@@ -4,5 +4,6 @@
     "journal": "International Journal of Python Applications",
     "link": "https://example.com/paper2",
     "image": "static/img/journal2.png",
+    "authors": "Doe, J., Perlin, M. S.",
     "abstract": "In this study, we analyze the effectiveness of Python Flask as a framework for building data science portfolios. We compare it against other popular frameworks and highlight its flexibility in handling data-driven content."
 }

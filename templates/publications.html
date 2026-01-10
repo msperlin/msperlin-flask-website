@@ -8,6 +8,9 @@
         <li class="item-card publication-item">
             <div class="publication-content">
                 <h3><a href="{{ pub.link }}">{{ pub.title }}</a></h3>
+                {% if pub.authors %}
+                <p class="meta"><strong>{{ pub.authors }}</strong></p>
+                {% endif %}
                 <p class="meta">{{ pub.year }} | {{ pub.journal }}</p>
                 {% if pub.abstract %}
                 <p class="abstract">{{ pub.abstract }}</p>

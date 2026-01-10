@@ -4,5 +4,6 @@
     "journal": "Journal of Web Engineering",
     "link": "https://example.com/paper1",
     "image": "static/img/journal1.png",
+    "authors": "Perlin, M. S., Smith, J.",
     "abstract": "This paper presents a new methodology for constructing academic websites using static site generation principles combined with dynamic data loading. We explore the benefits of decoupling content from presentation and demonstrate high maintainability."
 }
