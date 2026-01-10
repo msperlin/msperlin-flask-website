@@ -5,9 +5,19 @@
     <h2>Publications</h2>
     <ul class="item-list">
         {% for pub in publications %}
-        <li class="item-card">
-            <h3><a href="{{ pub.link }}">{{ pub.title }}</a></h3>
-            <p class="meta">{{ pub.year }} | {{ pub.journal }}</p>
+        <li class="item-card publication-item">
+            <div class="publication-content">
+                <h3><a href="{{ pub.link }}">{{ pub.title }}</a></h3>
+                <p class="meta">{{ pub.year }} | {{ pub.journal }}</p>
+                {% if pub.abstract %}
+                <p class="abstract">{{ pub.abstract }}</p>
+                {% endif %}
+            </div>
+            {% if pub.image %}
+            <div class="publication-image">
+                <img src="{{ url_for('static', filename=pub.image.replace('static/', '')) }}" alt="Journal Cover">
+            </div>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>

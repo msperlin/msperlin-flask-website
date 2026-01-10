@@ -8,6 +8,9 @@
     <div class="bio">
         <h2>Welcome</h2>
         <p>{{ about.bio }}</p>
+        {% if about.email %}
+        <p><strong>Contact:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
