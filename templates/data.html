@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Data</h2>
+    <ul class="item-list">
+        {% for d in data %}
+        <li class="item-card">
+            <h3><a href="{{ d.link }}">{{ d.name }}</a></h3>
+            <p>{{ d.description }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

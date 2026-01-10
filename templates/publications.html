@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Publications</h2>
+    <ul class="item-list">
+        {% for pub in publications %}
+        <li class="item-card">
+            <h3><a href="{{ pub.link }}">{{ pub.title }}</a></h3>
+            <p class="meta">{{ pub.year }} | {{ pub.journal }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

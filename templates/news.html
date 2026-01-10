@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Coverage by News</h2>
+    <ul class="item-list">
+        {% for item in news %}
+        <li class="item-card">
+            <h3><a href="{{ item.link }}">{{ item.title }}</a></h3>
+            <p class="meta">{{ item.date }} | {{ item.source }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Code</h2>
+
+    <div class="subsection">
+        <h3>R</h3>
+        <ul class="item-list">
+            {% for item in code['r'] %}
+            <li class="item-card">
+                <h4><a href="{{ item.link }}">{{ item.name }}</a></h4>
+                <p>{{ item.description }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="subsection">
+        <h3>Python</h3>
+        <ul class="item-list">
+            {% for item in code['python'] %}
+            <li class="item-card">
+                <h4><a href="{{ item.link }}">{{ item.name }}</a></h4>
+                <p>{{ item.description }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="subsection">
+        <h3>Matlab</h3>
+        <ul class="item-list">
+            {% for item in code['matlab'] %}
+            <li class="item-card">
+                <h4><a href="{{ item.link }}">{{ item.name }}</a></h4>
+                <p>{{ item.description }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Books</h2>
+    <div class="grid">
+        {% for book in books %}
+        <div class="card">
+            <img src="{{ book.cover_image }}" alt="{{ book.title }}">
+            <h3><a href="{{ book.link }}">{{ book.title }}</a></h3>
+            <p>{{ book.publisher }}, {{ book.year }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
