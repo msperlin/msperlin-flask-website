@@ -32,6 +32,9 @@ header {
        User said "only use three colors". Shadows introduce transparency (grays). Let's remove shadows to be strictly "three colors" or just keep it simple. 
        Let's keep it very clean. */
     border-bottom: 2px solid var(--text-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .container {
