@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 7 Basic Object Classes | Analyzing Financial and Economic Data with R - Online Version</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="generator" content="bookdown 0.37 with bs4_book()">
+<meta property="og:title" content="Chapter 7 Basic Object Classes | Analyzing Financial and Economic Data with R - Online Version">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<meta property="og:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 7 Basic Object Classes | Analyzing Financial and Economic Data with R - Online Version">
+<meta name="twitter:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.8/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.6.1/transition.js"></script><script src="libs/bs3compat-0.6.1/tabs.js"></script><script src="libs/bs3compat-0.6.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Analyzing Financial and Economic Data with R - Online Version</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome!</a></li>
+<li><a class="" href="about-new-edition.html">About New Edition</a></li>
+<li><a class="" href="preface.html">Preface</a></li>
+<li><a class="" href="introduction.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li><a class="" href="basicoperations.html"><span class="header-section-number">2</span> Basic Operations in R</a></li>
+<li><a class="" href="research-scripts.html"><span class="header-section-number">3</span> Writing Research Scripts</a></li>
+<li><a class="" href="importing.html"><span class="header-section-number">4</span> Importing Data from Local Files</a></li>
+<li><a class="" href="importing-internet.html"><span class="header-section-number">5</span> Importing Data from the Internet</a></li>
+<li><a class="" href="data-structure-objects.html"><span class="header-section-number">6</span> Dataframes and Other Objects</a></li>
+<li><a class="active" href="basic-classes.html"><span class="header-section-number">7</span> Basic Object Classes</a></li>
+<li><a class="" href="programming.html"><span class="header-section-number">8</span> Programming and Data Analysis</a></li>
+<li><a class="" href="cleaning.html"><span class="header-section-number">9</span> Cleaning and Structuring Data</a></li>
+<li><a class="" href="figures.html"><span class="header-section-number">10</span> Data Visualization with {ggplot2}</a></li>
+<li><a class="" href="models.html"><span class="header-section-number">11</span> Financial Econometrics with R</a></li>
+<li><a class="" href="reporting.html"><span class="header-section-number">12</span> Reporting Results</a></li>
+<li><a class="" href="optimizing.html"><span class="header-section-number">13</span> Optimizing Code</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98297869-1', 'auto');
+  ga('send', 'pageview');
+
+</script><!-- Global site tag (gtag.js) - Google Analytics GOOGLE ADS--><script async src="https://www.googletagmanager.com/gtag/js?id=UA-89690212-2">
+</script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-89690212-2');
+</script><div id="basic-classes" class="section level1" number="7">
+<h1>
+<span class="header-section-number">7</span> Basic Object Classes<a class="anchor" aria-label="anchor" href="#basic-classes"><i class="fas fa-link"></i></a>
+</h1>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+<div id="numeric-objects" class="section level2" number="7.1">
+<h2>
+<span class="header-section-number">7.1</span> <code>Numeric</code> Objects<a class="anchor" aria-label="anchor" href="#numeric-objects"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+<div id="creating-and-manipulating-numeric-objects" class="section level3" number="7.1.1">
+<h3>
+<span class="header-section-number">7.1.1</span> Creating and Manipulating <code>numeric</code> Objects<a class="anchor" aria-label="anchor" href="#creating-and-manipulating-numeric-objects"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="creating-a-numeric-sequence" class="section level3" number="7.1.2">
+<h3>
+<span class="header-section-number">7.1.2</span> Creating a <code>numeric</code> Sequence<a class="anchor" aria-label="anchor" href="#creating-a-numeric-sequence"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="creating-vectors-with-repeated-elements" class="section level3" number="7.1.3">
+<h3>
+<span class="header-section-number">7.1.3</span> Creating Vectors with Repeated Elements<a class="anchor" aria-label="anchor" href="#creating-vectors-with-repeated-elements"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="creating-vectors-with-random-numbers" class="section level3" number="7.1.4">
+<h3>
+<span class="header-section-number">7.1.4</span> Creating Vectors with Random Numbers<a class="anchor" aria-label="anchor" href="#creating-vectors-with-random-numbers"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="accessing-the-elements-of-a-numeric-vector" class="section level3" number="7.1.5">
+<h3>
+<span class="header-section-number">7.1.5</span> Accessing the Elements of a <code>numeric</code> Vector<a class="anchor" aria-label="anchor" href="#accessing-the-elements-of-a-numeric-vector"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="modifying-and-removing-elements-of-a-numeric-vector" class="section level3" number="7.1.6">
+<h3>
+<span class="header-section-number">7.1.6</span> Modifying and Removing Elements of a <code>numeric</code> Vector<a class="anchor" aria-label="anchor" href="#modifying-and-removing-elements-of-a-numeric-vector"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="creating-groups" class="section level3" number="7.1.7">
+<h3>
+<span class="header-section-number">7.1.7</span> Creating Groups<a class="anchor" aria-label="anchor" href="#creating-groups"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="other-useful-functions-2" class="section level3" number="7.1.8">
+<h3>
+<span class="header-section-number">7.1.8</span> Other Useful Functions<a class="anchor" aria-label="anchor" href="#other-useful-functions-2"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+</div>
+<div id="character-objects" class="section level2" number="7.2">
+<h2>
+<span class="header-section-number">7.2</span> <code>Character</code> Objects<a class="anchor" aria-label="anchor" href="#character-objects"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+<div id="creating-a-simple-character-object" class="section level3" number="7.2.1">
+<h3>
+<span class="header-section-number">7.2.1</span> Creating a Simple <code>character</code> Object<a class="anchor" aria-label="anchor" href="#creating-a-simple-character-object"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="creating-structured-character-objects" class="section level3" number="7.2.2">
+<h3>
+<span class="header-section-number">7.2.2</span> Creating Structured <code>character</code> Objects<a class="anchor" aria-label="anchor" href="#creating-structured-character-objects"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="character-constants" class="section level3" number="7.2.3">
+<h3>
+<span class="header-section-number">7.2.3</span> <code>character</code> Constants<a class="anchor" aria-label="anchor" href="#character-constants"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="selecting-pieces-of-a-text-object" class="section level3" number="7.2.4">
+<h3>
+<span class="header-section-number">7.2.4</span> Selecting Pieces of a Text Object<a class="anchor" aria-label="anchor" href="#selecting-pieces-of-a-text-object"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="finding-and-replacing-characters-of-a-text" class="section level3" number="7.2.5">
+<h3>
+<span class="header-section-number">7.2.5</span> Finding and Replacing Characters of a Text<a class="anchor" aria-label="anchor" href="#finding-and-replacing-characters-of-a-text"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="splitting-text" class="section level3" number="7.2.6">
+<h3>
+<span class="header-section-number">7.2.6</span> Splitting Text<a class="anchor" aria-label="anchor" href="#splitting-text"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="finding-the-number-of-characters-in-a-text" class="section level3" number="7.2.7">
+<h3>
+<span class="header-section-number">7.2.7</span> Finding the Number of Characters in a Text<a class="anchor" aria-label="anchor" href="#finding-the-number-of-characters-in-a-text"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="generating-combinations-of-text" class="section level3" number="7.2.8">
+<h3>
+<span class="header-section-number">7.2.8</span> Generating Combinations of Text<a class="anchor" aria-label="anchor" href="#generating-combinations-of-text"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="encoding-of-character-objects" class="section level3" number="7.2.9">
+<h3>
+<span class="header-section-number">7.2.9</span> Encoding of <code>character</code> Objects<a class="anchor" aria-label="anchor" href="#encoding-of-character-objects"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="other-useful-functions-3" class="section level3" number="7.2.10">
+<h3>
+<span class="header-section-number">7.2.10</span> Other Useful Functions<a class="anchor" aria-label="anchor" href="#other-useful-functions-3"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+</div>
+<div id="factor-objects" class="section level2" number="7.3">
+<h2>
+<span class="header-section-number">7.3</span> <code>Factor</code> Objects<a class="anchor" aria-label="anchor" href="#factor-objects"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+<div id="creating-factors" class="section level3" number="7.3.1">
+<h3>
+<span class="header-section-number">7.3.1</span> Creating <code>factors</code><a class="anchor" aria-label="anchor" href="#creating-factors"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="modifying-factors" class="section level3" number="7.3.2">
+<h3>
+<span class="header-section-number">7.3.2</span> Modifying <code>factors</code><a class="anchor" aria-label="anchor" href="#modifying-factors"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="converting-factors-to-other-classes" class="section level3" number="7.3.3">
+<h3>
+<span class="header-section-number">7.3.3</span> Converting <code>factors</code> to Other Classes<a class="anchor" aria-label="anchor" href="#converting-factors-to-other-classes"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="creating-contingency-tables" class="section level3" number="7.3.4">
+<h3>
+<span class="header-section-number">7.3.4</span> Creating Contingency Tables<a class="anchor" aria-label="anchor" href="#creating-contingency-tables"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="other-useful-functions-4" class="section level3" number="7.3.5">
+<h3>
+<span class="header-section-number">7.3.5</span> Other Useful Functions<a class="anchor" aria-label="anchor" href="#other-useful-functions-4"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+</div>
+<div id="logical-objects" class="section level2" number="7.4">
+<h2>
+<span class="header-section-number">7.4</span> <code>Logical</code> Objects<a class="anchor" aria-label="anchor" href="#logical-objects"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+<div id="creating-logical-objects" class="section level3" number="7.4.1">
+<h3>
+<span class="header-section-number">7.4.1</span> Creating <code>logical</code> Objects<a class="anchor" aria-label="anchor" href="#creating-logical-objects"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+</div>
+<div id="date-and-time" class="section level2" number="7.5">
+<h2>
+<span class="header-section-number">7.5</span> Date and Time<a class="anchor" aria-label="anchor" href="#date-and-time"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+<div id="creating-simple-dates" class="section level3" number="7.5.1">
+<h3>
+<span class="header-section-number">7.5.1</span> Creating Simple Dates<a class="anchor" aria-label="anchor" href="#creating-simple-dates"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="creating-a-sequence-of-dates" class="section level3" number="7.5.2">
+<h3>
+<span class="header-section-number">7.5.2</span> Creating a Sequence of <code>Dates</code><a class="anchor" aria-label="anchor" href="#creating-a-sequence-of-dates"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="operations-with-dates" class="section level3" number="7.5.3">
+<h3>
+<span class="header-section-number">7.5.3</span> Operations with <code>Dates</code><a class="anchor" aria-label="anchor" href="#operations-with-dates"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="dealing-with-time" class="section level3" number="7.5.4">
+<h3>
+<span class="header-section-number">7.5.4</span> Dealing with Time<a class="anchor" aria-label="anchor" href="#dealing-with-time"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="customizing-the-format-of-dates-and-times" class="section level3" number="7.5.5">
+<h3>
+<span class="header-section-number">7.5.5</span> Customizing the Format of Dates and Times<a class="anchor" aria-label="anchor" href="#customizing-the-format-of-dates-and-times"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="extracting-elements-of-a-date" class="section level3" number="7.5.6">
+<h3>
+<span class="header-section-number">7.5.6</span> Extracting Elements of a Date<a class="anchor" aria-label="anchor" href="#extracting-elements-of-a-date"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="find-the-current-date-and-time" class="section level3" number="7.5.7">
+<h3>
+<span class="header-section-number">7.5.7</span> Find the Current Date and Time<a class="anchor" aria-label="anchor" href="#find-the-current-date-and-time"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="other-useful-functions-5" class="section level3" number="7.5.8">
+<h3>
+<span class="header-section-number">7.5.8</span> Other Useful Functions<a class="anchor" aria-label="anchor" href="#other-useful-functions-5"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+</div>
+<div id="missing-data---na-not-available" class="section level2" number="7.6">
+<h2>
+<span class="header-section-number">7.6</span> Missing Data - <code>NA</code> (<em>Not available</em>)<a class="anchor" aria-label="anchor" href="#missing-data---na-not-available"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+<div id="defining-na-values" class="section level3" number="7.6.1">
+<h3>
+<span class="header-section-number">7.6.1</span> Defining <code>NA</code> Values<a class="anchor" aria-label="anchor" href="#defining-na-values"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="finding-and-replacing-na" class="section level3" number="7.6.2">
+<h3>
+<span class="header-section-number">7.6.2</span> Finding and Replacing <code>NA</code><a class="anchor" aria-label="anchor" href="#finding-and-replacing-na"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+<div id="other-useful-functions-6" class="section level3" number="7.6.3">
+<h3>
+<span class="header-section-number">7.6.3</span> Other Useful Functions<a class="anchor" aria-label="anchor" href="#other-useful-functions-6"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+</div>
+</div>
+<div id="exercises-4" class="section level2" number="7.7">
+<h2>
+<span class="header-section-number">7.7</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-4"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+You reached the end of the online version of <em>Analyzing Financial
+and Economic Data with R</em>. The full content of the book can be
+acquired at <a href="https://www.amazon.com/dp/B084LSNXMN">Amazon</a>
+for less than ten dollars. Purchasing this book is a great way of
+supporting this and other projects of the <a href="https://www.msperlin.com/">author</a>. If you are satisfied with
+the content, please leave your feedback at Amazon or by email
+(<a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a>). The book is a lifelong project and I’ll keep
+improving it based on the received feedback.
+</p>
+</div>
+
+</div>
+</div>
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://afedr-ed2.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+                            
+  <div class="chapter-nav">
+<div class="prev"><a href="data-structure-objects.html"><span class="header-section-number">6</span> Dataframes and Other Objects</a></div>
+<div class="next"><a href="programming.html"><span class="header-section-number">8</span> Programming and Data Analysis</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#basic-classes"><span class="header-section-number">7</span> Basic Object Classes</a></li>
+<li>
+<a class="nav-link" href="#numeric-objects"><span class="header-section-number">7.1</span> Numeric Objects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#creating-and-manipulating-numeric-objects"><span class="header-section-number">7.1.1</span> Creating and Manipulating numeric Objects</a></li>
+<li><a class="nav-link" href="#creating-a-numeric-sequence"><span class="header-section-number">7.1.2</span> Creating a numeric Sequence</a></li>
+<li><a class="nav-link" href="#creating-vectors-with-repeated-elements"><span class="header-section-number">7.1.3</span> Creating Vectors with Repeated Elements</a></li>
+<li><a class="nav-link" href="#creating-vectors-with-random-numbers"><span class="header-section-number">7.1.4</span> Creating Vectors with Random Numbers</a></li>
+<li><a class="nav-link" href="#accessing-the-elements-of-a-numeric-vector"><span class="header-section-number">7.1.5</span> Accessing the Elements of a numeric Vector</a></li>
+<li><a class="nav-link" href="#modifying-and-removing-elements-of-a-numeric-vector"><span class="header-section-number">7.1.6</span> Modifying and Removing Elements of a numeric Vector</a></li>
+<li><a class="nav-link" href="#creating-groups"><span class="header-section-number">7.1.7</span> Creating Groups</a></li>
+<li><a class="nav-link" href="#other-useful-functions-2"><span class="header-section-number">7.1.8</span> Other Useful Functions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#character-objects"><span class="header-section-number">7.2</span> Character Objects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#creating-a-simple-character-object"><span class="header-section-number">7.2.1</span> Creating a Simple character Object</a></li>
+<li><a class="nav-link" href="#creating-structured-character-objects"><span class="header-section-number">7.2.2</span> Creating Structured character Objects</a></li>
+<li><a class="nav-link" href="#character-constants"><span class="header-section-number">7.2.3</span> character Constants</a></li>
+<li><a class="nav-link" href="#selecting-pieces-of-a-text-object"><span class="header-section-number">7.2.4</span> Selecting Pieces of a Text Object</a></li>
+<li><a class="nav-link" href="#finding-and-replacing-characters-of-a-text"><span class="header-section-number">7.2.5</span> Finding and Replacing Characters of a Text</a></li>
+<li><a class="nav-link" href="#splitting-text"><span class="header-section-number">7.2.6</span> Splitting Text</a></li>
+<li><a class="nav-link" href="#finding-the-number-of-characters-in-a-text"><span class="header-section-number">7.2.7</span> Finding the Number of Characters in a Text</a></li>
+<li><a class="nav-link" href="#generating-combinations-of-text"><span class="header-section-number">7.2.8</span> Generating Combinations of Text</a></li>
+<li><a class="nav-link" href="#encoding-of-character-objects"><span class="header-section-number">7.2.9</span> Encoding of character Objects</a></li>
+<li><a class="nav-link" href="#other-useful-functions-3"><span class="header-section-number">7.2.10</span> Other Useful Functions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#factor-objects"><span class="header-section-number">7.3</span> Factor Objects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#creating-factors"><span class="header-section-number">7.3.1</span> Creating factors</a></li>
+<li><a class="nav-link" href="#modifying-factors"><span class="header-section-number">7.3.2</span> Modifying factors</a></li>
+<li><a class="nav-link" href="#converting-factors-to-other-classes"><span class="header-section-number">7.3.3</span> Converting factors to Other Classes</a></li>
+<li><a class="nav-link" href="#creating-contingency-tables"><span class="header-section-number">7.3.4</span> Creating Contingency Tables</a></li>
+<li><a class="nav-link" href="#other-useful-functions-4"><span class="header-section-number">7.3.5</span> Other Useful Functions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#logical-objects"><span class="header-section-number">7.4</span> Logical Objects</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#creating-logical-objects"><span class="header-section-number">7.4.1</span> Creating logical Objects</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#date-and-time"><span class="header-section-number">7.5</span> Date and Time</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#creating-simple-dates"><span class="header-section-number">7.5.1</span> Creating Simple Dates</a></li>
+<li><a class="nav-link" href="#creating-a-sequence-of-dates"><span class="header-section-number">7.5.2</span> Creating a Sequence of Dates</a></li>
+<li><a class="nav-link" href="#operations-with-dates"><span class="header-section-number">7.5.3</span> Operations with Dates</a></li>
+<li><a class="nav-link" href="#dealing-with-time"><span class="header-section-number">7.5.4</span> Dealing with Time</a></li>
+<li><a class="nav-link" href="#customizing-the-format-of-dates-and-times"><span class="header-section-number">7.5.5</span> Customizing the Format of Dates and Times</a></li>
+<li><a class="nav-link" href="#extracting-elements-of-a-date"><span class="header-section-number">7.5.6</span> Extracting Elements of a Date</a></li>
+<li><a class="nav-link" href="#find-the-current-date-and-time"><span class="header-section-number">7.5.7</span> Find the Current Date and Time</a></li>
+<li><a class="nav-link" href="#other-useful-functions-5"><span class="header-section-number">7.5.8</span> Other Useful Functions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#missing-data---na-not-available"><span class="header-section-number">7.6</span> Missing Data - NA (Not available)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#defining-na-values"><span class="header-section-number">7.6.1</span> Defining NA Values</a></li>
+<li><a class="nav-link" href="#finding-and-replacing-na"><span class="header-section-number">7.6.2</span> Finding and Replacing NA</a></li>
+<li><a class="nav-link" href="#other-useful-functions-6"><span class="header-section-number">7.6.3</span> Other Useful Functions</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#exercises-4"><span class="header-section-number">7.7</span> Exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Analyzing Financial and Economic Data with R - Online Version</strong>" was written by <strong><a class="text-light" href="https://www.msperlin.com">Marcelo S. Perlin </a></strong>. Full version available at <a class="text-light" href="TODO:">Amazon</a>.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was compiled with love in 2023-12-13, using the fantastic package <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

@@ -7,8 +7,9 @@
         {% for book in books %}
         <div class="card">
             <img src="{{ book.cover_image }}" alt="{{ book.title }}">
-            <h3><a href="{{ book.link }}">{{ book.title }}</a></h3>
+            <h3><a href="{{ book.link_amazon}}">{{ book.title }}</a></h3>
             <p>{{ book.publisher }}, {{ book.year }}</p>
+            <p><a href="{{ book.link_online}}">Online Version</a></p>
         </div>
         {% endfor %}
     </div>

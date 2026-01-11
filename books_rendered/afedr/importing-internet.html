@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 5 Importing Data from the Internet | Analyzing Financial and Economic Data with R - Online Version</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="generator" content="bookdown 0.37 with bs4_book()">
+<meta property="og:title" content="Chapter 5 Importing Data from the Internet | Analyzing Financial and Economic Data with R - Online Version">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<meta property="og:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 5 Importing Data from the Internet | Analyzing Financial and Economic Data with R - Online Version">
+<meta name="twitter:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.8/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.6.1/transition.js"></script><script src="libs/bs3compat-0.6.1/tabs.js"></script><script src="libs/bs3compat-0.6.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Analyzing Financial and Economic Data with R - Online Version</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome!</a></li>
+<li><a class="" href="about-new-edition.html">About New Edition</a></li>
+<li><a class="" href="preface.html">Preface</a></li>
+<li><a class="" href="introduction.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li><a class="" href="basicoperations.html"><span class="header-section-number">2</span> Basic Operations in R</a></li>
+<li><a class="" href="research-scripts.html"><span class="header-section-number">3</span> Writing Research Scripts</a></li>
+<li><a class="" href="importing.html"><span class="header-section-number">4</span> Importing Data from Local Files</a></li>
+<li><a class="active" href="importing-internet.html"><span class="header-section-number">5</span> Importing Data from the Internet</a></li>
+<li><a class="" href="data-structure-objects.html"><span class="header-section-number">6</span> Dataframes and Other Objects</a></li>
+<li><a class="" href="basic-classes.html"><span class="header-section-number">7</span> Basic Object Classes</a></li>
+<li><a class="" href="programming.html"><span class="header-section-number">8</span> Programming and Data Analysis</a></li>
+<li><a class="" href="cleaning.html"><span class="header-section-number">9</span> Cleaning and Structuring Data</a></li>
+<li><a class="" href="figures.html"><span class="header-section-number">10</span> Data Visualization with {ggplot2}</a></li>
+<li><a class="" href="models.html"><span class="header-section-number">11</span> Financial Econometrics with R</a></li>
+<li><a class="" href="reporting.html"><span class="header-section-number">12</span> Reporting Results</a></li>
+<li><a class="" href="optimizing.html"><span class="header-section-number">13</span> Optimizing Code</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98297869-1', 'auto');
+  ga('send', 'pageview');
+
+</script><!-- Global site tag (gtag.js) - Google Analytics GOOGLE ADS--><script async src="https://www.googletagmanager.com/gtag/js?id=UA-89690212-2">
+</script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-89690212-2');
+</script><div id="importing-internet" class="section level1" number="5">
+<h1>
+<span class="header-section-number">5</span> Importing Data from the Internet<a class="anchor" aria-label="anchor" href="#importing-internet"><i class="fas fa-link"></i></a>
+</h1>
+<p>One of the great advantages of using R in Finance and Economics is the large amount of data that can be imported using the internet, substituting the tedious, unreliable and soul-crushing work of manual data collection. It also becomes easier to share reproducible code, as anyone can feasibly download the same tables with a single line of code.</p>
+<p>In this chapter, we will study the most important and reliable packages for data importation in the fields of Finance and Economics. It is a small, but comprehensive list of packages that cover a large range of research topics. The list includes:</p>
+<dl>
+<dt>
+<strong>{GetQuandlData}</strong> <span class="citation">(<a href="references.html#ref-R-GetQuandlData">M. S. Perlin 2023b</a>)</span>
+</dt>
+<dd>
+Imports economical and financial data from the Quandl platform.
+</dd>
+<dt>
+<strong>{yfR}</strong> <span class="citation">(<a href="references.html#ref-R-yfR">M. Perlin 2023</a>)</span>
+</dt>
+<dd>
+Imports adjusted and unadjusted stock price data from Yahoo Finance.
+</dd>
+<dt>
+<strong>{simfinapi}</strong> <span class="citation">(<a href="references.html#ref-R-simfinapi">Gomolka 2023</a>)</span>
+</dt>
+<dd>
+Imports financial statements and adjusted stock prices from the <a href="https://simfin.com/">SimFin project</a><a href="references.html#fn40" class="footnote-ref" id="fnref40"><sup>40</sup></a>.
+</dd>
+<dt>
+<strong>{tidyquant}</strong> <span class="citation">(<a href="references.html#ref-R-tidyquant">Dancho and Vaughan 2023</a>)</span>
+</dt>
+<dd>
+Imports several financial information about stock prices and fundamental data.
+</dd>
+</dl>
+<div id="quandl" class="section level2" number="5.1">
+<h2>
+<span class="header-section-number">5.1</span> Package <strong>{GetQuandlData}</strong><a class="anchor" aria-label="anchor" href="#quandl"><i class="fas fa-link"></i></a>
+</h2>
+<p><em>Quandl</em> is an established and comprehensive platform that provides access to a series of free and paid data. Several central banks and research institutions provide free economic and financial information on this platform. I strongly recommend browsing the available tables from the <a href="https://data.nasdaq.com/">Quandl website</a><a href="references.html#fn41" class="footnote-ref" id="fnref41"><sup>41</sup></a>. It is likely that you’ll find datasets that you’re familiar with.</p>
+<p>In R, package <strong>{Quandl}</strong> <span class="citation">(<a href="references.html#ref-R-Quandl">Raymond McTaggart, Gergely Daroczi, and Clement Leung 2021</a>)</span>
+is the official extension offered by the company and available in CRAN. However, the package has some issues (see <a href="https://www.msperlin.com/post/2019-10-01-new-package-getquandldata/">blog post here</a><a href="references.html#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a>), which are fixed with the alternative package <strong>{GetQuandlData}</strong> <span class="citation">(<a href="references.html#ref-R-GetQuandlData">M. S. Perlin 2023b</a>)</span>.</p>
+<p>The <strong>first and mandatory</strong> step in using <strong>{GetQuandlData}</strong> <span class="citation">(<a href="references.html#ref-R-GetQuandlData">M. S. Perlin 2023b</a>)</span> is to register a user at the <a href="https://data.nasdaq.com/">Quandl website</a><a href="references.html#fn43" class="footnote-ref" id="fnref43"><sup>43</sup></a>. Soon after, go to <em>account settings</em> and click <em>API KEY</em>. This page should show a code, such as <code>Asv8Ac7zuZzJSCGxynfG</code>. Copy it to the clipboard (<em>control + c</em>) and, in R, define a character object containing the copied content as follows:</p>
+<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set FAKE api key to quandl</span></span>
+<span><span class="va">my_api_key</span> <span class="op">&lt;-</span> <span class="st">'Asv8Ac7zuZzJSCGxynfG'</span></span></code></pre></div>
+<p>The API key is unique to each user, and the one presented here will not work on your computer. You’ll need to get your own API key to run the examples of the book. After finding and setting your key, go to <a href="https://data.nasdaq.com/">Quandl’s website</a> and use the search box to look for the symbol of the time series of interest. As an example, we will use data for gold prices in the London Market, with a Quandl code equivalent to <code>'LBMA/GOLD'</code>. Do notice that the structure of a Quandl code is always the same, with the name of the main database at first, and the name of table second, separated by a forward slash (/).</p>
+<p>Now, with the API key and the Quandl symbol, we use function <strong>GetQuandlData</strong>::<strong>get_Quandl_series()</strong> to download the data from 1980-01-01 to 2023-01-01:</p>
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set symbol and dates</span></span>
+<span><span class="va">my_symbol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'GOLD'</span> <span class="op">=</span> <span class="st">'LBMA/GOLD'</span><span class="op">)</span></span>
+<span><span class="va">first_date</span> <span class="op">&lt;-</span> <span class="st">'1980-01-01'</span></span>
+<span><span class="va">last_date</span> <span class="op">&lt;-</span> <span class="st">'2023-01-01'</span></span>
+<span></span>
+<span><span class="co"># get data!</span></span>
+<span><span class="va">df_quandl</span> <span class="op">&lt;-</span> <span class="fu">GetQuandlData</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GetQuandlData/man/get_Quandl_series.html">get_Quandl_series</a></span><span class="op">(</span></span>
+<span>  id_in <span class="op">=</span> <span class="va">my_symbol</span>,</span>
+<span>  api_key <span class="op">=</span> <span class="va">my_api_key</span>, </span>
+<span>  first_date <span class="op">=</span> <span class="va">first_date</span>,</span>
+<span>  last_date <span class="op">=</span> <span class="va">last_date</span>, </span>
+<span>  do_cache <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># check it</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df_quandl</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 10,866
+R&gt; Columns: 9
+R&gt; $ `USD (AM)`  &lt;chr&gt; "559", "632", "596", "634", "615.75", …
+R&gt; $ `USD (PM)`  &lt;chr&gt; "559.5", "634", "588", "633.5", "610",…
+R&gt; $ `GBP (AM)`  &lt;chr&gt; "251.123", "281.577", "266.285", "281.…
+R&gt; $ `GBP (PM)`  &lt;chr&gt; "250.841", "282.468", "262.77", "280.0…
+R&gt; $ `EURO (AM)` &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+R&gt; $ `EURO (PM)` &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+R&gt; $ series_name &lt;chr&gt; "GOLD", "GOLD", "GOLD", "GOLD", "GOLD"…
+R&gt; $ ref_date    &lt;date&gt; 1980-01-02, 1980-01-03, 1980-01-04, 1…
+R&gt; $ id_quandl   &lt;chr&gt; "LBMA/GOLD", "LBMA/GOLD", "LBMA/GOLD",…</code></pre>
+<p>Notice how we set the name of the time series in line <code>id_in = c('GOLD' = 'LBMA/GOLD')</code>. The name of the element becomes the value of column <code>series_name</code> in <code>df_quandl</code>. If we had more time series, they would be stacked in the same table, but with different <code>series_name</code> value.</p>
+<p>There are other <code>Quandl</code> API options available with inputs <code>order</code>, <code>collapse</code> and <code>transform</code>. If using <code>Quandl</code> is important to your work, I strongly recommend reading the <a href="https://docs.data.nasdaq.com/docs/parameters-2">available parameters for querying data</a><a href="references.html#fn44" class="footnote-ref" id="fnref44"><sup>44</sup></a>. Several choices for data transformations can be passed to function <strong>GetQuandlData</strong>::<strong>get_Quandl_series()</strong> .</p>
+<p>As an inspection check, let’s plot the prices of Gold in USD over time.</p>
+<p>Overall, gold prices were fairly stable between 1980 and 2000, reaching a spike after 2010. One possible explanation is the higher demand for safer assets, such as gold, after the 2009 financial crisis.</p>
+</div>
+<div id="package-yfr" class="section level2" number="5.2">
+<h2>
+<span class="header-section-number">5.2</span> Package <strong>{yfR}</strong><a class="anchor" aria-label="anchor" href="#package-yfr"><i class="fas fa-link"></i></a>
+</h2>
+<p>Package <strong>{yfR}</strong> <span class="citation">(<a href="references.html#ref-R-yfR">M. Perlin 2023</a>)</span> is all about downloading stock price data from Yahoo Finance. Unlike other packages, <strong>{yfR}</strong> <span class="citation">(<a href="references.html#ref-R-yfR">M. Perlin 2023</a>)</span> focuses on large batch downloads of structured and clean/tidy data. Its main features are:</p>
+<ul>
+<li><p>Fetches daily/weekly/monthly/annual stock prices/returns from yahoo finance and outputs a dataframe (tibble) in the long format (stacked data);</p></li>
+<li><p>A feature called <strong>collections</strong> facilitates download of multiple tickers from a particular market/index. You can, for example, download data for all stocks in the SP500 index with a simple call to <code>yf_collection_get("SP500")</code>;</p></li>
+<li><p>A session-persistent smart cache system is available by default. This means that the data is saved locally and only missing portions are downloaded, if needed.</p></li>
+<li><p>All dates are compared to a benchmark ticker such as SP500 and, whenever an individual asset does not have a sufficient number of dates, the software drops it from the output. This means you can choose to ignore tickers with a high proportion of missing dates.</p></li>
+<li><p>A customized function called <strong>yfR</strong>::<strong>yf_convert_to_wide()</strong> can transform a long <code>dataframe</code> into a wide format (tickers as columns), much used in portfolio optimization. The output is a list where each element is a different target variable (prices, returns, volumes).</p></li>
+<li><p>Parallel computing with package <code>furrr</code> is available, speeding up the data importation process.</p></li>
+</ul>
+<p>As an example of usage, let’s download the prices of four stocks in the previous five years using function <strong>yfR</strong>::<strong>yf_get()</strong> . We choose these companies: Microsoft (MSFT), Google (GOOGL), JP Morgan (JPM) and General Electric (GE).</p>
+<p>In the call to function <strong>yfR</strong>::<strong>yf_get()</strong> , we set arguments <code>thresh_bad_data = 0.95</code> and <code>bench_ticker = '^GSPC'</code>. These choices make sure that all returned data have at least 95% of valid prices when compared to data from the SP500 index (ticker <code>'^GSPC'</code>).</p>
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set tickers</span></span>
+<span><span class="va">tickers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'MSFT'</span>,<span class="st">'GOOGL'</span>,<span class="st">'JPM'</span>,<span class="st">'GE'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># set dates</span></span>
+<span><span class="va">first_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">5</span><span class="op">*</span><span class="fl">365</span> <span class="co"># past five years</span></span>
+<span><span class="va">last_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># today</span></span>
+<span><span class="va">thresh_bad_data</span> <span class="op">&lt;-</span> <span class="fl">0.95</span>   <span class="co"># sets percent threshold for bad data</span></span>
+<span><span class="va">bench_ticker</span> <span class="op">&lt;-</span> <span class="st">'^GSPC'</span>   <span class="co"># set benchmark as SP500</span></span>
+<span></span>
+<span><span class="va">df_yf</span> <span class="op">&lt;-</span> <span class="fu">yfR</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/yfR/reference/yf_get.html">yf_get</a></span><span class="op">(</span>tickers <span class="op">=</span> <span class="va">tickers</span>,</span>
+<span>                     first_date <span class="op">=</span> <span class="va">first_date</span>,</span>
+<span>                     last_date <span class="op">=</span> <span class="va">last_date</span>,</span>
+<span>                     bench_ticker <span class="op">=</span> <span class="va">bench_ticker</span>,</span>
+<span>                     thresh_bad_data <span class="op">=</span> <span class="va">thresh_bad_data</span><span class="op">)</span></span></code></pre></div>
+<p>The output of <strong>yfR</strong>::<strong>yf_get()</strong> is an object of type <code>dataframe</code>, a table with prices and returns:</p>
+<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># print df.tickers</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df_yf</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 5,028
+R&gt; Columns: 11
+R&gt; $ ticker                 &lt;chr&gt; "GE", "GE", "GE", "GE", "GE…
+R&gt; $ ref_date               &lt;date&gt; 2018-12-14, 2018-12-17, 20…
+R&gt; $ price_open             &lt;dbl&gt; 42.51486, 42.57491, 43.1153…
+R&gt; $ price_high             &lt;dbl&gt; 43.53570, 43.41560, 45.8175…
+R&gt; $ price_low              &lt;dbl&gt; 42.03447, 42.09452, 42.9952…
+R&gt; $ price_close            &lt;dbl&gt; 42.63496, 42.93521, 43.7158…
+R&gt; $ volume                 &lt;dbl&gt; 21449181, 21604120, 2444219…
+R&gt; $ price_adjusted         &lt;dbl&gt; 41.77919, 42.07340, 42.8383…
+R&gt; $ ret_adjusted_prices    &lt;dbl&gt; NA, 0.007042079, 0.01818195…
+R&gt; $ ret_closing_prices     &lt;dbl&gt; NA, 0.007042277, 0.01818180…
+R&gt; $ cumret_adjusted_prices &lt;dbl&gt; 1.0000000, 1.0070421, 1.025…</code></pre>
+<p>As expected, we find information about stock prices, daily returns and traded volumes. Notice it also includes column <code>ticker</code>, which contains the symbols of the stocks. In the tidy format, each stock has a chunk of data that is pilled in top of each other. Later, in chapter <a href="programming.html#programming">8</a>, we will use this column to split the data and build summary tables. To inspect the data, create a figure with the prices:</p>
+<div class="inline-figure"><img src="afedR_ed03_ONLINE_files/figure-html/unnamed-chunk-152-1.png" width="672" style="display: block; margin: auto;"></div>
+<p>We see that General Eletric (GE) stock was not kind to its investors. Someone that bought the stock at its peak in mid-2016 has found its current value at less than half. Now, when it comes to the GOOGL, JPM and MSFT, we see an overall upward increase in stock prices, and a recent drop. These are profitable and competitive companies in their sectors and not surprisingly, the stock prices surged over the long period of time.</p>
+<p>Now, let’s look at an example of a large download of stock price data. Here, we will download the current composition of the SP500 index using function <strong>yfR</strong>::<strong>yf_collection_get()</strong> .</p>
+<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set dates</span></span>
+<span><span class="va">first_date</span> <span class="op">&lt;-</span> <span class="st">'2020-01-01'</span></span>
+<span><span class="va">last_date</span> <span class="op">&lt;-</span> <span class="st">'2023-01-01'</span></span>
+<span></span>
+<span><span class="va">df_dow</span> <span class="op">&lt;-</span> <span class="fu">yfR</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/yfR/reference/yf_collection_get.html">yf_collection_get</a></span><span class="op">(</span></span>
+<span>  <span class="st">"DOW"</span>,</span>
+<span>  <span class="va">first_date</span>,</span>
+<span>  <span class="va">last_date</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>And now we check the resulting data:</p>
+<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df_dow</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 22,680
+R&gt; Columns: 11
+R&gt; $ ticker                 &lt;chr&gt; "AAPL", "AAPL", "AAPL", "AA…
+R&gt; $ ref_date               &lt;date&gt; 2020-01-02, 2020-01-03, 20…
+R&gt; $ price_open             &lt;dbl&gt; 74.0600, 74.2875, 73.4475, …
+R&gt; $ price_high             &lt;dbl&gt; 75.1500, 75.1450, 74.9900, …
+R&gt; $ price_low              &lt;dbl&gt; 73.7975, 74.1250, 73.1875, …
+R&gt; $ price_close            &lt;dbl&gt; 75.0875, 74.3575, 74.9500, …
+R&gt; $ volume                 &lt;dbl&gt; 135480400, 146322800, 11838…
+R&gt; $ price_adjusted         &lt;dbl&gt; 73.15265, 72.44146, 73.0186…
+R&gt; $ ret_adjusted_prices    &lt;dbl&gt; NA, -0.009721989, 0.0079681…
+R&gt; $ ret_closing_prices     &lt;dbl&gt; NA, -0.009722036, 0.0079682…
+R&gt; $ cumret_adjusted_prices &lt;dbl&gt; 1.0000000, 0.9902780, 0.998…</code></pre>
+<p>We get a fairly sized table with 22680 rows and 11 columns in object <code>df_dow</code>. Notice how easy it was to get that large volume of data from Yahoo Finance with a simple call to <strong>yfR</strong>::<strong>yf_collection_get()</strong> .</p>
+<div class="rmdcaution">
+<p>
+Be aware that Yahoo Finance (YF) data for <strong>adjusted prices of
+single stocks</strong> over long periods of time is not trustworthy. If
+you compare it to other data vendors, you’ll easily find large
+differences. The issue is that Yahoo Finance does not adjust for
+dividends, only for stock splits. This means that, when looking at a
+price series over a long period of time, there is a downward bias in
+overall return. As a rule of thumb, in a formal research, <strong>never
+use individual stock data from Yahoo Finance</strong>, specially if the
+stock return is important to the research. The exception is for
+financial indexes, such as the SP500, where Yahoo Finance data is quite
+reliable since indexes do not undergo the same adjustments as individual
+stocks.
+</p>
+</div>
+</div>
+<div id="package-simfinapi" class="section level2" number="5.3">
+<h2>
+<span class="header-section-number">5.3</span> Package <strong>{simfinapi}</strong><a class="anchor" aria-label="anchor" href="#package-simfinapi"><i class="fas fa-link"></i></a>
+</h2>
+<p><a href="https://simfin.com/">SimFin</a><a href="references.html#fn45" class="footnote-ref" id="fnref45"><sup>45</sup></a> is a reliable repository of financial data from around the world. It works by gathering, cleaning and organizing data from different stock exchanges and financial reports. From its own <a href="https://simfin.com/">website</a><a href="references.html#fn46" class="footnote-ref" id="fnref46"><sup>46</sup></a>:</p>
+<blockquote>
+<p>Our core goal is to make financial data as freely available as possible because we believe that having the right tools for investing/research shouldn’t be the privilege of those that can afford to spend thousands of dollars per year on data.</p>
+</blockquote>
+<p>As of february 2023, the platform offers a generous free plan, with a daily limit of 2000 api calls. This is enough calls for most projects. If you need more calls, the <a href="https://simfin.com/simfin-plus">premium version</a><a href="references.html#fn47" class="footnote-ref" id="fnref47"><sup>47</sup></a> is a fraction of what other data vendors usually request.</p>
+<p>Package <strong>{simfinapi}</strong> <span class="citation">(<a href="references.html#ref-R-simfinapi">Gomolka 2023</a>)</span> facilitates importing data from the SimFin API. First, it makes sure the requested data exists and only then calls the api. As usual, all api queries are saved locally using package <code>memoise</code>. This means that the second time you ask for a particular data about a company/year, the function will load a local copy, and will not call the web api, helping you stay below the API limits.</p>
+<div id="example-01---apple-inc-annual-profit" class="section level3" number="5.3.1">
+<h3>
+<span class="header-section-number">5.3.1</span> Example 01 - Apple Inc Annual Profit<a class="anchor" aria-label="anchor" href="#example-01---apple-inc-annual-profit"><i class="fas fa-link"></i></a>
+</h3>
+<p>The first step in using <code>simfinR</code> is registering at the <a href="https://simfin.com/">SimFin website</a>. Once done, click on <a href="https://simfin.com/data/access/api">Data Access</a><a href="references.html#fn48" class="footnote-ref" id="fnref48"><sup>48</sup></a>. It should now show an API key such as <code>'rluwSlN304NpyJeBjlxZPspfBBhfJR4o'</code>. Save it in an R object for later use.</p>
+<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">my_api_key</span> <span class="op">&lt;-</span> <span class="st">'rluwSlN304NpyJeBjlxZPspfBBhfJR4o'</span></span></code></pre></div>
+<p>Be aware that the <strong>API key in <code>my_api_key</code> is fake</strong> and will not work for you. You need to get your own to execute the examples.</p>
+<p>With the API key in hand, the second step is to find the numerical id of the company of interest. For that, we can find all available companies and their respective ids and ticker with <strong>simfinapi</strong>::<strong>sfa_get_entities()</strong> .</p>
+<div class="sourceCode" id="cb205"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cache_dir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html">path_temp</a></span><span class="op">(</span><span class="st">"cache-simfin"</span><span class="op">)</span></span>
+<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html">dir_create</a></span><span class="op">(</span><span class="va">cache_dir</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">simfinapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simfinapi/man/sfa_set_api_key.html">sfa_set_api_key</a></span><span class="op">(</span><span class="va">my_api_key</span><span class="op">)</span></span>
+<span><span class="fu">simfinapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simfinapi/man/sfa_set_cache_dir.html">sfa_set_cache_dir</a></span><span class="op">(</span><span class="va">cache_dir</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get info</span></span>
+<span><span class="va">df_info_companies</span> <span class="op">&lt;-</span> <span class="fu">simfinapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simfinapi/man/sfa_get_entities.html">sfa_get_entities</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># check it</span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df_info_companies</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 5,082
+R&gt; Columns: 2
+R&gt; $ simfin_id &lt;int&gt; 854465, 45846, 1253413, 1333027, 367153,…
+R&gt; $ ticker    &lt;chr&gt; "1COV.DE", "A", "A18", "A21", "AA", "AAC…</code></pre>
+<p>Now, based on ticker “AAPL”, lets download the download the profit and loss (PL) statement for Apple INC in 2022:</p>
+<div class="sourceCode" id="cb207"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="st">"AAPL"</span> <span class="co"># ticker of APPLE INC</span></span>
+<span><span class="va">type_statements</span> <span class="op">&lt;-</span> <span class="st">'pl'</span> <span class="co"># profit/loss statement</span></span>
+<span><span class="va">period</span> <span class="op">&lt;-</span> <span class="st">'fy'</span> <span class="co"># final year</span></span>
+<span><span class="va">fiscal_year</span> <span class="op">&lt;-</span> <span class="fl">2022</span></span>
+<span></span>
+<span><span class="va">PL_aapl</span> <span class="op">&lt;-</span> <span class="fu">simfinapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simfinapi/man/sfa_get_statement.html">sfa_get_statement</a></span><span class="op">(</span></span>
+<span>  ticker <span class="op">=</span> <span class="va">ticker</span>, </span>
+<span>  statement <span class="op">=</span> <span class="va">type_statements</span>,</span>
+<span>  period <span class="op">=</span> <span class="va">period</span>,</span>
+<span>  fyear <span class="op">=</span> <span class="va">fiscal_year</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># select columns</span></span>
+<span><span class="va">PL_aapl</span> <span class="op">&lt;-</span> <span class="va">PL_aapl</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">ticker</span>, <span class="va">simfin_id</span>, <span class="va">revenue</span>, <span class="va">net_income</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">PL_aapl</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 1
+R&gt; Columns: 4
+R&gt; $ ticker     &lt;chr&gt; "AAPL"
+R&gt; $ simfin_id  &lt;int&gt; 111052
+R&gt; $ revenue    &lt;dbl&gt; 3.94328e+11
+R&gt; $ net_income &lt;dbl&gt; 9.9803e+10</code></pre>
+<p>Not bad! Financially speaking, the year 2022 was very good for Apple.</p>
+</div>
+<div id="example-02---annual-net-profit-of-many-companies" class="section level3" number="5.3.2">
+<h3>
+<span class="header-section-number">5.3.2</span> Example 02 - Annual Net Profit of Many Companies<a class="anchor" aria-label="anchor" href="#example-02---annual-net-profit-of-many-companies"><i class="fas fa-link"></i></a>
+</h3>
+<p>Package <code>simfinapi</code> can also fetch information for many companies in a single call. Let’s run another example by selecting three companies: Apple, Google and Amazon, and downloading end of year information:</p>
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tickers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AAPL"</span>, <span class="st">'GOOG'</span>, <span class="st">"AMZN"</span><span class="op">)</span> <span class="co"># ticker of APPLE INC</span></span>
+<span><span class="va">type_statements</span> <span class="op">&lt;-</span> <span class="st">'pl'</span> <span class="co"># profit/loss statement</span></span>
+<span><span class="va">period</span> <span class="op">&lt;-</span> <span class="st">'fy'</span> <span class="co"># final year</span></span>
+<span><span class="va">fiscal_year</span> <span class="op">&lt;-</span> <span class="fl">2022</span></span>
+<span></span>
+<span><span class="va">PL</span> <span class="op">&lt;-</span> <span class="fu">simfinapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simfinapi/man/sfa_get_statement.html">sfa_get_statement</a></span><span class="op">(</span></span>
+<span>  ticker <span class="op">=</span> <span class="va">tickers</span>, </span>
+<span>  statement <span class="op">=</span> <span class="va">type_statements</span>,</span>
+<span>  period <span class="op">=</span> <span class="va">period</span>,</span>
+<span>  fyear <span class="op">=</span> <span class="va">fiscal_year</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># select columns</span></span>
+<span><span class="va">PL</span> <span class="op">&lt;-</span> <span class="va">PL</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">ticker</span>, <span class="va">simfin_id</span>, <span class="va">revenue</span>, <span class="va">net_income</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">PL</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 3
+R&gt; Columns: 4
+R&gt; $ ticker     &lt;chr&gt; "AAPL", "AMZN", "GOOG"
+R&gt; $ simfin_id  &lt;int&gt; 111052, 62747, 18
+R&gt; $ revenue    &lt;dbl&gt; 3.94328e+11, 5.13983e+11, 2.82836e+11
+R&gt; $ net_income &lt;dbl&gt; 99803000000, -2722000000, 59972000000</code></pre>
+<p>As you can see, it is fairly straightforward to download financial data for multiple companies using package <strong>{simfinapi}</strong> <span class="citation">(<a href="references.html#ref-R-simfinapi">Gomolka 2023</a>)</span>.</p>
+</div>
+<div id="example-03---fetching-price-data" class="section level3" number="5.3.3">
+<h3>
+<span class="header-section-number">5.3.3</span> Example 03 - Fetching price data<a class="anchor" aria-label="anchor" href="#example-03---fetching-price-data"><i class="fas fa-link"></i></a>
+</h3>
+<p>The simfin project also provides prices of stocks, adjusted for dividends, splits and other corporate events. Have a look at the next example, where we download adjusted stock prices for the previous three companies:</p>
+<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df_prices</span>  <span class="op">&lt;-</span> <span class="fu">simfinapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simfinapi/man/sfa_get_prices.html">sfa_get_prices</a></span><span class="op">(</span><span class="va">tickers</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df_prices</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 14,496
+R&gt; Columns: 12
+R&gt; $ simfin_id                 &lt;int&gt; 111052, 111052, 111052, …
+R&gt; $ ticker                    &lt;chr&gt; "AAPL", "AAPL", "AAPL", …
+R&gt; $ date                      &lt;date&gt; 2000-01-03, 2000-01-04,…
+R&gt; $ currency                  &lt;chr&gt; "USD", "USD", "USD", "US…
+R&gt; $ open                      &lt;dbl&gt; 0.94, 0.97, 0.93, 0.95, …
+R&gt; $ high                      &lt;dbl&gt; 1.00, 0.99, 0.99, 0.96, …
+R&gt; $ low                       &lt;dbl&gt; 0.91, 0.90, 0.92, 0.85, …
+R&gt; $ close                     &lt;dbl&gt; 1.00, 0.92, 0.93, 0.85, …
+R&gt; $ adj_close                 &lt;dbl&gt; 0.85, 0.78, 0.79, 0.72, …
+R&gt; $ volume                    &lt;dbl&gt; 535797336, 512378112, 77…
+R&gt; $ dividend                  &lt;dbl&gt; NA, NA, NA, NA, NA, NA, …
+R&gt; $ common_shares_outstanding &lt;dbl&gt; NA, NA, NA, NA, NA, NA, …</code></pre>
+<div class="inline-figure"><img src="afedR_ed03_ONLINE_files/figure-html/unnamed-chunk-161-1.png" width="672" style="display: block; margin: auto;"></div>
+<p>As you can see, the data is comprehensive and should suffice for many different corporate finance research topics.</p>
+</div>
+</div>
+<div id="package-tidyquant" class="section level2" number="5.4">
+<h2>
+<span class="header-section-number">5.4</span> Package <strong>{tidyquant}</strong><a class="anchor" aria-label="anchor" href="#package-tidyquant"><i class="fas fa-link"></i></a>
+</h2>
+<p>Package <strong>{tidyquant}</strong> <span class="citation">(<a href="references.html#ref-R-tidyquant">Dancho and Vaughan 2023</a>)</span> provides functions related to financial data acquisition and analysis. It is an ambitious project that offers many solutions in the field of finance. The package includes functions for obtaining financial data from the web, manipulation of such data, and the calculation of performance measures of portfolios.</p>
+<p>First, we will obtain price data for Apple stocks (AAPL) using function <strong>tidyquant</strong>::<strong>tq_get()</strong> .</p>
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set stock and dates</span></span>
+<span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="st">'AAPL'</span></span>
+<span><span class="va">first_date</span> <span class="op">&lt;-</span> <span class="st">'2020-01-01'</span></span>
+<span><span class="va">last_date</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get data with tq_get</span></span>
+<span><span class="va">df_prices</span> <span class="op">&lt;-</span> <span class="fu">tidyquant</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidyquant/man/tq_get.html">tq_get</a></span><span class="op">(</span><span class="va">ticker</span>,</span>
+<span>                    get <span class="op">=</span> <span class="st">"stock.prices"</span>, </span>
+<span>                    from <span class="op">=</span> <span class="va">first_date</span>, </span>
+<span>                    to <span class="op">=</span> <span class="va">last_date</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df_prices</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 994
+R&gt; Columns: 8
+R&gt; $ symbol   &lt;chr&gt; "AAPL", "AAPL", "AAPL", "AAPL", "AAPL", "…
+R&gt; $ date     &lt;date&gt; 2020-01-02, 2020-01-03, 2020-01-06, 2020…
+R&gt; $ open     &lt;dbl&gt; 74.0600, 74.2875, 73.4475, 74.9600, 74.29…
+R&gt; $ high     &lt;dbl&gt; 75.1500, 75.1450, 74.9900, 75.2250, 76.11…
+R&gt; $ low      &lt;dbl&gt; 73.7975, 74.1250, 73.1875, 74.3700, 74.29…
+R&gt; $ close    &lt;dbl&gt; 75.0875, 74.3575, 74.9500, 74.5975, 75.79…
+R&gt; $ volume   &lt;dbl&gt; 135480400, 146322800, 118387200, 10887200…
+R&gt; $ adjusted &lt;dbl&gt; 73.15265, 72.44144, 73.01869, 72.67529, 7…</code></pre>
+<p>As we can see, except for column names, the price data has a similar format to the one we got with <strong>{yfR}</strong> <span class="citation">(<a href="references.html#ref-R-yfR">M. Perlin 2023</a>)</span>. This is not surprising as both share the same origin, Yahoo Finance.</p>
+<p>We can also get information about components of an index using function <strong>tidyquant</strong>::<strong>tq_index()</strong> . The available market indices are:</p>
+<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># print available indices</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu">tidyquant</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidyquant/man/tq_index.html">tq_index_options</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "DOW"       "DOWGLOBAL" "SP400"     "SP500"    
+R&gt; [5] "SP600"</code></pre>
+<p>Let’s get information for <code>"DOWGLOBAL"</code>.</p>
+<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get components of "DOWJONES"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu">tidyquant</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidyquant/man/tq_index.html">tq_index</a></span><span class="op">(</span><span class="st">"DOWGLOBAL"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Getting holdings for DOWGLOBAL</code></pre>
+<pre><code>R&gt; # A tibble: 179 × 8
+R&gt;    symbol company            identifier sedol  weight sector
+R&gt;    &lt;chr&gt;  &lt;chr&gt;              &lt;chr&gt;      &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt; 
+R&gt;  1 QCOM   QUALCOMM INC       747525103  2714… 0.00828 -     
+R&gt;  2 VWS    VESTAS WIND SYSTE… BN4MYF907  BN4M… 0.00810 -     
+R&gt;  3 DBK    DEUTSCHE BANK AG … 575035902  5750… 0.00801 -     
+R&gt;  4 NKE    NIKE INC  CL B     654106103  2640… 0.00786 -     
+R&gt;  5 BBVA   BANCO BILBAO VIZC… 550190904  5501… 0.00783 -     
+R&gt;  6 UCG    UNICREDIT SPA      BYMXPS901  BYMX… 0.00782 -     
+R&gt;  7 AVGO   BROADCOM INC       11135F101  BDZ7… 0.00780 -     
+R&gt;  8 BA     BOEING CO/THE      097023105  2108… 0.00763 -     
+R&gt;  9 SPG    SIMON PROPERTY GR… 828806109  2812… 0.00754 -     
+R&gt; 10 SIE    SIEMENS AG REG     572797900  5727… 0.00750 -     
+R&gt; # ℹ 169 more rows
+R&gt; # ℹ 2 more variables: shares_held &lt;dbl&gt;,
+R&gt; #   local_currency &lt;chr&gt;</code></pre>
+<p>We only looked into a few functions from the package. <strong>{tidyquant}</strong> <span class="citation">(<a href="references.html#ref-R-tidyquant">Dancho and Vaughan 2023</a>)</span> also offers solutions for the usual financial manipulations, such as calculating returns and functions for portfolio analytics. You can find more details about this package in its <a href="https://business-science.github.io/tidyquant/">website</a><a href="references.html#fn49" class="footnote-ref" id="fnref49"><sup>49</sup></a>.</p>
+</div>
+<div id="other-packages" class="section level2" number="5.5">
+<h2>
+<span class="header-section-number">5.5</span> Other Packages<a class="anchor" aria-label="anchor" href="#other-packages"><i class="fas fa-link"></i></a>
+</h2>
+<p>In CRAN, you’ll find many more packages for importing financial datasets in R. In this section, we focused on packages, which are free and easy to use. Interface with commercial data sources is also possible. Several companies provide APIs for serving data to their clients. Packages such as <strong>{Rblpapi}</strong> <span class="citation">(<a href="references.html#ref-R-Rblpapi">Armstrong, Eddelbuettel, and Laing 2022</a>)</span> for Bloomberg, <strong>{IBrokers}</strong> <span class="citation">(<a href="#ref-R-IBrokers"><strong>R-IBrokers?</strong></a>)</span> for Interactive Brokers can make R communicate with commercial platforms. If the company you use is not available, check the <a href="https://cran.r-project.org/">list of packages in CRAN</a><a href="references.html#fn50" class="footnote-ref" id="fnref50"><sup>50</sup></a>. It is very likely you’ll find what you need.</p>
+</div>
+<div id="accessing-data-from-web-pages-webscraping" class="section level2" number="5.6">
+<h2>
+<span class="header-section-number">5.6</span> Accessing Data from Web Pages (<em>webscraping</em>)<a class="anchor" aria-label="anchor" href="#accessing-data-from-web-pages-webscraping"><i class="fas fa-link"></i></a>
+</h2>
+<p>Packages from previous section facilitates data importation over the internet. However, in many cases, the information of interest is not available through a package, but on a web page. Fortunately, we can use R to read the data and import the desired information into an R session. The main advantage is that, every time we execute the code, we get the same content available in the website.</p>
+<p>The process of extracting information from web pages is called <em>webscraping</em>. Depending on the structure and technology used on the internet page, importing its content can be as trivial as a single line in R or a complex process, taking hundreds of lines of code.</p>
+<div id="scraping-the-components-of-the-sp500-index-from-wikipedia" class="section level3" number="5.6.1">
+<h3>
+<span class="header-section-number">5.6.1</span> Scraping the Components of the SP500 Index from Wikipedia<a class="anchor" aria-label="anchor" href="#scraping-the-components-of-the-sp500-index-from-wikipedia"><i class="fas fa-link"></i></a>
+</h3>
+<p>As an example of webscraping, let’s retrieve tabular information about the SP500 index from Wikipedia. In its website, Wikipedia offers a <a href="https://en.wikipedia.org/wiki/List_of_S%26P_500_companies">section</a><a href="references.html#fn51" class="footnote-ref" id="fnref51"><sup>51</sup></a> about the components of the SP500 index. This information is presented in a tabular format, Figure <a href="importing-internet.html#fig:SP500-wikipedia">5.1</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:SP500-wikipedia"></span>
+<img src="resources/figs/SP500-Wikipedia.png" alt="Mirror of Wikipedia page on SP500 components" width="75%"><p class="caption">
+Figure 5.1: Mirror of Wikipedia page on SP500 components
+</p>
+</div>
+<p>The information on this web page is constantly updated, and we can use it to import information about the stocks belonging to the SP500 index. Before delving into the R code, we need to understand how a webpage works. Briefly, a webpage is nothing more than a lengthy code interpreted by your browser. A numerical value or text presented on the website can usually be found within the code. This code has a particular tree-like structure with branches and classes. Moreover, every element of a webpage has an address, called <em>xpath</em>. In chrome and firefox browsers, you can see the actual code of a webpage by using the mouse to right-click any part of the webpage and selecting <em>View page source</em>.</p>
+<p>The first step in webscraping is finding out the location of the information you need. In Chrome, you can do that by right-clicking in the specific location of the number/text on the website and selecting <em>inspect</em>. This will open an extra window in the browser. Once you do that, right-click in the selection and click in <em>copy</em> and <em>copy xpath</em>. In Figure <a href="importing-internet.html#fig:SP500-Wikipedia-webscraping">5.2</a>, we see a mirror of what you should be seeing in your browser.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:SP500-Wikipedia-webscraping"></span>
+<img src="resources/figs/SP500-Wikipedia_webscraping.png" alt="Finding xpath from website" width="75%"><p class="caption">
+Figure 5.2: Finding xpath from website
+</p>
+</div>
+<p>Here, the copied <em>xpath</em> is:</p>
+<div class="sourceCode" id="cb220"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="st">'//*[@id="mw-content-text"]/table[1]/thead/tr/th[2]'</span></span></code></pre></div>
+<p>This is the address of the header of the table. For the whole content of the table, including header, rows, and columns, we need to set an upper level of the HTML tree. This is equivalent to address <code>//*[@id="MW-content-text"]/table[1]</code>.</p>
+<p>Now that we have the location of what we want, let’s load package <strong>{rvest}</strong> <span class="citation">(<a href="references.html#ref-R-rvest">Wickham 2022</a>)</span> and use functions <strong>rvest</strong>::<strong>read_html()</strong> , <strong>rvest</strong>::<strong>html_nodes()</strong> and <strong>rvest</strong>::<strong>html_table()</strong> to import the desired table into R:</p>
+<div class="sourceCode" id="cb221"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set url and xpath</span></span>
+<span><span class="va">my_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'https://en.wikipedia.org/wiki/'</span>,</span>
+<span>                 <span class="st">'List_of_S%26P_500_companies'</span><span class="op">)</span></span>
+<span><span class="va">my_xpath</span> <span class="op">&lt;-</span> <span class="st">'//*[@id="mw-content-text"]/div/table[1]'</span></span>
+<span></span>
+<span><span class="co"># get nodes from html</span></span>
+<span><span class="va">out_nodes</span> <span class="op">&lt;-</span> <span class="fu">rvest</span><span class="fu">::</span><span class="fu"><a href="https://rvest.tidyverse.org/reference/rename.html">html_nodes</a></span><span class="op">(</span><span class="fu">rvest</span><span class="fu">::</span><span class="fu"><a href="http://xml2.r-lib.org/reference/read_xml.html">read_html</a></span><span class="op">(</span><span class="va">my_url</span><span class="op">)</span>,</span>
+<span>                        xpath <span class="op">=</span> <span class="va">my_xpath</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get table from nodes (each element in </span></span>
+<span><span class="co"># list is a table)</span></span>
+<span><span class="va">df_SP500_comp</span> <span class="op">&lt;-</span> <span class="fu">rvest</span><span class="fu">::</span><span class="fu"><a href="https://rvest.tidyverse.org/reference/html_table.html">html_table</a></span><span class="op">(</span><span class="va">out_nodes</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># isolate it </span></span>
+<span><span class="va">df_SP500_comp</span> <span class="op">&lt;-</span> <span class="va">df_SP500_comp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># change column names (remove space)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_SP500_comp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/make.names.html">make.names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_SP500_comp</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">df_SP500_comp</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Rows: 503
+R&gt; Columns: 8
+R&gt; $ Symbol                &lt;chr&gt; "MMM", "AOS", "ABT", "ABBV",…
+R&gt; $ Security              &lt;chr&gt; "3M", "A. O. Smith", "Abbott…
+R&gt; $ GICS.Sector           &lt;chr&gt; "Industrials", "Industrials"…
+R&gt; $ GICS.Sub.Industry     &lt;chr&gt; "Industrial Conglomerates", …
+R&gt; $ Headquarters.Location &lt;chr&gt; "Saint Paul, Minnesota", "Mi…
+R&gt; $ Date.added            &lt;chr&gt; "1957-03-04", "2017-07-26", …
+R&gt; $ CIK                   &lt;int&gt; 66740, 91142, 1800, 1551152,…
+R&gt; $ Founded               &lt;chr&gt; "1902", "1916", "1888", "201…</code></pre>
+<p>Object <code>df_SP500_comp</code> contains a mirror of the data from the Wikipedia website. The names of the columns require some work, but the raw data is intact and could be further used in a script.</p>
+<p>Learning <em>webscraping</em> techniques can give you access to an immense amount of information available on the web. However, each scenario of <em>webscraping</em> is particular. It is not always the case you can import data directly and easily as in previous example.</p>
+<p>Another problem is that the webscrapping code depends on the structure of the website. Any simple change in the <em>html</em> structure and your code will fail. You should be aware that maintaining a <em>webscraping</em> code can demand significant time and effort from the developer. If possible, you should always check for alternative sources of the same information.</p>
+<p>Readers interested in learning more about this topic should study the functionalities of packages <strong>{XML}</strong> <span class="citation">(<a href="references.html#ref-R-XML">Temple Lang 2023</a>)</span> and <strong>{RSelenium}</strong> <span class="citation">(<a href="references.html#ref-R-RSelenium">Harrison 2022</a>)</span></p>
+</div>
+</div>
+<div id="exercises-2" class="section level2" number="5.7">
+<h2>
+<span class="header-section-number">5.7</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-2"><i class="fas fa-link"></i></a>
+</h2>
+<hr>
+<div id="q.1-4" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-4"><i class="fas fa-link"></i></a>
+</h3>
+<p>Using the <code>yfR</code> package, download daily data of the Facebook stock (META) from <em>Yahoo Finance</em> for the period between 2019 and 2023. What is the lowest <strong>unadjusted closing price (column <code>price.close</code>)</strong> in the analyzed period?</p>
+<hr>
+</div>
+<div id="q.2-4" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-4"><i class="fas fa-link"></i></a>
+</h3>
+<p>If you have not already done so, create a profile on the <a href="https://www.quandl.com/">Quandl website</a><a href="references.html#fn52" class="footnote-ref" id="fnref52"><sup>52</sup></a> and download the arabica coffee price data in the CEPEA database (Center for Advanced Studies in Applied Economics) ) between 2010-01-01 and 2020-12-31. What is the value of the most recent price?</p>
+<hr>
+</div>
+<div id="q.3-3" class="section level3 unnumbered">
+<h3>Q.3<a class="anchor" aria-label="anchor" href="#q.3-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use function <code><a href="https://rdrr.io/pkg/simfinapi/man/sfa_get_entities.html">simfinapi::sfa_get_entities()</a></code> to import data about all available companies in <a href="https://simfin.com">Simfin</a>. How many companies do you find? (see function <code><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">dplyr::n_distinct()</a></code>).</p>
+<hr>
+</div>
+<div id="q.4-3" class="section level3 unnumbered">
+<h3>Q.4<a class="anchor" aria-label="anchor" href="#q.4-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>With package <code>simfinapi</code>, download the PL (profit/loss) statement for FY (final year) data for TESLA (ticker = “TSLA”) for year 2022. What is the latest Profit/Loss of the company for that particular year?</p>
+<hr>
+</div>
+<div id="q.5-3" class="section level3 unnumbered">
+<h3>Q.5<a class="anchor" aria-label="anchor" href="#q.5-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>Using function <code><a href="https://rdrr.io/pkg/tidyquant/man/tq_index.html">tidyquant::tq_index</a></code>, download the current composition of index SP400. What is the company with the highest percentage in the composition of the index?</p>
+<p>Be aware that the answer is time-dependent and the reported result might be different from what you actually got in your R session.</p>
+<hr>
+</div>
+<div id="q.6-3" class="section level3 unnumbered">
+<h3>Q.6<a class="anchor" aria-label="anchor" href="#q.6-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>Using again the <code>yfR</code> package, download financial data between 2019-01-01 and 2020-01-01 for the following tickers:</p>
+<ul>
+<li>AAPL: Apple Inc</li>
+<li>BAC: Bank of America Corporation</li>
+<li>GE: General Electric Company</li>
+<li>TSLA: Tesla, Inc.</li>
+<li>SNAP: Snap Inc.</li>
+</ul>
+<p>Using the <strong>adjusted closing price</strong> column, what company provided higher return to the stock holder during the analyzed period?</p>
+<p>Tip: this is an advanced exercise that will require some coding. To solve it, check out function <code>split</code> to split the dataframe of price data and <code>lapply</code> to map a function to each dataframe.</p>
+
+</div>
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://afedr-ed2.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+                            
+  <div class="chapter-nav">
+<div class="prev"><a href="importing.html"><span class="header-section-number">4</span> Importing Data from Local Files</a></div>
+<div class="next"><a href="data-structure-objects.html"><span class="header-section-number">6</span> Dataframes and Other Objects</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#importing-internet"><span class="header-section-number">5</span> Importing Data from the Internet</a></li>
+<li><a class="nav-link" href="#quandl"><span class="header-section-number">5.1</span> Package {GetQuandlData}</a></li>
+<li><a class="nav-link" href="#package-yfr"><span class="header-section-number">5.2</span> Package {yfR}</a></li>
+<li>
+<a class="nav-link" href="#package-simfinapi"><span class="header-section-number">5.3</span> Package {simfinapi}</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#example-01---apple-inc-annual-profit"><span class="header-section-number">5.3.1</span> Example 01 - Apple Inc Annual Profit</a></li>
+<li><a class="nav-link" href="#example-02---annual-net-profit-of-many-companies"><span class="header-section-number">5.3.2</span> Example 02 - Annual Net Profit of Many Companies</a></li>
+<li><a class="nav-link" href="#example-03---fetching-price-data"><span class="header-section-number">5.3.3</span> Example 03 - Fetching price data</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#package-tidyquant"><span class="header-section-number">5.4</span> Package {tidyquant}</a></li>
+<li><a class="nav-link" href="#other-packages"><span class="header-section-number">5.5</span> Other Packages</a></li>
+<li>
+<a class="nav-link" href="#accessing-data-from-web-pages-webscraping"><span class="header-section-number">5.6</span> Accessing Data from Web Pages (webscraping)</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#scraping-the-components-of-the-sp500-index-from-wikipedia"><span class="header-section-number">5.6.1</span> Scraping the Components of the SP500 Index from Wikipedia</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#exercises-2"><span class="header-section-number">5.7</span> Exercises</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-4">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-4">Q.2</a></li>
+<li><a class="nav-link" href="#q.3-3">Q.3</a></li>
+<li><a class="nav-link" href="#q.4-3">Q.4</a></li>
+<li><a class="nav-link" href="#q.5-3">Q.5</a></li>
+<li><a class="nav-link" href="#q.6-3">Q.6</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Analyzing Financial and Economic Data with R - Online Version</strong>" was written by <strong><a class="text-light" href="https://www.msperlin.com">Marcelo S. Perlin </a></strong>. Full version available at <a class="text-light" href="TODO:">Amazon</a>.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was compiled with love in 2023-12-13, using the fantastic package <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

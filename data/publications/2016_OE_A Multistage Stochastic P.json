@@ -8,5 +8,6 @@
     "abstract": "This paper proposes a multistage stochastic programming approach for the asset-liability management of Brazilian pension funds. We generate asset price scenarios with stochastic differential equations\u2014Geometric Brownian Motion model for stocks and Cox\u2013Ingersoll\u2013Ross model for fixed income securities. Intertemporal solvency regulatory rules for Brazilian pension funds are considered endogenously in the model and enforced with a combinatorial constraint. A VaR probabilistic constraint is incorporated to obtain a positive funding ratio at each time period with high probability. Our approach uses multiple trees to provide a representative characterization of the uncertainty and is not computationally prohibitive. We evaluate the insolvency probability under different initial funding ratios through extensive simulations. The study reveals that the likely decrease of interest rate premiums in the next years will force pension fund managers to significantly change their portfolio strategies. They will have to take more risk in order to deliver the cash flows required to cover the liabilities and satisfy the regulatory constraints.",
     "link": "https://link.springer.com/article/10.1007/s11081-016-9316-3?wt_mc=internal.event.1.SEM.ArticleAuthorOnlineFirst",
     "image": "static/img/2016_OE_A Multistage Stochastic P.jpg",
-    "impact_factor": "1.7"
+    "impact_factor": "1.7",
+    "issn": "1573-2924"
 }

@@ -1,9 +1,10 @@
 import json
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 
 app = Flask(__name__)
 
+BOOKS_FOLDER = os.path.join(os.getcwd(), 'books_rendered')
 
 def load_data(filename):
     filepath = os.path.join('data', filename)
@@ -28,15 +29,33 @@ def index():
     about_data = load_data('about.json')
     return render_template('index.html', title='Home', about=about_data)
 
+@app.route('/books/<book_name>/')
+@app.route('/books/<book_name>/<path:path>')
+def serve_book(book_name, path='index.html'):
+    # Check if book exists
+    full_book_path = os.path.join(BOOKS_FOLDER, book_name)
+    if not os.path.exists(full_book_path) or not os.path.isdir(full_book_path):
+        return "Book not found", 404
+    
+    return send_from_directory(full_book_path, path)
+
+
 @app.route('/publications')
 def publications():
     publications_data = load_data_from_folder('publications')
     publications_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
+
+    # restrict size of abstract to 200 characters
+    for publication in publications_data:
+        publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
+
     return render_template('publications.html', title='Publications', publications=publications_data)
 
 @app.route('/books')
 def books():
     books_data = load_data_from_folder('books')
+    books_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
+
     return render_template('books.html', title='Books', books=books_data)
 
 @app.route('/code')

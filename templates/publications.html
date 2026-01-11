@@ -11,7 +11,7 @@
                 {% if pub.authors %}
                 <p class="meta"><strong>{{ pub.authors }}</strong></p>
                 {% endif %}
-                <p class="meta">{{ pub.year }} | {{ pub.journal }} {% if pub.impact_factor %} | IF: {{ pub.impact_factor
+                <p class="meta">{{ pub.year }} | {{ pub.journal }} {% if pub.issn %}| ISSN: {{ pub.issn }} {% endif %}{% if pub.impact_factor %} | IF: {{ pub.impact_factor
                     }}{% endif %}</p>
                 {% if pub.abstract %}
                 <p class="abstract">{{ pub.abstract }}</p>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 8 Programando com o R | Análise de Dados Financeiros e Econômicos com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 8 Programando com o R | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 8 Programando com o R | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00-code-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Análise de Dados Financeiros e Econômicos com o R - Versão Online</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="sobre-nova-edi%C3%A7%C3%A3o.html">Sobre Nova Edição</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="operacoes-basicas.html"><span class="header-section-number">2</span> Operações Básicas no R</a></li>
+<li><a class="" href="scripts-pesquisa.html"><span class="header-section-number">3</span> Desenvolvendo Rotinas de Pesquisa</a></li>
+<li><a class="" href="importacao-exportacao.html"><span class="header-section-number">4</span> Importação e Exportação de Dados Locais</a></li>
+<li><a class="" href="importacao-pacotes.html"><span class="header-section-number">5</span> Importação de Dados via Pacotes</a></li>
+<li><a class="" href="classe-estrutura.html"><span class="header-section-number">6</span> Dataframes e outros Objetos</a></li>
+<li><a class="" href="classes-basicas.html"><span class="header-section-number">7</span> As Classes Básicas de Objetos</a></li>
+<li><a class="active" href="programacao.html"><span class="header-section-number">8</span> Programando com o R</a></li>
+<li><a class="" href="limpando-estruturando.html"><span class="header-section-number">9</span> Estruturando e Limpando Dados</a></li>
+<li><a class="" href="figuras.html"><span class="header-section-number">10</span> Visualizando Dados</a></li>
+<li><a class="" href="modelos.html"><span class="header-section-number">11</span> Econometria Financeira com o R</a></li>
+<li><a class="" href="reportando-resultados.html"><span class="header-section-number">12</span> Reportando Resultados e Criando Relatórios</a></li>
+<li><a class="" href="otimizacao.html"><span class="header-section-number">13</span> Otimização de Código</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-120530145-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-120530145-1');
+</script><div id="programacao" class="section level1" number="8">
+<h1>
+<span class="header-section-number">Capítulo 8</span> Programando com o R<a class="anchor" aria-label="anchor" href="#programacao"><i class="fas fa-link"></i></a>
+</h1>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="criando-funções" class="section level2" number="8.1">
+<h2>
+<span class="header-section-number">8.1</span> Criando Funções<a class="anchor" aria-label="anchor" href="#criando-fun%C3%A7%C3%B5es"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="loops" class="section level2" number="8.2">
+<h2>
+<span class="header-section-number">8.2</span> Utilizando Loops (comando <em>for</em>)<a class="anchor" aria-label="anchor" href="#loops"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="execuções-condicionais-if-else-switch" class="section level2" number="8.3">
+<h2>
+<span class="header-section-number">8.3</span> Execuções Condicionais (<code>if</code>, <code>else</code>, <code>switch</code>)<a class="anchor" aria-label="anchor" href="#execu%C3%A7%C3%B5es-condicionais-if-else-switch"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="utilizando-as-funções-da-família-apply" class="section level2" number="8.4">
+<h2>
+<span class="header-section-number">8.4</span> Utilizando as Funções da Família <code>apply</code><a class="anchor" aria-label="anchor" href="#utilizando-as-fun%C3%A7%C3%B5es-da-fam%C3%ADlia-apply"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="função-lapply" class="section level3" number="8.4.1">
+<h3>
+<span class="header-section-number">8.4.1</span> Função <code>lapply</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-lapply"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="função-sapply" class="section level3" number="8.4.2">
+<h3>
+<span class="header-section-number">8.4.2</span> Função <code>sapply</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-sapply"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="função-tapply" class="section level3" number="8.4.3">
+<h3>
+<span class="header-section-number">8.4.3</span> Função <code>tapply</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-tapply"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="função-mapply" class="section level3" number="8.4.4">
+<h3>
+<span class="header-section-number">8.4.4</span> Função <code>mapply</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-mapply"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="função-apply" class="section level3" number="8.4.5">
+<h3>
+<span class="header-section-number">8.4.5</span> Função <code>apply</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-apply"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="utilizando-pacote-purrr" class="section level2" number="8.5">
+<h2>
+<span class="header-section-number">8.5</span> Utilizando Pacote <code>purrr</code><a class="anchor" aria-label="anchor" href="#utilizando-pacote-purrr"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="função-purrrmap" class="section level3" number="8.5.1">
+<h3>
+<span class="header-section-number">8.5.1</span> Função <code>purrr::map</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-purrrmap"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="função-purrrsafely" class="section level3" number="8.5.2">
+<h3>
+<span class="header-section-number">8.5.2</span> Função <code>purrr::safely</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-purrrsafely"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="função-purrrpmap" class="section level3" number="8.5.3">
+<h3>
+<span class="header-section-number">8.5.3</span> Função <code>purrr::pmap</code><a class="anchor" aria-label="anchor" href="#fun%C3%A7%C3%A3o-purrrpmap"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="manipulação-de-dados-com-dplyr" class="section level2" number="8.6">
+<h2>
+<span class="header-section-number">8.6</span> Manipulação de Dados com <code>dplyr</code><a class="anchor" aria-label="anchor" href="#manipula%C3%A7%C3%A3o-de-dados-com-dplyr"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="operações-de-grupo-com-dplyr" class="section level3" number="8.6.1">
+<h3>
+<span class="header-section-number">8.6.1</span> Operações de Grupo com <code>dplyr</code><a class="anchor" aria-label="anchor" href="#opera%C3%A7%C3%B5es-de-grupo-com-dplyr"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="operações-de-grupo-complexas-com-dplyr" class="section level3" number="8.6.2">
+<h3>
+<span class="header-section-number">8.6.2</span> Operações de Grupo Complexas com <code>dplyr</code><a class="anchor" aria-label="anchor" href="#opera%C3%A7%C3%B5es-de-grupo-complexas-com-dplyr"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="exerc-programacao" class="section level2" number="8.7">
+<h2>
+<span class="header-section-number">8.7</span> Exercícios<a class="anchor" aria-label="anchor" href="#exerc-programacao"><i class="fas fa-link"></i></a>
+</h2>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+<div id="q.1-6" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Crie uma função chamada <code>say_my_name</code> que tome como entrada um nome de pessoa e mostre na tela o texto <em>Your name is …</em>. Dentro do escopo da função, utilize comentários para descrever o propósito da função, suas entradas e saídas.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf46708f94" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf46708f94" class="collapse">
+<div class="card card-body">
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Print a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  #
+  # RETURNS: TRUE, if sucessfull
+  
+  my_msg &lt;- paste0('Your name is ', name_in)
+  
+  message(my_msg)
+  
+  # invisible will omit output if function is called without definition of output
+  return(invisible(TRUE))
+}
+
+# testing
+say_my_name('Marcelo')</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.2-6" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Implemente um teste para os objetos de entrada, de forma que, quando o nome de entrada não for da classe <code>character</code>, um erro é retornado ao usuário. Teste sua nova função e verifique se a mesma está funcionando conforme esperado.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf255d19a8" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf255d19a8" class="collapse">
+<div class="card card-body">
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != 'character') {
+    stop('Class of input name_in is ', class(name_in), 
+         ' and not character!')
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop('Input name_in has length ', length(name_in), 
+         ' and not 1 (this function only works for one name)!')
+  }
+  
+  
+  
+  my_msg &lt;- paste0('Your name is ', name_in, '.')
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+# testing Ok
+say_my_name('Marcelo')
+
+# testing vector
+say_my_name(c('Richard', 'Michael'))
+
+# testing class
+say_my_name(1)</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.3-5" class="section level3 unnumbered">
+<h3>Q.3<a class="anchor" aria-label="anchor" href="#q.3-5"><i class="fas fa-link"></i></a>
+</h3>
+<p>Crie um vetor com cinco nomes quaisquer, chamado <code>my_names</code>. Utilizando um <em>loop</em>, aplique função <code>say_my_name</code> para cada elemento de <code>my_names</code>.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf1eb5d513" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf1eb5d513" class="collapse">
+<div class="card card-body">
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != 'character') {
+    stop('Class of input name_in is ', class(name_in), 
+         ' and not character!')
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop('Input name_in has length ', length(name_in), 
+         ' and not 1 (this function only works for one name)!')
+  }
+  
+  
+  
+  my_msg &lt;- paste0('Your name is ', name_in, '\n')
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+my_names &lt;- c('Marcelo', 'Ricardo', 'Tarcizio')
+
+for (i_names in my_names) {
+  say_my_name(i_names)
+}</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.4-5" class="section level3 unnumbered">
+<h3>Q.4<a class="anchor" aria-label="anchor" href="#q.4-5"><i class="fas fa-link"></i></a>
+</h3>
+<p>No banco de dados do <a href="https://data.brasil.io/dataset/genero-nomes/grupos.csv.gz">Brasil.IO</a><a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://data.brasil.io/dataset/genero-nomes/grupos.csv.gz" class="uri"&gt;https://data.brasil.io/dataset/genero-nomes/grupos.csv.gz&lt;/a&gt;&lt;/p&gt;'><sup>24</sup></a> encontrarás uma tabela com nomes e gêneros derivados de uma das pesquisas do IBGE. Importe os dados do arquivo para R e, usando um <em>loop</em>, aplique a função <code>say_my_name</code> a 15 nomes aleatórios do banco de dados. Dica: neste caso, você pode baixar os dados direto do link usando <code>readr::read_csv(LINK)</code>.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf7ae560e0" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf7ae560e0" class="collapse">
+<div class="card card-body">
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != 'character') {
+    stop('Class of input name_in is ', class(name_in), 
+         ' and not character!')
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop('Input name_in has length ', length(name_in), 
+         ' and not 1 (this function only works for one name)!')
+  }
+  
+  
+  
+  my_msg &lt;- paste0('Your name is ', name_in, '.')
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+library(tidyverse)
+
+# get CURRENT url from https://data.chhs.ca.gov/dataset/most-popular-baby-names-2005-current
+my_url &lt;- 'https://data.brasil.io/dataset/genero-nomes/grupos.csv.gz'
+
+df_names &lt;- read_csv(my_url, col_types = cols())
+
+my_names &lt;- sample(df_names$name, 15)
+
+for (i_name in my_names) {
+  
+  say_my_name(i_name)
+}</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.5-5" class="section level3 unnumbered">
+<h3>Q.5<a class="anchor" aria-label="anchor" href="#q.5-5"><i class="fas fa-link"></i></a>
+</h3>
+<p>Refaça o exercício anterior utilizando comandos <code>sapply</code> ou <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code>.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf59e654c7" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf59e654c7" class="collapse">
+<div class="card card-body">
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != 'character') {
+    stop('Class of input name_in is ', class(name_in), 
+         ' and not character!')
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop('Input name_in has length ', length(name_in), 
+         ' and not 1 (this function only works for one name)!')
+  }
+    
+  my_msg &lt;- paste0('Your name is ', name_in, '\n')
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+library(tidyverse)
+library(purrr)
+
+# get CURRENT url from https://data.chhs.ca.gov/dataset/most-popular-baby-names-2005-current
+my_url &lt;- 'https://data.brasil.io/dataset/genero-nomes/grupos.csv.gz'
+
+df_names &lt;- read_csv(my_url, col_types = cols())
+
+# using sapply
+vec_out &lt;- sapply(sample(df_names$name, 15),
+                  say_my_name)
+glimpse(vec_out)
+
+# using purrr
+l_out &lt;- map(sample(df_names$name, 15),
+             say_my_name)
+glimpse(vec_out)</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.6-5" class="section level3 unnumbered">
+<h3>Q.6<a class="anchor" aria-label="anchor" href="#q.6-5"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use o pacote <code>BatchGetSymbols</code> para baixar dados do índice SP500 (<code>'^GSPC'</code>), Ibovespa (<code>'^BVSP'</code>), FTSE (<code>'^FSTE'</code>) e Nikkei 225 (<code>'^N225'</code>) de <code>'2010-01-01'</code> até a data atual. Com os dados importados, use um <em>loop</em> para calcular o retorno médio, máximo e mínimo de cada índice durante o período analisado. Salve todos os resultados em uma tabela única e a mostre no <em>prompt</em> do R.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf24e1c575" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf24e1c575" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+
+indexes &lt;- c('^BVSP', '^GSPC', '^FTSE', '^N225')
+
+df_indices &lt;- BatchGetSymbols(tickers = indexes, 
+                              first.date = '2010-01-01',
+                              last.date = Sys.Date())[[2]]
+
+tab &lt;- tibble()
+for (index in indexes) {
+  
+  temp_df &lt;- df_indices %&gt;%
+    filter(ticker == index)
+  
+  avg_ret &lt;- mean(temp_df$ret.adjusted.prices, 
+                  na.rm = TRUE)
+  max_ret &lt;- max(temp_df$ret.adjusted.prices, 
+                 na.rm = TRUE)
+  min_ret &lt;- min(temp_df$ret.adjusted.prices, 
+                 na.rm = TRUE)
+  
+  # save result
+  tab &lt;- bind_rows(tab, tibble(index = index,
+                               mean_ret = avg_ret, 
+                               max_ret = max_ret, 
+                               min_ret = min_ret))
+  
+}
+
+print(tab)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.7-5" class="section level3 unnumbered">
+<h3>Q.7<a class="anchor" aria-label="anchor" href="#q.7-5"><i class="fas fa-link"></i></a>
+</h3>
+<p>Refaça o exercício anterior utilizando as funções <code>group_by</code> e <code>summarise</code>, ambas do pacote <code>dplyr</code>.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cff3152f1" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cff3152f1" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+
+indexes &lt;- c('^BVSP', '^GSPC', '^FTSE', '^N225')
+
+df_indices &lt;- BatchGetSymbols(tickers = indexes, 
+                              first.date = '2010-01-01',
+                              last.date = Sys.Date())[[2]]
+
+tab_tidy &lt;- df_indices %&gt;%
+  group_by(ticker) %&gt;%
+  summarise(mean_ret = mean(ret.adjusted.prices, na.rm = TRUE),
+            max_ret = max(ret.adjusted.prices, na.rm = TRUE),
+            min_ret = min(ret.adjusted.prices, na.rm = TRUE))
+
+print(tab_tidy)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.8-4" class="section level3 unnumbered">
+<h3>Q.8<a class="anchor" aria-label="anchor" href="#q.8-4"><i class="fas fa-link"></i></a>
+</h3>
+<p>No site do <a href="http://cran-logs.rstudio.com/">Rstudio CRAN logs</a><a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="http://cran-logs.rstudio.com/" class="uri"&gt;http://cran-logs.rstudio.com/&lt;/a&gt;&lt;/p&gt;'><sup>25</sup></a> você encontrará dados sobre as estatísticas de download para a distribuição de base de R na seção <em>Daily R downloads</em>. Usando suas habilidades de programação, importe todos os dados disponíveis entre 2020-01-01 e 2020-01-15 e agregue-os em uma única tabela. Qual país apresenta a maior contagem de downloads do R?</p>
+<br> Resposta: <select class="webex-select"><option value="blank"></option>
+<option value="">AE</option>
+<option value="">UG</option>
+<option value="">YE</option>
+<option value="answer">US</option>
+<option value="">TR</option></select><div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf76bca5b" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf76bca5b" class="collapse">
+A solução é US. Para chegar no resultado anterior, deves executar o código abaixo. Para isso, abra um novo script no RStudio (Control+shift+N), copie e cole o código, e rode o script inteiro apertando Control+Shift+Enter ou por linha com Control+Enter.
+<div class="card card-body">
+<pre><code># set function that will download the files
+read_cranlogs_files &lt;- function(date_in) {
+  # Reads log files from http://cran-logs.rstudio.com/
+  #
+  # ARGS: date_in - date of log data
+  require(tidyverse)
+  require(lubridate)
+  
+  url_dl &lt;- paste0('http://cran-logs.rstudio.com/', year(date_in), '/',
+                   date_in, '-r.csv.gz')
+  
+  cat('\nReading ', url_dl)
+  
+  df &lt;- read_csv(url_dl, col_types = cols())
+  
+  return(df)
+}
+
+# find out the availabe dates in url
+library(rvest)
+library(lubridate)
+
+available_links &lt;- read_html('http://cran-logs.rstudio.com/') %&gt;%
+  html_nodes(css = 'a') %&gt;%
+  html_attr('href')
+
+# only keep links for R download (those with -r.csv.gz pattern)
+idx &lt;- str_detect(available_links, '-r.csv.gz')
+r_links &lt;- available_links[idx]
+
+# find out dates 
+dates_dls &lt;- ymd(basename(r_links))
+max_date &lt;- max(dates_dls)
+
+first_date &lt;- as.Date('2020-01-01')
+last_date &lt;- as.Date('2020-01-15')
+
+my_dates &lt;- seq(first_date, 
+                last_date, 
+                by = '1 day')
+
+library(purrr) 
+library(tidyverse)
+
+l_out &lt;- map(my_dates, 
+             safely(read_cranlogs_files, 
+                    otherwise = tibble())) # return empty tibble in case of error
+
+df_cranlogs &lt;- bind_rows(map(l_out, 'result'))
+
+# solution 
+my_sol &lt;- names(sort(table(df_cranlogs$country), 
+               decreasing = TRUE)[1])</code></pre>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://padfer.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="classes-basicas.html"><span class="header-section-number">7</span> As Classes Básicas de Objetos</a></div>
+<div class="next"><a href="limpando-estruturando.html"><span class="header-section-number">9</span> Estruturando e Limpando Dados</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#programacao"><span class="header-section-number">8</span> Programando com o R</a></li>
+<li><a class="nav-link" href="#criando-fun%C3%A7%C3%B5es"><span class="header-section-number">8.1</span> Criando Funções</a></li>
+<li><a class="nav-link" href="#loops"><span class="header-section-number">8.2</span> Utilizando Loops (comando for)</a></li>
+<li><a class="nav-link" href="#execu%C3%A7%C3%B5es-condicionais-if-else-switch"><span class="header-section-number">8.3</span> Execuções Condicionais (if, else, switch)</a></li>
+<li>
+<a class="nav-link" href="#utilizando-as-fun%C3%A7%C3%B5es-da-fam%C3%ADlia-apply"><span class="header-section-number">8.4</span> Utilizando as Funções da Família apply</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-lapply"><span class="header-section-number">8.4.1</span> Função lapply</a></li>
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-sapply"><span class="header-section-number">8.4.2</span> Função sapply</a></li>
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-tapply"><span class="header-section-number">8.4.3</span> Função tapply</a></li>
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-mapply"><span class="header-section-number">8.4.4</span> Função mapply</a></li>
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-apply"><span class="header-section-number">8.4.5</span> Função apply</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#utilizando-pacote-purrr"><span class="header-section-number">8.5</span> Utilizando Pacote purrr</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-purrrmap"><span class="header-section-number">8.5.1</span> Função purrr::map</a></li>
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-purrrsafely"><span class="header-section-number">8.5.2</span> Função purrr::safely</a></li>
+<li><a class="nav-link" href="#fun%C3%A7%C3%A3o-purrrpmap"><span class="header-section-number">8.5.3</span> Função purrr::pmap</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#manipula%C3%A7%C3%A3o-de-dados-com-dplyr"><span class="header-section-number">8.6</span> Manipulação de Dados com dplyr</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#opera%C3%A7%C3%B5es-de-grupo-com-dplyr"><span class="header-section-number">8.6.1</span> Operações de Grupo com dplyr</a></li>
+<li><a class="nav-link" href="#opera%C3%A7%C3%B5es-de-grupo-complexas-com-dplyr"><span class="header-section-number">8.6.2</span> Operações de Grupo Complexas com dplyr</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#exerc-programacao"><span class="header-section-number">8.7</span> Exercícios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-6">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-6">Q.2</a></li>
+<li><a class="nav-link" href="#q.3-5">Q.3</a></li>
+<li><a class="nav-link" href="#q.4-5">Q.4</a></li>
+<li><a class="nav-link" href="#q.5-5">Q.5</a></li>
+<li><a class="nav-link" href="#q.6-5">Q.6</a></li>
+<li><a class="nav-link" href="#q.7-5">Q.7</a></li>
+<li><a class="nav-link" href="#q.8-4">Q.8</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Análise de Dados Financeiros e Econômicos com o R - Versão Online</strong>" was written by Marcelo S. Perlin (<a href="mailto:marcelo.perlin@ufrgs.br" class="email">marcelo.perlin@ufrgs.br</a>). It was last built on 2022-11-23.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

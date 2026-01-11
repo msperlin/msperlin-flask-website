@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introdução ao R - 3&nbsp; Introdução ao RStudio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04-pacotes.html" rel="next">
+<link href="./02-como-o-r-funciona.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR8PLMG1G7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FR8PLMG1G7');
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-rstudio.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introdução ao RStudio</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introdução ao R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefácio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introdução.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-como-o-r-funciona.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Como o R Funciona?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rstudio.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introdução ao RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-pacotes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pacotes do R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-interagindo-computador-internet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Interagindo com o Sistema Operacional e a Internet</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-importacao-exportacao-dados-locais.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Importação e Exportação de Dados Locais</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-importacao-internet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Importação de Dados via Pacotes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-objetos-armazenamento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dataframes e outros Objetos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-objetos-basicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">As Classes Básicas de Objetos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-intro-programacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introdução a Programação com o R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referências Bibliográficas</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#executando-códigos-em-um-script" id="toc-executando-códigos-em-um-script" class="nav-link active" data-scroll-target="#executando-códigos-em-um-script"><span class="header-section-number">3.1</span> Executando Códigos em um <em>Script</em></a></li>
+  <li><a href="#tipos-de-arquivos" id="toc-tipos-de-arquivos" class="nav-link" data-scroll-target="#tipos-de-arquivos"><span class="header-section-number">3.2</span> Tipos de Arquivos</a></li>
+  <li><a href="#testando-código" id="toc-testando-código" class="nav-link" data-scroll-target="#testando-código"><span class="header-section-number">3.3</span> Testando Código</a></li>
+  <li><a href="#cancelando-a-execução-de-um-código" id="toc-cancelando-a-execução-de-um-código" class="nav-link" data-scroll-target="#cancelando-a-execução-de-um-código"><span class="header-section-number">3.4</span> Cancelando a Execução de um Código</a></li>
+  <li><a href="#procurando-ajuda" id="toc-procurando-ajuda" class="nav-link" data-scroll-target="#procurando-ajuda"><span class="header-section-number">3.5</span> Procurando Ajuda</a></li>
+  <li><a href="#utilizando-code-completion-com-a-tecla-tab" id="toc-utilizando-code-completion-com-a-tecla-tab" class="nav-link" data-scroll-target="#utilizando-code-completion-com-a-tecla-tab"><span class="header-section-number">3.6</span> Utilizando <em>Code Completion</em> com a Tecla <em>tab</em></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introdução ao RStudio</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Após instalar os dois programas, R e RStudio, procure o ícone do RStudio na área de trabalho ou via menu <em>Iniciar</em>. Note que a instalação do R inclui um programa de interface e isso muitas vezes gera confusão. Verifique que estás utilizado o <em>software</em> correto. A janela resultante deve ser igual a figura <a href="#fig-RStudio1">Figure&nbsp;<span>3.1</span></a>, apresentada a seguir.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-RStudio1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="resources/figs/RStudio1.png" class="img-fluid figure-img" width="958"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.1: A tela do RStudio</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Observe que o RStudio automaticamente detectou a instalação do R e inicializou a sua tela no lado esquerdo. Caso não visualizar uma tela parecida ou chegar em uma mensagem de erro indicando que o R não foi encontrado, repita os passos de instalação do capítulo anterior (seção @ref(instalacao)).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Alternativa ao RStudio
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Este capítulo inteiro é dedicado ao uso do RStudio, o qual entendo ser um dos melhores ambientes de desenvolvimento para o R. Alternativamente, um grande concorrente é o <a href="">vscode</a>, o qual oferece uma plataforma agnóstica a linguagem de programação, funcionando para R, Python ou qualquer outra lingaguem. Em projeto que envolve múltiplas linguagens, o vscode é ótimo e fácil de usar.</p>
+</div>
+</div>
+<p>Como um primeiro exercício, clique em <em>File</em>, <em>New File</em> e <em>R Script</em>. Após, um editor de texto deve aparecer no lado esquerdo da tela do RStudio. É nesse editor que iremos inserir os nossos comandos, os quais são executados de cima para baixo, na mesma direção em que normalmente o lemos. Note que essa direção de execução introduz uma dinâmica de recursividade: cada comando depende do comando executado nas linhas anteriores. Após realizar os passos definidos anteriormente, a tela resultante deve ser semelhante à apresentada na figura <a href="#fig-RStudio2">Figure&nbsp;<span>3.2</span></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-RStudio2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="resources/figs/RStudio2.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.2: Explicando a tela do RStudio</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Uma sugestão importante aqui é modificar o esquema de cores do RStudio para uma configuração de <strong>tela escura</strong>. Não é somente uma questão estética mas sim de prevenção e melhoria de sua saúde física. Possivelmente irás passar demasiado tempo na frente do computador. Assim, vale a pena modificar as cores da interface para aliviar seus olhos do constante brilho da tela. Dessa forma, conseguirás trabalhar por mais tempo, sem forçar a sua visão. Podes configurar o esquema de cores do RStudio indo na opção <em>Tools</em>, <em>Global Options</em> e então em <em>Appearance</em>. Um esquema de cores escuras que pessoalmente gosto e sugiro é o <em>Ambience</em>.</p>
+</div>
+</div>
+<p>Após os passos anteriores, a tela do RStudio deve estar semelhante a Figura <a href="#fig-RStudio2">Figure&nbsp;<span>3.2</span></a>, com os seguintes itens/painéis:</p>
+<p><strong>Editor de scripts (<em>Script editor</em>):</strong> localizado no lado esquerdo e acima da tela. Esse painel é utilizado para escrever código e é onde passaremos a maior parte do tempo.</p>
+<p><strong>Console do R (<em>R prompt</em>):</strong> localizado no lado esquerdo e abaixo do editor de <em>scripts</em>. Apresenta o <em>prompt</em> do R, o qual também pode ser utilizado para executar comandos. A principal função do <em>prompt</em> é testar código e apresentar os resultados dos comandos inseridos no editor de <em>scripts</em>.</p>
+<p><strong>Área de trabalho (<em>Environment</em>):</strong> localizado no lado direito e superior da tela. Mostra todos os objetos, incluindo variáveis e funções atualmente disponíveis para o usuário. Observe também a presença do painel <em>History</em>, o qual mostra o histórico dos comandos já executados.</p>
+<p><strong>Pacotes (<em>Panel Packages</em>):</strong> mostra os pacotes instalados e carregados pelo R. Um pacote é nada mais que um módulo no R, cada qual com sua finalidade específica. Observe a presença de quatro abas: <em>Files</em>, para carregar e visualizar arquivos do sistema; <em>Plots</em>, para visualizar figuras; <em>Help</em>, para acessar o sistema de ajuda do R e <em>Viewer</em>, para mostrar resultados dinâmicos e interativos, tal como uma página da internet.</p>
+<p>Como um exercício introdutório, vamos inicializar duas variáveis. Dentro do console do R (lado esquerdo inferior), digite os seguintes comandos e aperte <em>enter</em> ao final de cada linha. O símbolo <code>&lt;-</code> é nada mais que a junção de <code>&lt;</code> com <code>-</code>. O símbolo <code>'</code> representa uma aspa simples e sua localização no teclado Brasileiro é no botão abaixo do <em>escape</em> (<em>esc</em>), lado esquerdo superior do teclado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set x and y</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="st">'my text'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Após a execução, dois objetos devem aparecer no painel <em>Environment</em>, um chamado <code>x</code> com o valor 1, e outro chamado <code>y</code> com o conjunto de caracteres <code>'my text'</code>. O histórico de comandos na aba <em>History</em> também foi atualizado com os comandos utilizados anteriormente.</p>
+<p>Agora, vamos mostrar na tela os valores de <code>x</code>. Para isso, digite o seguinte comando no <em>prompt</em> e aperte <em>enter</em> novamente:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print x</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 1</code></pre>
+</div>
+</div>
+<p>A função <strong>print()</strong> é uma das principais funções para mostrarmos valores no <em>prompt</em> do R. O texto apresentado como <code>[1]</code> indica o índice do primeiro número da linha. Para verificar isso, digite o seguinte comando, o qual irá mostrar vários números na tela:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print vector from 50 to 100</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">50</span><span class="sc">:</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1]  50  51  52  53  54  55  56  57  58  59  60  61  62  63
+R&gt; [15]  64  65  66  67  68  69  70  71  72  73  74  75  76  77
+R&gt; [29]  78  79  80  81  82  83  84  85  86  87  88  89  90  91
+R&gt; [43]  92  93  94  95  96  97  98  99 100</code></pre>
+</div>
+</div>
+<p>Nesse caso, utilizamos o símbolo <code>:</code> em <code>50:100</code> para criar uma sequência iniciando em 50 e terminando em 100. Observe que temos valores encapsulados por colchetes ([]) no lado esquerda da tela. Esses representam os índices do primeiro elemento apresentado na linha. Por exemplo, o décimo quinto elemento do vetor criado é o valor 64.</p>
+<section id="executando-códigos-em-um-script" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="executando-códigos-em-um-script"><span class="header-section-number">3.1</span> Executando Códigos em um <em>Script</em></h2>
+<p>Agora, vamos juntar todos os códigos digitados anteriormente e colar na tela do editor (lado esquerdo superior), assim como mostrado a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set objects</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="st">'my text'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># print it</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Após colar todos os comandos no editor, salve o arquivo <em>.R</em> em alguma pasta pessoal. Esse arquivo, o qual no momento não faz nada de especial, registrou os passos de um algoritmo simples que cria dois objetos e mostra os seus valores. Futuramente esse irá ter mais forma, com a importação de dados, manipulação e modelagem dos mesmos e saída de tabelas e figuras.</p>
+<p>No RStudio existem alguns atalhos predefinidos para executar códigos que economizam bastante tempo. Para executar um <em>script</em> inteiro, basta apertar <code>control + shift + s</code>. Esse é o comando <em>source</em>. Com o RStudio aberto, sugiro testar essa combinação de teclas e verificar como o código digitado anteriormente é executado, mostrando os valores no <em>prompt</em> do R. Visualmente, o resultado deve ser próximo ao apresentado na figura <a href="#fig-script">Figure&nbsp;<span>3.3</span></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-script" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="resources/figs/RStudio_example_script_source.png" class="img-fluid figure-img" width="958"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.3: Exemplo de Rotina no R</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Outro comando muito útil é a execução por linha. Nesse caso não é executado todo o arquivo, mas somente a linha em que o cursor do <em>mouse</em> se encontra. Para isto, basta apertar <code>control+enter</code>. Esse atalho é bastante útil no desenvolvimento de rotinas pois permite que cada linha seja testada antes de executar o programa inteiro. Como um exemplo de uso, aponte o cursor para a linha <code>print(x)</code> e pressione <code>control + enter</code>. Verás que o valor de <code>x</code> é mostrado na tela do <em>prompt</em>. A seguir destaco esses e outros atalhos do RStudio, os quais também são muito úteis.</p>
+<ul>
+<li><strong>control+shift+s</strong> executa o arquivo atual do RStudio, sem mostrar comandos no <em>prompt</em> (sem eco – somente saída);</li>
+<li><strong>control+shift+enter</strong>: executa o arquivo atual, mostrando comandos na tela (com eco – código e saída);</li>
+<li><strong>control+enter</strong>: executa a linha selecionada, mostrando comandos na tela;</li>
+<li><strong>control+shift+b</strong>: executa os códigos do início do arquivo até a linha atual onde o cursor se encontra;</li>
+<li><strong>control+shift+e</strong>: executa os códigos da linha onde o cursor se encontra até o final do arquivo.</li>
+</ul>
+<p>Sugere-se que esses atalhos sejam memorizados e utilizados. Isso facilita bastante o uso do programa. Para aqueles que gostam de utilizar o <em>mouse</em>, uma maneira alternativa para rodar o código do <em>script</em> é apertar o botão <em>source</em>, localizado no canto direito superior do editor de rotinas. Isto é equivalente ao atalho <code>control+shift+s</code>.</p>
+<p>Porém, no mundo real de programação, poucos são os casos em que uma análise de dados é realizada por um <em>script</em> apenas. Como uma forma de organizar o código, pode-se dividir o trabalho em N <em>scripts</em> diferentes, onde um deles é o “mestre”, responsável por rodar os demais.</p>
+<p>Neste caso, para executar os <em>scripts</em> em sequência, basta chamá-los no <em>script</em> mestre com o comando <strong>source()</strong> , como no código a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import all data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'01-import-data.R'</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'02-clean-data.R'</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Build tables</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'03-build-table.R'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nesse caso, o código anterior é equivalente a abrirmos e executarmos (<em>control + shift + s</em>) cada um dos <em>scripts</em> sequencialmente.</p>
+<p>Como podemos ver, existem diversas maneiras de executar uma rotina de pesquisa. Na prática, porém, iras centralizar o uso em dois comandos apenas: <code>control+shift+s</code> para rodar o <em>script</em> inteiro e <code>control+enter</code> para rodar por linha.</p>
+</section>
+<section id="tipos-de-arquivos" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="tipos-de-arquivos"><span class="header-section-number">3.2</span> Tipos de Arquivos</h2>
+<p>Assim como outros programas, o R e o RStudio possuem um ecossistema de arquivos e cada extensão tem uma finalidade diferente. A seguir apresenta-se uma descrição de diversas extensões de arquivos exclusivos ao R e RStudio. Os itens da lista estão ordenados por ordem de importância e uso.</p>
+<p><strong>Arquivos com extensão <em>.R</em></strong>: Representam arquivos do tipo texto contendo diversas instruções para o R. Esses são os arquivos que conterão o código da pesquisa e onde passaremos a maior parte do tempo. Também pode ser chamado de um <em>script</em> ou rotina de pesquisa. Como sugestão, pode-se dividir toda uma pesquisa em etapas e arquivos numerados. Exemplos: <em>01-Get-Data.R</em>, <em>02-Clean-data.R</em>, <em>03-Estimate-Models.R</em>.</p>
+<p><strong>Arquivos com extensão <em>.RData</em> e <em>.rds</em></strong>: armazenam dados nativos do R. Esses arquivos servem para salvar (ou congelar) objetos do R em um arquivo no disco rígido do computador para, em sessão futura, serem novamente carregados. Por exemplo, podes guardar o resultado de uma pesquisa em uma tabela, a qual é salva em um arquivo com extensão <em>.RData</em> ou <em>.rds</em>. Exemplos: <em>Raw-Data.RData</em>, <em>Table-Results.rds</em>.</p>
+<p><strong>Arquivos com extensão <em>.Rmd</em>, <em>.Rnw</em> e <em>.qmd</em></strong>: São arquivos relacionados a tecnologia <em>Rmarkdown</em> e <em>Quarto</em>. O uso desses arquivos permite a criação de documentos onde texto e código são integrados.</p>
+<p><strong>Arquivos com extensão <em>.Rproj</em></strong>: Contém informações para a edição de projetos no RStudio. O sistema de projetos do RStudio permite a configuração customizada do projeto e também facilita a utilização de ferramentas de controle de código, tal como controle de versões. O seu uso, porém, não é essencial. Para aqueles com interesse em conhecer esta funcionalidade, sugiro a leitura do <a href="">manual do RStudio</a>. Uma maneira simples de entender os tipos de projetos disponíveis é, no RStudio, clicar em “File”, “New project”, “New Folder” e assim deve aparecer uma tela com todos os tipos possíveis de projetos no RStudio. Exemplo: <em>My-Dissertation-Project.Rproj</em>.</p>
+</section>
+<section id="testando-código" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="testando-código"><span class="header-section-number">3.3</span> Testando Código</h2>
+<p>O desenvolvimento de códigos em R segue um conjunto de etapas. Primeiro você escreverá uma nova linha de comando em uma rotina. Essa linha será testada com o atalho <code>control + enter</code>, verificando-se a ocorrência de erros e as saídas na tela. Caso não houver erro e o resultado for igual ao esperado, parte-se para a próxima linha de código.</p>
+<p>Um ciclo de trabalho fica claro, a escrita do código da linha atual é seguida pela execução, seguido da verificação de resultados, modificação caso necessário e assim por diante. Esse é um processo normal e esperado. Dado que uma rotina é lida e executada de cima para baixo, você precisa ter certeza de que cada linha de código está corretamente especificada antes de passar para a próxima.</p>
+<p>Quando você está tentando encontrar um erro em um <em>script</em> preexistente, o R oferece algumas ferramentas para controlar e avaliar sua execução. Isso é especialmente útil quando você possui um código longo e complicado. A ferramenta de teste mais simples e fácil de utilizar que o RStudio oferece é o ponto de interrupção do código. No RStudio, você pode clicar no lado esquerdo do editor e aparecerá um círculo vermelho, como na Figura <a href="#fig-example-debug">Figure&nbsp;<span>3.4</span></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-example-debug" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="resources/figs/RStudio_example_debug.png" class="img-fluid figure-img" width="149"></p>
+<figcaption class="figure-caption">Figure&nbsp;3.4: Exemplo de debug</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>O círculo vermelho indica um ponto de interrupção do código que forçará o R a pausar a execução nessa linha. Quando a execução atinge o ponto de interrupção, o <em>prompt</em> mudará para <code>browser[1]&gt;</code> e você poderá verificar o conteúdo dos objetos. No console, você tem a opção de continuar a execução para o próximo ponto de interrupção ou interrompê-la. O mesmo resultado pode ser alcançado usando a função <strong>browser()</strong> . Dê uma olhada:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set x</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set y</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">browser</span>()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="st">'My humble text'</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># print contents of x</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O resultado prático do código anterior é o mesmo que utilizar o círculo vermelho do RStudio, figura <a href="#fig-example-debug">Figure&nbsp;<span>3.4</span></a>. Porém, o uso do <strong>browser()</strong> permite mais controle sobre onde a execução deve ser pausada. Como um teste, copie e cole o código anterior no RStudio, salve em um novo <em>script</em> e execute com <em>Control + Shift + S</em>. Para sair do ambiente de depuramento (<em>debug</em>), aperte <em>enter</em> no <em>prompt</em> do RStudio.</p>
+</section>
+<section id="cancelando-a-execução-de-um-código" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="cancelando-a-execução-de-um-código"><span class="header-section-number">3.4</span> Cancelando a Execução de um Código</h2>
+<p>Toda vez que o R estiver executando algum código, uma sinalização visual no formato de um pequeno círculo vermelho no canto direito do <em>prompt</em> irá aparecer. Caso conseguir ler (o símbolo é pequeno em monitores modernos), o texto indica o termo <em>stop</em>. Esse símbolo não somente indica que o programa ainda está rodando mas também pode ser utilizado para cancelar a execução de um código. Para isso, basta clicar no referido botão. Outra maneira de cancelar uma execução é apontar o mouse no <em>prompt</em> e pressionar a tecla <em>Esc</em> no teclado.</p>
+<p>Para testar o cancelamento de código, copie e cole o código a seguir em um <em>script</em> do RStudio. Após salvar, rode o mesmo com <code>control+shift+s</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">'</span><span class="sc">\n</span><span class="st">Running code (please make it stop by hitting esc!)'</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">1</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O código anterior usa um comando especial do tipo <code>for</code> para mostrar a mensagem a cada segundo. Neste caso, o código demorará 100 segundos para rodar. Caso não desejes esperar, aperte <code>esc</code> para cancelar a execução. Por enquanto, não se preocupe com as funções utilizadas no exemplo. Iremos discutir o uso do comando <code>for</code> no capítulo <a href="10-intro-programacao.html"><span>Chapter&nbsp;10</span></a>.</p>
+</section>
+<section id="procurando-ajuda" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="procurando-ajuda"><span class="header-section-number">3.5</span> Procurando Ajuda</h2>
+<p>Uma tarefa muito comum no uso do R é procurar ajuda. A quantidade de funções disponíveis para o R é gigantesca e memorizar todas peculariedades é quase impossível. Assim, até mesmo usuários avançados comumente procuram ajuda sobre tarefas específicas no programa, seja para entender detalhes sobre algumas funções ou estudar um novo procedimento.</p>
+<p>É possível buscar ajuda utilizando tanto o painel de <em>help</em> do RStudio como diretamente do <em>prompt</em>. Para isso, basta digitar o ponto de interrogação junto ao objeto sobre o qual se deseja ajuda, tal como em <code>?mean</code>. Nesse caso, o objeto <strong>mean()</strong> é uma função e o uso do comando irá abrir o painel de ajuda sobre ela.</p>
+<p>No R, toda tela de ajuda de uma função é igual, conforme se vê na <a href="#fig-help">Figure&nbsp;<span>3.5</span></a> apresentada a seguir. Esta mostra uma descrição da função <strong>mean()</strong> , seus argumentos de entrada explicados e também o seu objeto de saída. A tela de ajuda segue com referências e sugestões para outras funções relacionadas. Mais importante, os <strong>exemplos de uso da função</strong> aparecem por último e podem ser copiados e colados para acelerar o aprendizado no uso da função.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-help" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="resources/gifs/gif_help.gif" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.5: Usando o sistema de ajuda do RStudio</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Caso quiséssemos procurar um termo nos arquivos de ajuda, bastaria utilizar o comando <code>??"standard deviation"</code>. Essa operação irá procurar a ocorrência do termo em todos os pacotes do R e é muito útil para aprender como realizar alguma operação, nesse caso o cálculo de desvio padrão.</p>
+<p>Como sugestão, o ponto inicial e mais direto para aprender uma nova função é observando o seu exemplo de uso, localizada no final da página de ajuda. Com isto, podes verificar quais tipos de objetos de entrada a mesma aceita e qual o formato e o tipo de objeto na sua saída. Após isso, leia atentamente a tela de ajuda para entender se a mesma faz exatamente o que esperas e quais são as suas opções de uso nas respectivas entradas. Caso a função realizar o procedimento desejado, podes copiar e colar o exemplo de uso para o teu próprio <em>script</em>, ajustando onde for necessário.</p>
+<p>Outra fonte muito importante de ajuda é a própria internet. Sites como <a href=""><em>stackoverflow.com</em></a> e <em>mailing lists</em> específicos do R, cujo conteúdo também está na internet, são fontes preciosas de informação. Havendo alguma dúvida que não foi possível solucionar via leitura dos arquivos de ajuda do R, vale o esforço de procurar uma solução via mecanismo de busca na internet. Em muitas situações, o seu problema, por mais específico que seja, já ocorreu e já foi solucionado por outros usuários.</p>
+<p>Caso estiver recebendo uma mensagem de erro enigmática, outra dica é copiar e colar a mesma para uma pesquisa no Google. Aqui apresenta-se outro benefício do uso da língua inglesa. É mais provável que encontres a solução se o erro for escrito em inglês, dado o maior número de usuários na comunidade global. Caso não encontrar uma solução desta forma, podes inserir uma pergunta no <a href="">stackoverflow</a> ou no <a href="">grupo Brasileiro do R no Facebook</a>.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Cuidado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Toda vez que for pedir ajuda na internet, procure sempre 1) descrever claramente o seu problema e 2) adicionar um código reproduzível do seu problema. Assim, o leitor pode facilmente verificar o que está acontecendo ao rodar o exemplo no seu computador. Não tenho dúvida que, se respeitar ambas regras, logo uma pessoa caridosa lhe ajudará com o seu problema.</p>
+</div>
+</div>
+</section>
+<section id="utilizando-code-completion-com-a-tecla-tab" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="utilizando-code-completion-com-a-tecla-tab"><span class="header-section-number">3.6</span> Utilizando <em>Code Completion</em> com a Tecla <em>tab</em></h2>
+<p>Um dos recursos mais úteis do RStudio é o preenchimento automático de código (<em>code completion</em>). Essa é uma ferramenta de edição que facilita o encontro de nomes de objetos, nome de pacotes, nome de arquivos e nomes de entradas em funções. O seu uso é muito simples. Após digitar um texto qualquer, basta apertar a tecla <em>tab</em> e uma série de opções aparecerá. Veja a Figura @ref(fig:autocomplete) apresentada a seguir, em que, após digitar a letra <em>f</em> e apertar <em>tab</em>, aparece uma janela com uma lista de objetos que iniciam com a respectiva letra. Figura <a href="#fig-autocomplete-objetos">Figure&nbsp;<span>3.6</span></a></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-autocomplete-objetos" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="resources/gifs/gif_autocomplete_objetos.gif" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.6: Usando o sistema de ajuda do RStudio</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Essa ferramenta também funciona para pacotes. Para verificar, digite <code>library(r)</code> no <em>prompt</em> ou no editor, coloque o cursor entre os parênteses e aperte <em>tab</em>. O resultado deve ser algo parecido com a <a href="#fig-autocomplete-pacotes">Figure&nbsp;<span>3.7</span></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-autocomplete-pacotes" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="resources/gifs/gif_autocomplete_pacotes.gif" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.7: Usando o autocomplete para procurar pacotes</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observe que uma descrição do pacote ou objeto também é oferecida. Isso facilita bastante o dia a dia, pois a memorização das funcionalidades e dos nomes dos pacotes e os objetos do R não é uma tarefa fácil. O uso do <em>tab</em> diminui o tempo de investigação dos nomes e evita possíveis erros de digitação na definição destes.</p>
+<p>O uso dessa ferramenta torna-se ainda mais benéfico quando os objetos são nomeados com algum tipo de padrão. No restante do livro observarás que os objetos tendem a ser nomeados com o prefixo <em>my</em>, como em <code>my_x</code>, <code>my_num</code>, <code>my_char</code>. O uso desse padrão facilita o encontro futuro do nome dos objetos, pois basta digitar <em>my</em>, apertar <em>tab</em> e uma lista de todos os objetos criados pelo usuário aparecerá.</p>
+<p>Outro uso do <em>tab</em> é no encontro de arquivos e pastas no computador. Basta criar uma variável como <code>my_file &lt;- " "</code>, apontar o cursor para o meio das aspas e apertar a tecla <em>tab</em>. Uma tela com os arquivos e pastas do diretório atual de trabalho aparecerá, conforme mostrado na <a href="#fig-autocomplete-dir">Figure&nbsp;<span>3.8</span></a>. Nesse caso específico, o R estava direcionado para a minha pasta de códigos, em que é possível enxergar diversos trabalhos realizados no passado.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-autocomplete-dir" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="resources/gifs/gif_autocomplete_dir.gif" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.8: Usando o autocomplete para navegar diretórios</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Uma dica aqui é utilizar o <em>tab</em> com a raiz do computador. Assumindo que o disco do seu computador está alocado para <code>C:/</code>, digite <code>my_file &lt;- "C:/"</code> e pressione <em>tab</em> após o símbolo <code>/</code>. Uma tela com os arquivos da raiz do computador aparecerá no RStudio. Podes facilmente navegar o sistema de arquivos utilizando as setas e <em>enter</em>.</p>
+<p>O <em>autocomplete</em> também funciona para encontrar e definir as entradas de uma função. Veja um exemplo na <a href="#fig-autocomplete-args">Figure&nbsp;<span>3.9</span></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-autocomplete-args" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img src="resources/gifs/gif_autocomplete_args.gif" class="img-fluid figure-img"></p>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.9: Usando o autocomplete para navegar argumentos de funções</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O <em>autocomplete</em> é uma das ferramentas mais importantes do RStudio, funcionando para encontro de objetos, locais no disco rígido, pacotes e funções. Acostume-se a utilizar a tecla <em>tab</em> o quanto antes e logo verá como fica mais fácil escrever código rapidamente, e sem erros de digitação.</p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./02-como-o-r-funciona.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Como o R Funciona?</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04-pacotes.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pacotes do R</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

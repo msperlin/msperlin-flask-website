@@ -8,5 +8,6 @@
     "abstract": "Pairs-trading is a popular trading strategy that tries to take advantage of market inefficiencies in order to obtain profit. The idea is simple: find two stocks that move together and take long/short positions when they diverge abnormally, hoping that the prices will converge in the future. From the academic point of view of weak market efficiency theory, pairs-trading strategy should not present positive performance, as, according to it, the actual price of a stock reflects its past trading data, including historical prices. This leaves us with a question: does pairs-trading strategy present positive performance for the Brazilian market? The main objective of this research is to verify the performance and risk of pairs-trading in the Brazilian financial market for different frequencies of the database: daily, weekly and monthly prices for the same time period. The main conclusion of this simulation is that pairs-trading strategy was a profitable and market-neutral strategy at the Brazilian market. Such profitability was consistent over a region of the strategy's parameters. The best results were found for the highest frequency (daily), which is an intuitive result.",
     "link": "https://link.springer.com/article/10.1057/jdhf.2009.4",
     "image": "static/img/2009_JDHF_Evaluation of pairs-tradi.jpeg",
-    "impact_factor": ""
+    "impact_factor": "",
+    "issn": "1753-965X"
 }

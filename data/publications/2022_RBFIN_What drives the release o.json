@@ -8,5 +8,6 @@
     "abstract": "In this study we look at the determinants of material facts (Fatos Relevantes) in the Brazilian Market. Following local legislation, material facts should be released to the public right after its occurrence, and preferably, after trading time. We investigate the randomness of the release of material facts\u2014and release strategies by executives\u2014and test whether there is a particular time period where more or fewer material facts are published. We also investigate whether the content of the material fact\u2014positive or negative sentiment\u2014explains different strategies regarding the release of news to the market. Lastly, using Vector Auto Regressions, we test for a feedback effect between material facts and the financial data, that is, if material facts publishing drives the returns, volume and volatility and vice versa. Finally, our results show that volume, volatility and returns (to a lesser extent) are determinants for material facts publishing and material facts.",
     "link": "https://doi.org/10.12660/rbfin.v20n2.2022.85378",
     "image": "static/img/2022_RBFIN_What drives the release o.jpg",
-    "impact_factor": ""
+    "impact_factor": "",
+    "issn": "1984-5146"
 }

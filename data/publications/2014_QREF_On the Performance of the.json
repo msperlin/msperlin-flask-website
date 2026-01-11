@@ -8,5 +8,6 @@
     "abstract": "In financial research, the sign of a trade (or identity of trade aggressor) is not always available in the transaction dataset and it can be estimated using a simple set of rules called the tick test. In this paper we investigate the accuracy of the tick test from an analytical perspective by providing a closed formula for the performance of the prediction algorithm. By analyzing the derived equation, we provide formal arguments for the use of the tick test by proving that it is bounded to perform better than chance (50/50) and that the set of rules from the tick test provides an unbiased estimator of the trade signs. On the empirical side of the research, we compare the values from the analytical formula against the empirical performance of the tick test for fifteen heavily traded stocks in the Brazilian equity market. The results show that the formula is quite realistic in assessing the accuracy of the prediction algorithm in a real data situation.",
     "link": "http://www.sciencedirect.com/science/article/pii/S1062976913000653",
     "image": "static/img/2014_QREF_On the Performance of the.jpg",
-    "impact_factor": "3.1"
+    "impact_factor": "3.1",
+    "issn": "1878-4259"
 }

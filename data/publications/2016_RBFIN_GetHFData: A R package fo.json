@@ -8,5 +8,6 @@
     "abstract": "This paper introduces GetHFData, a R package for downloading, importing and aggregating high frequency trading data from the Brazilian financial market. Based on a set of user choices, the package GetHFData will download the required files directly from Bovespa\u2019s ftp site and aggregate the financial data. The main objective of the publication of this software is to facilitate the computational effort related to research based on this large financial dataset and also to increase the reproducibility of studies by setting a replicable standard for data acquisition and processing. In this paper we present the available functions of the software, a brief description of the Brazilian market and several reproducible examples of usage.",
     "link": "http://bibliotecadigital.fgv.br/ojs/index.php/rbfin/article/view/64587",
     "image": "static/img/2016_RBFIN_GetHFData: A R package fo.jpg",
-    "impact_factor": ""
+    "impact_factor": "",
+    "issn": "1984-5146"
 }

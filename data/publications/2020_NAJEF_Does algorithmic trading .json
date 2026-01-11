@@ -8,5 +8,6 @@
     "abstract": "This paper provides the first evidence of algorithmic trading (AT) reducing liquidity in the Brazilian equities market. Our results are contrary to the majority of work which finds a positive relationship between AT and liquidity. Using the adoption of a new data center for the B3 exchange as an exogenous shock, we report evidence that AT increased realized spreads in both firm fixed-effects and vector autoregression estimates for 26 stocks between 2017 and 2018 using high-frequency data. We also provide evidence that AT increases commonality in liquidity, evidencing correlated transactions between automated traders.",
     "link": "https://doi.org/10.1016/j.najef.2020.101243",
     "image": "static/img/2020_NAJEF_Does algorithmic trading .jpg",
-    "impact_factor": "3.9"
+    "impact_factor": "3.9",
+    "issn": "1879-0860"
 }

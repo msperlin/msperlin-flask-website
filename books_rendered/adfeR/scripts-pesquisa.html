@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 3 Desenvolvendo Rotinas de Pesquisa | Análise de Dados Financeiros e Econômicos com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');  No capítulo anterior aprendemos a utilizar o R...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 3 Desenvolvendo Rotinas de Pesquisa | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');  No capítulo anterior aprendemos a utilizar o R...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 3 Desenvolvendo Rotinas de Pesquisa | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');  No capítulo anterior aprendemos a utilizar o R...">
+<meta name="twitter:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00-code-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Análise de Dados Financeiros e Econômicos com o R - Versão Online</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="sobre-nova-edi%C3%A7%C3%A3o.html">Sobre Nova Edição</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="operacoes-basicas.html"><span class="header-section-number">2</span> Operações Básicas no R</a></li>
+<li><a class="active" href="scripts-pesquisa.html"><span class="header-section-number">3</span> Desenvolvendo Rotinas de Pesquisa</a></li>
+<li><a class="" href="importacao-exportacao.html"><span class="header-section-number">4</span> Importação e Exportação de Dados Locais</a></li>
+<li><a class="" href="importacao-pacotes.html"><span class="header-section-number">5</span> Importação de Dados via Pacotes</a></li>
+<li><a class="" href="classe-estrutura.html"><span class="header-section-number">6</span> Dataframes e outros Objetos</a></li>
+<li><a class="" href="classes-basicas.html"><span class="header-section-number">7</span> As Classes Básicas de Objetos</a></li>
+<li><a class="" href="programacao.html"><span class="header-section-number">8</span> Programando com o R</a></li>
+<li><a class="" href="limpando-estruturando.html"><span class="header-section-number">9</span> Estruturando e Limpando Dados</a></li>
+<li><a class="" href="figuras.html"><span class="header-section-number">10</span> Visualizando Dados</a></li>
+<li><a class="" href="modelos.html"><span class="header-section-number">11</span> Econometria Financeira com o R</a></li>
+<li><a class="" href="reportando-resultados.html"><span class="header-section-number">12</span> Reportando Resultados e Criando Relatórios</a></li>
+<li><a class="" href="otimizacao.html"><span class="header-section-number">13</span> Otimização de Código</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-120530145-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-120530145-1');
+</script><div id="scripts-pesquisa" class="section level1" number="3">
+<h1>
+<span class="header-section-number">Capítulo 3</span> Desenvolvendo Rotinas de Pesquisa<a class="anchor" aria-label="anchor" href="#scripts-pesquisa"><i class="fas fa-link"></i></a>
+</h1>
+<p>No capítulo anterior aprendemos a utilizar o R e RStudio para operações básicas tal como a criação de <em>scripts</em>, manipulação de objetos no R, mudança de diretório de trabalho, entre outras. Antes de passarmos para a importação de dados, é necessário discutirmos como organizar uma rotina de pesquisa no seu computador.</p>
+<p>Neste capítulo iremos tratar das etapas de pesquisa e a organização de arquivos no computador, incluindo dados e rotinas. O principal objetivo aqui é mostrar e justificar um formato de trabalho que facilite o desenvolvimento e compartilhamento de código. Por exemplo, ao abrir um diretório de projeto antigo, a própria estrutura dos arquivos e pastas já indicará como o mesmo funciona e quais as suas entradas e saídas.</p>
+<div id="etapas-de-uma-pesquisa" class="section level2" number="3.1">
+<h2>
+<span class="header-section-number">3.1</span> Etapas de uma Pesquisa<a class="anchor" aria-label="anchor" href="#etapas-de-uma-pesquisa"><i class="fas fa-link"></i></a>
+</h2>
+<p>Um <em>script</em> de pesquisa pode ser organizado em quatro etapas consecutivas:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Importação dos dados</strong>: Dados crus (originais) do mundo real são importados para a sua sessão do R, seja de arquivo local ou da internet. Neste momento, nenhum tipo de manipulação de dados ou reformatação manual deve acontecer. Como regra de bolso, <strong>dados crus nunca devem ser tocados</strong>. Deixe toda e qualquer manipulação para a etapa seguinte.</p></li>
+<li><p><strong>Limpeza e estruturação dos dados</strong>: Dados importados na fase anterior são processados em uma etapa de limpeza e estruturação. Registros anormais e erros em observações são eliminados ou tratados das tabelas originais. Novas variáveis de interesse são criadas com base nos dados importados. A estrutura dos dados originais também pode ser refeita de acordo com a necessidade. O resultado final dessa etapa deve ser, preferencialmente, uma tabela final com todos os dados necessários para a análise do problema.</p></li>
+<li><p><strong>Visualização de dados e teste de hipóteses</strong>: Após limpar e estruturar os dados, o próximo passo é realizar a análise em si, a qual será visual, através da criação de diversas figuras, ou então com a estimação de modelos e testes de hipótese. Essa etapa refere-se ao próprio problema da pesquisa. Na grande maioria dos casos, essa é a fase que exigirá maior trabalho, visto que representa o coração da pesquisa. Essa etapa termina com a criação de arquivos, tal como uma figura com extensão <em>.png</em>, que serão utilizados na etapa seguinte.</p></li>
+<li><p><strong>Reportando os resultados</strong>: A última etapa é a criação dos objetos de interesse a serem reportados no artigo ou relatório. Esses objetos geralmente referem-se a tabelas e figuras, que podem ser exportados como arquivos externos e futuramente importados em um relatório.</p></li>
+</ol>
+<p>Cada uma das etapas anteriores pode ser estruturada em um único arquivo <em>.R</em> ou em vários arquivos separados. O uso de vários arquivos é preferível quando as etapas de cada pesquisa demandarem muito tempo de processamento. Por exemplo, na importação e organização de uma base de dados de grande volume, vale a pena separar os procedimentos em arquivos diferentes. Isto facilita o encontro de erros e manutenção do código.</p>
+<p>Um caso prático seria a análise de dados volumosos de transações financeiras no mercado de capitais. A importação e limpeza desses dados leva muito tempo. Uma organização inteligente da estrutura da pesquisa seria dividir as etapas em diferentes <em>scripts</em> do R e, usando arquivos locais de dados como “pontes”, lincar um script com outro. Assim, a rotina de importação e limpeza de dados salva um arquivo <em>.rds</em> no final de sua execução, o qual é importando no <em>script</em> de teste de hipóteses. Desta forma, uma mudança na modelagem do problema não exige que todo o processo de limpeza dos dados seja refeito. Essa simples organização de arquivos economiza bastante tempo. A lógica é clara: isole as partes da pesquisa que exigem muito tempo de execução – e pouco de desenvolvimento –, e conecte as mesmas com o resto do código usando arquivos externos de dados, tal como arquivos <em>.rds</em> e <em>.csv</em>.</p>
+<p>Caso você for trabalhar com diversos arquivos, uma sugestão é criar uma estrutura de nomenclatura que defina as etapas da pesquisa. Um exemplo seria nomear o código de importação de dados como <code>01-Import-and-clean-data.R</code>, o código de modelagem como <code>02-build-report-models.R</code> e assim sucessivamente. O efeito prático é que o uso de um contador na primeira letra do nome do arquivo faz com que a ordem de execução do programa fique clara. Indo além, você pode criar um <em>script</em> mestre chamado <code>00-run-it-all.R</code> que roda (comando <code>source</code>) todos as outras rotinas. Assim, toda vez que realizar uma atualização nos dados originais, você pode simplesmente executar <code>00-run-it-all.R</code> e terá os novos resultados, sem necessitar rodar cada <em>script</em> individualmente.</p>
+</div>
+<div id="diretorios" class="section level2" number="3.2">
+<h2>
+<span class="header-section-number">3.2</span> A Estrutura de Diretórios<a class="anchor" aria-label="anchor" href="#diretorios"><i class="fas fa-link"></i></a>
+</h2>
+<p>Uma estrutura de organização de diretórios também beneficia a reprodutibilidade e organização da pesquisa. Para rotinas simples, com uma base de dados única e um baixo número de procedimentos, não é necessário dispender muito tempo pensando na organização dos arquivos nos diretórios. Para programas mais complexos, onde existem diversas etapas de pesquisa e diversas bases de dados, uma segmentação dos diretórios é não somente recomendada como essencial.</p>
+<p>Uma estrutura de diretórios que considero eficiente é criar um diretório único para a pesquisa e, dentro dele, criar subdiretórios para cada elemento de entrada e saída. Por exemplo, você pode criar um subdiretório chamado <code>data</code>, onde todos os dados originais serão guardados, um diretório <code>figs</code> e um <code>tables</code>, para onde figuras e tabelas com resultados de interesse serão exportadas. Para funções utilizadas na pesquisa, você pode também criar um diretório chamado <code>R-Fcts</code>. Todos os <em>scripts</em> principais da pesquisa, e nada mais, devem ficar na raiz do diretório de pesquisa. Um exemplo da estrutura de arquivos seria:</p>
+<pre><code>/Capital Markets and Inflation/
+    /data/
+        stock_indices.csv
+        inflation_data.csv
+    /figs/
+        SP500_and_inflation.png
+    /tables/
+        Table1_descriptive_table.tex
+        Table2_model_results.tex
+    /R-Fcts/
+        fct_models.R
+        fct_clean_data.R
+    0-run-it-all.R
+    1-import-and-clean-data.R
+    2-run-research.R</code></pre>
+<p>O código de pesquisa também deve ser independente, com todos os arquivos disponíveis em uma subpasta do diretório raiz. Se você estiver usando muitos pacotes diferentes, é aconselhável adicionar um comentário nas primeiras linhas de <code>0-run-it-all.R</code> que indica quais pacotes são necessários para executar o código. A forma mais amigável de informar é adicionando uma linha comentada que instala todos os pacotes necessários, como em <code># install.packages ('pkg1', 'pkg2', ...)</code>. Portanto, quando alguém recebe o código pela primeira vez, tudo o que ele (ou ela) precisa fazer é retirar o símbolo de comentário e executar a rotina. Dependências externas e etapas para a instalação correta do software também devem ser informadas.</p>
+<p>Os benefícios deste formato de diretório são os seguintes. Se você precisar compartilhar o código com outros pesquisadores, basta compactar o diretório em um único arquivo e enviá-lo ao destinatário. Após descompactar o arquivo, a estrutura da pasta informa imediatamente ao usuário onde deve alterar os dados originais, a ordem de execução dos scripts na pasta raiz e onde as saídas são salvas. O mesmo benefício acontece quando você reutiliza seu código no futuro, digamos, daqui a três anos. Ao trabalhar de forma mais inteligente, você será mais produtivo, gastando menos tempo com etapas repetitivas e desnecessárias.</p>
+<p>Seguindo a sugestão de um <em>script</em> mestre, um exemplo comentado para o conteúdo do arquivo <code>00-run-it-all.R</code> seria:</p>
+<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># clean up workspace</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># close all figure windows created with x11()</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">graphics.off</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># load packages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">pkg1</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">pkg2</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">pkg3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># change directory</span></span>
+<span><span class="va">my_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html">dirname</a></span><span class="op">(</span><span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-editors.html">getActiveDocumentContext</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">path</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="va">my.d</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># list  functions in 'R-Fcts'</span></span>
+<span><span class="va">my_R_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path<span class="op">=</span><span class="st">'R-Fcts'</span>,</span>
+<span>                         pattern <span class="op">=</span> <span class="st">'*.R'</span>,</span>
+<span>                         full.names<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load all functions in R</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">my_R_files</span>,<span class="va">source</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Import data script</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">'01-import-and-clean-data.R'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># run models and report results</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">'02-run-research.R'</span><span class="op">)</span></span></code></pre></div>
+<p>Essa é a primeira vez que usamos as funções <code>graphics.off</code> e <code>sapply</code>. A primeira fecha todas janelas de gráficos abertas. Essas tendem a acumular no decorrer do trabalho e devem ser fechadas no início de um novo <em>script</em>. O comando <code>sapply</code> aplica uma função, nesse caso <code>source</code>, para uma série de elementos. O efeito prático em <code>sapply(my_R_files, source)</code> é que todos arquivos com extensão <em>.R</em> localizados na pasta <code>R-Fct</code> serão executados. Ou seja, todas funções que escrevermos nos arquivos <code>fct_models.R</code> e <code>fct_clean_data.R</code> serão carregadas em nossa sessão de trabalho. Futuramente, capítulos <a href="figuras.html#figuras">10</a> e <a href="programacao.html#programacao">8</a>, iremos voltar ao assunto de uso de funções customizadas.</p>
+<p>Note que, assumindo que todos os pacotes já estão instalados no computador, o script <code>00-run-it-all.R</code> é facilmente compartilhável e irá rodar em outro computador com nenhum problema. Caso o leitor quiser ir um passo além, pode também utilizar a função <code>file.copy</code> para copiar todos os arquivos de figuras para a pasta de escrita do artigo ou documento acadêmico. A partir disso, crie um link no texto para cada arquivo copiado anteriormente. Como exemplo, no LaTex você pode incluir um arquivo de figura com o comando <code>\includegraphics{filenamehere}</code>. Pode também criar um link direto entre o arquivo de escrita e a figura da pesquisa, apesar de esse método não ser recomendado, uma vez que ele cria uma dependência externa ao arquivo de escrita. Em ambas as formas, todas as figuras da pesquisa serão automaticamente atualizadas no texto e estarão sincronizadas com os arquivos provenientes do código da pesquisa. Para tabelas, a importação não é tão simples, pois uma tabela pode ser escrita em diversos formatos. Existem, porém, pacotes específicos para lidar com isso. No capítulo <a href="reportando-resultados.html#reportando-resultados">12</a> estudaremos uma forma eficiente de reportar resultados utilizando os pacotes <code>xtable</code> <span class="citation">(<a href="refer%C3%AAncias.html#ref-R-xtable" role="doc-biblioref">Dahl et al. 2019</a>)</span>, <code>texreg</code> <span class="citation">(<a href="refer%C3%AAncias.html#ref-R-texreg" role="doc-biblioref">Leifeld 2022</a>)</span>, entre outros.</p>
+</div>
+<div id="pontos-importantes-em-uma-pesquisa" class="section level2" number="3.3">
+<h2>
+<span class="header-section-number">3.3</span> Pontos Importantes em uma Pesquisa<a class="anchor" aria-label="anchor" href="#pontos-importantes-em-uma-pesquisa"><i class="fas fa-link"></i></a>
+</h2>
+<p>Aproveitando o tópico de execução de pesquisa, vou colocar aqui algumas sugestões para a realização de pesquisas com o R. Deixo claro que essas são posições pessoais, oriundas das minha experiência de trabalho. Muitos pontos levantados aqui são específicos para o ambiente acadêmico, porém podem ser facilmente estendíveis para a prática de pesquisa fora das universidades.</p>
+<p><strong>Em primeiro lugar, conheça os seus dados!</strong> Entendo que o primeiro instinto ao se deparar com uma nova base de dados é instantaneamente importá-la no R e sair realizando análises. Aqui, um certo nível de cautela é necessário. Toda vez que se deparar com um conjunto de dados novos, se pergunte o quanto você <strong>realmente</strong> conhece esses dados:</p>
+<ul>
+<li>Como os dados foram coletados? Para que fim?</li>
+<li>Como estes dados se comparam com dados já utilizados em outros trabalhos?</li>
+<li>Existe alguma possibilidade de viés na forma de coleta dos dados?</li>
+</ul>
+<p>Lembre-se que o propósito final de qualquer pesquisa é a comunicação. Certamente irás reportar os resultados para pessoas que irão ter algum tipo de opinião informada sobre a pesquisa. É provável que os avaliadores terão mais experiência que você no assunto, incluindo sobre as fontes e individualidades dos dados. Não desejo para ninguém estar em uma situação onde um esforço de pesquisa, com investimento de 3 a 6 meses de trabalho entre programação e escrita, é anulado por um simples lapso na checagem dos dados. Infelizmente, isso não é incomum.</p>
+<p>Portanto, <strong>seja muito cauteloso sobre os dados que estás utilizando</strong>. Um detalhe que passa despercebido pode invalidar toda uma pesquisa. Caso tiver sorte e a base de dados vier acompanhada de um manual escrito, destrinche o mesmo até os últimos detalhes. Elenque as principais dúvidas em relação aos dados e, em caso das informações não estarem claras, não seja tímido em enviar os questionamentos para o responsável.</p>
+<p>O segundo ponto é o código. Após terminar de ler este livro, o seu computador se tornará um poderoso aliado em fazer realidade as suas ideias de pesquisa, por mais gigantescas e mirabolantes que forem. Porém, <strong>um grande poder vem acompanhado de grande responsabilidade</strong>. Um erro de código pode facilmente inviabilizar ou tendenciar a sua pesquisa.</p>
+<p>Lembre que analisar dados é a sua profissão e a <strong>sua reputação é o seu maior ativo</strong>. Caso não tenhas confiança no código produzido, não publique ou comunique os seus resultados. O código de sua pesquisa é de total responsabilidade sua e de mais ninguém. Verifique e questione o mesmo quantas vezes for necessário. Seja, sempre, o avaliador mais criterioso do seu trabalho:</p>
+<ul>
+<li>As estatísticas descritivas das variáveis relatam fielmente a base de dados?</li>
+<li>Existe alguma relação entre as variáveis que pode ser verificada na tabela descritiva?</li>
+<li>Os resultados encontrados fazem sentido para a literatura atual do assunto? Caso não, como explicá-los?</li>
+<li>É possível que um <em>bug</em> no código tenha produzido o resultado encontrado?</li>
+</ul>
+<p>Ainda me surpreendo como pesquisas submetidas a respeitados periódicos podem ser negadas a publicação baseado em uma simples análise da tabela descritiva dos dados construídos. Erros básicos de cálculos de variáveis são facilmente encontrados para um olho treinado, que sabe onde procurar. Esse processo de avaliação contínua da sua pesquisa não somente o deixará mais forte como pesquisador(a) mas também servirá de treino para a prática de avaliação de pares, muito utilizada na pesquisa acadêmica. Caso não tenhas confiança suficiente para reportar os resultados, teste o seu código ostensivamente. Caso já o tenha feito e ainda não estás confiante, identifique as linhas de código que tens mais dificuldade e busque ajuda com um colega ou o seu orientador, caso existir. Este último é um forte aliado que pode ajudá-lo com a sua maior experiência.</p>
+<p>Todo o trabalho de pesquisa é, de certa forma, baseado em trabalhos já existentes. Atualmente é extremamente difícil realizar algum tipo de pesquisa que seja totalmente inovadora. O conhecimento é construído na forma de blocos, um sobre o outro. Sempre existe uma parcela de literatura que deve ser consultada. Particularmente para o caso de pesquisa em dados, deves sempre comparar os seus resultados com os resultados já apresentados na literatura do assunto, principalmente quando é um estudo replicado. Caso os resultados principais não forem semelhantes aos encontrados na literatura, questione-se o porquê disso. Será que um erro de código pode ter criado esse resultado?</p>
+<p>Deixo claro que é possível sim que resultados de uma pesquisa sejam diferentes dos da literatura, porém, o contrário é mais provável. O conhecimento disso demanda cuidado com o seu código. <em>Bugs</em> e erros de código são bastante comuns, principalmente nas primeiras versões das rotinas. É importante reconhecer este risco e saber administrá-lo.</p>
+</div>
+<div id="exerc-scripts-pesquisa" class="section level2" number="3.4">
+<h2>
+<span class="header-section-number">3.4</span> Exercícios<a class="anchor" aria-label="anchor" href="#exerc-scripts-pesquisa"><i class="fas fa-link"></i></a>
+</h2>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+<div id="q.1-2" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>Imagine uma pesquisa envolvendo a análise do seu orçamento doméstico ao longo do tempo. Dados estão disponíveis em planilhas eletrônicas separadas por mês, durante 10 anos. O objetivo da pesquisa é entender se é possível a compra de um imóvel daqui a cinco anos. A partir disso, detalhe em texto os elementos em cada etapa do estudo, desde importação dos dados até a construção do relatório.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf6a837e99" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf6a837e99" class="collapse">
+<div class="card card-body">
+<p>As possíveis etapas do estudo são:</p>
+<ol style="list-style-type: decimal">
+<li><p>Importação 01: Importar todos os dados relativos à renda e orçamento familiar, taxa de retorno em investimentos – renda fixa ou renda variável – e históricos de preços de imóveis nos locais desejados;</p></li>
+<li><p>Limpeza 01: Limpe os dados para <em>outliers</em> e dados faltantes (NA);</p></li>
+<li><p>Manipulação 01: Use os dados de renda pessoal para encontrar a necessidade de economia mensal para cada ano.</p></li>
+<li><p>Manipulação 02: Com base nos retornos históricos dos investimentos em renda fixa/variável e na inflação do imóvel, verifique quantos anos leva para economizar a quantidade de dinheiro necessária para comprar o imóvel.</p></li>
+</ol>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.2-2" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>Com base no estudo proposto anteriormente, crie uma estrutura de diretórios em seu computador para acomodar a pesquisa. Em um arquivo texto na pasta raiz da pesquisa, assinale arquivos fictícios para cada subdiretório (veja estrutura de diretórios no início da seção <a href="scripts-pesquisa.html#diretorios">3.2</a>). Note que a criação dos diretórios pode ser realizada pelo próprio R.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf1f2ad141" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf1f2ad141" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://fs.r-lib.org">library(fs)
+
+# set temp dir for solving exercise
+temp_dir &lt;- path(tempdir(), 'Chapter 3 exercise')
+
+# create folder
+dir_create(temp_dir)
+
+# create files
+file_create(path(temp_dir, '01-import_data.R'))
+file_create(path(temp_dir, '02-clean_data.R'))
+file_create(path(temp_dir, '03-build_budget_table.R'))
+file_create(path(temp_dir, '04-build_investment_realstate_table.R'))
+file_create(path(temp_dir, '05-build_report.R'))
+
+# create dirs
+dir_create(path(temp_dir, 'data'))
+dir_create(path(temp_dir, 'tabs'))
+dir_create(path(temp_dir, 'figs'))
+
+# fill with files
+for (i_year in 2009:2019) {
+  file_create(path(temp_dir, 'data', 
+                   paste0('annual_budget_', i_year, '.xlsx')) )
+}
+
+file_create(path(temp_dir, 'data', 'fixed_income_index.csv'))
+file_create(path(temp_dir, 'data', 'real_state_data.rds'))
+file_create(path(temp_dir, 'figs', 'Income_and_HousePrices.png'))
+file_create(path(temp_dir, 'tabs',  'Table_with_Results.xlsx'))
+
+dir_tree(temp_dir)</a></code></pre>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://padfer.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="operacoes-basicas.html"><span class="header-section-number">2</span> Operações Básicas no R</a></div>
+<div class="next"><a href="importacao-exportacao.html"><span class="header-section-number">4</span> Importação e Exportação de Dados Locais</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#scripts-pesquisa"><span class="header-section-number">3</span> Desenvolvendo Rotinas de Pesquisa</a></li>
+<li><a class="nav-link" href="#etapas-de-uma-pesquisa"><span class="header-section-number">3.1</span> Etapas de uma Pesquisa</a></li>
+<li><a class="nav-link" href="#diretorios"><span class="header-section-number">3.2</span> A Estrutura de Diretórios</a></li>
+<li><a class="nav-link" href="#pontos-importantes-em-uma-pesquisa"><span class="header-section-number">3.3</span> Pontos Importantes em uma Pesquisa</a></li>
+<li>
+<a class="nav-link" href="#exerc-scripts-pesquisa"><span class="header-section-number">3.4</span> Exercícios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-2">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-2">Q.2</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Análise de Dados Financeiros e Econômicos com o R - Versão Online</strong>" was written by Marcelo S. Perlin (<a href="mailto:marcelo.perlin@ufrgs.br" class="email">marcelo.perlin@ufrgs.br</a>). It was last built on 2022-11-23.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

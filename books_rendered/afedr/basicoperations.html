@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 2 Basic Operations in R | Analyzing Financial and Economic Data with R - Online Version</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="generator" content="bookdown 0.37 with bs4_book()">
+<meta property="og:title" content="Chapter 2 Basic Operations in R | Analyzing Financial and Economic Data with R - Online Version">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<meta property="og:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 2 Basic Operations in R | Analyzing Financial and Economic Data with R - Online Version">
+<meta name="twitter:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.8/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.6.1/transition.js"></script><script src="libs/bs3compat-0.6.1/tabs.js"></script><script src="libs/bs3compat-0.6.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Analyzing Financial and Economic Data with R - Online Version</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome!</a></li>
+<li><a class="" href="about-new-edition.html">About New Edition</a></li>
+<li><a class="" href="preface.html">Preface</a></li>
+<li><a class="" href="introduction.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li><a class="active" href="basicoperations.html"><span class="header-section-number">2</span> Basic Operations in R</a></li>
+<li><a class="" href="research-scripts.html"><span class="header-section-number">3</span> Writing Research Scripts</a></li>
+<li><a class="" href="importing.html"><span class="header-section-number">4</span> Importing Data from Local Files</a></li>
+<li><a class="" href="importing-internet.html"><span class="header-section-number">5</span> Importing Data from the Internet</a></li>
+<li><a class="" href="data-structure-objects.html"><span class="header-section-number">6</span> Dataframes and Other Objects</a></li>
+<li><a class="" href="basic-classes.html"><span class="header-section-number">7</span> Basic Object Classes</a></li>
+<li><a class="" href="programming.html"><span class="header-section-number">8</span> Programming and Data Analysis</a></li>
+<li><a class="" href="cleaning.html"><span class="header-section-number">9</span> Cleaning and Structuring Data</a></li>
+<li><a class="" href="figures.html"><span class="header-section-number">10</span> Data Visualization with {ggplot2}</a></li>
+<li><a class="" href="models.html"><span class="header-section-number">11</span> Financial Econometrics with R</a></li>
+<li><a class="" href="reporting.html"><span class="header-section-number">12</span> Reporting Results</a></li>
+<li><a class="" href="optimizing.html"><span class="header-section-number">13</span> Optimizing Code</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98297869-1', 'auto');
+  ga('send', 'pageview');
+
+</script><!-- Global site tag (gtag.js) - Google Analytics GOOGLE ADS--><script async src="https://www.googletagmanager.com/gtag/js?id=UA-89690212-2">
+</script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-89690212-2');
+</script><div id="basicoperations" class="section level1" number="2">
+<h1>
+<span class="header-section-number">2</span> Basic Operations in R<a class="anchor" aria-label="anchor" href="#basicoperations"><i class="fas fa-link"></i></a>
+</h1>
+<p>When working with R and RStudio, there are fundamental tasks (or basic operations) that you will be repeating many times over. In this chapter we will look at these basic operations with RStudio, including:</p>
+<ul>
+<li>Rstudio interface and shortcuts</li>
+<li>basic R commands</li>
+<li>working with files</li>
+<li>working with related file extensions</li>
+<li>the autocomplete feature of RStudio.</li>
+</ul>
+<p>Here, we will go through the initial steps from the viewpoint of someone who has never worked with R and possibly never had contact with other programming language. Those already familiar with the software may not find novel information here and, therefore, I suggest skipping to the next section. However, I recommended that you at least check the discussed topics so you can confirm your knowledge about the features of the software and how to use them for working smarter, and not harder. This is especially true for RStudio, which offers several tools to increase your productivity.</p>
+<div id="working-with-r" class="section level2" number="2.1">
+<h2>
+<span class="header-section-number">2.1</span> Working With R<a class="anchor" aria-label="anchor" href="#working-with-r"><i class="fas fa-link"></i></a>
+</h2>
+<p>The greatest hurdle a new user faces when developing routines in R is the format of work – the so-called development cycle. Our interaction with computers has been simplified over the years and we are currently comfortable with the <em>point&amp;click</em> format. That is, if you want to perform an operation on the computer, just point the <em>mouse</em> to a specific location on the screen and click a button. Visual cues in a series of steps allow the execution of complex tasks. Be aware, however, that this form of interaction is just one layer above what actually happens. Behind all these <em>clicks</em>, there is a command being executed on your computer. Any common task such as opening a <em>pdf</em> file, a spreadsheet document, directing a <em>browser</em> to a web page has an underlying call to a code.</p>
+<p>The <em>point&amp;click</em> format of visual and motor interaction has its benefits in facilitating and popularizing the use of computers. However, it is not flexible and effective when working with computational procedures such as data analysis. A better approach would be to create a file containing several instructions in sequence and, in the future, simply request that the computer <strong>execute</strong> this file using the recorded procedures. There is no need to do a “scripted” point and click operation. You spend some time studying commands and writing the program but, in the future, it will always execute the recorded procedure in the same way.</p>
+<p>Using <em>scripts</em> provides a significant gain in productivity when comparing to a <em>point&amp;click</em> type of interface. Going further, the risk of human error in executing the procedure is almost nil, because the commands and their required sequence of execution are recorded in the text file and will always be executed in the same way. This is one of the main reasons why programming languages are popular in science. All the steps of a data-based research, including results, can be replicated by different people, in different computers.</p>
+<p>While programming in R, the ideal format of work is to merge the mouse movement with commands. R and RStudio have some functionality with the <em>mouse</em>, but their capacity is optimized when we perform operations using code. When a group of commands is performed in a smart way, we have an R script that should preferably produce something important to us at the end of its execution. In finance and economics, this can be the current price of a stock, the value of an economic index such as inflation, the result of academic research, among many other possibilities.</p>
+<p>Like other software, R allows us to import data and export files. We can use code to import a dataset stored in a local file – or the web–, analyze it and paste the results into a technical report. Going further, we can use RStudio and the <em>RMarkdown</em> technology to write a dynamic report, where code and content are integrated. Needless to say that, by using the capabilities of R and RStudio, you will work smarter and faster.</p>
+<p>The final product of working with R and RStudio will be an R script that produces digital elements for a data report. A good example of a simple and polished R script can be found at this <a href="https://github.com/msperlin/afedR3/blob/main/inst/extdata/others/S_Example_Script.R">link</a><a href="references.html#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a>. Open it and you’ll see the content of a file with extension <em>.R</em> that will download stock prices of two companies and create a plot and a table. By the end of the book, you will understand what is going on in the code and how it gets the job done. Even better, you’ll be able to improve it. Soon, you’ll learn to execute the code on your own computer. If impatient, simply copy the text content of the link to a new RStudio R script, save it, and press <code>control + shift + enter</code>.</p>
+</div>
+<div id="objects-in-r" class="section level2" number="2.2">
+<h2>
+<span class="header-section-number">2.2</span> Objects in R<a class="anchor" aria-label="anchor" href="#objects-in-r"><i class="fas fa-link"></i></a>
+</h2>
+<p><strong>In R, everything is an object, and each type of object has its properties</strong>. For example, the daily closing prices of the IBM stock over 2023 can be represented as a numerical vector, where each element is a price recorded at the end of a trading day. Dates related to these prices can be represented as text (<em>string</em>) or as a unique <code>Date</code> class. Finally, we can represent the price data and the dates together by storing them in a single object of type <code>dataframe</code>, which is nothing more than a table with rows and columns.</p>
+<p>While we represent data as objects in R, a special type is a <code>function</code>. It stores a pre-established manipulation of other objects available to the user. R has an extremely large number of functions, which enable the user to perform a wide range of operations. For example, the basic commands of R, available in the package <strong>{base}</strong> <span class="citation">(<a href="references.html#ref-R-base">R Core Team 2023b</a>)</span>, adds up to a total of 1268 functions.</p>
+<p>Each function has its own name and a programmer can write their own functions. For example, the <strong>sort()</strong> function is a procedure that sorts elements within a vector. If we wanted to sort the elements of <code>2, 1, 4, 3, 1</code>, simply insert the following command in the <em>prompt</em> (left bottom side of RStudio’s screen) and press <em>enter</em>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">my_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sorted_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span> </span>
+<span>    x <span class="op">=</span> <span class="va">my_vec</span>, </span>
+<span>    decreasing <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sorted_vec</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 4 3 2 1 1</code></pre>
+<p>The <strong>sort()</strong> function is used with start and end parentheses. These parentheses serve to highlight the entries (<em>inputs</em>), that is, the information sent to the function to produce something that will be saved in object <code>sorted_vec</code>. Note that each entry is separated by a comma, as in <code>my_fct(input1, input2, input3, ...)</code>. We also set option <code>decreasing = TRUE</code>. This is a specific directive for the <strong>sort()</strong> function to order the value from highest to lowest.</p>
+<p>Be aware that <strong>functions are at the heart of R</strong> and we will dedicate a large part of this book to them. You can use the available functions or write your own. You can also publish functions as a package and let other people use your code. We will discuss more about functions in chapter <a href="programming.html#programming">8</a>.</p>
+</div>
+<div id="international-and-local-formats" class="section level2" number="2.3">
+<h2>
+<span class="header-section-number">2.3</span> International and Local Formats<a class="anchor" aria-label="anchor" href="#international-and-local-formats"><i class="fas fa-link"></i></a>
+</h2>
+<p>Before explaining the use of R and RStudio, it is important to highlight some rules of formatting numbers, latin characters and dates.</p>
+<p><strong>decimal:</strong> Following an international notation, the decimal point in R is defined by the period symbol (.), as in <code>2.5</code> and not a comma, as in <code>2,5</code>. If this is not the standard format in your country, you’ll have issues when importing local data from text files. Sometimes, such as with storing data in Microsoft Excel files, the reading function already takes care of the conversion. This, however, is generally an exception. As a general rule of using R, only use commas to separate the inputs of a function. Under no circumstances should the comma symbol be used as the decimal point separator. Always give priority to the international format because it will be compatible with the vast majority of data.</p>
+<p><strong>Latin characters:</strong> Due to its international standard, R has problems understanding Latin characters, such as the cedilla and accents. If you can, avoid using Latin characters in the names of your variables or files. In the content of character objects (text), you can use them without problems as long as the encoding of the script is correctly specified (e.g. UTF-8, Latin1). I strongly recommend the use of the English language for writing code and defining object names. This automatically eliminates the use of Latin characters and facilitates the usability of the code by people outside of your country.</p>
+<p><strong>date format:</strong> Dates in R are structured according to the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a><a href="references.html#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a> format. It follows the <code>YYYY-MM-DD</code> pattern, where <code>YYYY</code> is the year in four numbers (e.g. 2023), <code>MM</code> is the month as a number and <code>DD</code> is the day. An example of date is 2023-12-13. This, however, may not be the case in your country. When importing local data, make sure the dates are in this format. If necessary, you can convert any date to the ISO format. Again, while you can work with your local format of dates in R, it is best advised to use the international notation. The conversion between one format and another is quite easy and will be presented in chapter <a href="basic-classes.html#basic-classes">7</a>.</p>
+<p>If you want to learn more about your local format in R, use the following command by typing it in the prompt and pressing enter:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.localeconv.html">Sys.localeconv</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt;     decimal_point     thousands_sep          grouping 
+R&gt;               "."                ""                "" 
+R&gt;   int_curr_symbol   currency_symbol mon_decimal_point 
+R&gt;            "BRL "              "R$"               "," 
+R&gt; mon_thousands_sep      mon_grouping     positive_sign 
+R&gt;               "."        "\003\003"                "" 
+R&gt;     negative_sign   int_frac_digits       frac_digits 
+R&gt;               "-"               "2"               "2" 
+R&gt;     p_cs_precedes    p_sep_by_space     n_cs_precedes 
+R&gt;               "1"               "1"               "1" 
+R&gt;    n_sep_by_space       p_sign_posn       n_sign_posn 
+R&gt;               "1"               "1"               "1"</code></pre>
+<p>The output of <strong>Sys.localeconv()</strong> shows how R interprets decimal points and the thousands separator, among other things. As you can see from the previous output, this book was compiled using the Brazilian notation for the currency symbol, but uses the dot point for decimals.</p>
+<div class="rmdcaution">
+<p>
+Be careful when modifying the format that R interprets symbols. As a
+rule of thumb, if you need to use a specific format, do it separately
+within the context of the code. Avoid permanent changes as you never
+know where such formats are being used. That way, you can avoid
+unpleasant surprises in the future.
+</p>
+</div>
+</div>
+<div id="types-of-files-in-r" class="section level2" number="2.4">
+<h2>
+<span class="header-section-number">2.4</span> Types of Files in R<a class="anchor" aria-label="anchor" href="#types-of-files-in-r"><i class="fas fa-link"></i></a>
+</h2>
+<p>Like any other programming platform, R has a ecosystem of file extensions, where each has a different purpose. In the vast majority of cases, however, the work will focus mostly on a couple of types. Next, I describe the various file extensions you’ll find in a day to day basis. The items in the list are ordered by importance. Note that I omitted graphic files such as <em>.png</em>, <em>.jpg</em>, <em>.gif</em> and data storage/spreadsheet files (<em>.csv</em>, <em>.xlsx</em>, ..) among others, as they are not exclusive to R.</p>
+<p><strong>Files with extension <em>.R</em></strong>: text files containing R code. These are the files which you will spend most of your time. They contain the sequence of commands that configures the main script and computational routines of the data research. Examples: <em>Script-stock-research.R</em>, <em>R-fcts.R</em>.</p>
+<p><strong>Files with extension <em>.RData</em> or <em>.rds</em></strong>: files that store data in the native format. These files are used to save/write objects created in different sessions into your hard drive. For example, you can use a <em>.rds</em> file to save a table after processing and cleaning up the raw database. By <em>freezing</em> the data into a local file, we can later load it for subsequent analysis. Examples: <em>cleaned-inflation-data.rds</em>, <em>model-results.RData</em>.</p>
+<p><strong>Files with extension <em>.Rmd</em> and <em>.quarto</em></strong>: files used for editing dynamic documents in the <em>RMarkdown</em> and <em>Quarto</em> format. Using these files allows the creation of documents where text and code output are integrated into the same document. While <em>RMarkdown</em> is mostly related to R, the <em>quarto</em> format allows for a more flexible integration of text and code for other programming languages such as Python. In chapter <a href="reporting.html#reporting">12</a> we have a dedicated section for RMarkdown, which will explore this functionality in detail. Example: <em>investment-report.Rmd</em>.</p>
+<p><strong>Files with extension <em>.Rproj</em></strong>: contain files for editing projects in RStudio, such as a new R package, a <em>shiny</em> application or a book. While you can use the functionalities of RStudio projects to write R scripts, it is not a hard requirement. For those interested in learning more about this functionality, I suggest the <a href="https://support.posit.co/hc/en-us/articles/200526207-Using-Projects">Posit manual</a><a href="references.html#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a>. Example: <em>project-retirement.Rproj</em>.</p>
+</div>
+<div id="explaining-the-rstudio-screen" class="section level2" number="2.5">
+<h2>
+<span class="header-section-number">2.5</span> Explaining the RStudio Screen<a class="anchor" aria-label="anchor" href="#explaining-the-rstudio-screen"><i class="fas fa-link"></i></a>
+</h2>
+<p>After installing the R and RStudio, open RStudio by double-clicking its icon. <strong>Be aware that R also has its own interface and this often causes confusion</strong>. In Windows, you can search for RStudio link using the <em>Start</em> button and typing <em>Rstudio</em>.</p>
+<p>After opening RStudio, the resulting window should look like Figure <a href="basicoperations.html#fig:RStudio1">2.1</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:RStudio1"></span>
+<img src="resources/figs/RStudio1.png" alt="The RStudio screen" width="100%"><p class="caption">
+Figure 2.1: The RStudio screen
+</p>
+</div>
+<p>Note that RStudio automatically detected the installation of R and initialized a session on the left side of the interface.</p>
+<p>As a first exercise, click <em>File</em>, <em>New File</em>, and <em>R Script</em>. A text editor should appear on the left side of the screen. It is there that we will spend most of our time developing code. Commands are executed sequentially, from top to bottom. A side note, all <em>.R</em> files created in RStudio are just text files and can be edited anywhere. As an exercise, use Windows’s Notepad to open an R file. You’ll see that the raw code is the same, but without the syntax highlighting.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:RStudio2"></span>
+<img src="resources/figs/RStudio2.png" alt="Explaining the RStudio screen" width="100%"><p class="caption">
+Figure 2.2: Explaining the RStudio screen
+</p>
+</div>
+<div class="rmdimportant">
+<p>
+When using RStudio, a common suggestion is to change the color scheme
+to a <strong>dark mode</strong> setting. It is not just an aesthetic
+issue, but also a strategy for preventing eye strain. Since you will be
+spending a lot of time in front of the computer, it is smart to change
+the colors of the interface to relieve your eyes of the constant
+brightness of the screen. That way, you’ll be able to work longer,
+without straining your vision. You can configure the color scheme of
+RStudio by going to the option <em>Tools</em>, <em>Global Options</em>
+and then <em>Appearance</em>. A dark color scheme that I personally like
+and suggest is <em>Ambience</em>.
+</p>
+</div>
+<p>After the previous steps in RStudio, the resulting screen should look like the image in Figure <a href="basicoperations.html#fig:RStudio2">2.2</a>. The main items/panels are:</p>
+<p><strong>Script Editor:</strong> located on the left side and above the screen. This panel is used to write scripts and functions, mostly on files with the <em>.R</em> extension;</p>
+<p><strong>R prompt:</strong> on the left side and below the script editor. It displays the <em>prompt</em>, which can also be used to give commands to R. The main purpose of the <em>prompt</em> is to test code and display the results of the commands entered in the script editor;</p>
+<p><strong>Environment:</strong> located on the top-right of the screen. Shows all objects, including variables and functions, currently available to the user. Also note a <em>History</em> panel, which shows the history of commands previously executed by the user;</p>
+<p><strong>Panel Packages:</strong> shows the packages installed and loaded by R. Here you have four tabs: <em>Files</em>, to load and view system files; <em>Plots</em>, to view statistical figures created in R; <em>Help</em> to access the help system and <em>Viewer</em> to display dynamic and interactive results, such as a web page.</p>
+<p>As an introductory exercise, let’s initialize two objects in R. Inside the prompt (lower left side), insert these commands and press <em>enter</em> at the end of each. The <code>&lt;-</code> symbol is nothing more than the result of joining <code>&lt;</code> (less than) with the <code>-</code> (minus sign). The <code>'</code> symbol represents a single quotation mark and, in most computer keyboards, it is found under the escape (<em>esc</em>) key (top left).</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set x</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="co"># set y</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="st">'My humble text'</span></span></code></pre></div>
+<p>If done correctly, notice that two objects are available in the <em>environment</em> panel, one called <code>x</code> with a value of 1, and another called <code>y</code> with the text content <code>"My humble text"</code>. Also noticed how we used specific symbols to define objects <code>x</code> and <code>y</code>. The use of double quotes (<code>" "</code>) or single quotes (<code>' '</code>) defines objects of the class <code>character</code>. Numbers are defined by the value itself. As will be discussed later, understanding R object classes are important as each has a different behavior within the R code. After executing the previous commands, notice that the <em>history tab</em> has been updated.</p>
+<p>Now, lets show the values of <code>x</code> on the screen. To do this, type the following command:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># print contents of x</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 1</code></pre>
+<p>The <strong>print()</strong> function is one of the main commands for displaying values in the <em>prompt</em> of R. The text displayed as <code>[1]</code> indicates the index of the first line number. To verify this, enter the following command, which will show a lengthy sequence of numbers on the screen:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># print a sequence</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fl">50</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt;  [1]  50  51  52  53  54  55  56  57  58  59  60  61  62  63
+R&gt; [15]  64  65  66  67  68  69  70  71  72  73  74  75  76  77
+R&gt; [29]  78  79  80  81  82  83  84  85  86  87  88  89  90  91
+R&gt; [43]  92  93  94  95  96  97  98  99 100</code></pre>
+<p>Here, we use the colon symbol in <code>50:100</code> to create a sequence starting at 50 and ending at 100. Note that, on the left side of each line, we have the values [1], [13], and [25]. These represent the index of the first element presented in the line. For example, the fifteenth element of <code>50:100</code> is 64.</p>
+</div>
+<div id="r-packages" class="section level2" number="2.6">
+<h2>
+<span class="header-section-number">2.6</span> R Packages<a class="anchor" aria-label="anchor" href="#r-packages"><i class="fas fa-link"></i></a>
+</h2>
+<p>One of the greatest benefits of using R is its package collection. A package is nothing more than a group of procedures aimed at solving a particular computational problem. R has at its core a collaborative philosophy. Users provide their codes for others to use. And, most importantly, <strong>all packages are free</strong>. For example, consider the scenario where a user is interested in accessing data about historical inflation in the USA. He can install and use an R module that is specifically designed for importing data from central banks and research agencies.</p>
+<p>Every function in R belongs to a package. When R initializes, packages <code>stats</code>, <code>graphics</code>, <code>grDevices</code>, <code>utils</code>, <code>datasets</code>, <code>methods</code> and <code>base</code> are loaded by default. This is way why we can use some functions in R without the explicit call to a library. For example, function <code>print</code> is from the <code>base</code> package and is available whenever you start R.</p>
+<p>R packages can be accessed and installed from different sources. The main being <strong>CRAN</strong> (<em>The Comprehensive R Archive network</em>), and <strong>Github</strong>. It’s worth knowing that the quantity and diversity of R packages increases every day. <strong>CRAN is the official repository of R and it is built and maintained by the community</strong>. One of the reasons for the success of CRAN is the quality of code. While anyone can send a package, there is an evaluation process to ensure that certain strict rules about code format and safety are respected. For those interested in creating and distributing packages in CRAN, a clear roadmap on is available on the <a href="https://r-pkgs.org/">R packages site</a><a href="references.html#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a>. The official (and complete) rules are available on the <a href="https://cran.r-project.org/web/packages/policies.html">CRAN website</a><a href="references.html#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a>.</p>
+<div class="rmdimportant">
+<p>
+So far, I have eight package published in CRAN. In my experience,
+sending and publishing a package on CRAN can demand a significant amount
+of work, especially in the first submission. After that, it becomes a
+lot easier. Don’t be angry if your package is rejected. My own packages
+were rejected several times before entering CRAN. Listen to what the
+maintainers tell you and try fixing all problems before resubmitting. If
+you’re having issues that you cannot solve or find a solution on the
+Internet, look for help in the <a href="https://www.r-project.org/mail.html">R-packages mailing list</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. You’ll
+probably be surprised at how accessible and helpful the R community can
+be.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<p>The complete list of packages available on CRAN, along with a brief description of each, can be accessed at the <a href="https://cran.r-project.org/web/packages/available_packages_by_date.html">packages section of the R site</a><a href="references.html#fn29" class="footnote-ref" id="fnref29"><sup>29</sup></a>. A practical way to check if there is a package that does a specific procedure is to load the previous page and search in your <em>browser</em> for a keyword of interest (e.g. “SEC data”). If there is a package that does what you want, it is very likely that the keyword is used in the description field.</p>
+<p>Another important source for finding packages is the <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a><a href="references.html#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a>. There you can find the collection of noteworthy packages for a given area of expertise. See the <em>Task Views</em> screen in Figure <a href="basicoperations.html#fig:TaskViews">2.3</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:TaskViews"></span>
+<img src="resources/figs/TaskViews.png" alt="Task View screen" width="100%"><p class="caption">
+Figure 2.3: Task View screen
+</p>
+</div>
+<p>A popular alternative to CRAN is <a href="https://github.com/">Github</a><a href="references.html#fn31" class="footnote-ref" id="fnref31"><sup>31</sup></a>. Unlike the former, Github imposes no restrictions on the submitted code and, because of this flexibility and its version control system, it is a popular choice by developers. In practice, it is very common for developers to maintain a development version of a module on Github and the official version in CRAN. When the development version reaches a certain stage of maturity, it is then sent to CRAN.</p>
+<p>The most interesting part about R packages is that they can be installed directly from the prompt using the internet. To find out the current amount of packages on CRAN, type and execute the following commands in the prompt:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get a matrix with available packages</span></span>
+<span><span class="va">df_cran_pkgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/available.packages.html">available.packages</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># find the number of packages</span></span>
+<span><span class="va">n_cran_packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df_cran_pkgs</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">n_cran_packages</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 20186</code></pre>
+<p>Currently, 2023-12-13 10:30:15.688163, there are 20186 packages available on the CRAN servers, a very impressive mark for the community of developers as a whole.</p>
+<p>You can also check the amount of <strong>locally installed packages</strong> in R with the <strong>installed.packages()</strong> command:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># find number of packages currently installed</span></span>
+<span><span class="va">n_local_packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">n_local_packages</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 546</code></pre>
+<p>In this case, the computer in which the book was compiled has 546 packages currently installed. Notice that, even as an experienced R programmer, I’m only using a small fraction of all packages available in CRAN!</p>
+<div id="installing-packages-from-cran" class="section level3" number="2.6.1">
+<h3>
+<span class="header-section-number">2.6.1</span> Installing Packages from CRAN<a class="anchor" aria-label="anchor" href="#installing-packages-from-cran"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use command <strong>install.packages()</strong> to install a package locally. You only need to do it once for each new package. As an example, we will install a package called <strong>{readr}</strong> <span class="citation">(<a href="references.html#ref-R-readr">Wickham, Hester, and Bryan 2023</a>)</span>, that will be used in future chapters. Note that we defined the package name in the installation as if it were text with the use of quotation marks (<code>" "</code>).</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install package readr</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"readr"</span><span class="op">)</span></span></code></pre></div>
+<p>That’s it! After executing this simple command, package <strong>{readr}</strong> <span class="citation">(<a href="references.html#ref-R-readr">Wickham, Hester, and Bryan 2023</a>)</span> will be installed and the functions related to the package will be ready for use once the package is loaded in a script. If the installed package is dependent on another package, R detects this dependency and automatically installs the missing packages. Thus, all the requirements for using the installed package are satisfied and everything will work perfectly. Be aware, however, that some modules can require external software in the level of the operating system. These cases are usually announced in the description of the package and an error informs that a requirement is missing. External dependencies for R packages are not common, but they do happen.</p>
+</div>
+<div id="installing-packages-from-github" class="section level3" number="2.6.2">
+<h3>
+<span class="header-section-number">2.6.2</span> Installing Packages from Github<a class="anchor" aria-label="anchor" href="#installing-packages-from-github"><i class="fas fa-link"></i></a>
+</h3>
+<p>To install a package hosted in Github, you must first install the <strong>{devtools}</strong> <span class="citation">(<a href="references.html#ref-R-devtools">Wickham et al. 2022</a>)</span> package, available on CRAN:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install devtools</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'devtools'</span><span class="op">)</span></span></code></pre></div>
+<p>After that, use function <strong>devtools</strong>::<strong>install_github()</strong> to install a package directly from Github. In the following example, we will install the development version of package <strong>{dplyr}</strong> <span class="citation">(<a href="references.html#ref-R-dplyr">Wickham, François, et al. 2023</a>)</span>:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install ggplot2 from github</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"hadley/dplyr"</span><span class="op">)</span></span></code></pre></div>
+<p>Note that the username of the developer is included in the input string. In this case, the <em>hadley</em> name belongs to the developer of <strong>{dplyr}</strong> <span class="citation">(<a href="references.html#ref-R-dplyr">Wickham, François, et al. 2023</a>)</span>, Hadley Wickham. Throughout the book, you will notice that this name appears several times. Hadley is a prolific and competent developer of several popular R packages and currently works for RStudio.</p>
+<div class="rmdcaution">
+<p>
+Be aware that <strong>github packages are not moderated</strong>.
+Anyone can send code there and the content is not independently checked.
+Never install github packages without some confidence of the author’s
+work. Although unlikely - it never happened to me, for example - it is
+possible that they have malicious code.
+</p>
+</div>
+</div>
+<div id="loading-packages" class="section level3" number="2.6.3">
+<h3>
+<span class="header-section-number">2.6.3</span> Loading Packages<a class="anchor" aria-label="anchor" href="#loading-packages"><i class="fas fa-link"></i></a>
+</h3>
+<p>Within a script, use function <strong>library()</strong> to load a package, as in the following example.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load package readr</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span></code></pre></div>
+<p>After running this command, all functions of the package will be available in the <strong>current</strong> R session. Whenever you close RStudio or start a new session, you’ll lose all loaded packages. This is the reason why packages are usually loaded in the top of the script: starting from a clean memory, required packages are sequentially loaded before the actual R code is executed.</p>
+<p>If the package you want to use is not available, R will throw an error message. See an example next, where we try to load a non-existing package called <code>unicorn</code>.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">unicorn</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Error in library(unicorn): There is no package called "unicorn"</code></pre>
+<p>Remember this error message. It will appear every time a package is not found. If you got the same message when running code from this book, you need to check what are the required packages of the example and install them using <strong>install.packages()</strong> .</p>
+<p>Alternatively, if you want to use a specific function and do not want to load all functions from the same package, you can do it with the use of double colons (<code>::</code>), as in the following example.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># example of using a function without loading package</span></span>
+<span><span class="fu">fortunes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fortunes/man/fortunes.html">fortune</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; 
+R&gt; Overall, SAS is about 11 years behind R and S-Plus in
+R&gt; statistical capabilities (last year it was about 10 years
+R&gt; behind) in my estimation.
+R&gt;    -- Frank Harrell (SAS User, 1969-1991)
+R&gt;       R-help (September 2003)</code></pre>
+<p>Here, we use function <strong>fortunes</strong>::<strong>fortune()</strong> from the package <strong>{fortunes}</strong> <span class="citation">(<a href="#ref-R-fortunes"><strong>R-fortunes?</strong></a>)</span>, which shows on screen a potentially funny phrase chosen from the R mailing list. For our example, we selected message number 10. One interesting use of package <strong>{fortunes}</strong> <span class="citation">(<a href="#ref-R-fortunes"><strong>R-fortunes?</strong></a>)</span> is to display a random joke every time R starts and, perhaps, lighten up your day. As mentioned before, R is fully customizable. You can find many tutorials on how to achieve this effect by searching on the web for “customizing R startup”.</p>
+<p>Another way of loading a package is by using the <strong>require()</strong> function. A call to <strong>require()</strong> has a different behavior than a call to <strong>library()</strong> . Whenever you try to load an uninstalled package with the <strong>library()</strong> function, it returns an error. This means that the script stops and no further code are evaluated. As for <strong>require()</strong> , if a package is not found, it returns an object with value <code>FALSE</code> and the rest of the code is evaluated. So, in order to avoid code being executed without its explicit dependencies, it is best advised to always use <strong>library()</strong> for loading packages in R scripts.</p>
+<p>The use of <strong>require()</strong> is left for loading up packages inside of functions. If you create a custom function that requires procedures from a particular package, you must load the package within the scope of the function. For example, see the following code, where we create a new function called <code>fct_example</code> that depends on the package <strong>{quantmod}</strong> <span class="citation">(<a href="references.html#ref-R-quantmod">Ryan and Ulrich 2023</a>)</span>:</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fct_example</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://www.quantmod.com">quantmod</a></span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/quantmod/man/getSymbols.html">getSymbols</a></span><span class="op">(</span><span class="va">x</span>, auto.assign <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>In this case, the first time that <code>fct_example</code> is called, it loads up the package <strong>{quantmod}</strong> <span class="citation">(<a href="references.html#ref-R-quantmod">Ryan and Ulrich 2023</a>)</span> and all of its functions. Using <strong>require()</strong> inside a function is a good programming policy because the function becomes self-contained, making it easier to use it in the future. This was the first time where the complete definition of a user-created function in R is presented. Do not worry about it for now. We will explain it further in chapter <a href="programming.html#programming">8</a>.</p>
+<div class="rmdcaution">
+<p>
+Be aware that loading a package can cause a <strong>conflict of
+functions</strong>. For example, there is a function called
+<code>filter</code> in the <code>dplyr</code> package and also in the
+<code>stats</code> package. If we load both packages and call the
+<code>filter</code> function within the scope of the code, which one
+will R use?
+</p>
+<p>
+Well, the <strong>preference is always for the last loaded
+package</strong>. This is a type of problem that can be very confusing.
+Fortunately, note that R itself tests for conflicts when loading a
+package. Try it out: start a new R session and load the
+<code>dplyr</code> package. You’ll see that a message indicates that
+there are two conflicts with the <code>stats</code> package – functions
+<code>filter</code> and <code>lag</code> – and four with the
+<code>base</code> package.
+</p>
+<p>
+A simple strategy to avoid bugs due to conflict of function is to
+call a function using the actual package name. For example, if I’m
+calling <code>lag</code> from <code>dplyr</code>, I can write the call
+as <code><a href="https://dplyr.tidyverse.org/reference/lead-lag.html">dplyr::lag</a></code>. As you can see, the package name is
+explicit, avoiding any possible conflict.
+</p>
+</div>
+</div>
+<div id="upgrading-packages" class="section level3" number="2.6.4">
+<h3>
+<span class="header-section-number">2.6.4</span> Upgrading Packages<a class="anchor" aria-label="anchor" href="#upgrading-packages"><i class="fas fa-link"></i></a>
+</h3>
+<p>Over time, it is natural that packages available on CRAN are upgraded to accommodate new features and fix bugs. Thus, it is recommended that users update their installed packages to a new version. In R, a simple and direct way of upgrading packages is to click the button <em>Update</em> located in the package panel, lower right corner of RStudio, as shown in Figure <a href="basicoperations.html#fig:RStudio-update">2.4</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:RStudio-update"></span>
+<img src="resources/figs/RStudio_update.png" alt="Updating R packages" width="100%"><p class="caption">
+Figure 2.4: Updating R packages
+</p>
+</div>
+<p>The user can also update packages using commands. Simply type command <code><a href="https://rdrr.io/r/utils/update.packages.html">update.packages()</a></code> and hit <em>enter</em>, as shown below.</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># update all installed packages</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/update.packages.html">update.packages</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>The command <strong>update.packages()</strong> compares the version of the installed packages with the versions available in CRAN. If it finds any difference, the new version is downloaded and installed. After running the command, all packages will be synchronized with the versions available in CRAN.</p>
+<div class="rmdimportant">
+<p>
+Package versioning is an extremely important topic for keeping your
+code reproducible. Although it is uncommon to happen, a new package
+version can change the results of your analysis. I have a particularly
+unpleasant experience when a scientific article returned from a journal
+review and, due to the update of one of the R packages I used, I was
+unable to reproduce the results presented in the article. In the end
+everything went well, but the trauma remains.
+</p>
+<p>
+One solution to this problem is to freeze the package versions for
+each project using RStudio’s <code>renv</code> tool. In summary,
+<code>renv</code> makes local copies of the packages used in the
+project, which have preference over system packages. Thus, if a package
+is updated in the system, but not in the project, the R code will
+continue to use the older version and the R code will always run under
+the same conditions.
+</p>
+</div>
+</div>
+</div>
+<div id="running-scripts-from-rstudio" class="section level2" number="2.7">
+<h2>
+<span class="header-section-number">2.7</span> Running Scripts from RStudio<a class="anchor" aria-label="anchor" href="#running-scripts-from-rstudio"><i class="fas fa-link"></i></a>
+</h2>
+<p>Now, let’s copy some code into the editor’s screen (upper left side). The result should look like Figure <a href="basicoperations.html#fig:example-script">2.5</a>.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># a complete script</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="st">"my humble text"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 1</code></pre>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "my humble text"</code></pre>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:example-script"></span>
+<img src="resources/figs/RStudio_example_script.png" alt="Example of an R script" width="100%"><p class="caption">
+Figure 2.5: Example of an R script
+</p>
+</div>
+<p>After pasting all the commands in the editor, save the <em>.R</em> file to a personal folder where you have read and write permissions. In Windows, one possibility is to save it in the <code>Documents</code> folder with a name like <code>'my_first_script.R'</code>. This saved file, which at the moment does nothing special, records the steps of a simple algorithm that creates several objects and shows their content.</p>
+</div>
+<div id="using-the-help-files" class="section level2" number="2.8">
+<h2>
+<span class="header-section-number">2.8</span> Using the help files<a class="anchor" aria-label="anchor" href="#using-the-help-files"><i class="fas fa-link"></i></a>
+</h2>
+<p>There is no shame in seeking help. Advanced R users often seek instructions on specific tasks, whether it is to better understand the execution details of some functions or simply to study a new procedure. The use of the R help system is part of the work and you should master it as soon as possible.</p>
+<p>Within RStudio, you can get help by using the <em>help</em> panel in RStudio or directly from the <em>prompt</em>. Simply enter the question mark next to the object on which you want help, as in <code><a href="https://rdrr.io/r/base/mean.html">?mean</a></code>. In this case, object <code>means</code> is a function and the use of the <strong>help()</strong> command will open a panel on the right side of RStudio. Another way of opening the help page of a function is the select the name of the function and press F1 in the keyboard.</p>
+<p>In R, the help screen of a function is the same as shown in Figure <a href="basicoperations.html#fig:example-help">2.6</a>. It presents a general description of the function, explains its input arguments and the format of the output. The help screen follows with references and suggestions for other related functions. More importantly, examples of usage are given last and can be copied to the prompt or script in order to accelerate the learning process.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:example-help"></span>
+<img src="resources/figs/ExemploAjuda.png" alt="Help screen for function mean" width="100%"><p class="caption">
+Figure 2.6: Help screen for function mean
+</p>
+</div>
+<p>If we are looking for help for a given text and not a function name, we can use double question marks as in <code>??"standard deviation"</code>. This operation will search for the occurrence of the term in all packages of R and it is very useful to learn how to perform a particular task. In this case, we looked for the available functions to calculate the standard deviation of a vector.</p>
+<p>As a suggestion, the easiest and most direct way to learn a new function is by trying out the examples in the manual. This way, you can see which types of inputs the function expects and what type of output it provides back. Once you have it working in your code, read the help screen to understand if it does exactly what you expected and what are the options for its use. If the function performs the desired procedure, you can copy and paste the example for your own <em>script</em>, adjusting where necessary.</p>
+<p>Another very important source of help is the Internet itself. Sites like <a href="http://stackoverflow.com/">stackoverflow</a><a href="references.html#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a> and specific <em>mailing lists</em> and blogs, whose content is also on the Internet, are a valuable source of information. If you find a problem that could not be solved by reading the standard help files, the next logical step is to seek a solution using your error message or the description of the problem in search engines. In many cases, your problem, <strong>no matter how specific it is, has already occurred and has been solved by other users</strong>. In fact, it is more surprising <strong>not</strong> to find the solution for a programming problem on the internet, than the other way around.</p>
+<div class="rmdcaution">
+<p>
+Whenever you ask for help on the internet, always try to 1) describe
+your problem clearly and 2) add a reproducible code of your problem.
+Thus, the reader can easily verify what is happening by running the
+example on his computer, and solving the problem.
+</p>
+</div>
+<div id="rstudio-shortcuts" class="section level3" number="2.8.1">
+<h3>
+<span class="header-section-number">2.8.1</span> RStudio shortcuts<a class="anchor" aria-label="anchor" href="#rstudio-shortcuts"><i class="fas fa-link"></i></a>
+</h3>
+<p>In RStudio, there are some predefined and time-saving shortcuts for running code from the editor. To execute an entire script, simply press <strong>control + shift + s</strong>. This is the <em>source</em> command. With RStudio open, I suggest testing this key combination and checking how the code saved in a <em>.R</em> file is executed. The output of the script is shown in the prompt of R. The result in RStudio should look like Figure <a href="basicoperations.html#fig:example-script-source">2.7</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:example-script-source"></span>
+<img src="resources/figs/RStudio_example_script_source.png" alt="Example of a R script after execution" width="100%"><p class="caption">
+Figure 2.7: Example of a R script after execution
+</p>
+</div>
+<p>Another way of executing code is with the shortcut <strong>control + enter</strong>, which will only execute the line where the cursor is located. This shortcut is very useful in developing scripts because it allows each line of the code to be tested. As an example of usage, point the cursor to the <code>print(x)</code> line and press <em>control + enter</em>. As you will notice, only the line <code>print(x)</code> was executed and the cursor moves to the next line. Therefore, before running the whole script, you can test it line by line and check for possible errors.</p>
+<p>Next, I highlight these and other RStudio shortcuts, which are also very useful.</p>
+<dl>
+<dt>control + shift + s</dt>
+<dd>
+executes (source) the current RStudio file;
+</dd>
+<dt>control + shift + enter</dt>
+<dd>
+executes the current file with echo, showing the commands on the prompt;
+</dd>
+<dt>control + enter</dt>
+<dd>
+executes the selected line, showing on-screen commands;
+</dd>
+<dt>control + shift + b</dt>
+<dd>
+executes the codes from the beginning of the file to the cursor’s location;
+</dd>
+<dt>control + shift + e</dt>
+<dd>
+executes the codes of the lines where the cursor is until the end of the file.
+</dd>
+</dl>
+<p>I suggest you try to create a healthy habit by using these shortcuts from day one. Those who like to use the <em>mouse</em>, an alternate way to execute code is to click the <em>source</em> button in the upper-right corner of the code editor.</p>
+<p>If you want to run code in a <em>.R</em> file within another <em>.R</em> file, you can use the <strong>source()</strong> command. For example, imagine that you have a main R script with your data analysis and another two scripts that performs some support operation such as importing data to R. These operations have been dismembered as a way of organizing the code.</p>
+<p>To run the support <em>scripts</em>, just call it with function <code>source</code> in the main script, as in the following code:</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># execute import script</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">'01-import-data.R'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># execute analysis</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">'02-build-tables'</span><span class="op">)</span></span></code></pre></div>
+<p>Here, all code in <code>01-import-data.R</code> and <code>02-build-tables.R</code> will be executed sequentially. This equals manually opening each file and hitting <em>control + shift + s</em>.</p>
+</div>
+</div>
+<div id="testing-and-debugging-code" class="section level2" number="2.9">
+<h2>
+<span class="header-section-number">2.9</span> Testing and Debugging Code<a class="anchor" aria-label="anchor" href="#testing-and-debugging-code"><i class="fas fa-link"></i></a>
+</h2>
+<p>Developing code follows an observable cycle. At first, you will write a command line on a script, try it using <em>control + enter</em>, and check the result on the prompt or the content of objects. A new line of code is written once the previous line worked as expected. A moving cycle is clear, writing code is followed by line execution, followed by result checking, modify and repeat if necessary. This is a normal and expected process. You need to make sure that every line of code is correctly specified before moving to the next one. Whenever the code asks for something that is not expected (or possible), an error occurs.</p>
+<p>When trying to find an error in a preexisting script, R offers debugging tools for controlling and assessing its execution. This is especially useful when you have a long and complicated script. The simplest and easiest tool that R and RStudio offer is <strong>code breakpoint</strong>. In RStudio, you can click on the left side of the script editor and a red circle will appear, as in Figure <a href="basicoperations.html#fig:example-debug">2.8</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:example-debug"></span>
+<img src="resources/figs/RStudio_example_debug.png" alt="Example of breakpoint in an R script" width="75%"><p class="caption">
+Figure 2.8: Example of breakpoint in an R script
+</p>
+</div>
+<p>This red circle indicates a flag that will force the code to stop at that line. You can use it to test existing code and check its objects at a certain part of the execution. Pausing the code at a certain point might seem strange for a starting programmer but, for large scripts, with many functions and complex code, it is a necessity. When the execution hits the breakpoint, the prompt will change to <code>Browse[1]&gt;</code> and you’ll be able to try new code and verify the content of all current objects. From the Console, you have the option to continue the execution to the next breakpoint or stop it by pressing <em>shift+f8</em>. The same result can be achieved using a function called <code>browser</code>. Have a look:</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set x</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="co"># set y</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="st">'My humble text'</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/browser.html">browser</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print contents of x</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<p>The practical result is the same as using RStudio’s red circle, but it gives you more control for the case of several commands in the same line.</p>
+</div>
+<div id="creating-simple-objects" class="section level2" number="2.10">
+<h2>
+<span class="header-section-number">2.10</span> Creating Simple Objects<a class="anchor" aria-label="anchor" href="#creating-simple-objects"><i class="fas fa-link"></i></a>
+</h2>
+<p>One of the most basic and most used commands in R is the creation of objects. As shown in previous sections, you can define an object using the <code>&lt;-</code> command, which is verbally translated to <em>assign</em>. For example, consider the following code:</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set x</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">123</span></span>
+<span></span>
+<span><span class="co"># set my_x, my_y and my_z in one line</span></span>
+<span><span class="va">my_x</span> <span class="op">&lt;-</span> <span class="fl">1</span>; <span class="va">my_y</span> <span class="op">&lt;-</span> <span class="fl">2</span>; <span class="va">my_z</span> <span class="op">&lt;-</span> <span class="fl">3</span></span></code></pre></div>
+<p>We can read this code as <em>the value 123 is assigned to x</em>. The direction of the arrow defines where the value is stored. For example, using <code>123 -&gt; x</code> also works, although this is not recommended as the code becomes less readable. Moreover, notice that you can create objects within the same line by separating the commands using a semi-colon.</p>
+<div class="rmdimportant">
+<p>
+Using an arrow symbol <code>&lt;-</code> for object definition is a
+simple way to identify R code. The reason for this choice was that, at
+the time of conception of the <em>S</em> language, keyboards had a
+specific key that directly defined the arrow symbol. This means that the
+programmer only had to hit one key in the keyboard to create new
+variables. Modern keyboards, however, are different. If you find it
+troublesome to type this symbol, you can use a shortcut as well. In
+<em>Windows</em>, the shortcut for the symbol <code>&lt;-</code> is
+<em>alt</em> plus “-”.
+</p>
+</div>
+<p>Most programming languages uses a equality symbol (<code>=</code>) to define objects and, often, this creates confusion. When using R, you can also define objects with <code>=</code>, as in <code>x = 123</code>, however, no one should ever recommend it. The equality symbol has a special use within an R code as it defines function arguments, as in <code>my_l &lt;- fct(arg1 = 1, arg2 = 3)</code>. For now, just remember to use <code>&lt;-</code> for defining objects. We will learn more about functions and using the equality symbol in a future chapter.</p>
+<p>The name of the object is important in R. With the exception of very specific cases, you can name objects as you please. This freedom, however, can work against you. It is desirable to set short object names that make sense to the content of the script and which are simple to understand. This facilitates the understanding of the code by other users and is part of the suggested set of rules for structuring code. Note that all objects created in this book have nomenclature in English and specific format, where the white space between nouns are replaced by an underscore, as in <code>my_x &lt;- 1</code> and <code>name_of_file &lt;- 'my_data_file.csv'</code>. We will get back at code structure in chapter <a href="optimizing.html#optimizing">13</a>.</p>
+<p>R executes code by looking for objects available in the environment, including functions. You also need to be aware that R is case sensitive. That is, object <code>m</code> is not the same as <code>M</code>. If we try to access an object that does not exist, R will return an error message and halt the execution of the rest of the code. Have a look:</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; Error in eval(expr, envir, enclos): object 'z' not found</code></pre>
+<p>The error occurred because the object <code>z</code> does not exist in the current environment. If we create a variable <code>z</code> as <code>z &lt;- 321</code> and repeat the command <code>print(z)</code>, we will not have the same error message.</p>
+</div>
+<div id="creating-vectors" class="section level2" number="2.11">
+<h2>
+<span class="header-section-number">2.11</span> Creating Vectors<a class="anchor" aria-label="anchor" href="#creating-vectors"><i class="fas fa-link"></i></a>
+</h2>
+<p>In the previous examples, we created simple objects such as <code>x &lt;- 1</code> and <code>x &lt;- 'ABC'</code>. While this is sufficient to demonstrate the basic commands in R, in practice, such commands are very limited. A real problem of data analysis will certainly have a larger volume of information.</p>
+<p>When we gather many elements of the same class, such as <code>numeric</code>, into a single object, the result is an atomic vector. An example would be the representation of a series of daily stock prices as an atomic vector of the class <code>numeric</code>. Once you have a vector, you can manipulate it any way you want.</p>
+<p>Atomic vectors are created in R using the <strong>c()</strong> command, which comes from the verb <em>combine</em>. For example, if we want to combine the values 1, 2 and 3 in a single object, we can do it with the following command:</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create numeric atomic vector</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 1 2 3</code></pre>
+<p>The <strong>c()</strong> command works the same way for any other class of object, such as <em>character</em>:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create character atomic vector</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'text 1'</span>, <span class="st">'text 2'</span>, <span class="st">'text 3'</span>, <span class="st">'text 4'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "text 1" "text 2" "text 3" "text 4"</code></pre>
+<p>The only restriction when creating vectors is that all elements must have the same class. If we insert data from different classes in a call to <strong>c()</strong> , R will try to mutate all elements into the same class following its own logic. If the conversion of all elements to a single class is not possible, an error message is returned. Note the following example, where numeric values are set in the first and second element of <code>x</code> and a character in the last element.</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># a mixed vector</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="st">'3'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print result of forced conversion</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "1" "2" "3"</code></pre>
+<p>Notice that all values in <code>x</code> are converted to type <code>character</code>. The use of <strong>class()</strong> command confirms this result:</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># print class of x</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "character"</code></pre>
+</div>
+<div id="knowing-your-environment-and-objects" class="section level2" number="2.12">
+<h2>
+<span class="header-section-number">2.12</span> Knowing Your Environment and Objects<a class="anchor" aria-label="anchor" href="#knowing-your-environment-and-objects"><i class="fas fa-link"></i></a>
+</h2>
+<p>After using various commands, further development of an R script requires you to understand what objects are available and if their content are correct. You can find this information simply by looking at the <em>environment</em> tab in the upper right corner of RStudio. However, there is a command that shows the same information in the prompt. In order to know what objects are currently available in R’s memory, you can use the command <strong>ls()</strong> . Note the following example:</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set some objects</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<span></span>
+<span><span class="co"># print all objects in the environment</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "x" "y" "z"</code></pre>
+<p>Objects <code>x</code>, <code>y</code> and <code>z</code> were created and are available in the current working environment. If we had other objects, they would also appear in the output to <strong>ls()</strong> .</p>
+<p>To display the content of each object, just enter the names of objects and press <code>enter</code> in the <em>prompt</em>:</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># print objects by their name</span></span>
+<span><span class="va">x</span></span></code></pre></div>
+<pre><code>R&gt; [1] 1</code></pre>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y</span></span></code></pre></div>
+<pre><code>R&gt; [1] 2</code></pre>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">z</span></span></code></pre></div>
+<pre><code>R&gt; [1] 3</code></pre>
+<p>Typing the object name on the screen has the same effect as using the <strong>print()</strong> command. In fact, when executing the sole name of a variable in the prompt or script, R internally passes the object to the <strong>print()</strong> function.</p>
+<p>In R, all objects belong to a class. As previously mentioned, to find the class of an object, simply use the <strong>class()</strong> function. In the following example, <code>x</code> is an object of the class <code>numeric</code>, <code>y</code> is a text (<code>character</code>) object and <code>fct_example</code> is a function object.</p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set objects</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="st">'a'</span></span>
+<span><span class="va">fct_example</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># print their classes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "numeric"</code></pre>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "character"</code></pre>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">fct_example</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "function"</code></pre>
+<p>Another way to learn more about an object is to check its textual representation. Every object in R has this property and we can find it with function <strong>str()</strong> :</p>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set vec</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span><span class="co"># print the textual representation of a vector</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt;  int [1:10] 1 2 3 4 5 6 7 8 9 10
+R&gt; NULL</code></pre>
+<p>We find that object <code>x</code> is a vector of class <code>int</code> (integer). Function <strong>str()</strong> is particularly useful when trying to understand the details of a more complex object, such as a <code>dataframe</code> or a <code>list</code>, which will be introduced in future chapter.</p>
+</div>
+<div id="finding-the-size-of-objects" class="section level2" number="2.13">
+<h2>
+<span class="header-section-number">2.13</span> Finding the Size of Objects<a class="anchor" aria-label="anchor" href="#finding-the-size-of-objects"><i class="fas fa-link"></i></a>
+</h2>
+<p>In R, an object size can mean different things but most likely it is defined as the number of individual elements that constitute the object. This information serves not only to assist the programmer in checking possible code errors but also to know the length of iteration procedures such as <em>loops</em>, which will be treated in a later chapter of this book.</p>
+<p>In R, the size of an object can be checked with the use of four main functions: <strong>length()</strong> , <strong>nrow()</strong> , <strong>ncol()</strong> and <strong>dim()</strong> .</p>
+<p>Function <strong>length()</strong> is intended for objects with a single dimension, such as atomic vectors:</p>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create atomic vector</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get length of x</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># display message</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">'The length of x is '</span>, <span class="va">n</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; The length of x is 6</code></pre>
+<p>For objects with more than one dimension, such as a matrix, use functions <strong>nrow()</strong> , <strong>ncol()</strong> and <strong>dim()</strong> (dimension) to find the number of rows (first dimension) and the number of columns (second dimension). See the difference in usage below.</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create a matrix</span></span>
+<span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, nrow <span class="op">=</span> <span class="fl">4</span>, ncol <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print matrix</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt;      [,1] [,2] [,3] [,4] [,5]
+R&gt; [1,]    1    5    9   13   17
+R&gt; [2,]    2    6   10   14   18
+R&gt; [3,]    3    7   11   15   19
+R&gt; [4,]    4    8   12   16   20</code></pre>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># calculate size in different ways</span></span>
+<span><span class="va">my_nrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span></span>
+<span><span class="va">my_ncol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span></span>
+<span><span class="va">my_n_elements</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># display messages</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">'The number of lines in M is '</span>, <span class="va">my_nrow</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; The number of lines in M is 4</code></pre>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">'The number of columns in M is '</span>, <span class="va">my_ncol</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; The number of columns in M is 5</code></pre>
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">'The number of elements in M is '</span>, <span class="va">my_n_elements</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; The number of elements in M is 20</code></pre>
+<p>The <strong>dim()</strong> function shows the dimension of the object, resulting in a numeric vector as output. This function should be used when the object has more than two dimensions. In practice, however, such cases are rare as most data-related problems can be solved with a bi-dimensional representation. An example is given next:</p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get dimension of M</span></span>
+<span><span class="va">my_dim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">M</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_dim</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 4 5</code></pre>
+<p>In the case of objects with more than two dimensions, we can use the <strong>array()</strong> function to create the object and <strong>dim()</strong> to find its size. Have a look at the next example:</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create an array with three dimensions</span></span>
+<span><span class="va">my_array</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_array</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; , , 1
+R&gt; 
+R&gt;      [,1] [,2] [,3]
+R&gt; [1,]    1    4    7
+R&gt; [2,]    2    5    8
+R&gt; [3,]    3    6    9
+R&gt; 
+R&gt; , , 2
+R&gt; 
+R&gt;      [,1] [,2] [,3]
+R&gt; [1,]    1    4    7
+R&gt; [2,]    2    5    8
+R&gt; [3,]    3    6    9
+R&gt; 
+R&gt; , , 3
+R&gt; 
+R&gt;      [,1] [,2] [,3]
+R&gt; [1,]    1    4    7
+R&gt; [2,]    2    5    8
+R&gt; [3,]    3    6    9</code></pre>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># display its dimensions</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">my_array</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 3 3 3</code></pre>
+</div>
+<div id="selecting-elements-from-an-atomic-vector" class="section level2" number="2.14">
+<h2>
+<span class="header-section-number">2.14</span> Selecting Elements from an Atomic Vector<a class="anchor" aria-label="anchor" href="#selecting-elements-from-an-atomic-vector"><i class="fas fa-link"></i></a>
+</h2>
+<p>After creating an atomic vector, you can access and select portions of it. For example, suppose that a month ago you invested 1.000 USD in Apple shares. You download stock price data for previous month and want to see how much your portfolio is currently worth. In that case, you are interested only in latest price of the stocks. All price values from other dates are not relevant to our analysis and therefore could be safely ignored.</p>
+<p>The selection of <em>pieces</em> of an atomic vector is called <strong>indexing</strong> and it is accomplished with the use of square brackets (<code>[ ]</code>). Consider the following example:</p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set x</span></span>
+<span><span class="va">my_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">7</span>, <span class="fl">3.5</span>, <span class="fl">4.3</span><span class="op">)</span></span></code></pre></div>
+<p>If we wanted only the third element of <code>my_x</code>, we use the bracket operator as follows:</p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get the third element of x</span></span>
+<span><span class="va">elem_x</span> <span class="op">&lt;-</span> <span class="va">my_x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">elem_x</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 4</code></pre>
+<p>Indexing also works using vectors containing the desired locations. If we are only interested in the last and penultimate values of <code>my_x</code>, we use the following code:</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set vector with indices</span></span>
+<span><span class="va">my_idx</span> <span class="op">&lt;-</span>  <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">my_x</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">my_x</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># get last and penultimate value of my_x</span></span>
+<span><span class="va">piece_x_1</span> <span class="op">&lt;-</span> <span class="va">my_x</span><span class="op">[</span><span class="va">my_idx</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">piece_x_1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 3.5 4.3</code></pre>
+<p>A cautionary note: <strong>a unique property of the R language is that if a non-existing element of an object is accessed, the program returns the value <code>NA</code> (<em>not available</em>)</strong>. See the next example code, where we attempt to obtain the fourth value of a vector with only three components.</p>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set object</span></span>
+<span><span class="va">my_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print non-existing fourth element</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_vec</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] NA</code></pre>
+<p>This is important because <code>NA</code> elements are contagious. That is, anything that interacts with <code>NA</code> will also become <code>NA</code>. The lack of treatment of these errors can lead to problems that are difficult to identify. In other programming languages, attempting to access non-existing elements generally returns an error and cancels the execution of the rest of the code.</p>
+<div class="rmdimportant">
+<p>
+In most cases, the occurrence of <code>NA</code> (<em>Not
+Available</em>) values suggests that a problem exists within the code.
+Always remember that <code>NA</code> values indicates lack of data and
+are contagious: anything that interacts with a <code>NA</code> value
+will turn into another <code>NA</code>. <strong>You should become
+suspicious about your code quality every time that <code>NA</code>
+values are found unexpectedly</strong>.
+</p>
+</div>
+<p>The use of indices is very useful when you are looking for items of a vector that satisfy some condition. For example, if we wanted to find out all values in <code>my_x</code> that are greater than 3, we could use the following command:</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># find all values in my_x that is greater than 3</span></span>
+<span><span class="va">piece_x_2</span> <span class="op">&lt;-</span> <span class="va">my_x</span><span class="op">[</span><span class="va">my_x</span><span class="op">&gt;</span><span class="fl">3</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">piece_x_2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 5.0 4.0 7.0 3.5 4.3</code></pre>
+<p>It is also possible to index elements by more than one condition using the logical operators <code>&amp;</code> and <code>|</code> (<em>or</em>). For example, if we wanted the values of <code>my_x</code> greater than 2 <strong>and</strong> lower than 4, we could use the following command:</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># find all values of my_x that are greater than 2 and lower then 4</span></span>
+<span><span class="va">piece_x_3</span> <span class="op">&lt;-</span> <span class="va">my_x</span><span class="op">[</span> <span class="op">(</span><span class="va">my_x</span> <span class="op">&gt;</span> <span class="fl">2</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">my_x</span> <span class="op">&lt;</span> <span class="fl">4</span><span class="op">)</span> <span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">piece_x_3</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 3.0 3.5</code></pre>
+<p>Likewise, if we wanted all items that are lower than 3 <strong>or</strong> greater than 6, we use:</p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># find all values of my_x that are lower than 3 or higher than 6</span></span>
+<span><span class="va">piece_x_4</span> <span class="op">&lt;-</span> <span class="va">my_x</span><span class="op">[</span> <span class="op">(</span><span class="va">my_x</span> <span class="op">&lt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">my_x</span> <span class="op">&gt;</span> <span class="fl">6</span><span class="op">)</span> <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">piece_x_4</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] 1 2 7</code></pre>
+<p>Moreover, logic indexing also works with the interaction of different objects. That is, we can use a logical condition in one object to select items from another:</p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set my_x and my.y</span></span>
+<span><span class="va">my_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="va">my_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">10</span>, <span class="fl">14</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># find all elements of my_x where my.y is higher than 0</span></span>
+<span><span class="va">my_piece_x</span> <span class="op">&lt;-</span> <span class="va">my_x</span><span class="op">[</span><span class="va">my_y</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_piece_x</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1]  6  8 12</code></pre>
+<p>Looking more closely at the indexing process, notice that we are creating a variable of the <code>logical</code> type. This object takes only two values: <code>TRUE</code> and <code>FALSE</code>. Have a look in the code presented next, where we create a <code>logical</code> object, print it and present its class.</p>
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create a logical object</span></span>
+<span><span class="va">my_logical</span> <span class="op">&lt;-</span> <span class="va">my_y</span> <span class="op">&gt;</span> <span class="fl">0</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_logical</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] FALSE FALSE  TRUE  TRUE  TRUE</code></pre>
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># find its class</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">my_logical</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [1] "logical"</code></pre>
+<p>Logical objects are very useful whenever we are testing a particular condition on a data set. We will learn more about this and other basic classes in chapter <a href="basic-classes.html#basic-classes">7</a>.</p>
+</div>
+<div id="removing-objects-from-the-memory" class="section level2" number="2.15">
+<h2>
+<span class="header-section-number">2.15</span> Removing Objects from the Memory<a class="anchor" aria-label="anchor" href="#removing-objects-from-the-memory"><i class="fas fa-link"></i></a>
+</h2>
+<p>After creating several variables, the R environment can become full of used and disposable content. In this case, it is desirable to clear the memory to erase objects that are no longer needed. Generally, this is accomplished at the beginning of a script, so that every time the script runs, the memory will be cleared before any calculation. In addition to cleaning the computer’s memory, it also helps to avoid possible errors in the code.</p>
+<p>For example, given an object <code>x</code>, we can delete it from memory with the command <strong>rm()</strong> , as shown next:</p>
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set x</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="co"># remove x</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="st">'x'</span><span class="op">)</span></span></code></pre></div>
+<p>After executing the command <code>rm('x')</code>, the value of <code>x</code> is no longer available in the R session. In practical situations, however, it is desirable to clean up all the memory used by all objects created in R. We can achieve this goal with the following code:</p>
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The term <code>list</code> in <code>rm(list = ls())</code> is a function argument of <strong>rm()</strong> that defines which objects will be deleted. The <strong>ls()</strong> command shows all the currently available objects. Therefore, by chaining together both commands, we erase all current objects available in the environment. As mentioned before, it is a good programming policy to clear the memory before running the script. However, you should only wipe out all of R’s memory if you have already saved the results of interest or if you can replicate them.</p>
+<div class="rmdcaution">
+<p>
+Clearing memory in <em>scripts</em> is a controversial topic. Some
+authors argue that it is better not to clear the memory as this can
+erase important results. My opinion is that it is important to clear the
+memory at the top of the script, as long as all results are
+reproducible. When you start a code in a clean state – no variables or
+functions – it becomes easier to understand and solve possible bugs.
+</p>
+</div>
+</div>
+<div id="displaying-and-setting-the-working-directory" class="section level2" number="2.16">
+<h2>
+<span class="header-section-number">2.16</span> Displaying and Setting the Working Directory<a class="anchor" aria-label="anchor" href="#displaying-and-setting-the-working-directory"><i class="fas fa-link"></i></a>
+</h2>
+<p>Like other programming platforms, <strong>R always executes code in a working directory</strong>. If no directory is set, a default value is used when R starts up. It is based on the working directory that R searches for files to load data or other R scripts. It is in this directory that R saves any output if we do not explicitly define a path on the computer. This output can be a graphic file, text or a spreadsheet. That said ,<strong>it is good policy to change the working directory to the same place where the <em>script</em> is located</strong>.</p>
+<p>The simplest way of checking the current working directory is looking at RStudio’s prompt panel. At the top, in a small font and just below the word “Console”, you’ll see the working path. Using code, we can check the current working directory with function <strong>getwd()</strong> :</p>
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get current dir</span></span>
+<span><span class="va">my_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># display it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_dir</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; C:/my-books/afedR-ed4/book-content</code></pre>
+<p>The result of the previous code shows the folder in which this book was written and compiled.</p>
+<p>The change of the working directory is performed with the <strong>setwd()</strong> command. For example, if we wanted to change our working directory to <em>C:/My Research/</em>, simply type in the <em>prompt</em>:</p>
+<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set where to change directory</span></span>
+<span><span class="va">my_d</span> <span class="op">&lt;-</span> <span class="st">'C:/My Research/'</span></span>
+<span></span>
+<span><span class="co"># change it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="va">my_d</span><span class="op">)</span></span></code></pre></div>
+<p>After changing the directory, importing and saving files in the <em>C:/My Research/</em> folder will be a lot easier.</p>
+<p>Additionally, the easiest and most straightforward way to ensure that the working directory is the same as the R script is using <strong>RStudio projects</strong>. To do so, click in “File” and “New Project”. Doing so will create a .Rproj file in the chosen directory of the project. The trick here is to create the R scripts in the root folder of the project. Every time you open the project, it will automatically change the working directory to where the .Rproj file is located.</p>
+<p>Once you are working on the same path as the script, using relative paths is preferable. For example, if you are working in a folder that contains a subdirectory called <code>data</code>, you can enter this sub-folder with the code:</p>
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># change to subfolder</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="st">'data'</span><span class="op">)</span></span></code></pre></div>
+<p>Another possibility is to go to a previous level of the directory using <code>..</code>, as in:</p>
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># change to the previous level</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="st">'..'</span><span class="op">)</span></span></code></pre></div>
+<p>So, if you are working in directory <code>C:/My Research/</code> and execute the command <code>setwd('..')</code>, the current folder becomes <code>C:/</code>, which is one level below <code>C:/My Research/</code>.</p>
+</div>
+<div id="canceling-code-execution" class="section level2" number="2.17">
+<h2>
+<span class="header-section-number">2.17</span> Canceling Code Execution<a class="anchor" aria-label="anchor" href="#canceling-code-execution"><i class="fas fa-link"></i></a>
+</h2>
+<p>Whenever R is running some code, a visual cue in the shape of a small red circle with the word <em>stop</em> in the right corner of the <em>prompt</em> will appear. This button is not only an indicator that R is busy running code but also a shortcut for canceling its execution. Another way to cancel an execution is to point the mouse to the <em>prompt</em> and press the <em>escape</em> (<em>esc</em>) button from the keyboard.</p>
+<p>To try it out, run the next chunk of code in RStudio and cancel its execution using <em>esc</em>.</p>
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">'\nRunning code (please make it stop by hitting esc!)'</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>In the previous code, we used a <code>for</code> loop and function <code>Sys.sleep</code> to display the message <code>'\nRunning code (please make it stop by hitting ESC!)'</code> one hundred times, every second. For now, do not worry about the code and functions used in the example. We will discuss the use of loops in chapter <a href="programming.html#programming">8</a>.</p>
+<div class="rmdimportant">
+<p>
+Another very useful trick for defining working directories in R is to
+use the <code>~</code> symbol. The tilda defines the “Documents” folder
+in <em>Windows</em>, which is unique for each user. For Linux and Mac
+users, the tilda defines the “home” folder (e.g. “/home/USERNAME”).
+Therefore, by running <code>setwd(‘~’)</code>, you will direct R to a
+personal folder in any operating system.
+</p>
+</div>
+</div>
+<div id="code-comments" class="section level2" number="2.18">
+<h2>
+<span class="header-section-number">2.18</span> Code Comments<a class="anchor" aria-label="anchor" href="#code-comments"><i class="fas fa-link"></i></a>
+</h2>
+<p>In R, comments are set using the hashtag symbol <code>#</code>. Any text after this symbol will not be processed. This gives you the freedom to write whatever you want within the script. An example:</p>
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># this is a comment (R will not parse it)</span></span>
+<span><span class="co"># this is another comment (R will again not parse it)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="st">'abc'</span> <span class="co"># this is an inline comment</span></span></code></pre></div>
+<p>Comments are an effective way to communicate any important information that cannot be directly inferred from the code. In general, you should avoid using comments that are too obvious or too generic:</p>
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># read CSV file</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">'data/data_file.csv'</span><span class="op">)</span></span></code></pre></div>
+<p>As you can see, it is quite obvious from the line <code>df &lt;- read.csv('..')</code> that the code is reading a .csv file. The name of the function already states that. So, the comment was not a good one as it did not add any new information to the user. A better approach at commenting would be to set the author, description of the script and better explain the origin and last update of the data file. Have a look:</p>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Script for reproducing the results of JOHN (2019)</span></span>
+<span><span class="co"># Author: Mr data analyst (dontspamme@emailprovider.com)</span></span>
+<span><span class="co"># Last script update: 2020-01-10</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># File downloaded from www.site.com/data-files/data_file.csv</span></span>
+<span><span class="co"># The description of the data goes here</span></span>
+<span><span class="co"># Last file update: 2020-01-10</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">'data/data_file.csv'</span><span class="op">)</span></span></code></pre></div>
+<p>So, by reading the comments, the user will know the purpose of the script, who wrote it and the date of the last edit. It also includes the origin of the data file and the date of the latest update. If the user wants to update the data, all he has to do is go to the referred website and download the new file.</p>
+<p>Another productive use of comments is to set sections in the code, such as in:</p>
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Script for reproducing the results of JOHN (2019)</span></span>
+<span><span class="co"># Author: Mr data analyst (dontspamme@emailprovider.com)</span></span>
+<span><span class="co"># Last script update: 2020-01-10</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># File downloaded from www.site.com/data-files/data_file.csv</span></span>
+<span><span class="co"># The description of the data goes here</span></span>
+<span><span class="co"># Last file update: 2020-01-10</span></span>
+<span></span>
+<span><span class="co"># Clean data -------------------------</span></span>
+<span><span class="co"># - remove outliers</span></span>
+<span><span class="co"># - remove unnecessary columns</span></span>
+<span></span>
+<span><span class="co"># Create descriptive tables ----------</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Estimate models --------------------</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Report results ---------------------</span></span></code></pre></div>
+<p>The use of a long line of dashes (-) at each section of the code is intentional. It causes RStudio to identify and bookmark the sections, with a link to them at the bottom of the script editor. Test it yourself, copy and paste the above code into a new R script, save it, and you’ll see that the sections appear on a button between the editor and the prompt. Such a shortcut can save plenty of time in lengthy scripts.</p>
+<div class="rmdcaution">
+<p>
+When you start to share code with other people, you’ll soon realize
+that comments are essential and expected. They help transmit information
+that is not available from the code. This is one way of a discerning
+beginners from experienced programmers. Contrary to popular belief, it
+is likely that someone with experience in programming will be very
+communicative in its comments (sometimes too much!). A note here,
+throughout the book you’ll see that the code comments are, most of the
+time, a bit obvious. This was intentional as clear and direct messages
+are important for new users, which is part of the audience of this
+book.
+</p>
+</div>
+</div>
+<div id="autocomplete" class="section level2" number="2.19">
+<h2>
+<span class="header-section-number">2.19</span> Using Code Completion with <em>tab</em><a class="anchor" aria-label="anchor" href="#autocomplete"><i class="fas fa-link"></i></a>
+</h2>
+<p>A very useful feature of RStudio is <em>code completion</em>, an editing tool that facilitates the search of object names, packages, function arguments, and files. Its usage is very simple. After you type any first letter in the keyboard, just press <em>tab</em> (left side of the keyboard, above <em>capslock</em>) and a number of options will appear. See Figure <a href="basicoperations.html#fig:autocomplete-objects">2.9</a> where, after entering the <em>f</em> letter and pressing <em>tab</em>, a small window appears with a list of object names that begin with that letter.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:autocomplete-objects"></span>
+<img src="resources/figs/autocomplete_objects.png" alt="Usage of autocomplete for object name" width="100%"><p class="caption">
+Figure 2.9: Usage of autocomplete for object name
+</p>
+</div>
+<p>The autocomplete feature is self-aware and will work differently depending on where it is called. As such, it works perfectly for searching for packages. For that, type <code><a href="https://rdrr.io/r/base/library.html">library()</a></code> in the prompt or editor, place the cursor in between the parentheses and press <em>tab</em>. The result should look something like Figure <a href="basicoperations.html#fig:autocomplete-packages">2.10</a>, shown next.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:autocomplete-packages"></span>
+<img src="resources/figs/autocomplete_packages.png" alt="Usage of autocomplete for packages" width="100%"><p class="caption">
+Figure 2.10: Usage of autocomplete for packages
+</p>
+</div>
+<p>Note that a description of the package or object is also offered by the code completion tool. This greatly facilitates the day to day work as the memorization of package names and R objects can be challenging. The use of the <em>tab</em> decreases the time to look up names, also avoiding possible errors.</p>
+<p>The use of this tool becomes even more beneficial when objects and functions are named with some sort of pattern. In the rest of the book, you will notice that objects tend to be named with the prefix <em>my</em>, as <code>my_x</code>, <code>my_num</code>, <code>my_df</code>. Using this naming rule (or any other) facilitates the lookup for the names of objects created by the user. You can just type <code>my_</code>, press <em>tab</em>, and a list of objects will appear.</p>
+<p>As mentioned in the previous section, you can also find files and folders on your computer using <em>tab</em>. To try it, write the command <code>my_file &lt;- ""</code> in the prompt or a script, point the cursor to the middle of the quotes and press the <em>tab</em> key. A screen with the files and folders from the current working directory should appear, as shown in Figure <a href="basicoperations.html#fig:autocomplete-files">2.11</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:autocomplete-files"></span>
+<img src="resources/figs/autocomplete_files.png" alt="Usage of autocomplete for files and folders" width="100%"><p class="caption">
+Figure 2.11: Usage of autocomplete for files and folders
+</p>
+</div>
+<p>The use of autocomplete is also possible for finding the name and description of function arguments. To try it out, write <code><a href="https://rdrr.io/r/base/message.html">message()</a></code> and place the mouse cursor inside the parentheses. After that, press <em>tab</em>. The result should be similar to Figure <a href="basicoperations.html#fig:autocomplete-args">2.12</a>. By using <em>tab</em> inside of a function, we have the names of all arguments and their description – a mirror of the information found in the help files.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:autocomplete-args"></span>
+<img src="resources/figs/autocomplete_args.png" alt="Usage of autocomplete for function arguments" width="75%"><p class="caption">
+Figure 2.12: Usage of autocomplete for function arguments
+</p>
+</div>
+<p>Likewise, you can also search for a function within a package with <em>tab</em>. For that, simply type the name of the package followed by two commas, as in <code>readr::</code>, and press <em>tab</em>. The result should be similar to Figure <a href="basicoperations.html#fig:autocomplete-pkg-fct">2.13</a></p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:autocomplete-pkg-fct"></span>
+<img src="resources/figs/autocomplete_pkg_fcts.png" alt="Usage of autocomplete for finding functions within a package" width="75%"><p class="caption">
+Figure 2.13: Usage of autocomplete for finding functions within a package
+</p>
+</div>
+<p>Summing up, using code completion will make you more productive. You’ll find names of files, objects, arguments, and packages much faster. Use it as much as you can.</p>
+<div class="rmdimportant">
+<p>
+<em>Autocomplete</em> is one of the most important tools of RStudio,
+helping users to find object names, locations on the hard disk, packages
+and functions. Get used to using the <em>tab</em> key and, soon enough,
+you’ll see how much the <em>autocomplete</em> tool can help you write
+code quickly, and without typos.
+</p>
+</div>
+</div>
+<div id="interacting-with-files-and-the-operating-system" class="section level2" number="2.20">
+<h2>
+<span class="header-section-number">2.20</span> Interacting with Files and the Operating System<a class="anchor" aria-label="anchor" href="#interacting-with-files-and-the-operating-system"><i class="fas fa-link"></i></a>
+</h2>
+<p>As you are learning R, soon enough you’ll find a data-related problem that requires some interaction with files on the computer, either by creating new folders, decompressing and compressing files, listing and removing files from the hard drive of the computer or any other type of operation. R has full support for such type of operations. You can automate any type of computer task within an R script, if so needed.</p>
+<p>In this section we will give preference to functions from package <strong>{fs}</strong> <span class="citation">(<a href="references.html#ref-R-fs">Hester, Wickham, and Csárdi 2023</a>)</span>, which provides several routines for interacting with files and folders. Be aware, however, that the <code>base</code> package also offers similar functions.</p>
+<div id="listing-files-and-folders" class="section level3" number="2.20.1">
+<h3>
+<span class="header-section-number">2.20.1</span> Listing Files and Folders<a class="anchor" aria-label="anchor" href="#listing-files-and-folders"><i class="fas fa-link"></i></a>
+</h3>
+<p>To list files from your computer, use function <strong>fs</strong>::<strong>dir_ls()</strong> , where the <code>path</code> argument sets the directory to list the files from. For the compilation of the book, I’ve created a directory called <em>data</em>. This folder contains all the data needed to recreate the book’s examples. You can check the files in the sub-folder <code>data</code> with the following code:</p>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># list files in data folder</span></span>
+<span><span class="va">my_files</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_files</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; data/FileWithLatinChar_ISO-8859-9.txt
+R&gt; data/FileWithLatinChar_UTF-8.txt
+R&gt; data/Financial Sample.xlsx
+R&gt; data/MySQLiteDatabase.SQLITE
+R&gt; data/SP500-Stocks-WithRet.rds
+R&gt; data/SP500-Stocks_long.csv
+R&gt; data/SP500-Stocks_wide.csv
+R&gt; data/SP500_long_yearly_2010-01-01_2019-11-04.rds
+R&gt; data/SQLite_db.SQLITE
+R&gt; data/UCI_Credit_Card.csv
+R&gt; data/price-data.csv
+R&gt; data/pride_and_prejudice.txt
+R&gt; data/temp.txt
+R&gt; data/temp_file.xlsx
+R&gt; data/top25babynames-by-sex-2005-2017.csv</code></pre>
+<p>There are several files with different extensions in this directory. These files contain data that will be used in future chapters.</p>
+<p>You can also list the files recursively over inner folders, that is, list all files from all sub-folders contained in the original path. To check it, try using the following code in your computer:</p>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># list all files for all subfolders (IT MAY TAKE SOME TIME...)</span></span>
+<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="op">(</span>path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html">getwd</a></span><span class="op">(</span><span class="op">)</span>, recurse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>The previous command will list all files in the current folder and sub-folders. Depending on the current working directory, it may take some time to run it all (you can cancel it anytime by pressing <em>esc</em> in your keyboard).</p>
+<p>You can also set what type of output you need. For example, if you want only the available folders, and not files, use input <code>type = "directory"</code>:</p>
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># store names of directories</span></span>
+<span><span class="va">my_dirs</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="op">(</span></span>
+<span>    path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html">getwd</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>    type <span class="op">=</span> <span class="st">"directory"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print it</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_dirs</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/_book
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/blocks
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/data
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/ebook files
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/eqs
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/mem_cache
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/quandl_cache
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/resources
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/tabs
+R&gt; /tmp/RtmpCpmYn0/compile-book-html--4f5618cd6e83/text-to-reuse</code></pre>
+<p>The output shows the directories used to write the book. It includes the directory with the data (“./data”), resources (“./resources”) among others. In this same directory, you can find the chapters of the book, organized by files and based on the <em>RMarkdown</em> language (<code>.Rmd</code> file extension):</p>
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># list all files with the extension .Rmd</span></span>
+<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="op">(</span>glob <span class="op">=</span> <span class="st">"*.Rmd"</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; 00a-About-new-edition.Rmd
+R&gt; 00b-Preface.Rmd
+R&gt; 01-Introduction.Rmd
+R&gt; 02-Basic-operations.Rmd
+R&gt; 03-Research-scripts.Rmd
+R&gt; 04-Importing-exporting-local.Rmd
+R&gt; 05-Importing-internet.Rmd
+R&gt; 06-Data-structure-objects--ONLINE.Rmd
+R&gt; 07-Basic-objects--ONLINE.Rmd
+R&gt; 08-Programming--ONLINE.Rmd
+R&gt; 09-Cleaning-data--ONLINE.Rmd
+R&gt; 10-Figures--ONLINE.Rmd
+R&gt; 11-Models--ONLINE.Rmd
+R&gt; 12-Reporting-results--ONLINE.Rmd
+R&gt; 13-Optimizing-code--ONLINE.Rmd
+R&gt; 14-References.Rmd
+R&gt; _Welcome.Rmd
+R&gt; afedR_ed03_ONLINE.Rmd
+R&gt; index.Rmd</code></pre>
+<p>The files presented above contain all the contents of this book, including this specific paragraph, located in file <code>02-Basic-operations.Rmd</code>!</p>
+</div>
+<div id="deleting-files-and-directories" class="section level3" number="2.20.2">
+<h3>
+<span class="header-section-number">2.20.2</span> Deleting Files and Directories<a class="anchor" aria-label="anchor" href="#deleting-files-and-directories"><i class="fas fa-link"></i></a>
+</h3>
+<p>You can also use an R session to delete files and directories from your computer. This might come in handy when dealing with disposable data files. Use these commands with responsibility. If not careful, you can easily break the operating system of your computer.</p>
+<p>You can delete files with command <strong>fs</strong>::<strong>file_delete()</strong> :</p>
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create temporary file</span></span>
+<span><span class="va">my_file</span> <span class="op">&lt;-</span> <span class="st">'data/tempfile.csv'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>,</span>
+<span>          file <span class="op">=</span> <span class="va">my_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># delete it</span></span>
+<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/delete.html">file_delete</a></span><span class="op">(</span><span class="va">my_file</span><span class="op">)</span></span></code></pre></div>
+<p>To delete directories and all their elements, we use <strong>fs</strong>::<strong>dir_delete()</strong> :</p>
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create temp dir</span></span>
+<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html">dir_create</a></span><span class="op">(</span><span class="st">'temp'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create a file inside of temp</span></span>
+<span><span class="va">my_file</span> <span class="op">&lt;-</span> <span class="st">'temp/tempfile.csv'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>,</span>
+<span>          file <span class="op">=</span> <span class="va">my_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/delete.html">dir_delete</a></span><span class="op">(</span><span class="st">'temp'</span><span class="op">)</span></span></code></pre></div>
+<p>If needed, we can check if the deletion of a directory was successful with command <strong>fs</strong>::<strong>dir_exists()</strong> :</p>
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_access.html">dir_exists</a></span><span class="op">(</span><span class="st">'temp'</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt;  temp 
+R&gt; FALSE</code></pre>
+<p>As expected, the directory was not found.</p>
+</div>
+<div id="downloading-files-from-the-internet" class="section level3" number="2.20.3">
+<h3>
+<span class="header-section-number">2.20.3</span> Downloading Files from the Internet<a class="anchor" aria-label="anchor" href="#downloading-files-from-the-internet"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can also use R to download files from the Internet with function <strong>download.file()</strong> . See the following example, where we download an Excel spreadsheet from Microsoft’s website:</p>
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set link</span></span>
+<span><span class="va">link_dl</span> <span class="op">&lt;-</span> <span class="st">'go.microsoft.com/fwlink/?LinkID=521962'</span></span>
+<span><span class="va">local_file</span> <span class="op">&lt;-</span> <span class="st">'data/temp_file.xlsx'</span> <span class="co"># name of local file</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span>url <span class="op">=</span> <span class="va">link_dl</span>,</span>
+<span>              destfile <span class="op">=</span> <span class="va">local_file</span><span class="op">)</span></span></code></pre></div>
+<p>Using <strong>download.file()</strong> is quite handy when you are working with Internet data that is constantly being updated. In the script, we can download new data in every execution, making sure that our analysis is based on current information.</p>
+<p>One trick worth knowing is that you can also download files from cloud services such as <a href="https://www.dropbox.com/">Dropbox</a><a href="references.html#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a> and <a href="https://drive.google.com/">Google Drive</a><a href="references.html#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a>. So, if you need to send a data file to a large group of people and update it frequently, just pass the file link from the cloud service. This way, any local change in the data file in your computer will be reflected for all users with the file link.</p>
+<div class="rmdcaution">
+<p>
+Needless to say, <strong>be very careful</strong> with commands
+<code><a href="https://fs.r-lib.org/reference/delete.html">fs::file_delete</a></code> and <code><a href="https://fs.r-lib.org/reference/delete.html">fs::dir_delete</a></code>, especially
+when using recursion (<code>recurse = TRUE</code>). One simple mistake
+and important parts of your hard drive can be erased, breaking your
+operating system. Be aware that R <strong>permanently deletes</strong>
+files and folder, without any simple way to restore them.
+</p>
+</div>
+</div>
+<div id="using-temporary-files-and-directories" class="section level3" number="2.20.4">
+<h3>
+<span class="header-section-number">2.20.4</span> Using Temporary Files and Directories<a class="anchor" aria-label="anchor" href="#using-temporary-files-and-directories"><i class="fas fa-link"></i></a>
+</h3>
+<p>Every time a user starts an R session, a new temporary folder is created in your hard drive. This folder is used to store any disposable files and folders generated by R. The location of this directory is available with <strong>fs</strong>::<strong>path_temp()</strong> :</p>
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">windows_tempdir</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html">path_temp</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">windows_tempdir</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; C:\Users\msperlin\AppData\Local\Temp\RtmpEGt3Q7</code></pre>
+<p>The name of the temporary directory, in this case <code>'RtmpEGt3Q7'</code>, is unique and randomly defined at the start of every new R session. This means that every R session is linked to an unique temporary folder. If two R sessions are created, as in starting two RStudio sessions, two temporary folders will be available, each with an unique name. <strong>When the computer is rebooted, all temporary directories are deleted</strong>.</p>
+<p>The same dynamic is found for file names. If you want to use a temporary random name for some reason, use <strong>fs</strong>::<strong>file_temp()</strong> :</p>
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">windows_tempfile</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html">file_temp</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="va">windows_tempfile</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; C:\Users\msperlin\AppData\Local\Temp\RtmpEGt3Q7\file19917e5fbc7e</code></pre>
+<p>You can also set its extension and name:</p>
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">windows_tempfile</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html">file_temp</a></span><span class="op">(</span></span>
+<span>  pattern <span class="op">=</span> <span class="st">'temp_'</span>, </span>
+<span>  ext <span class="op">=</span> <span class="st">'.csv'</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="va">windows_tempfile</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; C:\Users\msperlin\AppData\Local\Temp\RtmpEGt3Q7\temp_19913e1dafe5.csv</code></pre>
+<p>As a practical case of using temporary files and folders, let’s <em>download</em> the Excel worksheet from Microsoft into a temporary folder and read its content for the first five rows:</p>
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># set link</span></span>
+<span><span class="va">link_dl</span> <span class="op">&lt;-</span> <span class="st">'go.microsoft.com/fwlink/?LinkID=521962'</span></span>
+<span><span class="va">local_file</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/file_temp.html">file_temp</a></span><span class="op">(</span>ext <span class="op">=</span> <span class="st">'.xlsx'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span>url <span class="op">=</span> <span class="va">link_dl</span>,</span>
+<span>              destfile <span class="op">=</span> <span class="va">local_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df_msft</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">local_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df_msft</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; # A tibble: 6 × 16
+R&gt;   Segment    Country Product   `Discount Band` `Units Sold`
+R&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;                  &lt;dbl&gt;
+R&gt; 1 Government Canada  Carretera None                   1618.
+R&gt; 2 Government Germany Carretera None                   1321 
+R&gt; 3 Midmarket  France  Carretera None                   2178 
+R&gt; 4 Midmarket  Germany Carretera None                    888 
+R&gt; 5 Midmarket  Mexico  Carretera None                   2470 
+R&gt; 6 Government Germany Carretera None                   1513 
+R&gt; # ℹ 11 more variables: `Manufacturing Price` &lt;dbl&gt;,
+R&gt; #   `Sale Price` &lt;dbl&gt;, `Gross Sales` &lt;dbl&gt;,
+R&gt; #   Discounts &lt;dbl&gt;, Sales &lt;dbl&gt;, COGS &lt;dbl&gt;, Profit &lt;dbl&gt;,
+R&gt; #   Date &lt;dttm&gt;, `Month Number` &lt;dbl&gt;, `Month Name` &lt;chr&gt;,
+R&gt; #   Year &lt;chr&gt;</code></pre>
+<p>The example Excel file contains the sales report of a company. Do notice that the imported file becomes a <code>dataframe</code> in our R session, a table like an object with rows and columns.</p>
+<p>By using <strong>fs</strong>::<strong>file_temp()</strong> , we do not need to delete (or worry) about the downloaded file because it will be removed from the computer’s hard disk when the system is rebooted.</p>
+</div>
+</div>
+<div id="exercises-basic-exercises" class="section level2" number="2.21">
+<h2>
+<span class="header-section-number">2.21</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-basic-exercises"><i class="fas fa-link"></i></a>
+</h2>
+<hr>
+<div id="q.1-1" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>In RStudio, create a new <em>script</em> and save it in a personal folder. Now, write R commands in the script that define two objects: one holding a sequence between 1 and 100 and the other with the text of your name (ex. ‘Richard’). Execute the whole script with the keyboard shortcuts.</p>
+<hr>
+</div>
+<div id="q.2-1" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>In the previously created <em>script</em>, use function <code>message</code> to display the following phrase in R’s <em>prompt</em>:<code>"My name is ...."</code>.</p>
+<hr>
+</div>
+<div id="q.3-1" class="section level3 unnumbered">
+<h3>Q.3<a class="anchor" aria-label="anchor" href="#q.3-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Within the same script, show the current working directory (see function <code>getwd</code>, as in <code>print(getwd())</code>). Now, change your working directory to <em>Desktop</em> (<em>Desktop</em>) and show the following message on the <em>prompt</em> screen: <code>'My desktop address is ....'</code>. Tip: use and abuse of RStudio’s <em>autocomplete</em> tool to quickly find the <em>desktop</em> folder.</p>
+<hr>
+</div>
+<div id="q.4-1" class="section level3 unnumbered">
+<h3>Q.4<a class="anchor" aria-label="anchor" href="#q.4-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use R to download the compressed zip file with the book material, available at this <a href="https://www.msperlin.com/files/afedr-files/afedR-code-and-data.zip">link</a><a href="references.html#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a>. Save it as a file in the temporary session folder (see function <code><a href="https://fs.r-lib.org/reference/file_temp.html">fs::file_temp()</a></code>).</p>
+<hr>
+</div>
+<div id="q.5-1" class="section level3 unnumbered">
+<h3>Q.5<a class="anchor" aria-label="anchor" href="#q.5-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use the <code>unzip</code> function to unzip the downloaded file from previous question to a directory called <code>'afedR-files'</code> inside the “Desktop” folder. How many files are available in the resulting folder? Tip: use the <code>recursive = TRUE</code> argument with <code><a href="https://fs.r-lib.org/reference/dir_ls.html">fs::dir_ls</a></code> to also search for all available subdirectories.</p>
+<hr>
+</div>
+<div id="q.6-1" class="section level3 unnumbered">
+<h3>Q.6<a class="anchor" aria-label="anchor" href="#q.6-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Every time the user installs an R package, all package files are stored locally in a specific directory of the hard disk. Using command <code>Sys.getenv('R_LIBS_USER')</code> and <code><a href="https://fs.r-lib.org/reference/dir_ls.html">fs::dir_ls</a></code>, list all the directories in this folder. How many packages are available in this folder on your computer?</p>
+<hr>
+</div>
+<div id="q.7-1" class="section level3 unnumbered">
+<h3>Q.7<a class="anchor" aria-label="anchor" href="#q.7-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>In the same topic as previous exercise, list all files in all subfolders in the directory containing the files for the different packages (see command <code>Sys.getenv('R_LIBS_USER')</code>). On average, how many files are needed for each package?</p>
+<hr>
+</div>
+<div id="q.8-1" class="section level3 unnumbered">
+<h3>Q.8<a class="anchor" aria-label="anchor" href="#q.8-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use the <code>install.packages</code> function to install the <code>yfR</code> package on your computer. After installation, use function <code>yf_get()</code> to download price data for the IBM stock in the last 15 days. Tip: use function <code><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date()</a></code> to find out the current date and <code>Sys.Date()- 15</code> to calculate the date located 15 days in the past.</p>
+<hr>
+</div>
+<div id="q.9-1" class="section level3 unnumbered">
+<h3>Q.9<a class="anchor" aria-label="anchor" href="#q.9-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>The <code>cranlogs</code> package allows access to downloads statistics of CRAN packages. After installing <code>cranlogs</code> on your computer, use the <code><a href="https://r-hub.github.io/cranlogs/reference/cran_top_downloads.html">cranlogs::cran_top_downloads</a></code> function to check which are the 10 most installed packages by the global community in the last month. Which package comes first? Tip: Set the <code>cran_top_downloads</code> function input to <code>when = 'last-month'</code>. Also, be aware that the answer here may not be the same as you got because it depends on the day the R code was executed.</p>
+<hr>
+</div>
+<div id="q.10-1" class="section level3 unnumbered">
+<h3>Q.10<a class="anchor" aria-label="anchor" href="#q.10-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Using the <code>devtools</code> package, install the development version of the <code>ggplot2</code> package, available in the <a href="https://github.com/hadley">Hadley Hickman repository</a>. Load the package using <code>library</code> and create a simple figure with the code <code>qplot(y = rnorm(10), x = 1:10)</code>.</p>
+<hr>
+</div>
+<div id="q.11" class="section level3 unnumbered">
+<h3>Q.11<a class="anchor" aria-label="anchor" href="#q.11"><i class="fas fa-link"></i></a>
+</h3>
+<p>Using your programming ability check on your computer which folder, from the “Documents” directory (shortcut = <code>~</code>), has the largest number of files. Display the five folders with the largest number of files on R’s prompt.</p>
+
+</div>
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://afedr-ed2.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+                            
+  <div class="chapter-nav">
+<div class="prev"><a href="introduction.html"><span class="header-section-number">1</span> Introduction</a></div>
+<div class="next"><a href="research-scripts.html"><span class="header-section-number">3</span> Writing Research Scripts</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#basicoperations"><span class="header-section-number">2</span> Basic Operations in R</a></li>
+<li><a class="nav-link" href="#working-with-r"><span class="header-section-number">2.1</span> Working With R</a></li>
+<li><a class="nav-link" href="#objects-in-r"><span class="header-section-number">2.2</span> Objects in R</a></li>
+<li><a class="nav-link" href="#international-and-local-formats"><span class="header-section-number">2.3</span> International and Local Formats</a></li>
+<li><a class="nav-link" href="#types-of-files-in-r"><span class="header-section-number">2.4</span> Types of Files in R</a></li>
+<li><a class="nav-link" href="#explaining-the-rstudio-screen"><span class="header-section-number">2.5</span> Explaining the RStudio Screen</a></li>
+<li>
+<a class="nav-link" href="#r-packages"><span class="header-section-number">2.6</span> R Packages</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#installing-packages-from-cran"><span class="header-section-number">2.6.1</span> Installing Packages from CRAN</a></li>
+<li><a class="nav-link" href="#installing-packages-from-github"><span class="header-section-number">2.6.2</span> Installing Packages from Github</a></li>
+<li><a class="nav-link" href="#loading-packages"><span class="header-section-number">2.6.3</span> Loading Packages</a></li>
+<li><a class="nav-link" href="#upgrading-packages"><span class="header-section-number">2.6.4</span> Upgrading Packages</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#running-scripts-from-rstudio"><span class="header-section-number">2.7</span> Running Scripts from RStudio</a></li>
+<li>
+<a class="nav-link" href="#using-the-help-files"><span class="header-section-number">2.8</span> Using the help files</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#rstudio-shortcuts"><span class="header-section-number">2.8.1</span> RStudio shortcuts</a></li></ul>
+</li>
+<li><a class="nav-link" href="#testing-and-debugging-code"><span class="header-section-number">2.9</span> Testing and Debugging Code</a></li>
+<li><a class="nav-link" href="#creating-simple-objects"><span class="header-section-number">2.10</span> Creating Simple Objects</a></li>
+<li><a class="nav-link" href="#creating-vectors"><span class="header-section-number">2.11</span> Creating Vectors</a></li>
+<li><a class="nav-link" href="#knowing-your-environment-and-objects"><span class="header-section-number">2.12</span> Knowing Your Environment and Objects</a></li>
+<li><a class="nav-link" href="#finding-the-size-of-objects"><span class="header-section-number">2.13</span> Finding the Size of Objects</a></li>
+<li><a class="nav-link" href="#selecting-elements-from-an-atomic-vector"><span class="header-section-number">2.14</span> Selecting Elements from an Atomic Vector</a></li>
+<li><a class="nav-link" href="#removing-objects-from-the-memory"><span class="header-section-number">2.15</span> Removing Objects from the Memory</a></li>
+<li><a class="nav-link" href="#displaying-and-setting-the-working-directory"><span class="header-section-number">2.16</span> Displaying and Setting the Working Directory</a></li>
+<li><a class="nav-link" href="#canceling-code-execution"><span class="header-section-number">2.17</span> Canceling Code Execution</a></li>
+<li><a class="nav-link" href="#code-comments"><span class="header-section-number">2.18</span> Code Comments</a></li>
+<li><a class="nav-link" href="#autocomplete"><span class="header-section-number">2.19</span> Using Code Completion with tab</a></li>
+<li>
+<a class="nav-link" href="#interacting-with-files-and-the-operating-system"><span class="header-section-number">2.20</span> Interacting with Files and the Operating System</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#listing-files-and-folders"><span class="header-section-number">2.20.1</span> Listing Files and Folders</a></li>
+<li><a class="nav-link" href="#deleting-files-and-directories"><span class="header-section-number">2.20.2</span> Deleting Files and Directories</a></li>
+<li><a class="nav-link" href="#downloading-files-from-the-internet"><span class="header-section-number">2.20.3</span> Downloading Files from the Internet</a></li>
+<li><a class="nav-link" href="#using-temporary-files-and-directories"><span class="header-section-number">2.20.4</span> Using Temporary Files and Directories</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#exercises-basic-exercises"><span class="header-section-number">2.21</span> Exercises</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-1">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-1">Q.2</a></li>
+<li><a class="nav-link" href="#q.3-1">Q.3</a></li>
+<li><a class="nav-link" href="#q.4-1">Q.4</a></li>
+<li><a class="nav-link" href="#q.5-1">Q.5</a></li>
+<li><a class="nav-link" href="#q.6-1">Q.6</a></li>
+<li><a class="nav-link" href="#q.7-1">Q.7</a></li>
+<li><a class="nav-link" href="#q.8-1">Q.8</a></li>
+<li><a class="nav-link" href="#q.9-1">Q.9</a></li>
+<li><a class="nav-link" href="#q.10-1">Q.10</a></li>
+<li><a class="nav-link" href="#q.11">Q.11</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Analyzing Financial and Economic Data with R - Online Version</strong>" was written by <strong><a class="text-light" href="https://www.msperlin.com">Marcelo S. Perlin </a></strong>. Full version available at <a class="text-light" href="TODO:">Amazon</a>.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was compiled with love in 2023-12-13, using the fantastic package <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

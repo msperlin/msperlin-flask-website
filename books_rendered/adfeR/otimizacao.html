@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 13 Otimização de Código | Análise de Dados Financeiros e Econômicos com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 13 Otimização de Código | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 13 Otimização de Código | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00-code-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Análise de Dados Financeiros e Econômicos com o R - Versão Online</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="sobre-nova-edi%C3%A7%C3%A3o.html">Sobre Nova Edição</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="operacoes-basicas.html"><span class="header-section-number">2</span> Operações Básicas no R</a></li>
+<li><a class="" href="scripts-pesquisa.html"><span class="header-section-number">3</span> Desenvolvendo Rotinas de Pesquisa</a></li>
+<li><a class="" href="importacao-exportacao.html"><span class="header-section-number">4</span> Importação e Exportação de Dados Locais</a></li>
+<li><a class="" href="importacao-pacotes.html"><span class="header-section-number">5</span> Importação de Dados via Pacotes</a></li>
+<li><a class="" href="classe-estrutura.html"><span class="header-section-number">6</span> Dataframes e outros Objetos</a></li>
+<li><a class="" href="classes-basicas.html"><span class="header-section-number">7</span> As Classes Básicas de Objetos</a></li>
+<li><a class="" href="programacao.html"><span class="header-section-number">8</span> Programando com o R</a></li>
+<li><a class="" href="limpando-estruturando.html"><span class="header-section-number">9</span> Estruturando e Limpando Dados</a></li>
+<li><a class="" href="figuras.html"><span class="header-section-number">10</span> Visualizando Dados</a></li>
+<li><a class="" href="modelos.html"><span class="header-section-number">11</span> Econometria Financeira com o R</a></li>
+<li><a class="" href="reportando-resultados.html"><span class="header-section-number">12</span> Reportando Resultados e Criando Relatórios</a></li>
+<li><a class="active" href="otimizacao.html"><span class="header-section-number">13</span> Otimização de Código</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-120530145-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-120530145-1');
+</script><div id="otimizacao" class="section level1" number="13">
+<h1>
+<span class="header-section-number">Capítulo 13</span> Otimização de Código<a class="anchor" aria-label="anchor" href="#otimizacao"><i class="fas fa-link"></i></a>
+</h1>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="otimizando-código-em-r" class="section level2" number="13.1">
+<h2>
+<span class="header-section-number">13.1</span> Otimizando Código em R<a class="anchor" aria-label="anchor" href="#otimizando-c%C3%B3digo-em-r"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="otimizando-a-velocidade-de-execução" class="section level2" number="13.2">
+<h2>
+<span class="header-section-number">13.2</span> Otimizando a Velocidade de Execução<a class="anchor" aria-label="anchor" href="#otimizando-a-velocidade-de-execu%C3%A7%C3%A3o"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="perfil-do-código-r-profiling" class="section level3" number="13.2.1">
+<h3>
+<span class="header-section-number">13.2.1</span> Perfil do Código R (<em>profiling</em>)<a class="anchor" aria-label="anchor" href="#perfil-do-c%C3%B3digo-r-profiling"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="estratégias-para-melhorar-a-velocidade-de-execução" class="section level3" number="13.2.2">
+<h3>
+<span class="header-section-number">13.2.2</span> Estratégias para Melhorar a Velocidade de Execução<a class="anchor" aria-label="anchor" href="#estrat%C3%A9gias-para-melhorar-a-velocidade-de-execu%C3%A7%C3%A3o"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="use-operações-vetoriais" class="section level4" number="13.2.2.1">
+<h4>
+<span class="header-section-number">13.2.2.1</span> Use Operações Vetoriais<a class="anchor" aria-label="anchor" href="#use-opera%C3%A7%C3%B5es-vetoriais"><i class="fas fa-link"></i></a>
+</h4>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="junção-repetitiva-de-dataframes" class="section level4" number="13.2.2.2">
+<h4>
+<span class="header-section-number">13.2.2.2</span> Junção Repetitiva de <code>dataframes</code><a class="anchor" aria-label="anchor" href="#jun%C3%A7%C3%A3o-repetitiva-de-dataframes"><i class="fas fa-link"></i></a>
+</h4>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="usando-código-c-pacote-rcpp" class="section level3" number="13.2.3">
+<h3>
+<span class="header-section-number">13.2.3</span> Usando Código C ++ (pacote <code>Rcpp</code>)<a class="anchor" aria-label="anchor" href="#usando-c%C3%B3digo-c-pacote-rcpp"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="usando-cacheamento-local-pacote-memoise" class="section level3" number="13.2.4">
+<h3>
+<span class="header-section-number">13.2.4</span> Usando Cacheamento Local (pacote <code>memoise</code>)<a class="anchor" aria-label="anchor" href="#usando-cacheamento-local-pacote-memoise"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="usando-processamento-paralelo-pacote-furrr" class="section level4" number="13.2.4.1">
+<h4>
+<span class="header-section-number">13.2.4.1</span> Usando Processamento Paralelo (pacote <code>furrr</code>)<a class="anchor" aria-label="anchor" href="#usando-processamento-paralelo-pacote-furrr"><i class="fas fa-link"></i></a>
+</h4>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exercícios-1" class="section level2" number="13.3">
+<h2>
+<span class="header-section-number">13.3</span> Exercícios<a class="anchor" aria-label="anchor" href="#exerc%C3%ADcios-1"><i class="fas fa-link"></i></a>
+</h2>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+<div id="q.1-11" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-11"><i class="fas fa-link"></i></a>
+</h3>
+<p>Considere o seguinte código:</p>
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+library(forecast)
+library(BatchGetSymbols)
+
+ticker &lt;- '^GSPC'
+df_prices &lt;- BatchGetSymbols(tickers = ticker, 
+                             first.date = '2010-01-01')[[2]]
+
+my_arima &lt;- auto.arima(df_prices$ret.adjusted.prices)
+summary(my_arima)</a></code></pre>
+<p>Use funcões <code>Rprof</code> e <code>profvis</code> para identificar o gargalo do código. Qual número da linha que está tomando maior tempo de execução?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf53cb3e8a" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf53cb3e8a" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+library(BatchGetSymbols)
+library(fGarch)
+library(profvis)
+
+# set temporary file for results
+profiling_file &lt;-  tempfile(pattern = 'profiling_exercise', 
+                            fileext = '.out')
+
+# initialize profiling
+Rprof(filename = profiling_file)
+
+# run code
+profiling &lt;- profvis(expr = {
+  ticker &lt;- '^GSPC'
+  df_prices &lt;- BatchGetSymbols(tickers = ticker, 
+                               first.date = '2000-01-01', do.cache = FALSE)[[2]]
+  
+  my_garch &lt;- garchFit(formula = ret.adjusted.prices ~ arma(1,1) + garch(1,1), 
+                       data =  na.omit(df_prices) )
+})
+
+# create visualization
+temp_html &lt;- tempfile(pattern = 'profile',
+                      fileext = '.html')
+
+htmlwidgets::saveWidget(profiling, temp_html)
+
+# open in browser from R
+browseURL(temp_html)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.2-11" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-11"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use o pacote <code>Rcpp</code> para escrever e usar uma função em linguagem C++ que irá adicionar elementos dos vetores <code>x</code> e <code>y</code>, elemento por elemento. A saída deve ser outro vetor de mesmo tamanho e com elementos iguais a operação <code>x + y</code>. Use a função <code>identical</code> para testar se todos os elementos de ambos os vetores são iguais.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf2932db9c" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf2932db9c" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://www.rcpp.org">library(Rcpp)
+
+cppFunction('Rcpp::NumericVector sum_vectors_C(NumericVector x, NumericVector y) {
+  int n = x.size();
+  
+  Rcpp::NumericVector total(x.size());
+  
+  for(int i = 0; i &lt; n; ++i) {
+    total[i] = x[i] + y[i];
+  }
+  return total;
+}')
+
+x &lt;- runif(100)
+y &lt;- runif(100)
+
+sol_C &lt;- sum_vectors_C(x, y)
+sol_R &lt;- x + y
+
+identical(sol_C, sol_R)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.3-10" class="section level3 unnumbered">
+<h3>Q.3<a class="anchor" aria-label="anchor" href="#q.3-10"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use o pacote <code>tictoc</code> para comparar o desempenho da função anterior com o operador nativo <code>+</code>, e uma versão baseada em loops com pré-alocação. Qual alternativa apresenta menor tempo de execução e por quê? A versão <code>Rcpp</code> vence a versão em loop?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf9e97b42" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf9e97b42" class="collapse">
+<div class="card card-body">
+<p>A melhor alternativa é o operador nativo <code>+</code>. Este já é otimizado e executa o cálculo rapidamente.</p>
+<pre><code><a href="https://www.rcpp.org">library(Rcpp)
+
+cppFunction('Rcpp::NumericVector sum_vectors_C(NumericVector x, NumericVector y) {
+  int n = x.size();
+  
+  Rcpp::NumericVector total(x.size());
+  
+  for(int i = 0; i &lt; n; ++i) {
+    total[i] = x[i] + y[i];
+  }
+  return total;
+}')
+
+x &lt;- runif(100)
+y &lt;- runif(100)
+
+sol_C &lt;- sum_vectors_C(x, y)
+sol_R &lt;- x + y
+
+identical(sol_C, sol_R)
+
+library(tictoc)
+
+tic('Using Rcpp')
+sol_C &lt;- sum_vectors_C(x, y)
+toc()
+
+tic('Using base R')
+sol_R &lt;- x + y
+toc()
+
+tic('Using a loop and prealocation')
+sol_loop &lt;- numeric(length = length(x))
+for (i in 1:length(x)) {
+  sol_loop[i] &lt;- x[i] + y[i]
+}
+toc()</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.4-9" class="section level3 unnumbered">
+<h3>Q.4<a class="anchor" aria-label="anchor" href="#q.4-9"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use o pacote <code>memoise</code> para criar uma versão memorizada de <code><a href="https://rdrr.io/pkg/Quandl/man/Quandl.html">Quandl::Quandl</a></code>. Use a nova função para importar dados para o Índice de Preços ao Consumidor dos Estados Unidos (código <code>'FRED/DDOE01USA086NWDB'</code>). Quanto de ganho de velocidade em porcentagem você obtém da segunda chamada para a versão memorizada?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf3d1c5f2" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf3d1c5f2" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://github.com/quandl/quandl-r">library(Quandl)
+library(memoise)
+library(tictoc)
+
+mem_quandl &lt;- memoise(f = Quandl, cache = cache_memory())
+
+id &lt;- 'FRED/DDOE01USA086NWDB'
+
+tic('Using original Quandl')
+df &lt;- Quandl(code = id)
+toc()
+
+tic('Using memoise version (first call)')
+df &lt;- mem_quandl(code = id)
+toc()
+
+tic('Using memoise version (second call)')
+df &lt;- mem_quandl(code = id)
+toc()</a></code></pre>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://padfer.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="reportando-resultados.html"><span class="header-section-number">12</span> Reportando Resultados e Criando Relatórios</a></div>
+<div class="next"><a href="refer%C3%AAncias.html">Referências</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#otimizacao"><span class="header-section-number">13</span> Otimização de Código</a></li>
+<li><a class="nav-link" href="#otimizando-c%C3%B3digo-em-r"><span class="header-section-number">13.1</span> Otimizando Código em R</a></li>
+<li>
+<a class="nav-link" href="#otimizando-a-velocidade-de-execu%C3%A7%C3%A3o"><span class="header-section-number">13.2</span> Otimizando a Velocidade de Execução</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#perfil-do-c%C3%B3digo-r-profiling"><span class="header-section-number">13.2.1</span> Perfil do Código R (profiling)</a></li>
+<li><a class="nav-link" href="#estrat%C3%A9gias-para-melhorar-a-velocidade-de-execu%C3%A7%C3%A3o"><span class="header-section-number">13.2.2</span> Estratégias para Melhorar a Velocidade de Execução</a></li>
+<li><a class="nav-link" href="#usando-c%C3%B3digo-c-pacote-rcpp"><span class="header-section-number">13.2.3</span> Usando Código C ++ (pacote Rcpp)</a></li>
+<li><a class="nav-link" href="#usando-cacheamento-local-pacote-memoise"><span class="header-section-number">13.2.4</span> Usando Cacheamento Local (pacote memoise)</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#exerc%C3%ADcios-1"><span class="header-section-number">13.3</span> Exercícios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-11">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-11">Q.2</a></li>
+<li><a class="nav-link" href="#q.3-10">Q.3</a></li>
+<li><a class="nav-link" href="#q.4-9">Q.4</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Análise de Dados Financeiros e Econômicos com o R - Versão Online</strong>" was written by Marcelo S. Perlin (<a href="mailto:marcelo.perlin@ufrgs.br" class="email">marcelo.perlin@ufrgs.br</a>). It was last built on 2022-11-23.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

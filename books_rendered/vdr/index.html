@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Bem vindo! | Visualização de Dados com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="Visualização de Dados com o R. O foco do livro será no uso do pacote ggplot2 para a criação de figuras na plataforma R, com ênfase na área de finanças e economia. O material foi escrito para o público em geral, mas exige certo conhecimento sobre a forma de uso do R e RStudio.">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Bem vindo! | Visualização de Dados com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<meta property="og:description" content="Visualização de Dados com o R. O foco do livro será no uso do pacote ggplot2 para a criação de figuras na plataforma R, com ênfase na área de finanças e economia. O material foi escrito para o público em geral, mas exige certo conhecimento sobre a forma de uso do R e RStudio.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bem vindo! | Visualização de Dados com o R - Versão Online">
+<meta name="twitter:description" content="Visualização de Dados com o R. O foco do livro será no uso do pacote ggplot2 para a criação de figuras na plataforma R, com ênfase na área de finanças e economia. O material foi escrito para o público em geral, mas exige certo conhecimento sobre a forma de uso do R e RStudio.">
+<meta name="twitter:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.3/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.3/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00a-compile-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="Aplicações para Finanças e Economia">Visualização de Dados com o R - Versão Online</a>:
+        <small class="text-muted">Aplicações para Finanças e Economia</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="active" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="agradecimentos.html">Agradecimentos</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="principios.html"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></li>
+<li><a class="" href="componentes-de-gr%C3%A1ficos.html"><span class="header-section-number">3</span> Componentes de Gráficos</a></li>
+<li><a class="" href="intro-ggplot.html"><span class="header-section-number">4</span> Visualização de Dados com o R</a></li>
+<li><a class="" href="gr%C3%A1ficos-estat%C3%ADsticos.html"><span class="header-section-number">5</span> Gráficos Estatísticos</a></li>
+<li><a class="" href="mapas.html"><span class="header-section-number">6</span> Mapas</a></li>
+<li><a class="" href="programando-com-o-ggplot2.html"><span class="header-section-number">7</span> Programando com o ggplot2</a></li>
+<li><a class="" href="conclus%C3%A3o.html"><span class="header-section-number">8</span> Conclusão</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2ZEBB973N"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y2ZEBB973N');
+</script><!--bookdown:title:end--><!--bookdown:title:start--><div id="bem-vindo" class="section level1 unnumbered">
+<h1>Bem vindo!<a class="anchor" aria-label="anchor" href="#bem-vindo"><i class="fas fa-link"></i></a>
+</h1>
+<p>
+<a href="https://www.amazon.com.br/dp/B0BK2V4HTB"><img src="00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg" width="250" height="350" alt="Ebook na Amazom.com.br" class="cover"></a> Seja bem vindo ao site do livro <strong>Visualização de Dados com o R</strong>. Aqui encontrarás o conteúdo integral do livro para os primeiros três capítulos. A obra completa está disponível como um <a href="https://www.amazon.com.br/dp/B0BK2V4HTB">ebook</a>, <a href="https://www.amazon.com/dp/B0BJYJQ92Q">impresso capa normal</a> ou <a href="https://www.amazon.com/dp/B0BJYMHWLN">impresso capa dura</a>. Se gostaste do livro e estás utilizando-o para o seu trabalho, considere comprar a obra em um dos seus formatos. No papel de autor, aprecio o gesto e irei considerá-los como um fator motivante para futuras obras.
+</p>
+<p>A versão <strong>online</strong> do livro também está disponível para download como <a href="./vdr_ed01_ONLINE.pdf">pdf</a> e <a href="./vdr_ed01_ONLINE.epub">ebook</a><a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Instale o software &lt;a href="https://calibre-ebook.com/"&gt;Calibre&lt;/a&gt; para ler o ebook no seu próprio computador.&lt;/p&gt;'><sup>1</sup></a>, com os primeiros capítulos na forma integral. As soluções dos exercícios de final de capítulo estão disponíveis neste <a href="https://www.msperlin.com/vdr/vdr-eoc-solutions.html">link</a>.</p>
+<div id="licença-de-uso" class="section level2 unnumbered">
+<h2>Licença de uso<a class="anchor" aria-label="anchor" href="#licen%C3%A7a-de-uso"><i class="fas fa-link"></i></a>
+</h2>
+<p>Este trabalho é licenciado pela <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. O código contigo neste site, e no livro como um todo, é disponibilizado pela licença do <a href="https://opensource.org/licenses/MIT">MIT</a>, portanto, sinta-se livre para utilizá-lo no seu trabalho, desde de que a origem do código seja citada. Uma sugestão de citação é disponibilizada abaixo:</p>
+<p>Perlin, M. S. Visualização de Dados com o R – Aplicações para Finanças e Economia. Primeira Edição, Porto Alegre: Marcelo S. Perlin (publicação independente), 2022.</p>
+</div>
+<div id="sobre-o-autor" class="section level2 unnumbered">
+<h2>Sobre o autor<a class="anchor" aria-label="anchor" href="#sobre-o-autor"><i class="fas fa-link"></i></a>
+</h2>
+<p>Sou professor associado ao programa de pós-graduação na escola de Administração da UFRGS (Universidade Federal do Rio Grande do Sul). Ao longo dos mais de 12 anos de minha carreira como acadêmico, a análise de dados sempre foi uma constante, tendo como saída diversas publicações científicas nacionais e internacionais nos tópicos de econometria financeira, mercado de capitais, finanças corporativas e cientometria. Além disso, sou autor e mantenedor de 11 pacotes de R distribuídos no <a href="https://cloud.r-project.org/web/packages/available_packages_by_date.html">CRAN</a> e <a href="https://github.com/msperlin">Github</a>. Maiores informações sobre o meu trabalho acadêmico, códigos de programação e formas de contato podem ser encontrados em minha <a href="https://www.msperlin.com">página pessoal</a>.</p>
+</div>
+<div id="livros-do-autor" class="section level2 unnumbered">
+<h2>Livros do Autor<a class="anchor" aria-label="anchor" href="#livros-do-autor"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><p><a href="https://www.amazon.com.br/dp/B07RR9K9PV">Poupando e Investindo em Renda Fixa</a>: Este livro apresenta uma forma de investir com foco no longo prazo, resiliência e na qualidade de vida do investidor. Contrário a crença popular, investir para o longo prazo é fácil e pode ser feito por qualquer pessoa com vontade de aprender. O grande diferencial da obra é o uso frequente de dados financeiros reais para entender melhor como o mercado de renda fixa funciona, os efeitos dos tributos e custos operacionais, e quais são as melhores opções para o investidor pessoa física. Cada capítulo do livro apresenta e analisa os principais produtos disponíveis na renda fixa: produtos bancários (CDBs, LCA, entre outros), Tesouro Direto (Prefixado, IPCA+, SELIC), fundos de renda fixa e debêntures.</p></li>
+<li><p><a href="https://www.amazon.com.br/dp/B08WNC27ZY">Análise de Dados Financeiros e Econômicos com o R</a>: Uma introdução ao uso do R e RStudio para a área específica de finanças. O livro texto contém 13 capítulos que explicam todo o processo de pesquisa com o R, desde aquisição dos dados até o reporte de resultados em planilhas e figuras. Versão online disponível em <a href="https://www.msperlin.com/adfeR/">https://www.msperlin.com/adfeR/</a>.</p></li>
+<li><p><a href="https://www.amazon.com/dp/B084LSNXMN">Analyzing Financial and Economic Data with R</a>: Versão internacional do livro “Análise de Dados Financeiros com o R”. Versão web disponível em <a href="https://www.msperlin.com/afedR/">https://www.msperlin.com/afedR/</a>.</p></li>
+</ul>
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://vdr-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="empty"></div>
+<div class="next"><a href="pref%C3%A1cio.html">Prefácio</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#bem-vindo">Bem vindo!</a></li>
+<li><a class="nav-link" href="#licen%C3%A7a-de-uso">Licença de uso</a></li>
+<li><a class="nav-link" href="#sobre-o-autor">Sobre o autor</a></li>
+<li><a class="nav-link" href="#livros-do-autor">Livros do Autor</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Visualização de Dados com o R - Versão Online</strong>: Aplicações para Finanças e Economia" foi escrito por <strong>Marcelo S. Perlin</strong>  (marceloperlin@gmail.com).</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Este livro foi compilado com amor em 2022-11-23. Deixo aqui meu profundo agradecimento aos autores do fantástico pacote <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

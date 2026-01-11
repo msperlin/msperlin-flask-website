@@ -8,5 +8,6 @@
     "abstract": "Research Productivity Grant (PQ) is a governmental research award maintained by CPNq, the Brazilian Council of Research, and designed as a funding program to support scientific studies in all fields of science. Using a compilation of data from the Lattes platform, we study the individual CVs of more than 133000 researchers between 2005 and 2022 to examine PQ's selection criteria and impact on research productivity over time. First, a machine learning model can accurately predict who receives the financial support. This suggests that some parts of the evaluation process can be automated based on Lattes. Moreover, the main factors that impact the likelihood of a researcher receiving an entry-level PQ are the number of supervisions and papers published. These factors are consistent across different fields of science. Additionally, we found a significant and positive impact from receiving the award in key academic research output. After receiving a CNPq productivity award, researchers tend to increase the number of citations of papers and publications.",
     "link": "https://doi.org/10.1016/j.joi.2024.101563",
     "image": "static/img/2024_JOI_The determinants and impa.jpg",
-    "impact_factor": "3.5"
+    "impact_factor": "3.5",
+    "issn": "1875-5879"
 }

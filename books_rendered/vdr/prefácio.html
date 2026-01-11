@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Prefácio | Visualização de Dados com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Quem trabalha com análise de dados sabe a...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Prefácio | Visualização de Dados com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Quem trabalha com análise de dados sabe a...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Prefácio | Visualização de Dados com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Quem trabalha com análise de dados sabe a...">
+<meta name="twitter:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.3/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.3/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00a-compile-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="Aplicações para Finanças e Economia">Visualização de Dados com o R - Versão Online</a>:
+        <small class="text-muted">Aplicações para Finanças e Economia</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="active" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="agradecimentos.html">Agradecimentos</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="principios.html"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></li>
+<li><a class="" href="componentes-de-gr%C3%A1ficos.html"><span class="header-section-number">3</span> Componentes de Gráficos</a></li>
+<li><a class="" href="intro-ggplot.html"><span class="header-section-number">4</span> Visualização de Dados com o R</a></li>
+<li><a class="" href="gr%C3%A1ficos-estat%C3%ADsticos.html"><span class="header-section-number">5</span> Gráficos Estatísticos</a></li>
+<li><a class="" href="mapas.html"><span class="header-section-number">6</span> Mapas</a></li>
+<li><a class="" href="programando-com-o-ggplot2.html"><span class="header-section-number">7</span> Programando com o ggplot2</a></li>
+<li><a class="" href="conclus%C3%A3o.html"><span class="header-section-number">8</span> Conclusão</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2ZEBB973N"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y2ZEBB973N');
+</script><div id="prefácio" class="section level1 unnumbered">
+<h1>Prefácio<a class="anchor" aria-label="anchor" href="#pref%C3%A1cio"><i class="fas fa-link"></i></a>
+</h1>
+<p>Quem trabalha com análise de dados sabe a importância e o potencial de comunicação que um gráfico possui. <strong>Figuras e ilustrações facilitam a transmissão de uma mensagem e o convencimento de um público</strong>. Em um mundo cada vez mais digitalizado e visual, o resultado de uma análise pode ser compartilhado com o mundo inteiro em questões de segundos, ao clique de um botão.</p>
+<p>Em contraste, raros são os cursos de universidades e instituições de pesquisa que oferecem algum tipo de treinamento formal na construção de gráficos baseados em dados. Por tentativa e erro, professores e alunos aprendem “na marra”, sem uma clara noção de estrutura, qualidade e aplicabilidade. Curiosamente, discussões sobre uso de <em>software</em> de análise de dados se assemelham a discussões sobre futebol em uma mesa de bar: muita paixão e pouca razão. Em uma triste inércia, grupos de pesquisa se utilizem de <em>softwares</em> defasados, implicando a proliferação de práticas de pesquisa individualizadas e pouco eficientes.</p>
+<p>A versão inicial deste livro surgiu como uma extensão do capítulo 10 da minha outra obra, <strong><a href="https://www.msperlin.com/adfeR/">Análise de Dados Financeiros e Econômicos com o R</a></strong> <span class="citation">(<a href="refer%C3%AAncias.html#ref-adfeR" role="doc-biblioref">M. S. Perlin 2021</a>)</span>. Em uma leitura pós-publicação, meu sentimento foi que, enquanto o material anterior se justificava no sentido de mostrar a mecânica de criação de figuras específicas da área de finanças e economia, faltava um conteúdo mais abrangente e completo sobre o tópico.</p>
+<p>Neste livro, <strong>Visualização de Dados com o R</strong>, escrevo sobre tudo aquilo que aprendi em mais de doze anos de carreira como professor, cientista de dados e consultor de empresas. Primeiro, iremos estudar os fundamentos e princípios a serem seguidos na criação de figuras baseadas em dados. Em seguida estudaremos a forma de trabalho com o R. Ao longo do caminho, teremos diversos exemplos de visualização de dados reais.</p>
+<div id="como-ler-o-livro" class="section level2 unnumbered">
+<h2>Como ler o livro<a class="anchor" aria-label="anchor" href="#como-ler-o-livro"><i class="fas fa-link"></i></a>
+</h2>
+<p>O livro foca na didática e foi escrito para o público em geral. O formato foi escolhido para que o leitor consiga aplicar as técnicas no seu dia a dia. Todos os exemplos de código são reproduzíveis em seu próprio computador. O material, porém, exige algum conhecimento sobre programação com o R. Sempre que possível, tentei simplificar e destilar o funcionamento do código no texto.</p>
+<p>A melhor maneira de utilizar o material do livro é replicando os exemplos apresentados em cada capítulo. Como falei antes, cada pedaço de código é auto-suficiente e foi criado para que rodes no seu próprio computador.</p>
+<p>Como sugestão, uma maneira didática de aprender as técnicas do livro é:</p>
+<ol style="list-style-type: decimal">
+<li><p>Procure primeiro entender o que o código está fazendo antes de utilizá-lo. Esse é o passo mais importante pois é assim que se aprende programação, construindo conexões entre o gráfico na sua cabeça, e aquele produzido pelo código no computador.</p></li>
+<li><p>Replique o código original do exemplo no seu próprio computador, de preferência escrevendo o código e não copiando e colando via <em>Control+C</em>. A digitação vai facilitar a memorização de comandos e estruturas de procedimentos. Quando se sentir confortável em digitar os mesmos comandos, podes atalhar o processo via cópia do código e colagem. Após a execução, confira se a figura obtida no seu próprio computador está idêntica a aquela apresentada no livro.</p></li>
+<li><p>Modifique o código para que a figura tenha algo diferente (título, nome dos eixos, fontes e cores, ..). Assim memorizará onde cada elemento gráfico e textual pode ser modificado. Em outras palavras, a modificação de código já existente facilitará a criação de conexões entre o código e o gráfico de saída.</p></li>
+<li><p>Utilize outras fontes de dados com o mesmo código.</p></li>
+</ol>
+<p>A replicação de código vai ajudar a memorização da sintaxe do R e do <strong>ggplot2</strong> <span class="citation">(<a href="refer%C3%AAncias.html#ref-R-ggplot2" role="doc-biblioref">Wickham, Chang, et al. 2022</a>)</span>. No começo certamente será difícil, mas não se desmotive. Tudo que vale a pena é difícil. Com o tempo, irás pegar o jeito e absorver a necessária fluência para produzir figuras de forma autônoma.</p>
+</div>
+<div id="instalação-do-r-e-rstudio" class="section level2 unnumbered">
+<h2>Instalação do R e RStudio<a class="anchor" aria-label="anchor" href="#instala%C3%A7%C3%A3o-do-r-e-rstudio"><i class="fas fa-link"></i></a>
+</h2>
+<p>O primeiro passo para aproveitar o material é instalar e configurar a sua máquina para reproduzir os códigos do livro. Abaixo destaco os programas necessários, ordem de instalação, e <em>links</em> para download de arquivos de instalação:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>R</strong>: motor de programação, cuja instalação já inclui módulos básicos. Disponível gratuitamente em <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>.</p></li>
+<li><p><strong>R-Tools</strong> (apenas usuários do Windows): ferramentas para a compilação de pacotes do R. Disponível em <a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a>.</p></li>
+<li><p><strong>RStudio</strong> (opcional): Interface de programação voltada ao R. Apesar de não ser estritamente necessário, o RStudio facilita muito o trabalho, e recomendo a todos a instalação e o uso do programa. Disponível em <a href="https://www.rstudio.com/products/rstudio/" class="uri">https://www.rstudio.com/products/rstudio/</a>.</p></li>
+</ol>
+<p>Caso tiver algum problema na instalação, podes encontrar um tutorial completo no Capítulo 1<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://www.msperlin.com/adfeR/introducao.html#instalando-o-rstudio" class="uri"&gt;https://www.msperlin.com/adfeR/introducao.html#instalando-o-rstudio&lt;/a&gt;&lt;/p&gt;'><sup>2</sup></a> de <span class="citation">(<a href="refer%C3%AAncias.html#ref-adfeR" role="doc-biblioref">M. S. Perlin 2021</a>)</span>.</p>
+</div>
+<div id="pacote-vdr" class="section level2 unnumbered">
+<h2>Pacote <code>vdr</code><a class="anchor" aria-label="anchor" href="#pacote-vdr"><i class="fas fa-link"></i></a>
+</h2>
+<p>Todo o material construído neste livro é aberto ao público e reproduzível. Para facilitar a importação dos dados, construí um módulo do R chamado <strong>vdr</strong> <span class="citation">(<a href="refer%C3%AAncias.html#ref-R-vdr" role="doc-biblioref">Marcelo S. Perlin 2022</a>)</span>, o qual pode ser instalado de forma prática e fácil. Com ele será possível importar dados para a sua sessão do R e rodar todos os exemplos no seu próprio computador.</p>
+<p>Assumindo que já tens o R e RStudio instalados, vamos prosseguir com a instalação do pacote. Para isto, inicie o RStudio e execute as seguintes linhas de comando no <em>prompt</em>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># package remotes is needed..</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'remotes'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># install vdr from github</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span></span>
+<span>    <span class="st">'msperlin/vdr'</span>, </span>
+<span>    dependencies <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    <span class="op">)</span></span></code></pre></div>
+<p>Pronto. Após a instalação, todos requisitos estarão disponíveis no seu computador. Reforço que o comando anterior já instala todos os módulos necessários para reproduzir os exemplos do livro.</p>
+<p>Após a instalação, teste o carregamento do módulo com o seguintes comando:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/msperlin/vdr/">vdr</a></span><span class="op">)</span></span></code></pre></div>
+<p>Pronto! Se tudo der certo, verás uma mensagem anterior informando que o pacote <strong>vdr</strong> foi carregado corretamente. Caso tenha tido uma mensagem de erro, refaça as etapas até que os comandos anteriores rodem sem problema.</p>
+</div>
+<div id="recursos-na-internet" class="section level2 unnumbered">
+<h2>Recursos na Internet<a class="anchor" aria-label="anchor" href="#recursos-na-internet"><i class="fas fa-link"></i></a>
+</h2>
+<p>Na internet é possível encontrar uma variedade de conteúdo sobre visualização de dados. Esta é uma eficiente maneira de se manter atualizado nas melhores práticas e buscar inspiração para futuros trabalhos. Abaixo destaco alguns links com material de alta qualidade e que merecem a sua atenção:</p>
+<ul>
+<li><p><a href="https://www.instagram.com/latinometrics/?hl=en">Instagram – LatinoMetrics</a> <a href="https://www.instagram.com/latinometrics/?hl=en" class="uri">https://www.instagram.com/latinometrics/?hl=en</a> – Grupo especializado em visualizações de dados da América Latina. Apresenta gráficos muito interessantes sobre o Brasil e outros países do continente americano.</p></li>
+<li><p><a href="https://www.instagram.com/statspanda/?hl=en">Instagram – Statspanda</a> – Página especializada em visualizações de dados em diferentes tópicos. O conteúdo é direto e fácil de entender.</p></li>
+<li><p><a href="https://www.reddit.com/r/dataisbeautiful/">Reddit – Dataisbeautiful</a> – Fórum online do <a href="https://www.reddit.com">Reddit</a>, voltado a agregação de conteúdo relativo a visualização de dados. Aqui é possível encontrar uma variada gama de gráficos e fontes relacionados a dados.</p></li>
+</ul>
+</div>
+<div id="exercícios" class="section level2 unnumbered">
+<h2>Exercícios<a class="anchor" aria-label="anchor" href="#exerc%C3%ADcios"><i class="fas fa-link"></i></a>
+</h2>
+<p>O final de cada capítulo apresenta exercícios a serem resolvidos pelo leitor. O gabarito dos exercícios, incluindo saída de código, está disponível através do pacote <strong>vdr</strong> e função <strong>vdr::exercises_compile_solution()</strong> :</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dir_solution</span> <span class="op">&lt;-</span> <span class="st">"~"</span></span>
+<span><span class="fu">vdr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/vdr/man/exercises_compile_solution.html">exercises_compile_solution</a></span><span class="op">(</span>dir_output <span class="op">=</span> <span class="va">dir_solution</span><span class="op">)</span></span></code></pre></div>
+<p>A execução do código anterior criará um arquivo <em>.html</em> na pasta “Documentos” (atalho de <code>~</code>), com todas as soluções dos exercícios. Para abrir o arquivo, localize o mesmo na referida pasta e clique duas vezes. Deves abrir o arquivo com seu navegador de internet de preferência, tal como o <em>Chrome</em> ou <em>Firefox</em>. Alternativamente, caso não conseguir compilar o arquivo de soluções localmente, podes baixá-lo diretamente do meu site<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://www.msperlin.com/vdr/vdr-eoc-solutions.html" class="uri"&gt;https://www.msperlin.com/vdr/vdr-eoc-solutions.html&lt;/a&gt;&lt;/p&gt;'><sup>3</sup></a>.</p>
+</div>
+<div id="convenções" class="section level2 unnumbered">
+<h2>Convenções<a class="anchor" aria-label="anchor" href="#conven%C3%A7%C3%B5es"><i class="fas fa-link"></i></a>
+</h2>
+<p>No decorrer do livro usarei código ao longo do texto, como o apresentado a seguir:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Code example</span></span>
+<span><span class="va">my_object</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
+<span></span>
+<span><span class="co"># print object</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_object</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt;  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<p>O código anterior está mostrando na tela o conteúdo do objeto <code>my_object</code>, o qual contém uma sequência entre 1 e 10. A saída do código é registrada no texto com o símbolo <code>R&gt;</code>, como em <code>R&gt; [1] 1</code>. Verás este mesmo padrão por todo o livro.</p>
+<p>Além disso, note o uso de comentários com o <em>hashtag</em> (<code>#</code>). Estes não são compilados pelo interpretador do R e servem para escrever texto no código. Note também que usarei a língua inglesa para definir comentários e código em si. Esta decisão pode não ser muito intuitiva, porém todo código deve respeitar padrões internacionais e o uso de uma língua comum, neste caso o inglês. No papel de instrutor, entendo que é importante aprender a maneira correta desde o início e, por isso, minha escolha por escrever códigos em inglês. Mas, não se assuste, o vocabulário necessário é reduzido e acessível.</p>
+<p>Ao longo do livro usaremos diversas funções, de diferentes módulos. Para organizar o texto e facilitar o entendimento da origem das funções, estas serão indicadas com o formato nativo do R. Por exemplo, função <code>geom_line</code> do pacote <code>ggplot2</code> será representada como <strong>ggplot2::geom_line()</strong>. Isto é, o pacote de origem é indicado primeiro, seguido pelo símbolo de separação (<code>::</code>), seguido pelo nome da função. Para evitar repetições desnecessárias, o nome do pacote aparece somente na primeira menção da função no texto.</p>
+<p>Espero que goste e aproveite o conteúdo do livro. Esta e demais obras são parte de um projeto pessoal na montagem de um conteúdo prático sobre o uso do R e, assim, popularizar o uso da plataforma na produção de ciência. Caso tiver alguma dúvida sobre o conteúdo, sugestões ou reclamações, sinta-se convidado a entrar em contato comigo pelo email <em><a href="mailto:marceloperlin@gmail.com" class="email">marceloperlin@gmail.com</a></em>.</p>
+<p>Boa leitura.</p>
+<p>Marcelo S. Perlin, 23/11/2022.</p>
+
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://vdr-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="index.html">Bem vindo!</a></div>
+<div class="next"><a href="agradecimentos.html">Agradecimentos</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#pref%C3%A1cio">Prefácio</a></li>
+<li><a class="nav-link" href="#como-ler-o-livro">Como ler o livro</a></li>
+<li><a class="nav-link" href="#instala%C3%A7%C3%A3o-do-r-e-rstudio">Instalação do R e RStudio</a></li>
+<li><a class="nav-link" href="#pacote-vdr">Pacote vdr</a></li>
+<li><a class="nav-link" href="#recursos-na-internet">Recursos na Internet</a></li>
+<li><a class="nav-link" href="#exerc%C3%ADcios">Exercícios</a></li>
+<li><a class="nav-link" href="#conven%C3%A7%C3%B5es">Convenções</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Visualização de Dados com o R - Versão Online</strong>: Aplicações para Finanças e Economia" foi escrito por <strong>Marcelo S. Perlin</strong>  (marceloperlin@gmail.com).</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Este livro foi compilado com amor em 2022-11-23. Deixo aqui meu profundo agradecimento aos autores do fantástico pacote <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>
