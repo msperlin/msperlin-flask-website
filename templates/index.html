@@ -11,6 +11,9 @@
         {% if about.email %}
         <p><strong>Contact:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>
         {% endif %}
+        {% if about.lattes_link %}
+        <p><strong>Lattes:</strong> <a href="{{ about.lattes_link }}">Lattes link</a></p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

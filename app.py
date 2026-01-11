@@ -1,6 +1,7 @@
 import json
 import os
 from flask import Flask, render_template, send_from_directory
+import datetime
 
 app = Flask(__name__)
 
@@ -29,6 +30,10 @@ def index():
     about_data = load_data('about.json')
     return render_template('index.html', title='Home', about=about_data)
 
+@app.context_processor
+def inject_now():
+    return {'year': datetime.datetime.now().year}
+
 @app.route('/books/<book_name>/')
 @app.route('/books/<book_name>/<path:path>')
 def serve_book(book_name, path='index.html'):
@@ -45,11 +50,17 @@ def publications():
     publications_data = load_data_from_folder('publications')
     publications_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
 
+    total_publications = len(publications_data)
+
+    # publications with IF
+    publications_with_if = [pub for pub in publications_data if pub.get('impact_factor')]
+    total_publications_with_if = len(publications_with_if)
+
     # restrict size of abstract to 200 characters
     for publication in publications_data:
         publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
 
-    return render_template('publications.html', title='Publications', publications=publications_data)
+    return render_template('publications.html', title='Publications', publications=publications_data, total_publications=total_publications, total_publications_with_if=total_publications_with_if)
 
 @app.route('/books')
 def books():

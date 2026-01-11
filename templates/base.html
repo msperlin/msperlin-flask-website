@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} - Marcelo S. Perlin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
     <header>
         <div class="container">
             <h1 class="logo"><a href="{{ url_for('index') }}">Marcelo S. Perlin</a></h1>
             <nav>
                 <ul>
-                    <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
-                    <li><a href="{{ url_for('publications') }}" class="{% if request.endpoint == 'publications' %}active{% endif %}">Publications</a></li>
-                    <li><a href="{{ url_for('books') }}" class="{% if request.endpoint == 'books' %}active{% endif %}">Books</a></li>
-                    <li><a href="{{ url_for('code') }}" class="{% if request.endpoint == 'code' %}active{% endif %}">Code</a></li>
-                    <li><a href="{{ url_for('data') }}" class="{% if request.endpoint == 'data' %}active{% endif %}">Data</a></li>
-                    <li><a href="{{ url_for('news') }}" class="{% if request.endpoint == 'news' %}active{% endif %}">News</a></li>
-                    <li><a href="{{ url_for('awards') }}" class="{% if request.endpoint == 'awards' %}active{% endif %}">Awards</a></li>
+                    <li><a href="{{ url_for('index') }}"
+                            class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ url_for('publications') }}"
+                            class="{% if request.endpoint == 'publications' %}active{% endif %}">Publications</a></li>
+                    <li><a href="{{ url_for('books') }}"
+                            class="{% if request.endpoint == 'books' %}active{% endif %}">Books</a></li>
+                    <li><a href="{{ url_for('code') }}"
+                            class="{% if request.endpoint == 'code' %}active{% endif %}">Code</a></li>
+                    <li><a href="{{ url_for('data') }}"
+                            class="{% if request.endpoint == 'data' %}active{% endif %}">Data</a></li>
+                    <li><a href="{{ url_for('news') }}"
+                            class="{% if request.endpoint == 'news' %}active{% endif %}">News</a></li>
+                    <li><a href="{{ url_for('awards') }}"
+                            class="{% if request.endpoint == 'awards' %}active{% endif %}">Awards</a></li>
                 </ul>
             </nav>
         </div>
@@ -30,8 +39,10 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 Marcelo S. Perlin. All rights reserved.</p>
+            <p>&copy; {{ year }} Marcelo S. Perlin. All rights reserved. <br> Made with love with <a
+                    href="https://flask.palletsprojects.com/">Flask </a></p>
         </div>
     </footer>
 </body>
+
 </html>
