@@ -1,0 +1,12 @@
+{
+    "title": "Accessing Financial Reports and Corporate Events with GetDFPData",
+    "authors": "Marcelo S. Perlin, Guilherme Kirch, Daniel Vancin",
+    "publication": "Revista Brasileira de Finan\u00e7as",
+    "year": "2019",
+    "journal": "Revista Brasileira de Finan\u00e7as",
+    "journal_abs": "RBFIN",
+    "abstract": "This paper presents and discusses the contributions and usage of GetDFPData, which is an open and free software for accessing corporate data from the Brazilian financial exchange, B3. The distribution and popularization of an open source algorithm for gathering and managing financial data can improve finance research and practice in two ways. First, by boosting the number and quality of research in accounting and corporate finance. Secondly, by providing retail investors with reliable data that may help their allocation decision. Initially, we analyzed the use of this kind of data in a list of recent publications to show the relevance of financial reports and corporate events data for research in the fields of accounting and finance. Finally, we illustrate the use of GetDFPData in large-scale research, an empirical and reproducible example of a corporate finance study.",
+    "link": "http://bibliotecadigital.fgv.br/ojs/index.php/rbfin/article/view/78654",
+    "image": "static/img/2019_RBFIN_Accessing Financial Repor.jpg",
+    "impact_factor": ""
+}

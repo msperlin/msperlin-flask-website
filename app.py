@@ -31,6 +31,7 @@ def index():
 @app.route('/publications')
 def publications():
     publications_data = load_data_from_folder('publications')
+    publications_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
     return render_template('publications.html', title='Publications', publications=publications_data)
 
 @app.route('/books')

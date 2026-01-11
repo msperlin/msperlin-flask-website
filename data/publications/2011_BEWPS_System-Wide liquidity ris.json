@@ -1,0 +1,12 @@
+{
+    "title": "System-Wide liquidity risk in the UK\u2019s large-value payment system: an empirical analysis",
+    "authors": "Marcelo S. Perlin, Jochen Schanz",
+    "publication": "Bank of England Working Paper Series",
+    "year": "2011",
+    "journal": "Bank of England Working Paper Series",
+    "journal_abs": "BEWPS",
+    "abstract": "When settling their own liabilities and those of their clients, settlement banks rely on incoming payments to fund a part of their outgoing payments. We investigate their behaviour in CHAPS, the United Kingdom\u2019s large-value payment system. Our estimates suggest that in normal times, banks increase their payment outflows when their liquidity is above target and immediately following the receipt of payments. We use these estimates to determine the robustness of this payment system to two hypothetical behavioural changes. In the first, a single bank stops sending payments, perhaps because of an operational problem. In the second, it pays out exactly what it previously received, relying exclusively on the liquidity provided by other system members. Using the observed uncertainty around our estimated behavioural equations, we derive probabilistic statements about the time at which the bank\u2019s counterparties would run out of liquidity if they followed their estimated normal-time behaviour.",
+    "link": "https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2011/system-wide-liquidity-risk-in-the-uks-large-value-payment-system-an-empirical-analysis.pdf",
+    "image": "static/img/2011_BEWPS_System-Wide liquidity ris.jpg",
+    "impact_factor": ""
+}

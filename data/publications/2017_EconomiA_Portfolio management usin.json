@@ -1,0 +1,12 @@
+{
+    "title": "Portfolio management using realized covariances: Evidence from Brazil",
+    "authors": "Jo\u00e3o F. Caldeira, Guilherme V. Moura, Marcelo S. Perlin, Andr\u00e9 A. P. Santos",
+    "publication": "EconomiA",
+    "year": "2017",
+    "journal": "EconomiA",
+    "journal_abs": "EconomiA",
+    "abstract": "It is often argued that intraday returns can be used to construct covariance estimates that are more accurate than those based on daily returns. However, it is still unclear whether high frequency data provide more precise covariance estimates in markets more contaminated from microstructure noise such as higher bid-ask spreads and lower liquidity. We address this question by investigating the benefits of using high frequency data in the Brazilian equities market to construct optimal minimum variance portfolios. We implement alternative realized covariance estimators based on intraday returns sampled at alternative frequencies and obtain their dynamic versions using a multivariate GARCH framework. Our evidence based on a high-dimensional data set suggests that realized covariance estimators performed significantly better from an economic point of view in comparison to standard estimators based on low-frequency (close-to-close) data as they delivered less risky portfolios.",
+    "link": "https://www.sciencedirect.com/science/article/pii/S1517758017300395",
+    "image": "static/img/2017_EconomiA_Portfolio management usin.jpg",
+    "impact_factor": "1.7"
+}

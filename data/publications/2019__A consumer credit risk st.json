@@ -1,0 +1,12 @@
+{
+    "title": "A consumer credit risk structural model based on affordability: balance at risk",
+    "authors": "Marcelo S. Perlin, Marcelo Brutti Righi, Tiago P. Filomena",
+    "publication": "Journal of Credit Risk",
+    "year": "2019",
+    "journal": "Journal of Credit Risk",
+    "journal_abs": "",
+    "abstract": "This paper introduces an approach designed for personal credit risk, with possible applications in risk assessment and optimization of debt contracts. We define a structural model related to the financial balance of an individual, allowing for cashflow seasonality and deterministic trends in the process. Based on the proposed model, we develop risk measures associated with the probability of default rates conditional on time. This formulation is best suited to short-term loans, where the dynamics of individuals\u2019 cashflow, such as seasonality and uncertainty, can significantly impact future default rates. In the empirical section of this paper, we illustrate an application by estimating risk measures using simulated data. We also present the specific case of optimization of a financial contract, where, based on an estimated model, we find the yield rate/time to maturity pair that maximizes the expected profit or minimizes the default risk of a short-term debt contract.",
+    "link": "https://www.risk.net/journal-of-credit-risk/6743521/a-consumer-credit-risk-structural-model-based-on-affordability-balance-at-risk",
+    "image": "static/img/2019__A consumer credit risk st.jpeg",
+    "impact_factor": "0.8"
+}

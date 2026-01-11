@@ -1,0 +1,12 @@
+{
+    "title": "Can AI beat a naive portfolio? An experiment with anonymized data",
+    "authors": "Marcelo S. Perlin, Cristian Foguesato, Fernanda Muller, Marcelo Righi",
+    "publication": "Finance Research Letters",
+    "year": "2025",
+    "journal": "Finance Research Letters",
+    "journal_abs": "FRL",
+    "abstract": "Using anonymized data from the United States (U.S.) market, we evaluate the performance of Google\u2019s main LLM (Large Language Model) Gemini 1.5 Flash in making investment decisions. Unlike other studies, we query the LLM for different investment horizons (1 to 36 months) and types of financial information (financial data, price data, and a combination of both). Running a total of 30,000 simulations for 1,522 companies over 20 years of data, we find that Gemini does not consistently outperform a naive portfolio and the S&P 500 index in terms of returns and Sharpe ratios. Additionally, our findings indicate a decline in risk adjusted investment performance as the investment horizon extends.",
+    "link": "https://doi.org/10.1016/j.frl.2025.107126",
+    "image": "static/img/2025_FRL_Can AI beat a naive portf.jpg",
+    "impact_factor": "6.9"
+}

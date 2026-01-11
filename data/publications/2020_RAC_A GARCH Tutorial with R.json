@@ -1,0 +1,12 @@
+{
+    "title": "A GARCH Tutorial with R",
+    "authors": "Marcelo S. Perlin, Mauro Mastella, Daniel Vancin, Henrique P. Ramos",
+    "publication": "Revista de Administra\u00e7\u00e3o Contempor\u00e2nea",
+    "year": "2020",
+    "journal": "Revista de Administra\u00e7\u00e3o Contempor\u00e2nea",
+    "journal_abs": "RAC",
+    "abstract": "In this tutorial paper we will address the topic of volatility modeling in R. We will discuss the underlying logic of GARCH models, their representation and estimation process, along with a descriptive example of a real-world application of volatility modelling: we use a GARCH model to investigate how much time it will take, after the latest crisis, for the Ibovespa index to reach its historical peak once again. The empirical data covers the period between years 2000 and 2020, including the 2009 financial crisis and the current 2020\u2019s episode of the COVID-19 pandemia. We find that, according to our GARCH model, Ibovespa is likely to reach its peak once again in 2,5 years. All data and R code used to produce this tutorial are freely available on the internet and all its results can be easily replicated. ",
+    "link": "https://rac.anpad.org.br/index.php/rac/article/view/1420",
+    "image": "static/img/2020_RAC_A GARCH Tutorial with R.jpg",
+    "impact_factor": "1.1"
+}

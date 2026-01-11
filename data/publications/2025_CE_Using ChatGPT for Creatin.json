@@ -1,0 +1,12 @@
+{
+    "title": "Using ChatGPT for Creating Multi-Language Finance Related Sentiment Dictionaries",
+    "authors": "Marcos Reichert, Marcelo S. Perlin",
+    "publication": "Computational Economics",
+    "year": "2025",
+    "journal": "Computational Economics",
+    "journal_abs": "CE",
+    "abstract": "The finance literature is abundant with applications of text sentiment based on English dictionaries. However, a large proportion of financial documents are written in languages other than English. As such, there is a gap in literature for the development of sentiment dictionaries in other languages. Using a reproducible and low cost approach based on ChatGPT\u2019s API, and with minimal interventions, we attempt to fill this gap with the proposal of a methodology for building finance-related sentiment word lists for any language. We provide an empirical study by building a Portuguese finance-related sentiment dictionary with the proposed methodology, and using it to analyze the last 50 COPOM (Monetary Politics Committee) public statements. Furthermore, the dictionary\u2019s performance is benchmarked against a full-text analysis NLP model, revealing a more balanced sentiment classification profile with a significant improvement in identifying positive news compared to existing lists. Additionally, the resulting sentiment word list in Portuguese is publicly available to the academic community and may help future local studies.",
+    "link": "https://link.springer.com/article/10.1007/s10614-025-11233-3",
+    "image": "static/img/2025_CE_Using ChatGPT for Creatin.webp",
+    "impact_factor": "2.2"
+}
