@@ -3,41 +3,14 @@
 {% block content %}
 <section>
     <h2>Code</h2>
+    <p>I fell that unrestricted access to organized datasets is one of the pillars of reproducible research, which is
+        why I've taken so much interest in it over the years. As a result, I'm the author of many R packages distributed
+        in CRAN (see this <a href="https://msperlin.r-universe.dev/builds">link</a> for all my packages) and <a
+            href="https://github.com/msperlin/">Github</a>. Most packages are related to
+        importing and organizing financial and economic datasets from public sources. </p>
+    <p>If you used one of the packages in research, please use the proper citation format with
+        <code>citation('pkgname')</code>.
+    </p>
 
-    <div class="subsection">
-        <h3>R</h3>
-        <ul class="item-list">
-            {% for item in code['r'] %}
-            <li class="item-card">
-                <h4><a href="{{ item.link }}">{{ item.name }}</a></h4>
-                <p>{{ item.description }}</p>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <div class="subsection">
-        <h3>Python</h3>
-        <ul class="item-list">
-            {% for item in code['python'] %}
-            <li class="item-card">
-                <h4><a href="{{ item.link }}">{{ item.name }}</a></h4>
-                <p>{{ item.description }}</p>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <div class="subsection">
-        <h3>Matlab</h3>
-        <ul class="item-list">
-            {% for item in code['matlab'] %}
-            <li class="item-card">
-                <h4><a href="{{ item.link }}">{{ item.name }}</a></h4>
-                <p>{{ item.description }}</p>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
 </section>
 {% endblock %}

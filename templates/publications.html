@@ -3,7 +3,9 @@
 {% block content %}
 <section>
     <h2>Publications</h2>
-    <p>Total publications: {{ total_publications }} | Publications with IF: {{ total_publications_with_if }}</p>
+    <p>Total publications: {{ total_publications }} </p>
+    <p> Publications with impact factor (IF): {{ total_publications_with_if }} </p>
+    <p> Average impact factor (IF): {{ avg_if }}</p>
     <ul class="item-list">
         {% for pub in publications %}
         <li class="item-card publication-item">

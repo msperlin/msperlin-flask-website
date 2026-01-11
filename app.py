@@ -51,16 +51,30 @@ def publications():
     publications_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
 
     total_publications = len(publications_data)
-
+    
     # publications with IF
     publications_with_if = [pub for pub in publications_data if pub.get('impact_factor')]
     total_publications_with_if = len(publications_with_if)
 
+    # average if
+    total_if = 0
+    for pub in publications_with_if:
+        total_if += float(pub.get('impact_factor', 0))
+    
+    avg_if = total_if / total_publications_with_if
+    avg_if = round(avg_if, 2)
+    
     # restrict size of abstract to 200 characters
     for publication in publications_data:
         publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
 
-    return render_template('publications.html', title='Publications', publications=publications_data, total_publications=total_publications, total_publications_with_if=total_publications_with_if)
+    return render_template(
+        'publications.html', 
+        title='Publications', 
+        publications=publications_data, 
+        total_publications=total_publications, 
+        total_publications_with_if=total_publications_with_if,
+        avg_if=avg_if)
 
 @app.route('/books')
 def books():
@@ -86,11 +100,23 @@ def data():
 @app.route('/news')
 def news():
     news_data = load_data_from_folder('news')
+    # Sort by date descending
+    news_data.sort(key=lambda x: x.get('date', ''), reverse=True)
+    
+    # Extract year for display
+    for item in news_data:
+        if 'date' in item:
+            item['year'] = item['date'].split('-')[0]
+            
     return render_template('news.html', title='News', news=news_data)
 
 @app.route('/awards')
 def awards():
     awards_data = load_data_from_folder('awards')
+
+    # sort by year
+    awards_data.sort(key=lambda x: x.get('year', 0), reverse=True)
+
     return render_template('awards.html', title='Awards', awards=awards_data)
 
 if __name__ == '__main__':
