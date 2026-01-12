@@ -1,0 +1,27 @@
+{
+  "container_type": "Author",
+  "filled": [
+    "basics",
+    "indices"
+  ],
+  "scholar_id": "n3LTk-UAAAAJ",
+  "source": "AUTHOR_PROFILE_PAGE",
+  "name": "Marcelo S. Perlin",
+  "url_picture": "https://scholar.googleusercontent.com/citations?view_op=view_photo&user=n3LTk-UAAAAJ&citpid=6",
+  "affiliation": "Associate Professor of Finance, Federal University of Rio Grande do Sul",
+  "organization": 5637866505012696611,
+  "interests": [
+    "market microstructure",
+    "financial econometrics",
+    "bibliometrics"
+  ],
+  "email_domain": "@ufrgs.br",
+  "homepage": "https://msperlin.com/",
+  "citedby": 1573,
+  "citedby5y": 817,
+  "hindex": 17,
+  "hindex5y": 14,
+  "i10index": 24,
+  "i10index5y": 18,
+  "date_retrieval": "2026-01-12"
+}

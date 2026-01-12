@@ -1,5 +1,5 @@
 :root {
-    --primary-blue: #0056b3;
+    --primary-blue: #0e6ed4;
     --text-color: #000000;
     --bg-color: #ffffff;
     --border-color: #000000;
@@ -28,9 +28,6 @@ header {
     background-color: var(--primary-blue);
     color: var(--bg-color);
     padding: 1rem 0;
-    /* Removed shadow to strictly follow flat/simple colors if desired, but user didn't ban shadows. keeping it subtle or removing? 
-       User said "only use three colors". Shadows introduce transparency (grays). Let's remove shadows to be strictly "three colors" or just keep it simple. 
-       Let's keep it very clean. */
     border-bottom: 2px solid var(--text-color);
     position: sticky;
     top: 0;

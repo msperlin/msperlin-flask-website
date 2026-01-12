@@ -68,20 +68,26 @@ def publications():
     for publication in publications_data:
         publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
 
+    # add gscholar stats
+    gscholar_stats = load_data('stats/gscholar.json')
+
     return render_template(
         'publications.html', 
         title='Publications', 
         publications=publications_data, 
         total_publications=total_publications, 
         total_publications_with_if=total_publications_with_if,
-        avg_if=avg_if)
+        avg_if=avg_if,
+        gscholar_stats = gscholar_stats)
 
 @app.route('/books')
 def books():
     books_data = load_data_from_folder('books')
     books_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
 
-    return render_template('books.html', title='Books', books=books_data)
+    n_books = len(books_data)
+
+    return render_template('books.html', title='Books', books=books_data, n_books=n_books)
 
 @app.route('/code')
 def code():

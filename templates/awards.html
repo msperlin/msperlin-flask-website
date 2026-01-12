@@ -3,12 +3,18 @@
 {% block content %}
 <section>
     <h2>Awards</h2>
-    <ul class="item-list">
+    <ul>
+        {% for i_data in data %}
+        <li>
+            <b>{{ i_data.name }}</b>: {{ i_data.description }} <a href="{{ i_data.link}}">Link</a>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <ul>
         {% for award in awards %}
-        <li class="item-card">
-            <h3>{{ award.title }}</h3>
-            <p class="meta">{{ award.year }} | {{ award.organization }}</p>
-            <p>{{ award.description }}</p>
+        <li>
+            [{{ award.year }}] <b>{{ award.title }}</b> granted by <b> {{award.organization }} </b>: {{ award.description }}
         </li>
         {% endfor %}
     </ul>

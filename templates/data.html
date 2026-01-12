@@ -15,12 +15,20 @@
         All data is distributed using the <a href="https://dataverse.harvard.edu/dataverse/msperlin">Harvard Dataverse
             Project</a>.
         The Dataverse platform is stable, provides data persistency, versioning and the automatic generation of citation
-        text. You can even use the <a href="https://github.com/IQSS/dataverse-client-r">dataverse</a> package for
-        reading the files from an R session.
+        text. You can even use the <a href="https://github.com/IQSS/dataverse-client-r">dataverse</a> package for reading the files from an R session.
     </p>
     <p>
         All hosted data will be updated at least once a year.
     </p>
+
+    <h3>Available datasets:</h3>
+    <ul>
+        {% for i_data in data %}
+        <li>
+            <b>{{ i_data.name }}</b>: {{ i_data.description }} <a href="{{ i_data.link}}">Link</a>
+        </li>
+        {% endfor %}
+    </ul>
 
 </section>
 {% endblock %}

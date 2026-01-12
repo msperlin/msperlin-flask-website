@@ -3,11 +3,10 @@
 {% block content %}
 <section>
     <h2>Coverage by News</h2>
-    <ul class="item-list">
+    <ul>
         {% for item in news %}
-        <li class="item-card">
-            <h3><a href="{{ item.link }}">{{ item.title }}</a></h3>
-            <p class="meta">{{ item.year }} | {{ item.source }}</p>
+        <li>
+           [{{ item.year }}] <a href="{{item.link}}"> {{ item.title }} </a> published by <b>{{item.source }}</b>.
         </li>
         {% endfor %}
     </ul>

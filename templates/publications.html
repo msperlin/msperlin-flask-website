@@ -6,6 +6,14 @@
     <p>Total publications: {{ total_publications }} </p>
     <p> Publications with impact factor (IF): {{ total_publications_with_if }} </p>
     <p> Average impact factor (IF): {{ avg_if }}</p>
+    <p>
+        <a href = "https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ">Gscholar stats:</a> (updated at {{gscholar_stats.date_retrieval}}): 
+        cited by {{gscholar_stats.citedby}} 
+        | 
+        h-index {{gscholar_stats.hindex}} 
+        | 
+        hindex5y {{gscholar_stats.hindex5y}}
+    </p>    
     <ul class="item-list">
         {% for pub in publications %}
         <li class="item-card publication-item">

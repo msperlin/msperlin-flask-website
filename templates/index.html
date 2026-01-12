@@ -9,11 +9,12 @@
         <h2>Welcome</h2>
         <p>{{ about.bio }}</p>
         {% if about.email %}
-        <p><strong>Contact:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>
+        <p><strong>Email:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>
         {% endif %}
-        {% if about.lattes_link %}
-        <p><strong>Lattes:</strong> <a href="{{ about.lattes_link }}">Lattes link</a></p>
-        {% endif %}
+    
+        <p>
+            <a href="{{ about.lattes_link }}">Lattes CV</a> | <a href="{{ about.gscholar_link }}">Google Scholar</a> | <a href="{{ about.linkedin_link }}">LinkedIn</a> | <a href="{{ about.github_link }}">Github</a>
+        </p>
     </div>
 </section>
 {% endblock %}
