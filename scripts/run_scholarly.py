@@ -4,9 +4,9 @@ import json
 import datetime
 
 my_id = "n3LTk-UAAAAJ"
-this_file = Path(__name__).resolve()
+this_file = Path(__file__).resolve()
 f_out = "../data/stats/gscholar.json"
-parent_dir = Path(__name__).resolve().parent
+parent_dir = Path(__file__).resolve().parent.parent
 file_path = parent_dir /  "data" / "stats" / "gscholar.json"
 
 author = scholarly.search_author_id(my_id)
