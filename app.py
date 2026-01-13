@@ -1,6 +1,6 @@
 import json
 import os
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, make_response, url_for
 import datetime
 
 app = Flask(__name__)
@@ -124,6 +124,28 @@ def awards():
     awards_data.sort(key=lambda x: x.get('year', 0), reverse=True)
 
     return render_template('awards.html', title='Awards', awards=awards_data)
+
+@app.route('/sitemap.xml')
+def sitemap():
+    """Generate sitemap.xml. Makes a list of urls and renders them."""
+    pages = []
+    ten_days_ago = (datetime.datetime.now() - datetime.timedelta(days=10)).date().isoformat()
+
+    # static pages
+    for rule in app.url_map.iter_rules():
+        if "GET" in rule.methods and len(rule.arguments) == 0:
+            pages.append(url_for(rule.endpoint, _external=True))
+
+    # books
+    for book_name in os.listdir(BOOKS_FOLDER):
+        if os.path.isdir(os.path.join(BOOKS_FOLDER, book_name)):
+             pages.append(url_for('serve_book', book_name=book_name, _external=True))
+
+    sitemap_xml = render_template('sitemap.xml', pages=pages)
+    response = make_response(sitemap_xml)
+    response.headers["Content-Type"] = "application/xml"
+    
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
