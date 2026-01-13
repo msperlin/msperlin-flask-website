@@ -138,8 +138,20 @@ def sitemap():
 
     # books
     for book_name in os.listdir(BOOKS_FOLDER):
-        if os.path.isdir(os.path.join(BOOKS_FOLDER, book_name)):
+        book_path = os.path.join(BOOKS_FOLDER, book_name)
+        if os.path.isdir(book_path):
+             # add main book page
              pages.append(url_for('serve_book', book_name=book_name, _external=True))
+             
+             # add subpages
+             for root, dirs, files in os.walk(book_path):
+                 for file in files:
+                     if file.endswith('.html') and file != 'index.html': # index.html is already covered by serve_book
+                         # Calculate relative path from book root
+                         rel_path = os.path.relpath(os.path.join(root, file), book_path)
+                         # Replace backslashes with forward slashes for URL consistency on Windows (though this is Linux)
+                         rel_path = rel_path.replace('\\', '/')
+                         pages.append(url_for('serve_book', book_name=book_name, path=rel_path, _external=True))
 
     sitemap_xml = render_template('sitemap.xml', pages=pages)
     response = make_response(sitemap_xml)
