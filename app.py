@@ -125,6 +125,12 @@ def awards():
 
     return render_template('awards.html', title='Awards', awards=awards_data)
 
+
+@app.route('/consulting')
+def consulting():
+    consulting_data = load_data('consulting.json')
+    return render_template('consulting.html', title='Consulting', content=consulting_data)
+
 @app.route('/sitemap.xml')
 def sitemap():
     """Generate sitemap.xml. Makes a list of urls and renders them."""
