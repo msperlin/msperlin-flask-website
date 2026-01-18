@@ -1,14 +1,10 @@
 {
   "title": "Consulting Services",
-  "intro": "I offer consulting services in the areas of data science, financial analysis, and programming in R and Python. My background in academia and practical experience allows me to provide robust and effective solutions.",
+  "intro": "I offer consulting services in the areas of data science, financial analysis, and programming in R and Python. My background in scientific research and practical experience in dealing with data problems allows me to provide effective solutions in different scenarios.",
   "services": [
     {
-      "name": "Data Cleaning & Structuring",
-      "description": "I write code that transforms raw, unstructured data into clean, organized formats ready for analysis and modeling."
-    },
-    {
       "name": "Data Analysis & Visualization & Modelling",
-      "description": "Transforming raw data into actionable insights through exploratory analysis, statistical modeling, and compelling visualizations. This inclused supervised and unsupervised machine learning models and Econometrics"
+      "description": "Transforming raw, unstructured data into clean, organized formats ready for analysis and modeling. Transforming raw information into actionable insights through exploratory analysis, statistical modeling, and compelling visualizations. This inclused supervised and unsupervised machine learning models and Econometrics"
     },
     {
       "name": "Financial Modeling",
@@ -16,7 +12,7 @@
     },
     {
       "name": "Custom Programming Solutions",
-      "description": "Developing custom scripts and applications in R and Python for automating data-related tasks and research."
+      "description": "Developing custom scripts and applications in R and Python for automating data-related tasks and research. This includes webscrapping scripts and general automation of data tasks."
     }
   ],
   "contact_prompt": "If you are interested in any of these services, please reach out via email (marceloperlin@gmail.com)."
