@@ -24,7 +24,15 @@
                 {% endif %}
                 <p class="meta">{{ pub.year }} | {{ pub.journal }} {% if pub.issn %}| ISSN: {{ pub.issn }} {% endif %}{%
                     if pub.impact_factor %} | IF: {{ pub.impact_factor
-                    }}{% endif %}</p>
+                    }}{% endif %}
+                    <button class="cite-btn" 
+                        data-title="{{ pub.title }}" 
+                        data-authors="{{ pub.authors }}" 
+                        data-year="{{ pub.year }}" 
+                        data-journal="{{ pub.journal }}">
+                        Cite This
+                    </button>
+                </p>
                 {% if pub.abstract %}
                 <p class="abstract">{{ pub.abstract }}</p>
                 {% endif %}
@@ -38,4 +46,79 @@
         {% endfor %}
     </ul>
 </section>
+
+<!-- Cite Modal -->
+<div id="citeModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Cite this publication</h3>
+        <p>BibTeX format:</p>
+        <textarea id="bibtexOutput" class="modal-textarea" readonly></textarea>
+        <button id="copyBtn" class="copy-btn">Copy to Clipboard</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById("citeModal");
+        const closeBtn = document.querySelector(".close-btn");
+        const bibtexOutput = document.getElementById("bibtexOutput");
+        const copyBtn = document.getElementById("copyBtn");
+        const citeBtns = document.querySelectorAll(".cite-btn");
+
+        citeBtns.forEach(btn => {
+            btn.addEventListener("click", function() {
+                const title = this.getAttribute("data-title");
+                const authors = this.getAttribute("data-authors");
+                const year = this.getAttribute("data-year");
+                const journal = this.getAttribute("data-journal");
+                
+                // Construct BibTeX key (FirstAuthorYear)
+                const firstAuthor = authors.split(',')[0].split(' ').pop().toLowerCase().replace(/[^a-z]/g, '');
+                const bibKey = `${firstAuthor}${year}`;
+
+                const bibtex = `@article{${bibKey},
+  title = {${title}},
+  author = {${authors}},
+  journal = {${journal}},
+  year = {${year}}
+}`;
+                bibtexOutput.value = bibtex;
+                modal.style.display = "block";
+            });
+        });
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        copyBtn.onclick = function() {
+            bibtexOutput.select();
+            document.execCommand("copy"); // Fallback for older browsers
+            
+            // Modern API if available
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(bibtexOutput.value).then(() => {
+                    const originalText = copyBtn.innerText;
+                    copyBtn.innerText = "Copied!";
+                    setTimeout(() => {
+                        copyBtn.innerText = originalText;
+                    }, 2000);
+                });
+            } else {
+                 const originalText = copyBtn.innerText;
+                 copyBtn.innerText = "Copied!";
+                 setTimeout(() => {
+                     copyBtn.innerText = originalText;
+                 }, 2000);
+            }
+        }
+    });
+</script>
 {% endblock %}

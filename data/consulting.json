@@ -3,12 +3,12 @@
   "intro": "I offer consulting services in the areas of data science, financial analysis, and programming in R and Python. My background in academia and practical experience allows me to provide robust and effective solutions.",
   "services": [
     {
-      "name": "Data Cleaning and Structuring",
+      "name": "Data Cleaning & Structuring",
       "description": "I write code that transforms raw, unstructured data into clean, organized formats ready for analysis and modeling."
     },
     {
-      "name": "Data Analysis & Visualization",
-      "description": "Transforming raw data into actionable insights through exploratory analysis, statistical modeling, and compelling visualizations."
+      "name": "Data Analysis & Visualization & Modelling",
+      "description": "Transforming raw data into actionable insights through exploratory analysis, statistical modeling, and compelling visualizations. This inclused supervised and unsupervised machine learning models and Econometrics"
     },
     {
       "name": "Financial Modeling",
