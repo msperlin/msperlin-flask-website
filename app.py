@@ -5,7 +5,7 @@ import datetime
 
 app = Flask(__name__)
 
-BOOKS_FOLDER = os.path.join(os.getcwd(), 'books_rendered')
+BOOKS_FOLDER = os.path.join(os.getcwd(), 'books_rendered') 
 
 def load_data(filename):
     filepath = os.path.join('data', filename)
