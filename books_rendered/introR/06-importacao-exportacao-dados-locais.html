@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introdução ao R - 6&nbsp; Importação e Exportação de Dados Locais</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./07-importacao-internet.html" rel="next">
+<link href="./05-interagindo-computador-internet.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR8PLMG1G7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FR8PLMG1G7');
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-importacao-exportacao-dados-locais.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Importação e Exportação de Dados Locais</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introdução ao R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefácio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introdução.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-como-o-r-funciona.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Como o R Funciona?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introdução ao RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-pacotes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pacotes do R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-interagindo-computador-internet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Interagindo com o Sistema Operacional e a Internet</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-importacao-exportacao-dados-locais.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Importação e Exportação de Dados Locais</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-importacao-internet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Importação de Dados via Pacotes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-objetos-armazenamento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dataframes e outros Objetos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-objetos-basicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">As Classes Básicas de Objetos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-intro-programacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introdução a Programação com o R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referências Bibliográficas</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#pacote-intror" id="toc-pacote-intror" class="nav-link active" data-scroll-target="#pacote-intror"><span class="header-section-number">6.1</span> Pacote <code>introR</code></a></li>
+  <li><a href="#arquivos-csv" id="toc-arquivos-csv" class="nav-link" data-scroll-target="#arquivos-csv"><span class="header-section-number">6.2</span> Arquivos <em>csv</em></a>
+  <ul class="collapse">
+  <li><a href="#importação-de-dados" id="toc-importação-de-dados" class="nav-link" data-scroll-target="#importação-de-dados"><span class="header-section-number">6.2.1</span> Importação de Dados</a></li>
+  <li><a href="#exportação-de-dados" id="toc-exportação-de-dados" class="nav-link" data-scroll-target="#exportação-de-dados"><span class="header-section-number">6.2.2</span> Exportação de Dados</a></li>
+  </ul></li>
+  <li><a href="#arquivos-excel-xls-e-xlsx" id="toc-arquivos-excel-xls-e-xlsx" class="nav-link" data-scroll-target="#arquivos-excel-xls-e-xlsx"><span class="header-section-number">6.3</span> Arquivos <em>Excel</em> (<em>xls</em> e <em>xlsx</em>)</a>
+  <ul class="collapse">
+  <li><a href="#importação-de-dados-1" id="toc-importação-de-dados-1" class="nav-link" data-scroll-target="#importação-de-dados-1"><span class="header-section-number">6.3.1</span> Importação de Dados</a></li>
+  <li><a href="#exportação-de-dados-1" id="toc-exportação-de-dados-1" class="nav-link" data-scroll-target="#exportação-de-dados-1"><span class="header-section-number">6.3.2</span> Exportação de Dados</a></li>
+  </ul></li>
+  <li><a href="#formato-.rdata-e-.rds" id="toc-formato-.rdata-e-.rds" class="nav-link" data-scroll-target="#formato-.rdata-e-.rds"><span class="header-section-number">6.4</span> Formato <em>.RData</em> e <em>.rds</em></a>
+  <ul class="collapse">
+  <li><a href="#importação-de-dados-2" id="toc-importação-de-dados-2" class="nav-link" data-scroll-target="#importação-de-dados-2"><span class="header-section-number">6.4.1</span> Importação de Dados</a></li>
+  <li><a href="#exportação-de-dados-2" id="toc-exportação-de-dados-2" class="nav-link" data-scroll-target="#exportação-de-dados-2"><span class="header-section-number">6.4.2</span> Exportação de Dados</a></li>
+  </ul></li>
+  <li><a href="#arquivos-fst" id="toc-arquivos-fst" class="nav-link" data-scroll-target="#arquivos-fst"><span class="header-section-number">6.5</span> Arquivos <em>fst</em></a>
+  <ul class="collapse">
+  <li><a href="#importação-de-dados-3" id="toc-importação-de-dados-3" class="nav-link" data-scroll-target="#importação-de-dados-3"><span class="header-section-number">6.5.1</span> Importação de Dados</a></li>
+  <li><a href="#exportação-de-dados-3" id="toc-exportação-de-dados-3" class="nav-link" data-scroll-target="#exportação-de-dados-3"><span class="header-section-number">6.5.2</span> Exportação de Dados</a></li>
+  <li><a href="#testando-o-tempo-de-execução-do-formato-fst" id="toc-testando-o-tempo-de-execução-do-formato-fst" class="nav-link" data-scroll-target="#testando-o-tempo-de-execução-do-formato-fst"><span class="header-section-number">6.5.3</span> Testando o Tempo de Execução do Formato <em>fst</em></a></li>
+  </ul></li>
+  <li><a href="#dados-não-estruturados-e-outros-formatos" id="toc-dados-não-estruturados-e-outros-formatos" class="nav-link" data-scroll-target="#dados-não-estruturados-e-outros-formatos"><span class="header-section-number">6.6</span> Dados Não-Estruturados e Outros Formatos</a>
+  <ul class="collapse">
+  <li><a href="#exportando-de-dados-não-estruturados" id="toc-exportando-de-dados-não-estruturados" class="nav-link" data-scroll-target="#exportando-de-dados-não-estruturados"><span class="header-section-number">6.6.1</span> Exportando de Dados Não-Estruturados</a></li>
+  </ul></li>
+  <li><a href="#selecionando-o-formato" id="toc-selecionando-o-formato" class="nav-link" data-scroll-target="#selecionando-o-formato"><span class="header-section-number">6.7</span> Selecionando o Formato</a></li>
+  <li><a href="#exerc-importacao-exportacao" id="toc-exerc-importacao-exportacao" class="nav-link" data-scroll-target="#exerc-importacao-exportacao"><span class="header-section-number">6.8</span> Exercícios</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="importacao-exportacao" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Importação e Exportação de Dados Locais</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Sem dúvida, a primeira etapa de um <em>script</em> de pesquisa é carregar os seus dados em uma sessão do R. Neste capítulo iremos aprender a importar e exportar dados contidos em arquivos locais. Apesar de não ser uma tarefa particularmente difícil, um analista de dados deve entender as diferentes características de cada formato de arquivo e como tirar vantagem deste conhecimento em cada situação. Enquanto algumas facilitam a colaboração e troca de dados, outras podem oferecer um ganho significativo em tempo de execução na leitura e gravação.</p>
+<p>Aqui iremos traçar uma lista abrangente com os seguintes formatos e extensões de arquivos:</p>
+<ul>
+<li>Dados delimitados em texto (<em>csv</em>);</li>
+<li>Microsoft Excel (<em>xls</em>, <em>xlsx</em>);</li>
+<li>Arquivos de dados nativos do R (<em>RData</em> e <em>rds</em>)</li>
+<li>Formato <code>fst</code> (<em>fst</em>)</li>
+<li>Texto não estruturado (<em>txt</em>).</li>
+</ul>
+<p>A primeira lição na importação de dados para o R é que o local do arquivo deve ser indicado explicitamente no código. Este endereço é passado para a função que irá ler o arquivo. Veja a definição a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> <span class="st">'C:/Data/MyData.csv'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note o uso de barras (<code>/</code>) para designar o diretório do arquivo. Referências relativas também funcionam, tal como em:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> <span class="st">'Data/MyData.csv'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Neste caso, assume-se que na pasta atual de trabalho existe um diretório chamado <code>Data</code> e, dentro desse, um arquivo denominado <code>MyData.csv</code>. Se o endereço do arquivo é simplesmente o seu nome, assume-se que o mesmo encontra-se na raiz da pasta de trabalho. Para verificar o endereço atual de trabalho, utilize a função <strong>getwd()</strong> .</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Aqui novamente reforço o uso do <em>tab</em> e <em>autocomplete</em> do RStudio. É muito mais <strong>fácil e prático</strong> encontrar arquivos do disco rígido do computador usando a navegação via <em>tab</em> do que copiar e colar o endereço do seu explorador de arquivos. Para usar, abra aspas no RStudio, coloque o cursor do <em>mouse</em> entre as aspas e aperte <em>tab</em>.</p>
+</div>
+</div>
+<p>Um ponto importante aqui é que os <strong>dados serão importados e exportados no R como objetos do tipo <code>dataframe</code></strong>. Isto é, uma tabela contida em um arquivo Excel ou <em>.csv</em> se transformará em um objeto do tipo <code>dataframe</code> no ambiente de trabalho do R. Quando exportarmos dados, o formato mais comum é esse mesmo tipo de objeto. Convenientemente, <code>dataframes</code> são nada mais que tabelas, com linhas e colunas.</p>
+<p>Cada coluna do <code>dataframe</code> importado terá a sua própria classe, sendo as mais comuns numérica (<em>numeric</em>), texto (<em>character</em>), fator (<em>factor</em>) e data (<em>Date</em>). Quando realizando a importação, <strong>é de fundamental importância que os dados sejam representados na classe correta</strong>. Uma vasta quantidade de erros podem ser evitados pela simples checagem das classes das colunas no <code>dataframe</code> resultante do processo de importação. Por enquanto somente é necessário entender esta propriedade básica de <code>dataframes</code>. Estudaremos esse objeto mais profundamente no capítulo <a href="08-objetos-armazenamento.html"><span>Chapter&nbsp;8</span></a>.</p>
+<section id="pacote-intror" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="pacote-intror"><span class="header-section-number">6.1</span> Pacote <code>introR</code></h2>
+<p>Nas seções futuras iremos utilizar o pacote do livro – <code>introR</code> – para carregar diversos exemplos de arquivos. Se você seguiu as instruções da seção <em>Material Suplementar</em> localizada no prefácio do livro, já deves ter o pacote instalado. Caso contrário, execute o seguinte código:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install devtools (if not installed)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(devtools)) <span class="fu">install.packages</span> (<span class="st">'devtools'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install book package</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span> (<span class="st">'msperlin/introR'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Uma vez que você instalou o pacote <code>introR</code>, todos os arquivos de dados usados no livro foram baixados. Podemos verificar os cinco primeiros arquivos disponíveis com o comando <strong>introR</strong>::<strong>data_list()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># list available data files</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(introR<span class="sc">::</span><span class="fu">data_list</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ── Available data files at '/home/msperlin/R/x86_64-pc-linux</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_another-funky-csv-file.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_example-fst.fst</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_example-Rdata.RData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_example-rds.rds</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_example-sqlite.SQLite</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_example-tsv.tsv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_funky-csv-file.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_ibovespa-Excel.xlsx</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_ibovespa.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_price-and-prejudice.txt</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_SP500-Excel.xlsx</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH04_SP500.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH07_FileWithLatinChar_Latin1.txt</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH07_FileWithLatinChar_UTF-8.txt</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH08_some-stocks-SP500.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH08_wide-example-stocks.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH10_sp500-stocks-long-by-year.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH11_grunfeld.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH11_SP500.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ CH11_UCI-Credit-Card.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_B3-stocks.rds</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_football-br.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_Ibov_PETR4.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_ibovespa.rds</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_SP500-stocks-wide.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_SP500-stocks-yearly.rds</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_SP500-stocks.rds</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_TD-data.rds</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ EX_TweetsElonMusk.csv</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔ You can get the local path of file using introR::data_path(name_of_file)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔ Example: local_path &lt;- introR::data_path('CH08_some-stocks-SP500.csv')</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1] "CH04_another-funky-csv-file.csv"   
+R&gt;  [2] "CH04_example-fst.fst"              
+R&gt;  [3] "CH04_example-Rdata.RData"          
+R&gt;  [4] "CH04_example-rds.rds"              
+R&gt;  [5] "CH04_example-sqlite.SQLite"        
+R&gt;  [6] "CH04_example-tsv.tsv"              
+R&gt;  [7] "CH04_funky-csv-file.csv"           
+R&gt;  [8] "CH04_ibovespa-Excel.xlsx"          
+R&gt;  [9] "CH04_ibovespa.csv"                 
+R&gt; [10] "CH04_price-and-prejudice.txt"      
+R&gt; [11] "CH04_SP500-Excel.xlsx"             
+R&gt; [12] "CH04_SP500.csv"                    
+R&gt; [13] "CH07_FileWithLatinChar_Latin1.txt" 
+R&gt; [14] "CH07_FileWithLatinChar_UTF-8.txt"  
+R&gt; [15] "CH08_some-stocks-SP500.csv"        
+R&gt; [16] "CH08_wide-example-stocks.csv"      
+R&gt; [17] "CH10_sp500-stocks-long-by-year.csv"
+R&gt; [18] "CH11_grunfeld.csv"                 
+R&gt; [19] "CH11_SP500.csv"                    
+R&gt; [20] "CH11_UCI-Credit-Card.csv"          
+R&gt; [21] "EX_B3-stocks.rds"                  
+R&gt; [22] "EX_football-br.csv"                
+R&gt; [23] "EX_Ibov_PETR4.csv"                 
+R&gt; [24] "EX_ibovespa.rds"                   
+R&gt; [25] "EX_SP500-stocks-wide.csv"          
+R&gt; [26] "EX_SP500-stocks-yearly.rds"        
+R&gt; [27] "EX_SP500-stocks.rds"               
+R&gt; [28] "EX_TD-data.rds"                    
+R&gt; [29] "EX_TweetsElonMusk.csv"</code></pre>
+</div>
+</div>
+<p>Os arquivos anteriores estão salvos na pasta de instalação dos pacote <code>introR</code>. Para ter o caminho completo, basta usar função <strong>introR</strong>::<strong>data_path()</strong> tendo o nome do arquivo como entrada:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get location of file</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">'CH11_grunfeld.csv'</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># print it</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A partir de agora iremos usar a função <code>introR::data_path</code> para obter o caminho dos arquivos utilizados nos exemplos. Note que, desde que tenha o pacote <code>introR</code> instalado, podes facilmente reproduzir todos os exemplos do livro no seu computador.</p>
+</section>
+<section id="arquivos-csv" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="arquivos-csv"><span class="header-section-number">6.2</span> Arquivos <em>csv</em></h2>
+<p>Considere o arquivo de dados no formato <code>csv</code> chamado <code>'CH04_ibovespa.csv'</code>, pertencente ao repositório do livro. Vamos copiar o mesmo para a pasta “Meus Documentos” com o uso do tilda (<code>~</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get location of file</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">'CH04_ibovespa.csv'</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># copy to ~</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">file.copy</span>(<span class="at">from =</span> my_f, </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">to =</span> <span class="st">'~'</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] TRUE</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] TRUE</code></pre>
+</div>
+</div>
+<p>Caso seja a primeira vez trabalhando com arquivos do tipo <em>.csv</em>, sugiro usar o explorador de arquivos do Windows e abrir CH04_ibovespa.csv com qualquer editor de texto instalado, tal como o <em>Notepad</em> (veja <a href="#fig-notepad">Figure&nbsp;<span>6.1</span></a>. Observe que as primeiras linhas do arquivo definem os nomes das colunas: “ref_date” e “price_close”. Conforme notação internacional, as linhas são definidas pela quebra do texto e as colunas pelo uso da vírgula (<code>,</code>).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-notepad" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="resources/figs/example_csv_notepad.png" class="img-fluid figure-img" width="224"></p>
+<figcaption class="figure-caption">Figure&nbsp;6.1: Exemplo de arquivo .csv no Notepad</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+O Formato Brasileiro
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quando trabalhando com dados brasileiros, a notação internacional pode gerar uma confusão desnecessária. Dados locais tendem a usar a vírgula para indicar valores decimais em números, assim como também datas no formato dia/mês/ano. Abaixo apresenta-se algumas regras de formatação de números e códigos para o caso brasileiro.</p>
+<p><strong>Decimal:</strong> O decimal no R é definido pelo ponto (.), tal como em <code>2.5</code> e não vírgula, como em <code>2,5</code>. Esse é o padrão internacional, e a diferença para a notação brasileira gera muita confusão. Em nenhuma situação deve-se utilizar a vírgula como separador de casas decimais. Mesmo quando estiver exportando dados, sempre dê prioridade para o formato internacional.</p>
+<p><strong>Caracteres latinos:</strong> Devido ao seu padrão internacional, o R apresenta problemas para entender caracteres latinos, tal como cedilha e acentos. Caso possa evitar, não utilize esses tipos de caracteres no código para nomeação de variáveis ou arquivos. Nos objetos de classe texto (<code>character</code>), é possível utilizá-los desde que a codificação do objeto esteja correta (<em>UTF-8</em> ou <em>Latin1</em>). Assim, recomenda-se que o código do R seja escrito na língua inglesa.</p>
+<p><strong>Formato das datas:</strong> Datas no R são formatadas de acordo com a norma <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a>, seguindo o padrão <code>YYYY-MM-DD</code>, onde <code>YYYY</code> é o ano em quatro números, <code>MM</code> é o mês e <code>DD</code> é o dia. Por exemplo, uma data em ISO 8601 é 2024-01-10. No Brasil, as datas são formatadas como <code>DD/MM/YYYY</code>. Reforçando a regra, sempre dê preferência ao padrão internacional. Vale salientar que a conversão entre um formato e outro é bastante fácil e será apresentada em capítulo futuro.</p>
+</div>
+</div>
+<p>O conteúdo de CH04_ibovespa.csv é bastante conservador e não será difícil importar o seu conteúdo. Porém, saiba que muitas vezes o arquivo <em>.csv</em> vem com informações extras de cabeçalho – o chamado <em>metadata</em> – ou diferentes formatações que exigem adaptações. Como sugestão para evitar problemas, antes de prosseguir para a importação de dados em um arquivo <em>.csv</em>, abra o arquivo em um editor de texto qualquer e siga os seguintes passos:</p>
+<ol type="1">
+<li><p>Verifique a existência de texto antes dos dados e a necessidade de ignorar algumas linhas iniciais. A maioria dos arquivos .csv não contém cabeçalho, porém deves sempre checar. No R, a função de leitura de arquivos <em>.csv</em> possui uma opção para ignorar um definido número de linhas antes de começar a leitura do arquivo;</p></li>
+<li><p>Verifique a existência ou não dos nomes das colunas na primeira linha com os dados. Em caso negativo, verifique com o autor qual o nome (e significado) das colunas;</p></li>
+<li><p>Verifique qual o símbolo de separador de colunas. Comumente, seguindo notação internacional, será a vírgula, porém nunca se tem certeza sem checar;</p></li>
+<li><p>Para dados numéricos, verifique o símbolo de decimal, o qual deve ser o ponto (<code>.</code>) tal como em <code>2.5</code>. Caso necessário, podes ajustar o símbolo na própria função de leitura;</p></li>
+<li><p>Verifique a codificação do arquivo de texto. Normalmente é UTF-8, Latin1 (ISO-8859) ou windows1252. Esses são formatos amplos e devem ser suficientes para a maioria dos idiomas. Sempre que você encontrar símbolos estranhos nas colunas de texto do <code>dataframe</code> resultante, o problema é devido a uma diferença na codificação entre o arquivo e o R. Os usuários do Windows podem verificar a codificação de um arquivo de texto abrindo-o no software <a href="">Notepad++</a>. As informações sobre a codificação estarão disponíveis no canto inferior direito do editor. No entanto, você precisa estar ciente de que o Notepad++ não faz parte da instalação do Windows e pode ser necessário instalá-lo em seu computador. Os usuários de Linux e Mac podem encontrar as mesmas informações em qualquer software editor de texto avançado, como o <a href="">Kate</a>.</p></li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sempre que você encontrar uma estrutura de texto inesperada em um arquivo <em>.csv</em>, use os argumentos da função de leitura <em>csv</em> para importar as informações corretamente. Repetindo, <strong>nunca modifique dados brutos manualmente</strong>. É muito mais eficiente usar o código R para lidar com diferentes estruturas de arquivos em <em>.csv</em>. Pode parecer mais trabalhoso, mas essa política vai economizar muito tempo no futuro, pois, em algumas semanas, você provavelmente esquecerá como limpou manualmente aquele arquivo <em>.csv</em> utilizado em pesquisa passada. Com o uso de código para a adaptação da importação de dados, sempre que você precisar atualizar o arquivo de dados, o código irá resolver todos os problemas, automatizando o processo.</p>
+</div>
+</div>
+<section id="importação-de-dados" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="importação-de-dados"><span class="header-section-number">6.2.1</span> Importação de Dados</h3>
+<p>O R possui uma função nativa chamada <strong>read.csv()</strong> para importar dados de arquivos <em>.csv</em>. Porém, esse é um dos muitos casos em que a alternativa do <strong>{tidyverse}</strong> <span class="citation" data-cites="R-tidyverse">(<a href="99-references.html#ref-R-tidyverse" role="doc-biblioref">Wickham 2023</a>)</span> – <strong>readr</strong>::<strong>read_csv()</strong> – é mais eficiente e mais fácil de trabalhar. Resumindo, <strong>readr</strong>::<strong>read_csv()</strong> lê arquivos mais rapidamente que <strong>read.csv()</strong> , além de usar regras mais inteligentes para definir as classes das colunas importadas.</p>
+<p>Este é a primeira vez que usamos um pacote do <strong>{tidyverse}</strong> <span class="citation" data-cites="R-tidyverse">(<a href="99-references.html#ref-R-tidyverse" role="doc-biblioref">Wickham 2023</a>)</span>, neste caso o <strong>{readr}</strong> <span class="citation" data-cites="R-readr">(<a href="99-references.html#ref-R-readr" role="doc-biblioref">Wickham, Hester, and Bryan 2023</a>)</span>. Antes de fazer isso, é necessário instalá-lo em sua sessão R. Uma maneira simples de instalar todos os pacotes pertencentes ao <strong>{tidyverse}</strong> <span class="citation" data-cites="R-tidyverse">(<a href="99-references.html#ref-R-tidyverse" role="doc-biblioref">Wickham 2023</a>)</span> é instalar o módulo de mesmo nome:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'tidyverse'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Após executar o código anterior, todos os pacotes <strong>{tidyverse}</strong> <span class="citation" data-cites="R-tidyverse">(<a href="99-references.html#ref-R-tidyverse" role="doc-biblioref">Wickham 2023</a>)</span> serão instalados em seu computador. Você também deve ter em mente que alguns aspectos dessa instalação podem demorar um pouco. Assim que terminar, carregue o conjunto de pacotes <strong>{tidyverse}</strong> <span class="citation" data-cites="R-tidyverse">(<a href="99-references.html#ref-R-tidyverse" role="doc-biblioref">Wickham 2023</a>)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load library</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>De volta à importação de dados de arquivos <em>.csv</em>, use a função <strong>readr</strong>::<strong>read_csv()</strong> para carregar o conteúdo do arquivo CH04_ibovespa.csv no R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set file to read</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">'CH04_ibovespa.csv'</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># read data</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>my_df_ibov <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(my_f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O conteúdo do arquivo importado é convertido para um objeto do tipo <code>dataframe</code> no R. Conforme mencionado no capítulo anterior, cada coluna de um <code>dataframe</code> tem uma classe. Podemos verificar as classes de <code>my_df_ibov</code> usando a função <strong>dplyr</strong>::<strong>glimpse()</strong> do pacote <strong>{dplyr}</strong> <span class="citation" data-cites="R-dplyr">(<a href="99-references.html#ref-R-dplyr" role="doc-biblioref">Wickham et al. 2023</a>)</span>, que também faz parte do <strong>{tidyverse}</strong> <span class="citation" data-cites="R-tidyverse">(<a href="99-references.html#ref-R-tidyverse" role="doc-biblioref">Wickham 2023</a>)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check content</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(my_df_ibov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 3,215
+R&gt; Columns: 2
+R&gt; $ ref_date    &lt;date&gt; 2010-01-04, 2010-01-05, 2010-01-06, 2…
+R&gt; $ price_close &lt;dbl&gt; 70045, 70240, 70729, 70451, 70263, 704…</code></pre>
+</div>
+</div>
+<p>Observe que a coluna de datas (<code>ref_date</code>) foi importada como um vetor <code>Date</code> e os preços de fechamento como numéricos (<code>dbl</code>, precisão dupla). Isso é exatamente o que esperávamos. Internamente, a função <strong>readr</strong>::<strong>read_csv()</strong> identifica as classes das colunas de acordo com seu conteúdo.</p>
+<p>Observe também como o código anterior apresentou a mensagem “Parsed with column specification: …”. Essa mensagem mostra como a função identifica as classes das colunas lendo as primeiras 1000 linhas do arquivo. Regras inteligentes tentam prever a classe com base no conteúdo importado. Podemos usar essas informações em nosso próprio código copiando o texto e atribuindo-o a uma variável:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set cols from readr import message</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>my_cols <span class="ot">&lt;-</span> <span class="fu">cols</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">price_close =</span> <span class="fu">col_double</span>(),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_date =</span> <span class="fu">col_date</span>(<span class="at">format =</span> <span class="st">""</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># read file with readr::read_csv</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>my_df_ibov <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(my_f,</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">col_types =</span> my_cols)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Como um exercício, vamos importar os mesmos dados, porém usando a classe <code>character</code> (texto) para colunas <code>ref_date</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set cols from readr import message</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>my_cols <span class="ot">&lt;-</span> <span class="fu">cols</span>(</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">price_close =</span> <span class="fu">col_double</span>(),</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_date =</span> <span class="fu">col_character</span>()</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># read file with readr::read_csv</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>my_df_ibov <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(my_f,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">col_types =</span> my_cols)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co"># check content</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(my_df_ibov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 3,215
+R&gt; Columns: 2
+R&gt; $ ref_date    &lt;chr&gt; "2010-01-04", "2010-01-05", "2010-01-0…
+R&gt; $ price_close &lt;dbl&gt; 70045, 70240, 70729, 70451, 70263, 704…</code></pre>
+</div>
+</div>
+<p>Como esperado, a coluna de datas – <code>ref_date</code> – agora foi importada como texto. Assim, o uso de <strong>readr</strong>::<strong>read_csv()</strong> pode ser resumido em duas etapas: 1) leia o arquivo sem argumentos em <strong>readr</strong>::<strong>read_csv()</strong> ; 2) copie o texto das classes de coluna padrão da mensagem de saída e adicione como entrada <code>col_types</code>. O conjunto de passos anterior é suficiente para a grande maioria dos casos. O uso da mensagem com as classes das colunas é particularmente útil quando o arquivo importado tem várias colunas e a definição manual de cada classe exige muita digitação.</p>
+<p>Uma alternativa mais prática no uso do <strong>readr</strong>::<strong>read_csv()</strong> é confiar na heurística da função e usar a definição padrão das colunas automaticamente. Para isto, basta definir a entrada <code>col_types</code> como <code>cols()</code>. Veja a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read file with readr::read_csv</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>my_df_ibov <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(my_f,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">col_types =</span> <span class="fu">cols</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Agora, vamos estudar um caso mais anormal de arquivo <em>.csv</em>. No pacote do livro temos um arquivo chamado <code>CH04_funky-csv-file.csv</code> onde:</p>
+<ul>
+<li>o cabeçalho possui texto com informações dos dados;</li>
+<li>o arquivo usará a vírgula como decimal;</li>
+<li>o texto do arquivo conterá caracteres latinos.</li>
+</ul>
+<p>As primeiras 10 linhas dos arquivos contém o seguinte conteúdo:</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; Example of funky file:
+R&gt; - columns separated by ";"
+R&gt; - decimal points as ","
+R&gt; 
+R&gt; Data build in 2022-12-28
+R&gt; Origin: www.funkysite.com.br
+R&gt; 
+R&gt; ID;Race;Age;Sex;Hour;IQ;Height;Died
+R&gt; 001;White;80;Male;00:00:00;92;68;FALSE
+R&gt; 002;Hispanic;25;Female;00:00:00;99;68;TRUE</code></pre>
+</div>
+</div>
+<p>Note a existência do cabeçalho até linha de número 7 e as colunas sendo separadas pela semi-vírgula (“;”).</p>
+<p>Ao importar os dados com opções padrões (e erradas), teremos o resultado a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>df_funky <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(my_f, </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_types =</span> readr<span class="sc">::</span><span class="fu">cols</span>())</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(df_funky)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 2
+R&gt; Columns: 1
+R&gt; $ `Example of funky file:` &lt;chr&gt; "- columns separated by \…</code></pre>
+</div>
+</div>
+<p>Claramente a importação deu errado, com a emissão de diversas mensagens de <em>warning</em>. Para resolver, utilizamos o seguinte código, estruturando todas as particularidades do arquivo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>df_not_funky <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_delim</span>(<span class="at">file =</span> my_f, </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">skip =</span> <span class="dv">7</span>, <span class="co"># how many lines do skip</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">delim =</span> <span class="st">';'</span>, <span class="co"># column separator</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">col_types =</span> readr<span class="sc">::</span><span class="fu">cols</span>(), <span class="co"># column types</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">locale =</span> readr<span class="sc">::</span><span class="fu">locale</span>(<span class="at">decimal_mark =</span> <span class="st">','</span>)<span class="co"># locale</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(df_not_funky)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 100
+R&gt; Columns: 8
+R&gt; $ ID     &lt;chr&gt; "001", "002", "003", "004", "005", "006", "…
+R&gt; $ Race   &lt;chr&gt; "White", "Hispanic", "Asian", "White", "Whi…
+R&gt; $ Age    &lt;dbl&gt; 80, 25, 25, 64, 76, 89, 33, 61, 23, 59, 80,…
+R&gt; $ Sex    &lt;chr&gt; "Male", "Female", "Male", "Male", "Female",…
+R&gt; $ Hour   &lt;time&gt; 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00…
+R&gt; $ IQ     &lt;dbl&gt; 92, 99, 98, 105, 109, 84, 109, 109, 99, 126…
+R&gt; $ Height &lt;dbl&gt; 68, 68, 69, 69, 67, 73, 65, 72, 70, 66, 63,…
+R&gt; $ Died   &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, FALSE…</code></pre>
+</div>
+</div>
+<p>Veja que agora os dados foram corretamente importados, com as classes corretas das colunas. Para isso, usamos a função alternativa <code>readr::read_delim</code>. O pacote <strong>{readr}</strong> <span class="citation" data-cites="R-readr">(<a href="99-references.html#ref-R-readr" role="doc-biblioref">Wickham, Hester, and Bryan 2023</a>)</span> também possui várias outras funções para situações específicas de importação. Caso a função <strong>readr</strong>::<strong>read_csv()</strong> não resolva o seu problema na leitura de algum arquivo de dados estruturado em texto, certamente outra função desse pacote resolverá.</p>
+</section>
+<section id="exportação-de-dados" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="exportação-de-dados"><span class="header-section-number">6.2.2</span> Exportação de Dados</h3>
+<p>Para exportar tabelas em um arquivo <em>.csv</em>, basta utilizar a função <strong>readr</strong>::<strong>write_csv()</strong> . No próximo exemplo iremos criar dados artificiais, salvar em um dataframe e exportar para um arquivo <em>.csv</em> temporário. Veja a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set number of observations</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create dataframe with random data</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y =</span> <span class="fu">runif</span>(N),</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">z =</span> <span class="fu">rep</span>(<span class="st">'a'</span>, N))</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="co"># write to file</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>f_out <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">'.csv'</span>)</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(<span class="at">x =</span> my_df, <span class="at">file =</span> f_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>No exemplo anterior, salvamos o <code>dataframe</code> chamado <code>my_df</code> para o arquivo file4a6d2eb4e365.csv, localizado na pasta temporária do computador. Podemos verificar o arquivo importando o seu conteúdo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(f_out,</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">y =</span> <span class="fu">col_double</span>(),</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">z =</span> <span class="fu">col_character</span>() ) )</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(my_df))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; # A tibble: 6 × 2
+R&gt;        y z    
+R&gt;    &lt;dbl&gt; &lt;chr&gt;
+R&gt; 1 0.267  a    
+R&gt; 2 0.0759 a    
+R&gt; 3 0.541  a    
+R&gt; 4 0.910  a    
+R&gt; 5 0.649  a    
+R&gt; 6 0.643  a</code></pre>
+</div>
+</div>
+<p>O resultado está conforme o esperado, um dataframe com duas colunas, a primeira com números e a segunda com texto.</p>
+<p>Note que toda exportação com função <strong>readr</strong>::<strong>write_csv()</strong> irá ser formatada, por padrão, com a notação internacional. Caso quiser algo diferentes, verifique as opções disponíveis na função <strong>readr</strong>::<strong>write_delim()</strong> , a qual é muito mais flexível.</p>
+</section>
+</section>
+<section id="arquivos-excel-xls-e-xlsx" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="arquivos-excel-xls-e-xlsx"><span class="header-section-number">6.3</span> Arquivos <em>Excel</em> (<em>xls</em> e <em>xlsx</em>)</h2>
+<p>Em Finanças e Economia, é bastante comum encontrarmos dados salvos em arquivos do tipo Microsoft Excel, com extensão <em>.xls</em> ou <em>.xlsx</em>. Apesar de não ser um formato de armazenamento de dados eficiente, esse é um programa de planilhas bastante popular devido às suas funcionalidades. É muito comum que informações sejam armazenadas e distribuídas dessa forma. Por exemplo, dados históricos do Tesouro Direto são disponibilizados como arquivos <em>.xls</em> no <a href="">site do tesouro nacional</a>. A CVM (Comissão de Valores Mobiliários) e ANBIMA (Associação Brasileira das Entidades dos Mercados Financeiro e de Capitais) também tem preferência por esse tipo de formato em alguns dados publicados em seu <em>site</em>.</p>
+<p>A desvantagem de usar arquivos do Excel para armazenar dados é sua baixa portabilidade e o maior tempo necessário para leitura e gravação. Isso pode não ser um problema para tabelas pequenas, mas ao lidar com um grande volume de dados, o uso de arquivos Excel é frustrante e não aconselhável. Se possível, evite o uso de arquivos do Excel em seu ciclo de trabalho.</p>
+<section id="importação-de-dados-1" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="importação-de-dados-1"><span class="header-section-number">6.3.1</span> Importação de Dados</h3>
+<p>O R não possui uma função nativa para importar dados do Excel e, portanto, deve-se instalar e utilizar certos pacotes para realizar essa operação. Existem diversas opções, porém, os principais pacotes são <strong>{XLConnect}</strong> <span class="citation" data-cites="R-XLConnect">(<a href="99-references.html#ref-R-XLConnect" role="doc-biblioref">Mirai Solutions GmbH 2023</a>)</span>, <strong>{xlsx}</strong> <span class="citation" data-cites="R-xlsx">(<a href="99-references.html#ref-R-xlsx" role="doc-biblioref">Dragulescu and Arendt 2020</a>)</span>, <strong>{readxl}</strong> <span class="citation" data-cites="R-readxl">(<a href="99-references.html#ref-R-readxl" role="doc-biblioref">Wickham and Bryan 2023</a>)</span> e <strong>{tidyxl}</strong> <span class="citation" data-cites="R-tidyxl">(<a href="99-references.html#ref-R-tidyxl" role="doc-biblioref">Garmonsway 2023</a>)</span>.</p>
+<p>Apesar de os pacotes anteriores terem objetivos semelhantes, cada um tem suas peculiaridades. Caso a leitura de arquivos do Excel seja algo importante no seu trabalho, aconselho-o fortemente a estudar as diferenças entre esses pacotes. Por exemplo, pacote <strong>{tidyxl}</strong> <span class="citation" data-cites="R-tidyxl">(<a href="99-references.html#ref-R-tidyxl" role="doc-biblioref">Garmonsway 2023</a>)</span> permite a leitura de dados não-estruturados de um arquivo Excel, enquanto <strong>{XLConnect}</strong> <span class="citation" data-cites="R-XLConnect">(<a href="99-references.html#ref-R-XLConnect" role="doc-biblioref">Mirai Solutions GmbH 2023</a>)</span> possibilita a abertura de uma conexão ativa entre o R e o Excel, onde o usuário pode transmitir dados entre um e o outro, formatar células, criar gráficos no Excel e muito mais.</p>
+<p>Nesta seção, daremos prioridade para funções do pacote <strong>{readxl}</strong> <span class="citation" data-cites="R-readxl">(<a href="99-references.html#ref-R-readxl" role="doc-biblioref">Wickham and Bryan 2023</a>)</span>, o qual é um dos mais fáceis e diretos de se utilizar, além de não necessitar de outros softwares instalados (tal como o <em>Java</em>). Para instalar o referido pacote, basta utilizar a função <strong>install.packages()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'readxl'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Imagine agora a existência de um arquivo chamado <code>CH04_ibovespa-Excel.xlsx</code> que contenha os mesmos dados do Ibovespa que importamos na seção anterior. A importação das informações contidas nesse arquivo para o R será realizada através da função <strong>readxl</strong>::<strong>read_excel()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set file</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">"CH04_ibovespa-Excel.xlsx"</span>)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="co"># read xlsx into dataframe</span></span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(my_f, <span class="at">sheet =</span> <span class="st">'Sheet1'</span>)</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse contents</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(my_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 3,215
+R&gt; Columns: 2
+R&gt; $ ref_date    &lt;dttm&gt; 2010-01-04, 2010-01-05, 2010-01-06, 2…
+R&gt; $ price_close &lt;dbl&gt; 70045, 70240, 70729, 70451, 70263, 704…</code></pre>
+</div>
+</div>
+<p>Observe que, nesse caso, as datas já foram importadas com a formatação correta na classe <code>dttm</code> (<em>datetime</em>). Essa é uma vantagem ao utilizar arquivos do Excel: a classe dos dados do arquivo original é levada em conta no momento da importação. O lado negativo desse formato é a baixa portabilidade dos dados e o maior tempo necessário para a execução da importação. Como regra geral, dados importados do Excel apresentarão um tempo de carregamento mais alto do que dados importados de arquivos <em>.csv</em>.</p>
+</section>
+<section id="exportação-de-dados-1" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="exportação-de-dados-1"><span class="header-section-number">6.3.2</span> Exportação de Dados</h3>
+<p>A exportação para arquivo Excel também é fácil. Assim como para a importação, não existe uma função nativa do R que execute esse procedimento. Para tal tarefa, temos pacotes <strong>{xlsx}</strong> <span class="citation" data-cites="R-xlsx">(<a href="99-references.html#ref-R-xlsx" role="doc-biblioref">Dragulescu and Arendt 2020</a>)</span> e <strong>{writexl}</strong> <span class="citation" data-cites="R-writexl">(<a href="99-references.html#ref-R-writexl" role="doc-biblioref">Ooms 2023</a>)</span>. Uma diferença aqui é que o pacote <strong>{xlsx}</strong> <span class="citation" data-cites="R-xlsx">(<a href="99-references.html#ref-R-xlsx" role="doc-biblioref">Dragulescu and Arendt 2020</a>)</span> oferece mais funcionalidade mas exige a instalação do Java JDK no sistema operacional. No caso do Windows, basta visitar o <a href="">site do Java</a> e instalar o software na versão 64 bits (opção <em>Windows Off-line (64 bits)</em>). Logo após, instale o pacote <strong>{xlsx}</strong> <span class="citation" data-cites="R-xlsx">(<a href="99-references.html#ref-R-xlsx" role="doc-biblioref">Dragulescu and Arendt 2020</a>)</span> normalmente no R com o comando <code>install.packages('xlsx')</code>.</p>
+<p>Para fins de ilustração de uso, vamos utilizar o pacote <strong>{writexl}</strong> <span class="citation" data-cites="R-writexl">(<a href="99-references.html#ref-R-writexl" role="doc-biblioref">Ooms 2023</a>)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set number of rows</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create random dataframe</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y =</span> <span class="fu">seq</span>(<span class="dv">1</span>,N),</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">z =</span> <span class="fu">rep</span>(<span class="st">'a'</span>,N))</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="co"># write to xlsx</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>f_out <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">'.xlsx'</span>)</span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>writexl<span class="sc">::</span><span class="fu">write_xlsx</span>(<span class="at">x =</span> my_df, <span class="at">path =</span> f_out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="formato-.rdata-e-.rds" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="formato-.rdata-e-.rds"><span class="header-section-number">6.4</span> Formato <em>.RData</em> e <em>.rds</em></h2>
+<p>O R possui dois formatos nativos para salvar objetos de sua área de trabalho para um arquivo local com extensão <em>RData</em> ou <em>rds</em>. O grande benefício, em ambos os casos, é que o arquivo resultante é compacto e o seu acesso é muito rápido. A desvantagem é que os dados perdem portabilidade para outros programas. A diferença entre um formato e outro é que arquivos <em>RData</em> podem salvar mais de um objeto, enquanto o formato <em>.rds</em> salva apenas um. Na prática, porém, essa <strong>não é uma restrição forte</strong>. No R existe um objeto do tipo <em>lista</em> que incorpora outros. Portanto, caso salvarmos uma <em>lista</em> em um arquivo <em>.rds</em>, podemos gravar no disco quantos objetos forem necessários.</p>
+<section id="importação-de-dados-2" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="importação-de-dados-2"><span class="header-section-number">6.4.1</span> Importação de Dados</h3>
+<p>Para carregar os dados de um aquivo <code>RData</code>, utilizamos a função <strong>load()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set a object</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>my_x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set temp name of RData file</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">'CH04_example-Rdata.RData'</span>)</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="co"># load it</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> my_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O arquivo CH04_example-Rdata.RData possui dois objetos, <code>my_x</code> e <code>my_y</code>, os quais se tornam disponíveis na área de trabalho depois da chamada de <strong>load()</strong> .</p>
+<p>O processo de importação para arquivos <em>.rds</em> é muito semelhante. A diferença é no uso da função <strong>readr</strong>::<strong>read_rds()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set file path</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">'CH04_example-rds.rds'</span>)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load content into workspace</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>my_x <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(<span class="at">file =</span> my_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Comparando o código entre o uso de arquivos <code>.RData</code> e <code>.rds</code>, note que um benefício no uso de <code>.rds</code> é a explícita definição do objeto na área de trabalho. Isto é, o conteúdo de <code>my_file</code> em <strong>readr</strong>::<strong>read_rds()</strong> é explicitamente salvo em <code>my_x</code>. Quando usamos a função <strong>load()</strong> , no código não fica claro qual o nome do objeto que foi importado. Isso é particularmente inconveniente quando é necessário modificar o nome do objeto importado.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Como sugestão, dê preferência ao uso do formato <em>.rds</em>, o qual deve resultar em códigos mais transparentes. A diferença de velocidade de acesso e gravação entre um e outro é mínima. O benefício de importar vários objetos em um mesmo arquivo com o formato <code>RData</code> torna-se irrelevante quando no uso de objetos do tipo lista, os quais podem incorporar outros objetos no seu conteúdo.</p>
+</div>
+</div>
+</section>
+<section id="exportação-de-dados-2" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="exportação-de-dados-2"><span class="header-section-number">6.4.2</span> Exportação de Dados</h3>
+<p>Para criar um novo arquivo <em>RData</em>, utilizamos a função <strong>save()</strong> . Veja o exemplo a seguir, onde criamos um arquivo <em>RData</em> com dois objetos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set vars</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>my_x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>my_y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="co"># write to RData</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">'.RData'</span>)</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(<span class="at">list =</span> <span class="fu">c</span>(<span class="st">'my_x'</span>, <span class="st">'my_y'</span>),</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> my_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Podemos verificar a existência do arquivo::</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">file_exists</span>(my_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; /tmp/RtmphMLwie/file4a6d35ab281b.RData 
+R&gt;                                   TRUE</code></pre>
+</div>
+</div>
+<p>Observe que o arquivo file4a6d35ab281b.RData está disponível na pasta temporária.</p>
+<p>Já para arquivos <em>.rds</em>, salvamos o objeto com função <strong>readr</strong>::<strong>write_rds()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set data and file</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>my_x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">".rds"</span>)</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="co"># save as .rds</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_rds</span>(my_x, my_file)</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="co"># read it</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>my_x2 <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_rds</span>(my_file)</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a><span class="co"># test equality</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">identical</span>(my_x, my_x2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] TRUE</code></pre>
+</div>
+</div>
+<p>O comando <strong>identical()</strong> testa a igualdade entre os objetos e, como esperado, verificamos que <code>my_x</code> e <code>my_x2</code> são exatamente iguais.</p>
+</section>
+</section>
+<section id="arquivos-fst" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="arquivos-fst"><span class="header-section-number">6.5</span> Arquivos <em>fst</em></h2>
+<p>Pacote <strong>{fst}</strong> <span class="citation" data-cites="R-fst">(<a href="99-references.html#ref-R-fst" role="doc-biblioref">Klik 2022</a>)</span> foi especialmente <a href="">desenhado</a> para possibilitar a gravação e leitura de dados tabulares de forma rápida e com mínimo uso do espaço no disco. O uso deste formato é particularmente benéfico quando se está trabalhando com volumosas bases de dados em computadores potentes. <strong>O grande truque do formato <em>fst</em> é usar todos núcleos do computador para importar e exportar dados</strong>, enquanto todos os demais formatos se utilizam de apenas um. Como logo veremos, o ganho em velocidade é bastante significativo.</p>
+<section id="importação-de-dados-3" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="importação-de-dados-3"><span class="header-section-number">6.5.1</span> Importação de Dados</h3>
+<p>O uso do formato <em>fst</em> é bastante simples. Utilizamos a função <strong>fst</strong>::<strong>read_fst()</strong> para ler arquivos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fst)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">'CH04_example-fst.fst'</span>)</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">read_fst</span>(my_file)</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(my_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 100
+R&gt; Columns: 8
+R&gt; $ ID     &lt;chr&gt; "001", "002", "003", "004", "005", "006", "…
+R&gt; $ Race   &lt;fct&gt; Black, White, Hispanic, Black, White, White…
+R&gt; $ Age    &lt;int&gt; 33, 35, 23, 87, 65, 51, 58, 67, 22, 52, 52,…
+R&gt; $ Sex    &lt;fct&gt; Male, Female, Male, Female, Male, Male, Fem…
+R&gt; $ Hour   &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.00000…
+R&gt; $ IQ     &lt;dbl&gt; 108, 108, 85, 106, 92, 92, 88, 100, 86, 80,…
+R&gt; $ Height &lt;dbl&gt; 72, 63, 77, 72, 71, 74, 64, 69, 63, 72, 70,…
+R&gt; $ Died   &lt;lgl&gt; FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE…</code></pre>
+</div>
+</div>
+<p>Assim como para os demais casos, os dados estão disponíveis na área de trabalho após a importação.</p>
+</section>
+<section id="exportação-de-dados-3" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="exportação-de-dados-3"><span class="header-section-number">6.5.2</span> Exportação de Dados</h3>
+<p>Utilizamos a função <strong>fst</strong>::<strong>write_fst()</strong> para gravar arquivos no formato <em>fst</em>, :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fst)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create dataframe</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">'.fst'</span>)</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">runif</span>(N))</span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a><span class="co"># write to fst</span></span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a><span class="fu">write_fst</span>(<span class="at">x =</span> my_df, <span class="at">path =</span> my_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="testando-o-tempo-de-execução-do-formato-fst" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="testando-o-tempo-de-execução-do-formato-fst"><span class="header-section-number">6.5.3</span> Testando o Tempo de Execução do Formato <em>fst</em></h3>
+<p>Como um teste do potencial do pacote <strong>{fst}</strong> <span class="citation" data-cites="R-fst">(<a href="99-references.html#ref-R-fst" role="doc-biblioref">Klik 2022</a>)</span>, a seguir vamos cronometrar o tempo de leitura e gravação entre <em>fst</em> e <em>rds</em> para um dataframe com grande quantidade de dados: 5,000,000 linhas e 2 colunas. Iremos reportar também o tamanho do arquivo resultante.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fst)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set number of rows</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">5000000</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create random dfs</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>my_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y =</span> <span class="fu">seq</span>(<span class="dv">1</span>,N),</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">z =</span> <span class="fu">rep</span>(<span class="st">'a'</span>,N))</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a><span class="co"># set files</span></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>my_file_rds <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">".rds"</span>)</span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>my_file_fst <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">".fst"</span>)</span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a><span class="co"># test write</span></span>
+<span id="cb75-15"><a href="#cb75-15" aria-hidden="true" tabindex="-1"></a>time_write_rds <span class="ot">&lt;-</span> <span class="fu">system.time</span>(readr<span class="sc">::</span><span class="fu">write_rds</span>(my_df, my_file_rds ))</span>
+<span id="cb75-16"><a href="#cb75-16" aria-hidden="true" tabindex="-1"></a>time_write_fst <span class="ot">&lt;-</span> <span class="fu">system.time</span>(fst<span class="sc">::</span><span class="fu">write_fst</span>(my_df, my_file_fst ))</span>
+<span id="cb75-17"><a href="#cb75-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-18"><a href="#cb75-18" aria-hidden="true" tabindex="-1"></a><span class="co"># test read</span></span>
+<span id="cb75-19"><a href="#cb75-19" aria-hidden="true" tabindex="-1"></a>time_read_rds <span class="ot">&lt;-</span> <span class="fu">system.time</span>(readr<span class="sc">::</span><span class="fu">read_rds</span>(my_file_rds))</span>
+<span id="cb75-20"><a href="#cb75-20" aria-hidden="true" tabindex="-1"></a>time_read_fst <span class="ot">&lt;-</span> <span class="fu">system.time</span>(fst<span class="sc">::</span><span class="fu">read_fst</span>(my_file_fst))</span>
+<span id="cb75-21"><a href="#cb75-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-22"><a href="#cb75-22" aria-hidden="true" tabindex="-1"></a><span class="co"># test file size (MB)</span></span>
+<span id="cb75-23"><a href="#cb75-23" aria-hidden="true" tabindex="-1"></a>file_size_rds <span class="ot">&lt;-</span> <span class="fu">file.size</span>(my_file_rds)<span class="sc">/</span><span class="dv">1000000</span></span>
+<span id="cb75-24"><a href="#cb75-24" aria-hidden="true" tabindex="-1"></a>file_size_fst <span class="ot">&lt;-</span> <span class="fu">file.size</span>(my_file_fst)<span class="sc">/</span><span class="dv">1000000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Após a execução, vamos verificar o resultado:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># results</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>my_formats <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'.rds'</span>, <span class="st">'.fst'</span>)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>results_read <span class="ot">&lt;-</span> <span class="fu">c</span>(time_read_rds[<span class="dv">3</span>], time_read_fst[<span class="dv">3</span>])</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>results_write<span class="ot">&lt;-</span> <span class="fu">c</span>(time_write_rds[<span class="dv">3</span>], time_write_fst[<span class="dv">3</span>])</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>results_file_size <span class="ot">&lt;-</span> <span class="fu">c</span>(file_size_rds , file_size_fst)</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print text</span></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>my_text <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'</span><span class="sc">\n</span><span class="st">Time to WRITE dataframe with '</span>,</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>                  my_formats, <span class="st">': '</span>,</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>                  results_write, <span class="st">' seconds'</span>, <span class="at">collapse =</span> <span class="st">''</span>)</span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(my_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; 
+R&gt; Time to WRITE dataframe with .rds: 0.749 seconds
+R&gt; Time to WRITE dataframe with .fst: 0.115 seconds</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>my_text <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'</span><span class="sc">\n</span><span class="st">Time to READ dataframe with '</span>,</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>                  my_formats, <span class="st">': '</span>,</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>                  results_read, <span class="st">' seconds'</span>, <span class="at">collapse =</span> <span class="st">''</span>)</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(my_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; 
+R&gt; Time to READ dataframe with .rds: 0.916 seconds
+R&gt; Time to READ dataframe with .fst: 0.141 seconds</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>my_text <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'</span><span class="sc">\n</span><span class="st">Resulting FILE SIZE for '</span>,</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>                  my_formats, <span class="st">': '</span>,</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>                  results_file_size, <span class="st">' MBs'</span>, <span class="at">collapse =</span> <span class="st">''</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(my_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; 
+R&gt; Resulting FILE SIZE for .rds: 65.000177 MBs
+R&gt; Resulting FILE SIZE for .fst: 14.791938 MBs</code></pre>
+</div>
+</div>
+<p>A diferença é gritante! O formato <em>fst</em> não somente lê e grava com mais rapidez mas o arquivo resultante também é menor. Porém, saiba que os resultados anteriores foram compilados em um computador com 16 núcleos. É possível que a diferença de tempo para um computador mais modesto não seja tão significativa.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Dica
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Devido ao uso de todos os núcleos do computador, o formato <em>fst</em> é altamente recomendado quando estiver trabalhando com dados volumosos em um computador potente. Não somente os arquivos resultantes serão menores, mas o processo de gravação e leitura será consideravelmente mais rápido.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Devido ao uso de todos os núcleos do computador, o formato <em>fst</em> é altamente recomendado quando estiver trabalhando com dados volumosos em um computador potente. Não somente os arquivos resultantes serão menores, mas o processo de gravação e leitura será consideravelmente mais rápido.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="dados-não-estruturados-e-outros-formatos" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="dados-não-estruturados-e-outros-formatos"><span class="header-section-number">6.6</span> Dados Não-Estruturados e Outros Formatos</h2>
+<p>Os pacotes e formatos anteriores são suficientes para resolver o problema de importação de dados na grande maioria das situações. Apesar disso, vale destacar que o R possui outras funções específicas para diferentes formatos. Isso inclui arquivos exportados de outros softwares, tal como SPSS, Matlab, entre vários outros. Se esse for o seu caso, sugiro um estudo aprofundado do pacote <strong>{foreign}</strong> <span class="citation" data-cites="R-foreign">(<a href="99-references.html#ref-R-foreign" role="doc-biblioref">R Core Team 2023</a>)</span>.</p>
+<p>Em alguns casos nos deparamos com dados armazenados de uma forma não estruturada, tal como um texto qualquer. Pode-se importar o conteúdo de um arquivo de texto linha por linha através da função <strong>readr</strong>::<strong>read_lines()</strong> . Veja o exemplo a seguir, onde importamos o conteúdo inteiro do livro <em>Pride and Prejudice</em>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set file to read</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> introR<span class="sc">::</span><span class="fu">data_path</span>(<span class="st">'CH04_price-and-prejudice.txt'</span>)</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a><span class="co"># read file line by line</span></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>my_txt <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_lines</span>(my_f)</span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print 50 characters of first fifteen lines</span></span>
+<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(stringr<span class="sc">::</span><span class="fu">str_sub</span>(<span class="at">string =</span> my_txt[<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>], </span>
+<span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">start =</span> <span class="dv">1</span>, </span>
+<span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">end =</span> <span class="dv">50</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1] "                            [Illustration:"        
+R&gt;  [2] ""                                                  
+R&gt;  [3] "                             GEORGE ALLEN"         
+R&gt;  [4] "                               PUBLISHER"          
+R&gt;  [5] ""                                                  
+R&gt;  [6] "                        156 CHARING CROSS ROAD"    
+R&gt;  [7] "                                LONDON"            
+R&gt;  [8] ""                                                  
+R&gt;  [9] "                             RUSKIN HOUSE"         
+R&gt; [10] "                                   ]"              
+R&gt; [11] ""                                                  
+R&gt; [12] "                            [Illustration:"        
+R&gt; [13] ""                                                  
+R&gt; [14] "               _Reading Jane’s Letters._      _Cha"
+R&gt; [15] "                                   ]"</code></pre>
+</div>
+</div>
+<p>Neste exemplo, arquivo CH04_price-and-prejudice.txt contém todo o conteúdo do livro <em>Pride and Prejudice</em> de Jane Austen, disponível gratuitamente pelo projeto <a href="">Gutenberg</a>. Importamos todo o conteúdo do arquivo como um vetor de texto denominado <code>my_txt</code>. Cada elemento de <code>my_txt</code> é uma linha do arquivo do texto original. Com base nisso, podemos calcular o número de linhas do livro e o número de vezes que o nome <code>'Bennet'</code>, um dos protagonistas da história, aparece no texto:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># count number of lines</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>n_lines <span class="ot">&lt;-</span> <span class="fu">length</span>(my_txt)</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set target text</span></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>name_to_search <span class="ot">&lt;-</span> <span class="st">'Bennet'</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a><span class="co"># set function for counting words</span></span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>fct_count_bennet <span class="ot">&lt;-</span> <span class="cf">function</span>(str_in, target_text) {</span>
+<span id="cb84-9"><a href="#cb84-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-10"><a href="#cb84-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(stringr)</span>
+<span id="cb84-11"><a href="#cb84-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-12"><a href="#cb84-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-13"><a href="#cb84-13" aria-hidden="true" tabindex="-1"></a>  n_words <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">str_locate_all</span>(<span class="at">string =</span> str_in, </span>
+<span id="cb84-14"><a href="#cb84-14" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">pattern =</span> target_text)[[<span class="dv">1</span>]])</span>
+<span id="cb84-15"><a href="#cb84-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb84-16"><a href="#cb84-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(n_words)</span>
+<span id="cb84-17"><a href="#cb84-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb84-18"><a href="#cb84-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-19"><a href="#cb84-19" aria-hidden="true" tabindex="-1"></a><span class="co"># use fct for all lines of Pride and Prejudice</span></span>
+<span id="cb84-20"><a href="#cb84-20" aria-hidden="true" tabindex="-1"></a>n_times <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">sapply</span>(<span class="at">X =</span> my_txt, </span>
+<span id="cb84-21"><a href="#cb84-21" aria-hidden="true" tabindex="-1"></a>                      <span class="at">FUN =</span> fct_count_bennet, </span>
+<span id="cb84-22"><a href="#cb84-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">target_text =</span> name_to_search))</span>
+<span id="cb84-23"><a href="#cb84-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-24"><a href="#cb84-24" aria-hidden="true" tabindex="-1"></a><span class="co"># print results</span></span>
+<span id="cb84-25"><a href="#cb84-25" aria-hidden="true" tabindex="-1"></a>my_msg <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'The number of lines found in the file is '</span>, </span>
+<span id="cb84-26"><a href="#cb84-26" aria-hidden="true" tabindex="-1"></a>                 n_lines, <span class="st">'.</span><span class="sc">\n</span><span class="st">'</span>,</span>
+<span id="cb84-27"><a href="#cb84-27" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'The word "'</span>, name_to_search, <span class="st">'" appears '</span>, </span>
+<span id="cb84-28"><a href="#cb84-28" aria-hidden="true" tabindex="-1"></a>                 n_times, <span class="st">' times in the book.'</span>)</span>
+<span id="cb84-29"><a href="#cb84-29" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(my_msg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; The number of lines found in the file is 14529.
+R&gt; The word "Bennet" appears 696 times in the book.</code></pre>
+</div>
+</div>
+<p>No exemplo, mais uma vez usamos <strong>sapply()</strong> . Neste caso, a função nos permitiu usar outra função para cada elemento de <code>my_txt</code>. Neste caso, procuramos e contamos o número de vezes que a palavra “Bennet” foi encontrada no texto. Observe que poderíamos simplesmente mudar <code>name_to_search</code> por qualquer outro nome, caso quiséssemos.</p>
+<section id="exportando-de-dados-não-estruturados" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="exportando-de-dados-não-estruturados"><span class="header-section-number">6.6.1</span> Exportando de Dados Não-Estruturados</h3>
+<p>Em algumas situações, é necessário exportar algum tipo de texto para um arquivo. Por exemplo: quando se precisa salvar o registro de um procedimento em um arquivo de texto; ou quando se precisa gravar informações em um formato específico não suportado pelo R. Esse procedimento é bastante simples. Junto à função <strong>readr</strong>::<strong>write_lines()</strong> , basta indicar um arquivo de texto para a saída com o argumento <code>file</code>. Veja a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set file</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">'.txt'</span>)</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set some string</span></span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>my_text <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'Today is '</span>, <span class="fu">Sys.Date</span>(), <span class="st">'</span><span class="sc">\n</span><span class="st">'</span>, </span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'Tomorrow is '</span>, <span class="fu">Sys.Date</span>()<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a><span class="co"># save string to file</span></span>
+<span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_lines</span>(<span class="at">x =</span> my_text, <span class="at">file =</span> my_f, <span class="at">append =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>No exemplo, criamos um objeto de texto com uma mensagem sobre a data atual e gravamos a saída no arquivo temporário file4a6d6bb543e3.txt. Podemos checar o resultado com a função <strong>readr</strong>::<strong>read_lines()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(readr<span class="sc">::</span><span class="fu">read_lines</span>(my_f))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "Today is 2024-01-10"    "Tomorrow is 2024-01-11"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="selecionando-o-formato" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="selecionando-o-formato"><span class="header-section-number">6.7</span> Selecionando o Formato</h2>
+<p>Após entendermos a forma de salvar e carregar dados de arquivos locais em diferentes formatos, é importante discutirmos sobre a escolha do formato. O usuário deve levar em conta três pontos nessa decisão:</p>
+<ul>
+<li>velocidade de importação e exportação;</li>
+<li>tamanho do arquivo resultante;</li>
+<li>compatibilidade com outros programas e sistemas.</li>
+</ul>
+<p>Na grande maioria das situações, o uso de arquivos <em>csv</em> satisfaz esses quesitos. Ele nada mais é do que um arquivo de texto que pode ser aberto, visualizado e importado em qualquer programa. Desse modo, fica muito fácil compartilhar dados compatíveis com outros usuários. Além disso, o tamanho de arquivos <em>csv</em> geralmente não é exagerado em computadores modernos. Caso necessário, podes compactar o arquivo .csv usando o programa <a href="https://www.7-zip.org/"><em>7zip</em></a>, por exemplo, o qual irá diminuir consideravelmente o tamanho do arquivo. Por esses motivos, <strong>o uso de arquivos <em>csv</em> para importações e exportações é preferível na grande maioria das situações</strong>.</p>
+<p>Existem casos, porém, onde a velocidade de importação e exportação pode fazer diferença. Caso abrir mão de portabilidade não faça diferença ao projeto, o formato <em>rds</em> é ótimo e prático. Se este não foi suficiente, então a melhor alternativa é partir para o <em>fst</em>, o qual usa maior parte do <em>hardware</em> do computador para importar os dados. Como sugestão, caso puder, apenas <strong>evite o formato do Excel</strong>, o qual é o menos eficiente de todos.</p>
+</section>
+<section id="exerc-importacao-exportacao" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="exerc-importacao-exportacao"><span class="header-section-number">6.8</span> Exercícios</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-R-xlsx" class="csl-entry" role="listitem">
+Dragulescu, Adrian, and Cole Arendt. 2020. <em>Xlsx: Read, Write, Format Excel 2007 and Excel 97/2000/XP/2003 Files</em>. <a href="https://github.com/colearendt/xlsx">https://github.com/colearendt/xlsx</a>.
+</div>
+<div id="ref-R-tidyxl" class="csl-entry" role="listitem">
+Garmonsway, Duncan. 2023. <em>Tidyxl: Read Untidy Excel Files</em>. <a href="https://github.com/nacnudus/tidyxl">https://github.com/nacnudus/tidyxl</a>.
+</div>
+<div id="ref-R-fst" class="csl-entry" role="listitem">
+Klik, Mark. 2022. <em>Fst: Lightning Fast Serialization of Data Frames</em>. <a href="http://www.fstpackage.org">http://www.fstpackage.org</a>.
+</div>
+<div id="ref-R-XLConnect" class="csl-entry" role="listitem">
+Mirai Solutions GmbH. 2023. <em>XLConnect: Excel Connector for r</em>. <a href="https://mirai-solutions.ch
+https://github.com/miraisolutions/xlconnect">https://mirai-solutions.ch https://github.com/miraisolutions/xlconnect</a>.
+</div>
+<div id="ref-R-writexl" class="csl-entry" role="listitem">
+Ooms, Jeroen. 2023. <em>Writexl: Export Data Frames to Excel Xlsx Format</em>. <a href="https://docs.ropensci.org/writexl/">https://docs.ropensci.org/writexl/</a>.
+</div>
+<div id="ref-R-foreign" class="csl-entry" role="listitem">
+R Core Team. 2023. <em>Foreign: Read Data Stored by Minitab, s, SAS, SPSS, Stata, Systat, Weka, dBase, ...</em> <a href="https://svn.r-project.org/R-packages/trunk/foreign/">https://svn.r-project.org/R-packages/trunk/foreign/</a>.
+</div>
+<div id="ref-R-tidyverse" class="csl-entry" role="listitem">
+Wickham, Hadley. 2023. <em>Tidyverse: Easily Install and Load the Tidyverse</em>. <a href="https://tidyverse.tidyverse.org">https://tidyverse.tidyverse.org</a>.
+</div>
+<div id="ref-R-readxl" class="csl-entry" role="listitem">
+Wickham, Hadley, and Jennifer Bryan. 2023. <em>Readxl: Read Excel Files</em>. <a href="https://readxl.tidyverse.org">https://readxl.tidyverse.org</a>.
+</div>
+<div id="ref-R-dplyr" class="csl-entry" role="listitem">
+Wickham, Hadley, Romain François, Lionel Henry, Kirill Müller, and Davis Vaughan. 2023. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://dplyr.tidyverse.org">https://dplyr.tidyverse.org</a>.
+</div>
+<div id="ref-R-readr" class="csl-entry" role="listitem">
+Wickham, Hadley, Jim Hester, and Jennifer Bryan. 2023. <em>Readr: Read Rectangular Text Data</em>. <a href="https://readr.tidyverse.org">https://readr.tidyverse.org</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05-interagindo-computador-internet.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Interagindo com o Sistema Operacional e a Internet</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./07-importacao-internet.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Importação de Dados via Pacotes</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

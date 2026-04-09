@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 2 Princípios de Visualização de Dados | Visualização de Dados com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  O que torna a figura de Jeremy Siegel tão...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 2 Princípios de Visualização de Dados | Visualização de Dados com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  O que torna a figura de Jeremy Siegel tão...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 2 Princípios de Visualização de Dados | Visualização de Dados com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  O que torna a figura de Jeremy Siegel tão...">
+<meta name="twitter:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.3/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.3/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00a-compile-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="Aplicações para Finanças e Economia">Visualização de Dados com o R - Versão Online</a>:
+        <small class="text-muted">Aplicações para Finanças e Economia</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="agradecimentos.html">Agradecimentos</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="active" href="principios.html"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></li>
+<li><a class="" href="componentes-de-gr%C3%A1ficos.html"><span class="header-section-number">3</span> Componentes de Gráficos</a></li>
+<li><a class="" href="intro-ggplot.html"><span class="header-section-number">4</span> Visualização de Dados com o R</a></li>
+<li><a class="" href="gr%C3%A1ficos-estat%C3%ADsticos.html"><span class="header-section-number">5</span> Gráficos Estatísticos</a></li>
+<li><a class="" href="mapas.html"><span class="header-section-number">6</span> Mapas</a></li>
+<li><a class="" href="programando-com-o-ggplot2.html"><span class="header-section-number">7</span> Programando com o ggplot2</a></li>
+<li><a class="" href="conclus%C3%A3o.html"><span class="header-section-number">8</span> Conclusão</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2ZEBB973N"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y2ZEBB973N');
+</script><div id="principios" class="section level1" number="2">
+<h1>
+<span class="header-section-number">Capítulo 2</span> Princípios de Visualização de Dados<a class="anchor" aria-label="anchor" href="#principios"><i class="fas fa-link"></i></a>
+</h1>
+<p>O que torna a figura de Jeremy Siegel tão impactante? Qual foi o processo de criação da figura? Neste capítulo vamos responder estas questões através da discussão de princípios e componentes visuais de um gráfico de dados. Discutiremos elementos centrais e independentes da plataforma. Ou seja, podes aplicar os mesmos princípios para gráficos produzidos em outras linguagens de programação.</p>
+<p>Este é um tema complexo e existem ótimas referências a serem consultadas. Aqui focaremos na prática de criação de figuras, deixando a teoria de lado. Como referência complementar, recomendo os seguintes livros:</p>
+<ul>
+<li><p><strong>Fundamentals of Data Visualization</strong> <span class="citation">(<a href="refer%C3%AAncias.html#ref-wilke2019fundamentals" role="doc-biblioref">Claus O. Wilke 2019</a>)</span>, disponível gratuitamente em <a href="https://clauswilke.com/dataviz/" class="uri">https://clauswilke.com/dataviz/</a>.</p></li>
+<li><p><strong>Data Visualization - A practical introduction</strong> <span class="citation">(<a href="refer%C3%AAncias.html#ref-healy2018data" role="doc-biblioref">Healy 2018</a>)</span>, disponível gratuitamente em <a href="https://socviz.co/" class="uri">https://socviz.co/</a>.</p></li>
+</ul>
+<div id="por-que-criamos-uma-figura" class="section level2" number="2.1">
+<h2>
+<span class="header-section-number">2.1</span> Por que criamos uma figura?<a class="anchor" aria-label="anchor" href="#por-que-criamos-uma-figura"><i class="fas fa-link"></i></a>
+</h2>
+<p>Primeiro, e mais importante, é preciso reforçar que <strong>a razão principal da análise de dados é a comunicação de ideias</strong>. De forma simplificada, é seu trabalho analisar informações retiradas de um banco de dados e sugerir possíveis efeitos no mundo real. Um relatório técnico é nada mais do que uma opinião profissional sobre determinado problema. O mesmo é verdadeiro para um trabalho acadêmico, onde se testa uma hipótese baseada nos dados, ou o estudo de uma decisão empresarial, tal como maneiras de se obter maior impacto em campanhas de marketing.</p>
+<p>Assim sendo, um sólido parecer técnico pode ter seu impacto ofuscado por uma baixa capacidade de comunicação <span class="citation">(<a href="refer%C3%AAncias.html#ref-schwabish2014economist" role="doc-biblioref">Schwabish 2014</a>)</span>. O poder de um argumento é multiplicado pela sua capilaridade, a facilidade com que o mesmo pode ser transmitido para o seu público. Veja que, de nada adianta realizar um excelente trabalho técnico na análise de dados, se a comunicação escrita e visual não transmite a mensagem desejada. De fato, um dos erros frequentes que encontro na revisão de trabalhos acadêmicos é o foco na técnica, deixando de lado a <em>venda do peixe</em>. Enquanto a parte técnica e científica é certamente importante, a comunicação do material potencializa o impacto do conteúdo para com seu público.</p>
+<div id="transmissão-de-informação" class="section level3" number="2.1.1">
+<h3>
+<span class="header-section-number">2.1.1</span> Transmissão de informação<a class="anchor" aria-label="anchor" href="#transmiss%C3%A3o-de-informa%C3%A7%C3%A3o"><i class="fas fa-link"></i></a>
+</h3>
+<p>O primeiro princípio na criação de gráficos é que <strong>uma figura deve justificar a sua existência e conversar com a sua audiência</strong>. Um erro muito comum por parte de alunos é tentar criar os mais variados gráficos sem se perguntar se os mesmos adicionam informações novas na análise, ou se o público irá entendê-los. Só porque você pode fazer um gráfico, não significa que você deve mostrá-lo. O valor de um conteúdo está diretamente relacionado às novas informações que ele traz na análise, e a capacidade do público em entendê-las.</p>
+<p>Ao decidir sobre os elementos de um gráfico, atenha-se àqueles que ajudam a transmitir a sua mensagem. Não hesite em cortar material. Em um documento escrito, sempre que você encontrar uma figura que não seja sendo discutida em pelo menos dois parágrafos do texto, não tenha receio em retirá-la do documento. Se não consegues escrever mais do que dois parágrafos sobre uma figura, provavelmente não é importante.</p>
+<p>Uma figura conversa com o seu público quando todos os elementos do gráfico convergem para a mensagem. Assim, utilize todas as ferramentas disponíveis – cores, formas, tamanhos e transparência – para transmitir uma mensagem clara e objetiva. Na prática, sugiro as seguintes ações:</p>
+<ul>
+<li><p>Use cores e formas para distinguir grupos dentro dos dados. Se um grupo é mais importante do que outros, diferencie o mesmo usando uma cor ou forma específica;</p></li>
+<li><p>Use cores para transmitir sentimentos e adjetivos tais como bom/ruim, alto/baixo, lucro/prejuízo;</p></li>
+<li><p>Use tamanhos, cores e a transparência de linhas e formas para indicar graus de importância nos resultados. Por exemplo, se estiver comparando a inflação de países diferentes em relação ao Brasil, realce o caso brasileiro no gráfico com uma cor ou densidade mais forte;</p></li>
+</ul>
+</div>
+<div id="manipulação-da-atenção" class="section level3" number="2.1.2">
+<h3>
+<span class="header-section-number">2.1.2</span> Manipulação da atenção<a class="anchor" aria-label="anchor" href="#manipula%C3%A7%C3%A3o-da-aten%C3%A7%C3%A3o"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use e abuse de formas visuais de chamar a atenção. Em outras palavras, facilite e direcione a análise para o seu público, sempre verificando se os gráficos produzidos indicam uma mensagem clara e direta. Destaque nos gráficos o que o público deve procurar e como lê-lo. Como regra de bolso, <strong>o melhor gráfico é aquele que não precisa ser explicado</strong>.</p>
+<p>Assim, entendas o limite do conhecimento e expectativas do seu público. Ao comunicar uma figura, não espere que todos tenham o mesmo conhecimento técnico que você. O que é óbvio para você, que está semanas (ou anos) trabalhando no mesmo problema, pode ser confuso para outros. Entenda o que seu público espera e qual a motivação para ler o seu conteúdo. Por exemplo, não apresente para um grupo de executivos o mesmo material que apresenta para o seu orientador acadêmico. Cada qual possuem diferentes demandas e características, e irão avaliar o trabalho de acordo com suas expectativas. Não é incomum um gráfico ser elogiado pelo público em geral, e rechaçado pelo público técnico.</p>
+<p>A forma de digestão visual de um gráfico é importante. No momento em que um gráfico é analisado, os olhos do leitor irão percorrer o material sistematicamente. Enquanto as pessoas podem processar dados visuais de forma diferentes, a sequência de avaliação tende a seguir a forma como lemos, de cima pra baixo. Assim, os seguintes elementos são avaliados em sequência:</p>
+<ol style="list-style-type: decimal">
+<li>título;</li>
+<li>subtítulo;</li>
+<li>miolo da figura (linhas e formas), incluindo cores, formas e transparências;</li>
+<li>textos dos eixos horizontais e verticais;</li>
+<li>outros elementos do gráfico.</li>
+</ol>
+<p>Assim, use a sequência dos elementos em uma narrativa sobre a mensagem. O título e subtítulo são elementos extremamente importantes pois definem a primeira mensagem do gráfico. Assim, use textos claros e sugestivos no título e subtítulo do gráfico, os quais devem indicar como analisar o miolo da figura.</p>
+<div class="rmdcaution">
+<p>
+Um erro comum de professores que trabalham em consultoria é tratar o
+público corporativo da mesma forma que o universitário. Minha
+experiência sugere que o público corporativo, focado em problemas
+empresariais, está mais interessado no <strong>impacto real</strong>,
+isto é, como o que está sendo apresentado afetará a prática da empresa,
+em linhas simples e fáceis de entender. Para este tipo de público, o
+foco deve ser em claridade das informações e sugestão de ações reais.
+Evite, assim, justificativas técnicas e científicas que o público
+provavelmente não entenderá e/ou necessitará de muito tempo para
+explicar. Lembre que o público corporativo não está interessado em
+questionar as suas decisões técnicas, mas sim solucionar um
+problema.
+</p>
+</div>
+</div>
+<div id="independência-do-elemento-gráfico" class="section level3" number="2.1.3">
+<h3>
+<span class="header-section-number">2.1.3</span> Independência do elemento gráfico<a class="anchor" aria-label="anchor" href="#independ%C3%AAncia-do-elemento-gr%C3%A1fico"><i class="fas fa-link"></i></a>
+</h3>
+<p>Todas as informações técnicas, como origem e período de dados, devem ser claramente indicadas no título, subtítulo ou legenda do gráfico. Se o público precisar buscar informações adicionais para entender o gráfico, então existe espaço para melhoria. É mais fácil dizer do que fazer, mas tente comunicar o máximo de informações possíveis, desde que não polua o gráfico. Lembre-se de que existe um sensível equilíbrio entre uma estética elegante, e os detalhes técnicos que o seu público espera. Assim sendo, use e abuse de elementos textuais tais como títulos e subtítulos para acrescentar informações relevantes ao entendimento do problema. Em resumo, busque criar gráficos que podem ser entendidos sem explicação adicional, onde os elementos textuais – títulos, subtítulos, eixos e legendas – fornecem todas as informações necessárias para se entender a figura.</p>
+</div>
+<div id="herança-e-reprodutibilidade" class="section level3" number="2.1.4">
+<h3>
+<span class="header-section-number">2.1.4</span> Herança e reprodutibilidade<a class="anchor" aria-label="anchor" href="#heran%C3%A7a-e-reprodutibilidade"><i class="fas fa-link"></i></a>
+</h3>
+<p>A ciência e a análise de dados evoluem na forma de blocos de construção, um encima do outro. Sempre verifique os gráficos produzidos em suas referências de texto. Eles guiarão sobre o que seu público espera. Da mesma forma, você pode até usar figuras de artigos anteriores para comparar seus resultados, o que é especialmente conveniente quando o mesmo conjunto de dados são usados. Por isso, sempre informe qual a origem dos dados utilizados no gráfico, facilitando que outra pessoa, ou até mesmo você mesmo, replique o gráfico no futuro.</p>
+<p>Ao escrever um código de criação de figuras, tenha a certeza de que o mesmo é facilmente reproduzível no futuro. A melhor versão de um código de visualização de dados é aquela que, com mínimas modificações, executa corretamente daqui a cinco anos. Assim, faço as minhas sugestões:</p>
+<ul>
+<li><p>Evite qualquer trabalho manual para a criação de gráficos. Plataformas de programação e análise de dados, tal como o R e o Python, facilitam todo o processo;</p></li>
+<li><p>Automatize o processo de importação e manipulação de dados para que, daqui a alguns anos, possa replicar o gráfico com dados atualizados;</p></li>
+<li><p>Escreva códigos que se adaptem aos dados, e nunca o contrário. Se alguma modificação nos dados de entrada exige modificação no código, então vale a pena revisar o trabalho. Ao manter um código que se adapta aos dados, fica mais fácil manter a reprodutibilidade da análise ao longo do tempo.</p></li>
+</ul>
+<div class="rmdimportant">
+<p>
+Uma maneira eficiente de transitar o mesmo material entre diferentes
+públicos é primeiro criar uma versão básica do gráfico, e depois adaptar
+o conteúdo às demandas de cada público. Assim, a partir do mesmo modelo
+de gráfico, podes modificar os elementos facilmente em cada cenário.
+Convenientemente, o uso do R e pacote <code>ggplot2</code> facilita este
+processo pois se utiliza de um sistema de camadas, onde a primeira
+camada é a versão básica e, conforme necessidade, adicionamos e
+removemos camadas de acordo com o público.
+</p>
+</div>
+</div>
+</div>
+<div id="visualizando-a-inflação-para-o-brasil" class="section level2" number="2.2">
+<h2>
+<span class="header-section-number">2.2</span> Visualizando a inflação para o Brasil<a class="anchor" aria-label="anchor" href="#visualizando-a-infla%C3%A7%C3%A3o-para-o-brasil"><i class="fas fa-link"></i></a>
+</h2>
+<p>Agora que já entendemos a teoria, vamos para a prática. No gráfico a seguir, Figura <a href="principios.html#fig:inflacao-ruim">2.1</a>, é apresentado uma série de <strong>inflação histórica</strong> para o Brasil, retirada do sistema de séries temporais do Banco Central do Brasil.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:inflacao-ruim"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/inflacao-ruim-1.png" alt="Gráfico de exemplo para a inflação Brasileira" width="672"><p class="caption">
+Figure 2.1: Gráfico de exemplo para a inflação Brasileira
+</p>
+</div>
+<div class="databox">
+<p>
+A inflação refere-se ao aumento sistemático de preços em um país e é
+geralmente definida como o aumento de preço em uma cesta de produtos.
+Observar e entender a inflação é tarefa de todo economista: a inflação
+tem efeitos negativos em toda a economia, corroendo o poder de compra de
+consumidores e desincentivando o consumo. No Brasil, o índice de
+inflação mais popular é o IPCA, calculado e comunicado pelo IBGE
+(Instituto Brasileiro de Geografia e Estatística).
+</p>
+</div>
+<p>O gráfico anterior mostra o IPCA (<em>Índice de Preço ao Consumidor Amplo</em>) mensal entre 2015 e 2022. A olho nu, ler este gráfico e retirar alguma conclusão é tarefa quase impossível:</p>
+<ul>
+<li>Qual o objetivo do gráfico? Por que o mesmo está sendo mostrado?</li>
+<li>O que os valores do eixo vertical representam exatamente?</li>
+<li>De onde os dados saíram e como o gráfico pode ser replicado?</li>
+<li>Mais importante, qual a mensagem transmitida?</li>
+</ul>
+<p>Entender o gráfico anterior requere tempo e esforço cerebral. Como regra, toda vez que um gráfico forçar a audiência a pensar demais, existe um alto risco do material ser irrelevante para o mundo real. Na dificuldade do entendimento da figura em menos de cinco segundos, provavelmente o leitor irá ignorar a imagem e prosseguir para o próximo elemento do texto. Aposto que você, ao observar o gráfico, fez a mesma coisa. Ou seja, o gráfico rompe dois princípios básicos de visualização de dados, a justificativa de existência e manipulação da atenção. Uma versão melhorada é apresentada a seguir, Figura <a href="principios.html#fig:inflacao-melhorado">2.2</a>.</p>
+<div class="rmdimportant">
+<p>
+Um erro muito comum de iniciantes é utilizar o <em>template</em>
+original do gráfico, isto é, exportar o primeiro gráfico criado, sem
+muito esforço na construção de algo atrativo. Saiba que um olho treinado
+e experiente conhece muito bem o <em>template</em> básico e isso vai
+pesar em qualquer avaliação. Além de mostrar certa preguiça por parte do
+criador, o qual simplesmente aceitou a primeira versão do gráfico,
+também reforça a falta de capacidade na utilização das ferramentas de
+programação.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:inflacao-melhorado"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/inflacao-melhorado-1.png" alt="Gráfico melhorado para a inflação Brasileira" width="672"><p class="caption">
+Figure 2.2: Gráfico melhorado para a inflação Brasileira
+</p>
+</div>
+<p>Comparando a primeira com a segunda versão, vemos as seguintes diferenças:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Elementos textuais</strong> – o título e o subtítulo em <a href="principios.html#fig:inflacao-melhorado">2.2</a> já indicam o que estamos analisando no gráfico e qual a mensagem, neste caso a variabilidade da inflação mensal. Em outras palavras, estamos analisando como a inflação varia ao longo do tempo, com seus altos e baixos. Note também a variação do tom da letra do título com o uso do negrito e tamanho da fonte para reforçar o objetivo do gráfico. Abaixo, na direita, vemos a origem e a identificação dos dados, neste caso o sistema de séries temporais do Banco Central do Brasil (BCB-SGS), série de número 433. Dado que a origem dos dados é pública, qualquer pessoa pode acessar e reproduzir o mesmo gráfico.</p></li>
+<li><p><strong>Elementos gráficos</strong> – Uso de cores para distinguir os períodos de alta inflação dos períodos de baixa, reforçando e salientando a variação da inflação entre os meses. Círculo azuis e vermelhos mostram os pontos máximos e mínimos da inflação mensal no período analisado.</p></li>
+<li><p><strong>reprodutibilidade</strong> – Uma mudança nos dados não exige mudança no código pois todos os elementos são baseados nos dados de entrada. Para demonstrar a reprodutibilidade do gráfico, a seguir, Figura <a href="principios.html#fig:inflacao-periodos">2.3</a>, apresentamos o mesmo gráfico para três períodos diferentes.</p></li>
+</ol>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:inflacao-periodos"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/inflacao-periodos-1.png" alt="Gráfico da inflação Brasileira para diferentes períodos" width="960"><p class="caption">
+Figure 2.3: Gráfico da inflação Brasileira para diferentes períodos
+</p>
+</div>
+<p>Note as semelhanças e as diferenças entre os painéis de <a href="principios.html#fig:inflacao-periodos">2.3</a>. Além dos elementos de barra e cores, todas as datas e os valores do texto são calculados a partir dos dados. Mais importante, depois de montado o código, a criação dos três gráficos é muito fácil. Reforçando, o esforço para construir um gráfico com reprodutibilidade se concentra na concepção inicial. Depois do código pronto, a reutilização é eficiente e instantânea.</p>
+</div>
+<div id="exercícios-1" class="section level2" number="2.3">
+<h2>
+<span class="header-section-number">2.3</span> Exercícios<a class="anchor" aria-label="anchor" href="#exerc%C3%ADcios-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>A solução dos exercícios de final de capítulo pode ser compilada localmente com o comando <code><a href="https://rdrr.io/pkg/vdr/man/exercises_compile_solution.html">vdr::exercises_compile_solution()</a></code>. Alternativamente, podes baixar uma versão do arquivo compilado no site do livro<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://www.msperlin.com/vdr/vdr-eoc-solutions.html" class="uri"&gt;https://www.msperlin.com/vdr/vdr-eoc-solutions.html&lt;/a&gt;&lt;/p&gt;'><sup>5</sup></a>.</p>
+<hr>
+<div id="q.1" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1"><i class="fas fa-link"></i></a>
+</h3>
+<p>O grupo <a href="https://latinometrics.substack.com/">LatinoMetrics</a> produz e distribui um conteúdo muito interessante de visualização de dados econômicos para a América Latina. Observando o material do <a href="https://www.instagram.com/latinometrics/">Instagram</a>, visualize as seis últimas imagens disponibilizadas na página principal. Observando as figuras como um todo, destaque os elementos comuns na criação das imagens. Isto, é, destaque os elementos visuais que foram repetidos entre uma figura e outra.</p>
+<hr>
+</div>
+<div id="q.2" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2"><i class="fas fa-link"></i></a>
+</h3>
+<p>No Reddit é possível encontrar o grupo <a href="https://www.reddit.com/r/dataisugly/">r/dataisugly</a>, o qual contém inúmeros posts sobre visualizações de dados realizadas da forma errada. Na data de 27/09/2022 foi publicado a seguinte <a href="https://www.reddit.com/r/dataisugly/comments/xphz87/polls_for_upcoming_s%C3%A3o_paulo_state_governor/">mensagem</a> no fórum:</p>
+<div class="figure">
+<img src="00b-text-resources/figs/exercises-reddit-brazil.jpg" alt=""><p class="caption">Publicação do reddit/dataisuglu em 27/09/2022</p>
+</div>
+<p>Analise o gráfico e, sem buscar a resposta no fórum, indique qual o problema com o gráfico.</p>
+
+</div>
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://vdr-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="introducao.html"><span class="header-section-number">1</span> Introdução</a></div>
+<div class="next"><a href="componentes-de-gr%C3%A1ficos.html"><span class="header-section-number">3</span> Componentes de Gráficos</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#principios"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></li>
+<li>
+<a class="nav-link" href="#por-que-criamos-uma-figura"><span class="header-section-number">2.1</span> Por que criamos uma figura?</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#transmiss%C3%A3o-de-informa%C3%A7%C3%A3o"><span class="header-section-number">2.1.1</span> Transmissão de informação</a></li>
+<li><a class="nav-link" href="#manipula%C3%A7%C3%A3o-da-aten%C3%A7%C3%A3o"><span class="header-section-number">2.1.2</span> Manipulação da atenção</a></li>
+<li><a class="nav-link" href="#independ%C3%AAncia-do-elemento-gr%C3%A1fico"><span class="header-section-number">2.1.3</span> Independência do elemento gráfico</a></li>
+<li><a class="nav-link" href="#heran%C3%A7a-e-reprodutibilidade"><span class="header-section-number">2.1.4</span> Herança e reprodutibilidade</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#visualizando-a-infla%C3%A7%C3%A3o-para-o-brasil"><span class="header-section-number">2.2</span> Visualizando a inflação para o Brasil</a></li>
+<li>
+<a class="nav-link" href="#exerc%C3%ADcios-1"><span class="header-section-number">2.3</span> Exercícios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1">Q.1</a></li>
+<li><a class="nav-link" href="#q.2">Q.2</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Visualização de Dados com o R - Versão Online</strong>: Aplicações para Finanças e Economia" foi escrito por <strong>Marcelo S. Perlin</strong>  (marceloperlin@gmail.com).</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Este livro foi compilado com amor em 2022-11-23. Deixo aqui meu profundo agradecimento aos autores do fantástico pacote <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

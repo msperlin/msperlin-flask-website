@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Preface | Analyzing Financial and Economic Data with R - Online Version</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="generator" content="bookdown 0.37 with bs4_book()">
+<meta property="og:title" content="Preface | Analyzing Financial and Economic Data with R - Online Version">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<meta property="og:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Preface | Analyzing Financial and Economic Data with R - Online Version">
+<meta name="twitter:description" content="(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), ...">
+<meta name="twitter:image" content="/resources/figs/CAPAdigital-AnalyzinDataR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.8/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.8/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.6.1/transition.js"></script><script src="libs/bs3compat-0.6.1/tabs.js"></script><script src="libs/bs3compat-0.6.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Analyzing Financial and Economic Data with R - Online Version</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome!</a></li>
+<li><a class="" href="about-new-edition.html">About New Edition</a></li>
+<li><a class="active" href="preface.html">Preface</a></li>
+<li><a class="" href="introduction.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li><a class="" href="basicoperations.html"><span class="header-section-number">2</span> Basic Operations in R</a></li>
+<li><a class="" href="research-scripts.html"><span class="header-section-number">3</span> Writing Research Scripts</a></li>
+<li><a class="" href="importing.html"><span class="header-section-number">4</span> Importing Data from Local Files</a></li>
+<li><a class="" href="importing-internet.html"><span class="header-section-number">5</span> Importing Data from the Internet</a></li>
+<li><a class="" href="data-structure-objects.html"><span class="header-section-number">6</span> Dataframes and Other Objects</a></li>
+<li><a class="" href="basic-classes.html"><span class="header-section-number">7</span> Basic Object Classes</a></li>
+<li><a class="" href="programming.html"><span class="header-section-number">8</span> Programming and Data Analysis</a></li>
+<li><a class="" href="cleaning.html"><span class="header-section-number">9</span> Cleaning and Structuring Data</a></li>
+<li><a class="" href="figures.html"><span class="header-section-number">10</span> Data Visualization with {ggplot2}</a></li>
+<li><a class="" href="models.html"><span class="header-section-number">11</span> Financial Econometrics with R</a></li>
+<li><a class="" href="reporting.html"><span class="header-section-number">12</span> Reporting Results</a></li>
+<li><a class="" href="optimizing.html"><span class="header-section-number">13</span> Optimizing Code</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-98297869-1', 'auto');
+  ga('send', 'pageview');
+
+</script><!-- Global site tag (gtag.js) - Google Analytics GOOGLE ADS--><script async src="https://www.googletagmanager.com/gtag/js?id=UA-89690212-2">
+</script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-89690212-2');
+</script><div id="preface" class="section level1 unnumbered">
+<h1>Preface<a class="anchor" aria-label="anchor" href="#preface"><i class="fas fa-link"></i></a>
+</h1>
+<p>Since you are reading this book, you are likely a data analyst looking for alternative and more efficient ways to add value to your organization, an undergraduate or graduate student in the first steps of learning data science, or an experienced researcher, looking for new computational tools. In any case, be assured that you are in the right place. <strong>This book will teach you how to use R and RStudio for data analysis in finance and economics</strong>.</p>
+<p>The first version of the book originates from the class material I teach my postgraduate students in my university. By observing students learning and using R in the classroom, I frequently see the positive impact of technology on their careers. They spend less time doing repetitive and soul-crushing spreadsheet data chores, and more time thinking about their analysis and learning new tools. This book my humble attempt to go beyond the local classroom and reach an international audience.</p>
+<p>Another motivation for writing this book is my personal experience using code from other researchers. Usually, the code is not well-organized, lacks clarity, and, possibly, only works in the computer of its author! After being constantly frustrated, I realized the work required to figure out the code of other researchers would take more time than writing the procedure myself. These cases hurt the development of science, as one of its basic principles is the <strong>reproducibility of experiments</strong>. As researchers are expected to be good writers, it should also be expected that their code is in a proper format and readable by other people. With this book, I will tackle this problem by presenting a code structure focused on scientific reproducibility, organization, and usability.</p>
+<p>In this book, we will not work on the advanced uses of R. The content will be limited to simple and practical examples. One challenge I had while writing this book was defining the boundary between introductory and advanced material. Wherever possible, I gradually dosed the level of complexity. For readers interested in learning advanced features and inner workings of R, I suggest the book <span class="citation">Venables et al. (<a href="references.html#ref-venables2004introduction">2004</a>)</span>, <span class="citation">Teetor (<a href="references.html#ref-teetor2011r">2011</a>)</span> and <span class="citation">Wickham (<a href="references.html#ref-wickham2019advanced">2019</a>)</span>.</p>
+<p>This is what you’ll learn from this book:</p>
+<dl>
+<dt>Using R and RStudio</dt>
+<dd>
+In chapter 01 we will discuss the use of R as a programming platform designed to solve data-related problems in finance and economics. In chapter 02 we will explore basic commands and functionalities that will increase your productivity as a data analyst.
+</dd>
+<dt>Importing financial and economic data</dt>
+<dd>
+In chapters 04 and 05 we will learn to import data from local files, such as an Excel spreadsheet, or the internet, using specialized packages that can download financial and economic data such as stock prices, economic indices, the US yield curve, corporate financial statements, and many others.
+</dd>
+<dt>Cleaning, structuring and analyzing the data with R</dt>
+<dd>
+In chapters 06 and 07 we will concentrate our study on the ecosystem of basic and advanced classes of objects within R. We will learn to manipulate objects such as numeric vectors, dates and whole tables. In chapters 08 and 09 we’ll learn to use the programming to solve data-related problems such as cleaning and structuring messy data. In chapter 11 we will learn applications of the most common econometric models used in finance and economics including linear regression, generalized linear model, Arima model and others.
+</dd>
+<dt>Creating a visual analysis of data</dt>
+<dd>
+In chapter 10 we’ll learn to use functions from package <strong>{ggplot2}</strong> <span class="citation">(<a href="references.html#ref-R-ggplot2">Wickham, Chang, et al. 2023</a>)</span> to create clever visualizations of our datasets, including the most popular applications in finance and economics, time series and statistical plots.
+</dd>
+<dt>Reporting your results</dt>
+<dd>
+In chapter 12 we will see how to report our data analysis using specialized packages and the <em>RMarkdown</em> technology. It includes the topic of presenting and exporting tables, figures and models to a written report.
+</dd>
+<dt>Writing better and faster code</dt>
+<dd>
+In the last chapter of the book we discuss best programming practices with R. We will look at how to profile code and search for bottlenecks and improving execution time with caching strategies using package <strong>{memoise}</strong> <span class="citation">(<a href="references.html#ref-R-memoise">Wickham et al. 2021</a>)</span>, C++ code with <strong>{Rcpp}</strong> <span class="citation">(<a href="references.html#ref-R-Rcpp">Eddelbuettel et al. 2023</a>)</span> and parallel computing with <strong>{furrr}</strong> <span class="citation">(<a href="references.html#ref-R-furrr">Vaughan and Dancho 2022</a>)</span>.
+</dd>
+</dl>
+<div id="conventions" class="section level2 unnumbered">
+<h2>Conventions<a class="anchor" aria-label="anchor" href="#conventions"><i class="fas fa-link"></i></a>
+</h2>
+<p>The format of the book was chosen to maximize learnability and memorization. Here are the conventions used throughout the text:</p>
+<dl>
+<dt>Packages</dt>
+<dd>
+Every R package used in the text will have the textual format of <strong>{package}</strong>. The first time a R package shows up in the text, a formal citation will also be available.
+</dd>
+<dt>Functions</dt>
+<dd>
+Functions are formatted as <strong>dplyr</strong>::<strong>glimpse()</strong> , with the information of which package the function belongs to. This notation is simply a copy of real R code, that is, you can call functions using the same structure. The first time the function is referenced, the package name will be included, except for packages that are pre-loaded in a R session (<strong>{base}</strong>, <strong>{utils}</strong> and others).
+</dd>
+<dt>Code</dt>
+<dd>
+All R code will be presented in boxes, with the code output prefixed by string <code>R&gt;</code>. Inline comments are set with the symbol <code>#</code>. Anything on the right side of <code>#</code> is not evaluated by R. Here’s an example, showing the contents of a <code>list</code> in R:
+</dd>
+</dl>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># create a list</span></span>
+<span><span class="va">my_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">'xx'</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="st">'dec'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># print list</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">my_list</span><span class="op">)</span></span></code></pre></div>
+<pre><code>R&gt; [[1]]
+R&gt; [1] "xx"
+R&gt; 
+R&gt; [[2]]
+R&gt; [1] 1 2 3 4 5
+R&gt; 
+R&gt; [[3]]
+R&gt; [1] "dec"</code></pre>
+</div>
+<div id="supplement-material" class="section level2 unnumbered">
+<h2>Supplement Material<a class="anchor" aria-label="anchor" href="#supplement-material"><i class="fas fa-link"></i></a>
+</h2>
+<p>All the material used in the book, including code examples separated by chapters, is publicly available on the internet and distributed with an R package called <strong>{afedR3}</strong> <span class="citation">(<a href="references.html#ref-R-afedR3">M. S. Perlin 2023a</a>)</span>. It includes data files and several functions that can make it easier to run the examples of the book. If you plan to write some code as you read the book, this package will greatly help your journey.</p>
+<p>In order to install the book package in your computer, you need to execute a couple of lines of code in R. For that, copy and paste the following commands into RStudio prompt (bottom left of screen, with a “&gt;” sign) and press enter for each command. Be aware you’ll need R and RStudio installed in your computer (see section <a href="introduction.html#installing">1.4</a> for details).</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install devtools dependency</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'devtools'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># install book package</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'msperlin/afedR3'</span><span class="op">)</span></span></code></pre></div>
+<p>What this code will do is to install package <strong>{devtools}</strong> <span class="citation">(<a href="references.html#ref-R-devtools">Wickham et al. 2022</a>)</span>, a required dependency for installing a package from Github, which is where the book bundle is hosted. After that, a call to <code>devtools::install_github('msperlin/afedR3')</code> will install the package in your computer. You can safely ignore any warning messages about long paths during installation.</p>
+<p>After installing package <strong>{afedR3}</strong> <span class="citation">(<a href="references.html#ref-R-afedR3">M. S. Perlin 2023a</a>)</span>, you can, but its not necessary, to copy all book files to a local folder by executing the following command in R:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">afedR3</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/afedR3/man/bookfiles_get.html">bookfiles_get</a></span><span class="op">(</span>path_to_copy <span class="op">=</span> <span class="st">'~/afedR3'</span><span class="op">)</span></span></code></pre></div>
+<p>The previous code will unzip the book file into your “Documents/afedR3” folder, as the tilda (<code>~</code>) is a shortcut to your “Documents” directory<a href="references.html#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. If you prefer the old-fashioned way of using an internet page, you can find and download the package zip file from <a href="https://github.com/msperlin/afedR3">github</a><a href="references.html#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<p>A suggestion, before you read the rest of the book: go to the <a href="https://www.msperlin.com/publication/2020_book-afedr-en/">book website</a> and search for the related links page at the bottom. There you will find all internet addresses highlighted in the text, including the links for the installation of R and RStudio.</p>
+</div>
+<div id="content-for-instructors" class="section level2 unnumbered">
+<h2>Content for Instructors<a class="anchor" aria-label="anchor" href="#content-for-instructors"><i class="fas fa-link"></i></a>
+</h2>
+<p>If you are an R instructor, you’ll find plenty of material you can use with your classes. I made sure you get everything you need:</p>
+<dl>
+<dt>Over 100 exercises</dt>
+<dd>
+Every chapter in this book includes exercises that your students can practice, with solutions available in the <a href="https://www.msperlin.com/afedr">web version</a> of the book. Also, all exercises are available in the <a href="http://www.r-exams.org/"><code>exams</code> format</a>, meaning that you can compile the same exercises in pdf or html. Moreover, you can export the exercises to <em>e-learning</em> platforms such as Moodle and Blackboard. See this <a href="https://www.msperlin.com/post/2023-03-09-compiling-exercises-afedR3/">blog post</a><a href="references.html#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> for instructions on how to use it with your students.
+</dd>
+<dt>Web version</dt>
+<dd>
+The first seven chapters of the book are freely available at link <a href="https://www.msperlin.com/afedr" class="uri">https://www.msperlin.com/afedr</a>, which is more than enough material for an introductory class on R and data analysis.
+</dd>
+</dl>
+<p>All of this content is released with the <a href="https://opensource.org/licenses/MIT">MIT license</a>, so feel free to use and abuse it, as long as you give the credits to the original author. You can find the content within the book package <strong>{afedR3}</strong> (see previous instructions on installation) or directly at the <a href="https://www.msperlin.com/publication/2020_book-afedr-en/">book site</a><a href="references.html#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
+<p>I hope you enjoy this book and find it useful for your work.</p>
+<p>Good reading!</p>
+<p>Marcelo S. Perlin</p>
+
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://afedr-ed2.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+                            
+  <div class="chapter-nav">
+<div class="prev"><a href="about-new-edition.html">About New Edition</a></div>
+<div class="next"><a href="introduction.html"><span class="header-section-number">1</span> Introduction</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#preface">Preface</a></li>
+<li><a class="nav-link" href="#conventions">Conventions</a></li>
+<li><a class="nav-link" href="#supplement-material">Supplement Material</a></li>
+<li><a class="nav-link" href="#content-for-instructors">Content for Instructors</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Analyzing Financial and Economic Data with R - Online Version</strong>" was written by <strong><a class="text-light" href="https://www.msperlin.com">Marcelo S. Perlin </a></strong>. Full version available at <a class="text-light" href="TODO:">Amazon</a>.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was compiled with love in 2023-12-13, using the fantastic package <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

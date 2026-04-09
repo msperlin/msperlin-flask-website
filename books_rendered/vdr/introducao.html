@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 1 Introdução | Visualização de Dados com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Visualização de dados é a arte de transformar...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 1 Introdução | Visualização de Dados com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Visualização de dados é a arte de transformar...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 1 Introdução | Visualização de Dados com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Visualização de dados é a arte de transformar...">
+<meta name="twitter:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.3/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.3/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00a-compile-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="Aplicações para Finanças e Economia">Visualização de Dados com o R - Versão Online</a>:
+        <small class="text-muted">Aplicações para Finanças e Economia</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="agradecimentos.html">Agradecimentos</a></li>
+<li><a class="active" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="principios.html"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></li>
+<li><a class="" href="componentes-de-gr%C3%A1ficos.html"><span class="header-section-number">3</span> Componentes de Gráficos</a></li>
+<li><a class="" href="intro-ggplot.html"><span class="header-section-number">4</span> Visualização de Dados com o R</a></li>
+<li><a class="" href="gr%C3%A1ficos-estat%C3%ADsticos.html"><span class="header-section-number">5</span> Gráficos Estatísticos</a></li>
+<li><a class="" href="mapas.html"><span class="header-section-number">6</span> Mapas</a></li>
+<li><a class="" href="programando-com-o-ggplot2.html"><span class="header-section-number">7</span> Programando com o ggplot2</a></li>
+<li><a class="" href="conclus%C3%A3o.html"><span class="header-section-number">8</span> Conclusão</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2ZEBB973N"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y2ZEBB973N');
+</script><div id="introducao" class="section level1" number="1">
+<h1>
+<span class="header-section-number">Capítulo 1</span> Introdução<a class="anchor" aria-label="anchor" href="#introducao"><i class="fas fa-link"></i></a>
+</h1>
+<p>Visualização de dados é a arte de transformar medidas em padrões visuais. O objetivo é incrivelmente simples, <strong>apresentar evidências de um evento ou causalidade do mundo real</strong>. E, como qualquer arte, é fácil de descrever e difícil de executar. Na prática, construir figuras baseadas em dados exige <em>expertise</em> da área de conhecimento, noções de <em>design</em> e conhecimento das ferramentas corretas de programação. O retorno para o autor, porém, é imenso.</p>
+<p>Impressões visuais nunca foram tão importantes quanto hoje. A popularidade de sites<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Já peço desculpas antecipadas se estás lendo este livro e os sites citados não existem mais. Quem lembra do Orkut?&lt;/p&gt;"><sup>4</sup></a> como <em>Instagram</em>, <em>Twitter</em> e <em>Facebook</em> mostram o potencial digital que uma figura pode apresentar. Assim, o seu conteúdo de visualização de dados em um relatório técnico ou trabalho acadêmico pode ser facilmente distribuído, com uma chance de viralizar e lhe promover em sua área de trabalho.</p>
+<p>Ao mesmo tempo, como uma faca de dois gumes, gráficos também podem ser utilizados para a manipulação e distorção da realidade. Como um analista de dados, seu trabalho também será identificar tais casos. Ao aprender a criar figuras baseadas em dados, entenderás as escolhas realizadas na produção do gráfico e, inevitavelmente, um possível despreparo ou malícia do autor.</p>
+<p>No lado do mercado de trabalho, ser a <strong>pessoa que saber montar gráficos</strong> é uma maneira direta e factível de se diferenciar como profissional. Muitos sabem criar um gráfico em planilhas eletrônicas, por exemplo, mas poucos conseguem ir além e apresentar ilustrações de dados que geram um real impacto ao olho, com a apresentação de informações visuais que facilitam a entrega de uma mensagem. A especialização nesta arte, com o correto uso das ferramentas de programação, certamente lhe diferenciará.</p>
+<div id="o-gráfico-do-jeremy-siegel" class="section level2" number="1.1">
+<h2>
+<span class="header-section-number">1.1</span> O Gráfico do Jeremy Siegel<a class="anchor" aria-label="anchor" href="#o-gr%C3%A1fico-do-jeremy-siegel"><i class="fas fa-link"></i></a>
+</h2>
+<p>Para entender o impacto de uma figura baseada em dados, vamos olhar o caso do Jeremy Siegel – professor americano especializado no tópico de investimentos. Em seu livro “Investindo em Ações no Longo Prazo: O Guia Indispensável do Investidor do Mercado Financeiro” <span class="citation">(<a href="refer%C3%AAncias.html#ref-siegel2015investindo" role="doc-biblioref">Siegel 2015</a>)</span>, Jeremy apresenta nas primeiras páginas uma figura que impactou o mundo dos investimentos. Veja o gráfico em questão na Figura <a href="introducao.html#fig:siegel">1.1</a>. Tome alguns bons segundos na análise das informações disponíveis ali. De antemão, perceba que cada configuração do gráfico foi uma decisão do autor.</p>
+
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:siegel"></span>
+<img src="00b-text-resources/figs/investing_for_the_long_run.jpg" alt="O gráfico de Jeremy Siegel (Siegel 2015)" width="85%"><p class="caption">
+Figure 1.1: O gráfico de Jeremy Siegel <span class="citation">(<a href="refer%C3%AAncias.html#ref-siegel2015investindo" role="doc-biblioref">Siegel 2015</a>)</span>
+</p>
+</div>
+<p>Ao longo do livro, o autor defende e justifica o investimento financeiro em empresas como sendo o mais rentável no longo prazo. A principal mensagem do livro, e também da figura, é a superioridade de performance financeira quando uma pessoa investe em empresas no mercado de ações. Em resumo, quando olhamos um investimento no longíssimo prazo, mais de 10 anos, as empresas oferecem o maior retorno financeiro entre as alternativas.</p>
+<p>Voltando ao gráfico em si, Figura <a href="introducao.html#fig:siegel">1.1</a>, as seguintes classes de investimentos são apresentadas:</p>
+<dl>
+<dt>Stocks (ações)</dt>
+<dd>
+investimento em empresas através das ações negociadas em bolsa. Utiliza-se do índice SP500 como referência para investimentos em renda variável. Em outras palavras, o investidor que investe no índice irá receber uma média de desempenho das 500 ações que o compõem. O investimento equivalente para o Brasil seria o índice Ibovespa.
+</dd>
+<dt>Bonds (renda fixa de longo prazo)</dt>
+<dd>
+investimento em dívida governamental com prazo maior do que um ano. Traduzindo para o Brasil, seria o equivalente a um investimento no Tesouro Direto, isto é, compra de dívida do governo federal.
+</dd>
+<dt>Bills (renda fixa de curto prazo)</dt>
+<dd>
+dívidas governamentais com duração menor do que um ano. Aqui não temos uma tradução direta, mas pode-se entender como equivalente a nossa conta poupança, um veículo para investimentos de curto prazo, com bastante liquidez.
+</dd>
+<dt>US Dollar (dólares americanos)</dt>
+<dd>
+Compra de dólares físicos. A equivalência para o Brasil seria a compra de notas físicas de Reais.
+</dd>
+</dl>
+<p>O gráfico funciona pois demostra, de forma clara, a mensagem do livro: <strong>investir em ações é a alternativa mais lucrativa no longo prazo</strong>. Já descontando a inflação, alguém que tivesse investido 1 dólar no índice de ações em 1802, teria observado o seu patrimônio crescer para mais de 704,997 dólares em 2004.</p>
+<p>Destrinchando a construção do gráfico, nota-se os seguintes pontos e decisões dos autores:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Todos os diferentes investimentos – dólar, ações, dívida pública americana — começam com um dólar</strong>. Esta é uma manipulação simples de dados, com o cálculo do retorno acumulado para cada investimento. A escolha padroniza a análise entre as alternativas, e facilita a interpretação. Para verificar a diferença de performance entre cada possibilidade de investimento, basta observar o valor final obtido. Assim, para alguém simular um investimento inicial diferente, é suficiente multiplicar o valor final do investimento pelo montante investido. Por exemplo, 100 dólares investidos em ações em 1802, se tornariam 704 milhões de dólares em 2004.</p></li>
+<li><p><strong>O retorno acumulado no investimento em ações é ressaltado no gráfico, com o uso de uma linha com uma cor mais intensa</strong>. Claramente é uma estratégia visual para passar a mensagem implícita da dominância de ações sobre os demais investimentos. Na primeira batida de olho no gráfico, a linha de ações chama a atenção e já sugere o resultado da análise. Note que, se fosse o contrário, com a linha de ações menos espessa que as demais, a mensagem não seria tão óbvia. O autor mesclou, portanto, o aspecto financeiro de investimento com um padrão gráfico que suporta o mesmo argumento: “o investimento em ações resulta em algo maior do que as alternativas”.</p></li>
+<li><p><strong>A escala do eixo vertical é não-linear</strong>. Veja que os intervalos entre os pontos não são os mesmos. O primeiro ponto do eixo é 1, depois 10, depois 100, até chegar em 1.000.000. A razão é simples, quando colocado em um espaço de gráfico não-linear, os investimentos em ações se assemelham a uma linha reta. Veja, porém, que a linha reta é um resultado ilusório. Se a escala fosse espacialmente correta, os investimentos em renda fixa e dólar não apareceriam no gráfico devido ao alto valor no resultado para ações. E isso distorceria a análise, pois seria impossível enxergar ambas as linhas no mesmo espaço do gráfico.</p></li>
+<li><p><strong>O valor final do investimento é apresentado como texto na direita do gráfico</strong>. Isso facilita a interpretação para o leitor pois não precisa olhar para o eixo da esquerda para identificar o valor final de cada alternativa.</p></li>
+<li><p>A tabela no lado esquerdo superior do gráfico mostra o <strong>retorno anualizado de cada investimento</strong>, isto é, o retorno equivalente em um ano que resulta no desempenho observado no gráfico. Em comparação, as ações dominam os demais investimentos, com 6,6% de retorno real anualizado.</p></li>
+</ol>
+<p>Estes aspectos do gráfico são de total responsabilidade do autor. Podes ter certeza que o mesmo ponderou cada decisão de configuração do gráfico até chegar no estado atual. Diversas versões devem ter sido criadas, e o que funciona foi mantido, e o que não funciona foi eliminado.</p>
+<p>Para se ter uma ideia do impacto deste gráfico, o nome do autor é praticamente sinônimo do gráfico. Ao procurar imagens relacionadas a busca “Jeremy Siegel” no <em>Google Images</em>, o <a href="https://www.google.com/search?q=jeremy+siegel&amp;newwindow=1&amp;sxsrf=ACYBGNQTdeasot7p94N3_pOZIDGt4eTAhg:1580215660813&amp;source=lnms&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwjQ44WJqqbnAhUgILkGHaNSCS4Q_AUoAnoECBEQBA&amp;biw=1920&amp;bih=916">resultado</a> mostra esta mesma imagem nas mais diversas páginas da internet. Indo além, ao realizar uma <a href="https://www.google.com.br/imghp?hl=en&amp;ogbl">busca reversa</a>, isto é, usando a própria imagem como ponto de partida da busca na internet, o Google retorna 3,720,000,000 resultados, incluindo sites de notícias, blogs, bancos e corretoras de investimentos.</p>
+<p>Resumindo, o gráfico do livro do Siegel tomou vida própria e pode ser considerado um dos materiais mais impactantes do autor, talvez até mais que o livro em si! Não tenho dúvida que, mesmo desatualizada – o dados utilizados acabam em 2004 – a imagem continuará sendo utilizada nas próximas décadas como um exemplo da mensagem do livro. O grande sucesso do autor foi compilar uma única figura que transmitisse, de forma simples e direta, a mensagem principal de sua obra.</p>
+<p>Meu objetivo principal quando escrevi os capítulos do livro <em>Visualização de Dados com o R</em> é mostrar <strong>como atingir o mesmo impacto dentro de sua área de trabalho</strong>. Talvez não consiga a capilaridade histórica do gráfico do professor Siegel, mas terás conhecimento para criar visualizações de dados que impressionam e transmitem a informação de forma clara. Assim, nossa primeira etapa é entender o que torna os gráficos visualmente atrativos e impactantes, o que funciona e o que não funciona, assim como as ferramentas para construí-los no seu próprio computador. Para começar, no próximo capítulo vamos primeiro buscar entender os princípios por trás da criação de figuras.</p>
+
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://vdr-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="agradecimentos.html">Agradecimentos</a></div>
+<div class="next"><a href="principios.html"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#introducao"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="nav-link" href="#o-gr%C3%A1fico-do-jeremy-siegel"><span class="header-section-number">1.1</span> O Gráfico do Jeremy Siegel</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Visualização de Dados com o R - Versão Online</strong>: Aplicações para Finanças e Economia" foi escrito por <strong>Marcelo S. Perlin</strong>  (marceloperlin@gmail.com).</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Este livro foi compilado com amor em 2022-11-23. Deixo aqui meu profundo agradecimento aos autores do fantástico pacote <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

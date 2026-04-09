@@ -1,0 +1,3048 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+<title>Solutions to book exercises</title>
+<style type="text/css">
+body{font-family: Arial, Helvetica, Sans;}
+</style>
+<meta charset="utf-8">
+</head>
+
+<body>
+<h1>Solutions to book exercises</h1> 
+
+<p>The book <strong>Analyzing Financial and Economic Data with R</strong> is available at <a href = "https://www.amazon.com/dp/B084LSNXMN">Amazon<a>, as an ebook and print. A restricted online version is available at <a href = "https://www.msperlin.com/afedr" >https://www.msperlin.com/afedr<a></p>
+
+<h2>Questions</h2>
+
+<ol>
+<li>
+<h4>Question</h4>
+<p>The R language was developed based on what other programming language?</p>
+<br/>
+<ol type="a">
+<li>
+Julia
+</li>
+<li>
+Python
+</li>
+<li>
+Javascript
+</li>
+<li>
+S
+</li>
+<li>
+C++
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<p>Straight from the book, section <strong>What is R</strong>: “R is a modern version of S, a programming language originally created in Bell Laboratories (formerly AT&amp;T, now Lucent Technologies).”</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>What are the names of the two authors of R?</p>
+<br/>
+<ol type="a">
+<li>
+Guido van Rossum and Bjarne Stroustrup
+</li>
+<li>
+Ross Ihaka and Robert Gentleman
+</li>
+<li>
+Roger Federer and Rafael Nadal
+</li>
+<li>
+Linus Torvalds and Richard Stallman
+</li>
+<li>
+John Chambers and Robert Engle
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<p>Straight from the book: “… The base code of R was developed by two academics, <strong>Ross Ihaka</strong> and <strong>Robert Gentleman</strong>, resulting in the programming platform we have today.”.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Why is R special when comparing to other programming languages, such as Python, C++, javascript and others?</p>
+<br/>
+<ol type="a">
+<li>
+Quick code execution
+</li>
+<li>
+Easy to use
+</li>
+<li>
+Makes it easy to write mobile apps
+</li>
+<li>
+It was designed for analyzing data and producing statistical output
+</li>
+<li>
+Works on any plataform such as Windows, Unix, MacOS
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<p>Undoubtedly, the main differential of the R language is the ease with which data can be analyzed on the platform. Although other languages also allow data analysis, it is in R where this process is supported by a wide range of specialized and efficient packages.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>What was the reason the programming language was named R?</p>
+<br/>
+<ol type="a">
+<li>
+R = Reausable code.
+</li>
+<li>
+It was the only available letter, not yet used as a programming language.
+</li>
+<li>
+Letter R is shared in the first names of its authors.
+</li>
+<li>
+Letter R is cool!
+</li>
+<li>
+The mother of one of the authors is called Renata.
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<p>The letter R was chosen due to its use in the first letter of the two authors of the platform.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Consider the following alternatives about R and RStudio:</p>
+<p>I - R was developed in 2018 and is an innovative and unstable project;</p>
+<p>II - RStudio is an alternative programming language to R;</p>
+<p>III - R is not compatible with different programming languages;</p>
+<p>Which alternatives are correct?</p>
+<br/>
+<ol type="a">
+<li>
+FALSE, FALSE, FALSE
+</li>
+<li>
+TRUE, TRUE, TRUE
+</li>
+<li>
+TRUE, FALSE, TRUE
+</li>
+<li>
+FALSE, TRUE, TRUE
+</li>
+<li>
+FALSE, FALSE, TRUE
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<p>See section “Why Choose R” in the “Introduction” chapter.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Once you have R and RStudio installed, head over to the <a href="https://cloud.r-project.org/web/packages/available_packages_by_date.html">CRAN package website</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and look for technologies you use in your work. For example, if you use <a href="https://www.google.com/sheets/about/">Google Sheets</a><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> ostensibly in your work, you will soon discover that there is a package in CRAN called <code>googlesheets4</code> that interacts with spreadsheets in the cloud.</p>
+<br/>
+<h4>Solution</h4>
+<ol style="list-style-type: decimal">
+<li>Browse <a href="https://cloud.r-project.org/web/packages/available_packages_by_date.html">CRAN package website</a></li>
+<li>Search for technologies you use in your work (Excel, Word, Google Docs, …)</li>
+</ol>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>On the <a href="https://cloud.r-project.org/bin/windows/">CRAN site</a> you can also install the Rtools application. What is it for?</p>
+<br/>
+<ol type="a">
+<li>
+Compile graphics.
+</li>
+<li>
+Compile R packages locally
+</li>
+<li>
+Build web pages.
+</li>
+<li>
+Compile technical reports.
+</li>
+<li>
+Make coffee (?).
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<p>Rtools is an extension particular to R on Windows. It is used to compile packages from source code and is a requirement for those who develop packages. For the average user, however, it is also recommended to install Rtools as some packages requires compilation.</p>
+<p>For Linux/Unix or MacOS users, Rtools is not necessary as, generally, compilers are already available within the operating system itself.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use <a href="https://www.google.com/search?q=R+groups+in+my+city">Google</a> to search for R groups in your region. Check if the meetings are frequent and, if you don’t have a major impediment, go to one of these meetings and make new friends.</p>
+<br/>
+<h4>Solution</h4>
+<p>It is not uncommon for programmers to have a tendency for introversion. This was certainly my case at the beginning of my career. But, know that shyness is a transitory state. In the same way that you will improve in any sport at the rate of how often you practice it, the more comunicative you are, less shy and more assertive you tend to be.</p>
+<p>The sad (or not) reality for the timid is that communication is a fundamental part of the adult life and is a way to maintain your professional network. The more people who know your work and your personality, the better. Perhaps a person you met in one of these groups can refer you to a job vacancy or future project. Summing up, what do you <strong>really</strong> have to lose by going to one of these meetings?</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Go to the <a href="https://www.r-bloggers.com/">RBloggers website</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and look for a topic of interest to you, such as football (<em>soccer</em>) or investments (<em>investments</em>). Read at least three of the found blog posts.</p>
+<br/>
+<h4>Solution</h4>
+<p>I am particularly passionate about the sport of tennis. On the RBloggers website I’ve found the following articles mixing R and tennis:</p>
+<p><a href="https://www.r-bloggers.com/2017/02/using-r-to-study-the-evolution-of-tennis/">Using R to study the evolution of Tennis</a></p>
+<p><a href="https://www.r-bloggers.com/2017/05/visualizing-tennis-grand-slam-winners-performances/">Visualizing Tennis Grand Slam Winners Performances</a></p>
+<p><a href="https://www.r-bloggers.com/2017/12/tennis-grand-slam-tournaments-champions-basic-analysis/">Tennis Grand Slam Tournaments Champions Basic Analysis</a></p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>If you work in an institution with data infrastructure, talk to the person in charge of the IT department and verify what technologies are used. Check if, through R, it is possible to access all tables in the databases. For now there is no need to write code, yet. Just check if this possibility exists.</p>
+<br/>
+<h4>Solution</h4>
+<p>At the university we have access to different paid repositories for financial data. Unfortunately, none of them offers any type of API for communicating with R. In fact, this was one of the motivators for writing R packages for free access to financial data.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>In RStudio, create a new <em>script</em> and save it in a personal folder. Now, write R commands in the script that define two objects: one holding a sequence between 1 and 100 and the other with the text of your name (ex. ‘Richard’). Execute the whole script with the keyboard shortcuts.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>x &lt;- 1:100
+y &lt;- &#39;Richard&#39;
+
+# press control+shift+enter to run this chunk of code in RStudio</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>In the previously created <em>script</em>, use function <code>message</code> to display the following phrase in R’s <em>prompt</em>:<code>"My name is ...."</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>x &lt;- 36
+y &lt;- &#39;Richard&#39;
+
+message(paste0(&#39;My name is &#39;, y))
+
+# press control+shift+enter to run this chunk of code in RStudio</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Within the same script, show the current working directory (see function <code>getwd</code>, as in <code>print(getwd())</code>). Now, change your working directory to <em>Desktop</em> (<em>Desktop</em>) and show the following message on the <em>prompt</em> screen: <code>'My desktop address is ....'</code>. Tip: use and abuse of RStudio’s <em>autocomplete</em> tool to quickly find the <em>desktop</em> folder.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>current_dir &lt;- getwd()
+print(current_dir)
+
+new_dir &lt;- &#39;~/Desktop/&#39; # this is probably C:/Users/USERNAME/Desktop for Windows
+setwd(new_dir)
+
+cat(paste0(&#39;My desktop address is &#39;, getwd()))</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use R to download the compressed zip file with the book material, available at this <a href="https://www.msperlin.com/files/afedr-files/afedR-code-and-data.zip">link</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. Save it as a file in the temporary session folder (see function <code>fs::file_temp()</code>).</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>local_file &lt;- fs::file_temp(ext = &#39;.zip&#39;)
+my_url &lt;- afedR3::links_get()$book_blog_zip
+
+download.file(url = my_url, 
+              destfile = local_file)
+
+# check if exists
+fs::file_exists(local_file)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>unzip</code> function to unzip the downloaded file from previous question to a directory called <code>'afedR-files'</code> inside the “Desktop” folder. How many files are available in the resulting folder? Tip: use the <code>recursive = TRUE</code> argument with <code>fs::dir_ls</code> to also search for all available subdirectories.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_folder &lt;- &#39;~/Desktop/adfeR-Files&#39; # this is probably C:/Users/USERNAME/Desktop for Windows
+unzip(local_file, exdir = my_folder) # local_file comes from previous exercise
+
+files &lt;- fs::dir_ls(my_folder, 
+                    recurse = TRUE)
+
+n_files &lt;- length(files)
+
+message(paste0(&#39;There are &#39;, n_files, &#39; files available at folder &quot;&#39;, my_folder, &#39;&quot;.&#39;))</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Every time the user installs an R package, all package files are stored locally in a specific directory of the hard disk. Using command <code>Sys.getenv('R_LIBS_USER')</code> and <code>fs::dir_ls</code>, list all the directories in this folder. How many packages are available in this folder on your computer?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>r_pkg_folder &lt;- Sys.getenv(&#39;R_LIBS_USER&#39;)
+
+available_dirs &lt;- fs::dir_ls(
+    r_pkg_folder, 
+    recurse = FALSE,
+    type = &#39;directory&#39;)
+    
+n_dirs &lt;- length(available_dirs)
+
+cat(paste0(&#39;There are &#39;, n_dirs, &#39; folders available  at &quot;&#39;, r_pkg_folder, &#39;&quot;.&#39;))</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>In the same topic as previous exercise, list all files in all subfolders in the directory containing the files for the different packages (see command <code>Sys.getenv('R_LIBS_USER')</code>). On average, how many files are needed for each package?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>r_pkg_folder &lt;- Sys.getenv (&#39;R_LIBS_USER&#39;)
+
+pkg_files &lt;- fs::dir_ls(r_pkg_folder, recurse = TRUE)
+my_dirs &lt;- list.dirs(
+    r_pkg_folder, 
+    recurse = FALSE,
+    type = &#39;directory&#39;
+    )
+
+n_files &lt;- length(pkg_files)
+n_dirs &lt;- length(my_dirs)
+
+my_msg &lt;- paste0(&#39;We have &#39;, length(pkg_files), &#39; &#39;,
+                 &#39;files for &#39;, length(my_dirs), &#39; packages. \n&#39;,
+                 &#39;On average, there are &#39;, n_files/n_dirs, &#39; files per directory.&#39;)
+
+message(my_msg)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>install.packages</code> function to install the <code>yfR</code> package on your computer. After installation, use function <code>yf_get()</code> to download price data for the IBM stock in the last 15 days. Tip: use function <code>Sys.Date()</code> to find out the current date and <code>Sys.Date()- 15</code> to calculate the date located 15 days in the past.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>if (!require(yfR)) install.packages(&#39;yfR&#39;)
+
+df_prices &lt;- yfR::yf_get(tickers = &#39;IBM&#39;,
+                     first_date = Sys.Date() - 15,
+                     last_date = Sys.Date())
+
+ str(df_prices)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>The <code>cranlogs</code> package allows access to downloads statistics of CRAN packages. After installing <code>cranlogs</code> on your computer, use the <code>cranlogs::cran_top_downloads</code> function to check which are the 10 most installed packages by the global community in the last month. Which package comes first? Tip: Set the <code>cran_top_downloads</code> function input to <code>when = 'last-month'</code>. Also, be aware that the answer here may not be the same as you got because it depends on the day the R code was executed.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>#if (!require(cranlogs)) install.packages(&#39;cranlogs&#39;)
+pkgs &lt;- cranlogs::cran_top_downloads(when = &#39;last-month&#39;)
+
+my_sol &lt;- pkgs$package[1]
+my_sol</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using the <code>devtools</code> package, install the development version of the <code>ggplot2</code> package, available in the <a href="https://github.com/hadley">Hadley Hickman repository</a>. Load the package using <code>library</code> and create a simple figure with the code <code>qplot(y = rnorm(10), x = 1:10)</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>if (!require(devtools)) install.packages(&quot;devtools&quot;)
+
+devtools::install_github(&#39;hadley/ggplot2&#39;)
+
+library(ggplot2)
+qplot(y = rnorm (10), x = 1:10)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using your programming ability check on your computer which folder, from the “Documents” directory (shortcut = <code>~</code>), has the largest number of files. Display the five folders with the largest number of files on R’s prompt.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>doc_folder &lt;- &#39;~&#39; # &#39;C:/Users/USERNAME/Documents&#39; in Windows
+                  # &#39;/home/USERNAME/  in Linux
+
+fct_count_files &lt;- function(dir_in) {
+  n_files &lt;- fs::dir_ls(dir_in, recurse = FALSE)
+  return(length(n_files))
+}
+
+# be aware this might take lots of time...
+all_folders &lt;- fs::dir_ls(path = doc_folder, 
+                          type = &#39;directory&#39;, 
+                          recurse = TRUE)
+
+counter_files &lt;- sapply(all_folders, fct_count_files)
+sorted &lt;- sort(counter_files, decreasing = TRUE)
+
+message(&#39;\nThe five folders with highest number of files are:\n\n&#39;)
+message(paste0(names(sorted[1:5]), collapse = &#39;\n&#39;))</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Imagine a survey regarding your household budget over time. Financial data is available in electronic spreadsheets separated by month, for 10 years. The objective of the research is to understand if it is possible to purchase a real state property in the next five years. Within this setup, detail in text the elements in each stage of the study, from importing the data to the construction of the report.</p>
+<br/>
+<h4>Solution</h4>
+<p>The possible stages of the study are:</p>
+<ol style="list-style-type: decimal">
+<li><p>Importing 01: Import all data related to income and family budget, rate of return on investments - fixed income or stocks - and historical property prices in the desired locations;</p></li>
+<li><p>Cleaning 01: Clean the data for outliers and missing data (NA);</p></li>
+<li><p>Manipulation 01: Use personal income data to find the need for monthly savings for each year.</p></li>
+<li><p>Manipulation 02: Based on the historical returns of investments and the inflation of the property, check how many years it takes to save the amount of money needed to buy the property.</p></li>
+</ol>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Based on the study proposed earlier, create a directory structure on your computer to accommodate the study. Create mock files for each subdirectory (see directory structure at section @ref(directories)). Be aware you can create mock files and direction all in R (see functions <code>cat</code> and <code>fs::dir_create</code>).</p>
+<br/>
+<ol type="a">
+<li>
+S+
+</li>
+<li>
+C++
+</li>
+<li>
+Python
+</li>
+<li>
+Matlab
+</li>
+<li>
+Javascript
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(fs)
+
+# set temp dir for solving exercise
+temp_dir &lt;- path(tempdir(), &#39;Chapter 3 exercise&#39;)
+
+# create folder
+dir_create(temp_dir)
+
+# create files
+file_create(path(temp_dir, &#39;01-import_data.R&#39;))
+file_create(path(temp_dir, &#39;02-clean_data.R&#39;))
+file_create(path(temp_dir, &#39;03-build_budget_table.R&#39;))
+file_create(path(temp_dir, &#39;04-build_investment_realstate_table.R&#39;))
+file_create(path(temp_dir, &#39;05-build_report.R&#39;))
+
+# create dirs
+dir_create(path(temp_dir, &#39;data&#39;))
+dir_create(path(temp_dir, &#39;tabs&#39;))
+dir_create(path(temp_dir, &#39;figs&#39;))
+
+# fill with files
+for (i_year in 2009:2019) {
+  file_create(path(temp_dir, &#39;data&#39;, 
+                   paste0(&#39;annual_budget_&#39;, i_year, &#39;.xlsx&#39;)) )
+}
+
+file_create(path(temp_dir, &#39;data&#39;, &#39;fixed_income_index.csv&#39;))
+file_create(path(temp_dir, &#39;data&#39;, &#39;real_state_data.rds&#39;))
+file_create(path(temp_dir, &#39;figs&#39;, &#39;Income_and_HousePrices.png&#39;))
+file_create(path(temp_dir, &#39;tabs&#39;,  &#39;Table_with_Results.xlsx&#39;))
+
+dir_tree(temp_dir)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a <code>dataframe</code> with the following code:</p>
+<pre><code>library(dplyr)
+
+my_N &lt;- 10000
+my_df &lt;- tibble(x = 1:my_N,
+                y = runif(my_N))</code></pre>
+<p>Export the resulting <code>dataframe</code> to each of the five formats: csv, rds, xlsx, fst. Which of the formats took up the most space in the computer’s memory? Tip: <code>file.size</code> calculates the size of files within R.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+library(readr)
+
+do_tests &lt;- function(my_N) {
+  
+  my_df &lt;- tibble(x = 1:my_N,
+                  y = runif(my_N))
+  
+  # csv
+  my_f &lt;- tempfile(pattern = &#39;temp&#39;, fileext = &#39;.csv&#39;)
+  time.csv &lt;- system.time({
+    write_csv(my_df, my_f)
+  })[&#39;elapsed&#39;]
+  size.csv &lt;- file.size(my_f)/1000000
+  
+  # rds
+  my_f &lt;- tempfile(pattern = &#39;temp&#39;, fileext = &#39;.rds&#39;)
+  time.rds &lt;- system.time({
+    write_rds(my_df, my_f)
+  })[&#39;elapsed&#39;]
+  
+  size.rds &lt;- file.size(my_f)/1000000
+  
+  # xlsx
+  my_f &lt;- tempfile(pattern = &#39;temp&#39;, fileext = &#39;.xlsx&#39;)
+  library(writexl) 
+  time.xlsx &lt;- system.time({
+    write_xlsx(my_df, my_f)
+  })[&#39;elapsed&#39;]
+  
+  size.xlsx &lt;- file.size(my_f)/1000000
+  
+  # fst
+  library(fst)
+  my_f &lt;- tempfile(pattern = &#39;temp&#39;, fileext = &#39;.fst&#39;)
+  time.fst &lt;- system.time({
+    write_fst(my_df, my_f)
+  })[&#39;elapsed&#39;]
+  
+  size.fst &lt;- file.size(my_f)/1000000
+  
+  print(c(size.csv, size.rds, size.xlsx, size.fst))
+  
+  print(c(time.csv, time.rds, time.xlsx, time.fst))
+  
+  tab &lt;- tibble(Result = c(&#39;csv&#39;, &#39;rds&#39;, &#39;xlsx&#39;, &#39;fst&#39;), 
+                Size =  c(size.csv, size.rds, size.xlsx, size.fst),
+                Time = c(time.csv, time.rds, time.xlsx, time.fst))
+  
+  return(tab)
+}
+
+my_N &lt;- 10000
+
+tab &lt;- do_tests(my_N)
+print(tab)
+
+my_msg &lt;- paste0(&#39;The format with largest disk space for N = &#39;, my_N, &#39; is &#39;, 
+                 tab$Result[which.max(tab$Size)], &#39;.&#39;)
+message(my_msg)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Improve the previous code by measuring the execution time for saving the data in different formats. Which file format resulted in the fastest execution for exporting data? Tip: use the <code>system.time</code> function or the<code>tictoc</code> package to calculate the execution times.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code># do notice that this chunk requires the execution of previous solution
+my_msg &lt;- paste0(&#39;The format with least execution time for N = &#39;, my_N, &#39; is &#39;, 
+                 tab$Result[which.min(tab$Time)], &#39;.&#39;)
+message(my_msg)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>For the previous code, reset the value of <code>my_N</code> to <code>1000000</code>. Does it change the answers to the last two questions?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code># do notice that this chunk requires the execution of previous solution
+my_N &lt;- 1000000
+
+tab &lt;- do_tests(my_N)
+print(tab)
+
+my_msg &lt;- paste0(&#39;The format with largest disk space for N = &#39;, my_N, &#39; is &#39;, 
+                 tab$Result[which.max(tab$Size)], &#39;.&#39;)
+
+message(my_msg)
+
+my_msg &lt;- paste0(&#39;The format with least execution time for N = &#39;, my_N, &#39; is &#39;, 
+                 tab$Result[which.min(tab$Time)], &#39;.&#39;)
+message(my_msg)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use <code>afedR3::data_path</code> function to access the CH04_SP500.csv file in the book’s data repository. Import the contents of the file into R with the function <code>readr::read_csv</code>. How many lines are there in the resulting <code>dataframe</code>?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_f &lt;- afedR3::data_path(&#39;CH04_SP500.csv&#39;)
+
+df_SP500 &lt;- readr::read_csv(my_f, 
+                     col_types = readr::cols())
+
+my_msg &lt;- paste0(&#39;There are &#39;, nrow(df_SP500), &#39; rows and &#39;, 
+                 ncol(df_SP500), &#39; columns in file &#39;, basename(my_f))
+message(my_msg)
+
+my_sol &lt;- nrow(df_SP500)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>At link <a href="https://eeecon.uibk.ac.at/~zeileis/grunfeld/Grunfeld.csv">https://eeecon.uibk.ac.at/~zeileis/grunfeld/Grunfeld.csv/</a> you’ll find a <em>.csv</em> file for the <em>Grunfeld</em> data. This is a particularly famous table due to its use as reference data in econometric models. Using <code>readr::read_csv</code> function, read this file using the direct link as input <code>read_csv</code>. How many columns do you find in the resulting <code>dataframe</code>?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_url &lt;- &#39;https://eeecon.uibk.ac.at/~zeileis/grunfeld/Grunfeld.csv&#39;
+
+df_grunfeld &lt;- readr::read_csv(my_url, col_types = readr::cols())
+
+my_sol &lt;- ncol(df_grunfeld)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use function <code>afedR3::data_path</code> function to access the CH04_example-tsv.tsv file in the book’s data repository. Note that the columns of the data are separated by the tab symbol (<code>'\t'</code>), and not the usual comma. After reading the <code>readr::read_delim</code> manual, import the information from this file to your R session. How many rows does the resulting <code>dataframe</code> contain?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_f &lt;- afedR3::data_path(&#39;CH04_example-tsv.tsv&#39;)
+
+df_tsv &lt;- readr::read_delim(my_f, delim = &#39;\t&#39;, col_types = readr::cols())
+
+my_sol &lt;- nrow(df_tsv)
+
+#check_answers(my_answers)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>In the book package you’ll find data file called CH04_another-funky-csv-file.csv, with a particularly bizarre format. Open it in a text editor and try to understand how the columns are separated and what is symbol for decimals. After that, study the inputs of function <code>utils::read.table</code> and import the table into your R session. If we add the number of rows to the number of columns in the imported table, what is the result?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_f &lt;- afedR3::data_path(&quot;CH04_another-funky-csv-file.csv&quot;)
+
+df_funky &lt;- read.table(file = my_f, 
+           dec = &#39;?&#39;, 
+           skip = 7, 
+           sep = &#39;|&#39;, 
+           header = TRUE)
+
+my_sol &lt;- nrow(df_funky) + ncol(df_funky)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using the <code>yfR</code> package, download daily data of the Facebook stock (META) from <em>Yahoo Finance</em> for the period between 2019 and 2023. What is the lowest <strong>unadjusted closing price (column <code>price.close</code>)</strong> in the analyzed period?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>ticker &lt;- &#39;META&#39;
+first_date &lt;- &#39;2019-01-01&#39;
+last_date  &lt;- &#39;2023-01-01&#39;
+
+df_prices &lt;- yfR::yf_get(
+  tickers = ticker, 
+  first_date = first_date, 
+  last_date = last_date)
+
+my_sol &lt;- min(df_prices$price_close, 
+              na.rm = TRUE)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>If you have not already done so, create a profile on the <a href="https://www.quandl.com/">Quandl website</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and download the arabica coffee price data in the CEPEA database (Center for Advanced Studies in Applied Economics) ) between 2010-01-01 and 2020-12-31. What is the value of the most recent price?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(GetQuandlData)
+
+id_series &lt;- c(COFFEE = &#39;CEPEA/COFFEE_A&#39;)
+
+# set api key (make sure you got your own!)
+#my_api_key &lt;- readLines(&#39;~/Dropbox/98-pass_and_bash/.quandl_api.txt&#39;)
+
+first_date &lt;- &#39;2010-01-01&#39;
+last_date &lt;- &#39;2020-12-31&#39;
+
+#df_coffee &lt;- get_Quandl_series(id_in = id_series, 
+ #                              first_date = first_date,
+  #                             last_date = last_date,
+   #                            api_key = my_api_key,
+    #                           do_cache = TRUE)
+
+# find most recent
+#idx &lt;- which.max(df_coffee$ref_date)
+#my_sol &lt;- as.numeric(df_coffee$`Cash Price US$`[idx])</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use function <code>simfinapi::sfa_get_entities()</code> to import data about all available companies in <a href="https://simfin.com">Simfin</a>. How many companies do you find? (see function <code>dplyr::n_distinct()</code>).</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(simfinapi)
+library(dplyr)
+library(readr)
+
+# set api key - make sure you got your own at https://simfin.com/data/access/api
+#my_api_key &lt;- read_lines(&#39;~/GDrive/98-pass-and-bash/.api_key_simfin.txt&#39;)
+my_api_key &lt;- &#39;&#39;
+
+cache_dir &lt;- fs::path_temp(&quot;cache-simfin&quot;)
+fs::dir_create(cache_dir)
+
+# get info
+simfinapi::sfa_set_api_key(my_api_key)
+simfinapi::sfa_set_cache_dir(cache_dir)
+
+# get info
+df_info_companies &lt;- simfinapi::sfa_get_entities()
+
+# check it
+glimpse(df_info_companies)
+
+n_companies &lt;- n_distinct(df_info_companies$ticker)
+
+my_sol &lt;- n_companies</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>With package <code>simfinapi</code>, download the PL (profit/loss) statement for FY (final year) data for TESLA (ticker = “TSLA”) for year 2022. What is the latest Profit/Loss of the company for that particular year?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(simfinapi)
+library(dplyr)
+library(readr)
+
+# set api key - make sure you got your own at https://simfin.com/data/access/api
+#my_api_key &lt;- read_lines(&#39;~/GDrive/98-pass-and-bash/.api_key_simfin.txt&#39;)
+
+cache_dir &lt;- fs::path_temp(&quot;cache-simfin&quot;)
+fs::dir_create(cache_dir)
+
+# get info
+simfinapi::sfa_set_api_key(my_api_key)
+simfinapi::sfa_set_cache_dir(cache_dir)
+
+ticker &lt;- &#39;TSLA&#39;
+type_statement &lt;- &#39;pl&#39; # profit/loss
+period &lt;- &#39;fy&#39; # final year
+year &lt;- 2022
+
+PL &lt;- sfa_get_statement(
+  ticker = ticker, 
+  statement = type_statement,
+  period = period,
+  fyear = year)
+
+glimpse(PL)
+
+desired_acc &lt;- &#39;net_income&#39;
+
+latest_acc_value &lt;- PL$net_income[1]
+
+my_sol &lt;- latest_acc_value </code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using function <code>tidyquant::tq_index</code>, download the current composition of index DOW. What is the company with the highest percentage in the composition of the index?</p>
+<p>Be aware that the answer is time-dependent and the reported result might be different from what you actually got in your R session.</p>
+<br/>
+<ol type="a">
+<li>
+NIKE INC CL B
+</li>
+<li>
+INTEL CORP
+</li>
+<li>
+COCA COLA CO/THE
+</li>
+<li>
+UNITEDHEALTH GROUP INC
+</li>
+<li>
+SALESFORCE INC
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(tidyquant)
+
+# print available indices
+available_index &lt;- tq_index_options()
+
+my_index &lt;- sample(available_index, 1)
+
+# get components of &quot;DOWJONES&quot;
+comp_idx &lt;- tq_index(my_index)
+
+highest_weight &lt;- comp_idx$company[which.max(comp_idx$weight)]
+
+my_sol &lt;- highest_weight </code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using again the <code>yfR</code> package, download financial data between 2019-01-01 and 2020-01-01 for the following tickers:</p>
+<ul>
+<li>AAPL: Apple Inc</li>
+<li>BAC: Bank of America Corporation</li>
+<li>GE: General Electric Company</li>
+<li>TSLA: Tesla, Inc.</li>
+<li>SNAP: Snap Inc.</li>
+</ul>
+<p>Using the <strong>adjusted closing price</strong> column, what company provided higher return to the stock holder during the analyzed period?</p>
+<p>Tip: this is an advanced exercise that will require some coding. To solve it, check out function <code>split</code> to split the dataframe of price data and <code>lapply</code> to map a function to each dataframe.</p>
+<br/>
+<ol type="a">
+<li>
+BAC
+</li>
+<li>
+GE
+</li>
+<li>
+AAPL
+</li>
+<li>
+TSLA
+</li>
+<li>
+SNAP
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+
+first_date &lt;- &#39;2019-01-01&#39;
+last_date  &lt;- &#39;2020-01-01&#39;
+
+my_tickers &lt;- c(&#39;AAPL&#39;, &#39;BAC&#39;, 
+                &#39;GE&#39;, &#39;TSLA&#39;,
+                &#39;SNAP&#39;)
+    
+df_prices &lt;- yfR::yf_get(
+  tickers = my_tickers, 
+  first_date = first_date, 
+  last_date = last_date)
+
+split_l &lt;- split(df_prices, df_prices$ticker)
+
+my_fct &lt;- function(df_in) {
+  price_vec &lt;- df_in$price_adjusted
+  ticker_in &lt;- df_in$ticker[1]
+  
+  total_ret &lt;- last(price_vec)/first(price_vec) - 1
+  
+  return(tibble(ticker = ticker_in,
+                total_ret = total_ret))
+}
+
+df_results &lt;- bind_rows(
+  lapply(split_l, my_fct)
+)
+
+winner &lt;- df_results$ticker[which.max(df_results$total_ret)]
+
+my_sol &lt;- winner</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using function <code>dplyr::tibble</code>, create a <code>dataframe</code> called <code>my_df</code> with a column called <code>x</code> containing a sequence from -100 to 100 and another column called <code>y</code> with the value of column x added by 5. How many values in column <code>x</code> are greater than 10 and lower than 25?</p>
+<br/>
+<ol type="a">
+<li>
+14
+</li>
+<li>
+2
+</li>
+<li>
+5
+</li>
+<li>
+7
+</li>
+<li>
+9
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_df &lt;- dplyr::tibble(x = -100:100, 
+                        y = x + 5)
+# solution
+my_sol &lt;- sum((my_df$x &gt; 10)&amp;(my_df$x &lt; 25))</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a new column in object <code>my_df</code> called <code>cumsum_x</code>, containing the cumulative sum of <code>x</code> (<code>cumsum</code> function). In this new column, how many values are greater than -3500?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_df &lt;- dplyr::tibble(x = -100:100, 
+                       y = x + 5)
+
+# solution
+my_df$cumsum_x &lt;- cumsum(my_df$x)
+
+# solution
+my_sol &lt;- sum(my_df$cumsum_x &gt; -3500)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use function <code>dplyr::filter</code> function and the pipeline operator to filter <code>my_df</code>, keeping only the rows where the value of the <code>y</code> column is greater than 0. What is the number of rows in the resulting table?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_df &lt;- dplyr::tibble(x = -100:100, 
+                       y = x + 5)
+
+# solution
+my_df2 &lt;- my_df |&gt;
+  dplyr::filter(y &gt; 0)
+
+# solution
+my_sol &lt;- nrow(my_df2)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>If you have not already done so, repeat exercises 1, 2 and 3 using the functions of the <code>tidyverse</code> universe and the <em>pipeline</em> operator.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+library(readr)
+library(stringr)
+
+my_df &lt;- tibble(x = -100:100,
+                y = x + 5) |&gt;
+  mutate(cumsum_x = cumsum(x))
+
+# solution 01
+sol_01 &lt;- my_df |&gt;
+  filter(x &gt; 10, 
+         x &lt; 25) |&gt;
+  nrow()
+
+# solution 02
+sol_02 &lt;- my_df |&gt;
+  mutate(cumsum_x = cumsum(x)) |&gt;
+  filter(cumsum_x &gt; -3500) |&gt;
+  nrow()
+
+# solution 03
+sol_03 &lt;- my_df |&gt;
+  filter(y &gt; 0) |&gt;
+  nrow()
+
+message(str_glue(
+  &#39;Solution 01 = {sol_01} \n&#39;,
+  &#39;Solution 02 = {sol_02} \n&#39;,
+  &#39;Solution 03 = {sol_03}&#39;
+  )
+)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>yfR</code> package to download Google (GOOG) stock data, from 2015-01-01 to 2023-01-01. If the investor had bought 1000 USD in Google shares on the first day of the data and kept the investment until today, what would be the value of his portfolio?</p>
+<br/>
+<ol type="a">
+<li>
+$30,685.82
+</li>
+<li>
+$11,997.49
+</li>
+<li>
+$5,976.27
+</li>
+<li>
+$24,039.93
+</li>
+<li>
+$18,018.71
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+
+first_date &lt;- &#39;2015-01-01&#39;
+last_date &lt;- &#39;2023-01-01&#39;
+
+df_prices &lt;- yfR::yf_get(&#39;GOOG&#39;, 
+                         first_date,
+                         last_date)
+
+value_purchase &lt;- sample(seq(1000, 10000, by = 50), 1)
+
+# solution
+my_sol &lt;- last(df_prices$price_adjusted)/first(df_prices$price_adjusted)*value_purchase</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use functions <code>afedR3::data_path</code> and <code>readr::read_csv</code> to import data from the CH11_grunfeld.csv file. Now, use function <code>dplyr::glimpse</code> to find out the number of lines in the imported data. What is the number of rows in the imported table?</p>
+<br/>
+<ol type="a">
+<li>
+200
+</li>
+<li>
+234
+</li>
+<li>
+271
+</li>
+<li>
+308
+</li>
+<li>
+345
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+library(readr)
+
+my_file &lt;- afedR3::data_path(&#39;CH11_grunfeld.csv&#39;)
+
+df_grunfeld &lt;- read_csv(my_file, 
+                        col_types = cols())
+
+# solution
+glimpse(df_grunfeld)
+
+my_sol &lt;- nrow(df_grunfeld)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a list type object with three <code>dataframes</code> in its contents,<code>df1</code>, <code>df2</code> and <code>df3</code>. The content and size of the <code>dataframes</code> is your personal choice. Now, use the <code>sapply</code> function and a custom function to find out the number of rows and columns in each <code>dataframe</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>df1 &lt;- dplyr::tibble(x = 1:10)
+df2 &lt;- dplyr::tibble(y = runif(100))
+df3 &lt;- dplyr::tibble(z = rnorm(150),
+                     m = rnorm(150))
+
+my_l &lt;- list(df1, df2, df3)
+
+my_fct &lt;- function(df_in) {
+  out &lt;- c(&#39;nrows&#39; = nrow(df_in), 
+           &#39;ncols&#39; = ncol(df_in))
+  return(out)
+}
+
+tab &lt;- sapply(my_l, my_fct)
+tab</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Within an R session, create an identity matrix (value 1 in the diagonal, zero in any other) of size 5X5. Tip: use the <code>diag</code> function to define the diagonal of the matrix.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_size &lt;- 5
+M_identity &lt;- matrix(0, 
+                     nrow = my_size, 
+                     ncol = my_size)
+
+# solution
+diag(M_identity) &lt;- 1
+
+print(M_identity)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Consider the following vectors x and y:</p>
+<pre><code>set.seed(7)
+x &lt;- sample (1:3, size = 5, replace = T)
+y &lt;- sample (1:3, size = 5, replace = T)</code></pre>
+<p>What is the sum of the elements of a new vector resulting from the multiplication between the elements of <code>x</code> and<code>y</code>?</p>
+<br/>
+<ol type="a">
+<li>
+31
+</li>
+<li>
+34
+</li>
+<li>
+41
+</li>
+<li>
+48
+</li>
+<li>
+55
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>set.seed(7)
+
+x &lt;- sample (1:3, size = 5, replace = T)
+y &lt;- sample (1:3, size = 5, replace = T)
+
+# solution
+my_sol &lt;- sum(x*y)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>If we performed a cumulative sum of a sequence between 1 and 100, in what element would this sum go beyond the value of 50?</p>
+<br/>
+<ol type="a">
+<li>
+10
+</li>
+<li>
+11
+</li>
+<li>
+13
+</li>
+<li>
+15
+</li>
+<li>
+17
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_sum &lt;- cumsum(1:100)
+
+# solution
+my_sol &lt;- (which(my_sum &gt; 50)[1])</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using R, create an sequence called <code>seq_1</code> between -15 and 10, where the interval between values is always equal to 2. What is the sum of the elements of <code>seq_1</code>?</p>
+<br/>
+<ol type="a">
+<li>
+-39
+</li>
+<li>
+-20
+</li>
+<li>
+-27
+</li>
+<li>
+-69
+</li>
+<li>
+-108
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code># solution
+seq_1 &lt;- seq(from = -15, to = 10, by = 2)
+
+# solution
+my_sol &lt;- sum(seq_1)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Define another object called <code>seq_2</code> containing a sequence of size 1000, with values between 0 and 100. What is the standard deviation (function <code>sd()</code>) of this sequence?</p>
+<br/>
+<ol type="a">
+<li>
+45.26061
+</li>
+<li>
+28.91085
+</li>
+<li>
+22.19465
+</li>
+<li>
+12.94184
+</li>
+<li>
+74.17146
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>seq_2 &lt;- seq(from = 0, 
+             to = 100, 
+             length.out = 1000)
+
+# solution
+my_sol &lt;- sd(seq_2)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Calculate the sum between <code>seq_1</code> and <code>seq_2</code> vectors (see previous exercises). Did this operation work despite the different size of the vectors? Explain your answer. If it works, what is the highest value of the resulting vector?</p>
+<br/>
+<ol type="a">
+<li>
+191.5447
+</li>
+<li>
+150.804
+</li>
+<li>
+108.999
+</li>
+<li>
+171.1743
+</li>
+<li>
+130.4336
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<p>Yes, it worked, but with a <em>warning</em>: _ “the length of the longest object is not a multiple of the length of the shortest object”_. The explanation is that whenever R encounters operations with different vector sizes, it uses the recycling rule, where the shortest vector is repeated as many times as necessary to match the size of the longest vector. In the book, see section on numerical vectors for more details.</p>
+<pre><code>seq_1 &lt;- seq(from = -10, to = 10, by = 2)
+seq_2 &lt;- seq(from = 0, 
+             to = 100, 
+             length.out = 1000)
+
+# solution
+my_sol &lt;- max(seq_1+seq_2)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Let’s assume that, on a certain date, you bought 100 shares in a company, paying $15 per share. After some time, you sold 41 shares for a $14 each and the remaining 59 shares were sold for $17 on a later day. Using a <em>script</em> in R, structure this financial problem by creating numeric objects. What is the total gross profit/loss from this sequence of transactions on the stock market?</p>
+<br/>
+<ol type="a">
+<li>
+$27
+</li>
+<li>
+$50
+</li>
+<li>
+$77
+</li>
+<li>
+$206
+</li>
+<li>
+$129
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>total_shares &lt;- 100
+price_purchase &lt;- 15
+
+total_purchase_value &lt;- total_shares*price_purchase
+
+qtd_sell_1 &lt;- sample(10:50, 1)
+price_sell_1 &lt;- sample(10:18, 1)
+total_sell_1 &lt;- qtd_sell_1*price_sell_1
+
+qtd_sell_2 &lt;- total_shares-qtd_sell_1
+price_sell_2 &lt;- sample(10:18, 1)
+total_sell_2 &lt;- qtd_sell_2*price_sell_2
+
+total_sell_value &lt;- total_sell_1 + total_sell_2
+
+# solution
+my_sol &lt;- total_sell_value - total_purchase_value</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a vector x according to the following formula, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>.</mi><mn>100</mn></mrow><annotation encoding="application/x-tex">i = 1 ... 100</annotation></semantics></math>. What is the sum of the elements of x?</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><mo>−</mo><msup><mn>1</mn><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msup></mrow><mrow><mn>2</mn><mi>i</mi><mo>−</mo><mn>1</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+x_i=\frac{-1^{i+1}}{2i-1}
+</annotation></semantics></math></p>
+<br/>
+<ol type="a">
+<li>
+0.7828982
+</li>
+<li>
+0.9299688
+</li>
+<li>
+1.069942
+</li>
+<li>
+1.209914
+</li>
+<li>
+1.349887
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>i &lt;- 1:100
+
+x &lt;- ( (-1)^(i+1) )/(2*i - 1)
+
+# solution
+my_sol &lt;- sum(x)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math> vector according to the following formula where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>.</mi><mn>50</mn></mrow><annotation encoding="application/x-tex">x_i = 1 ... 50</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>=</mo><mn>50</mn><mi>.</mi><mi>.</mi><mi>.</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">y_i = 50 ... 1</annotation></semantics></math>. What is the sum of the elements of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>? Tip: check out how the <code>dplyr::lag()</code> function works.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><msub><mi>y</mi><mrow><mi>i</mi><mo>−</mo><mn>2</mn></mrow></msub></mfrac></mrow><annotation encoding="application/x-tex">
+z_i=\frac{y_i - x_{i-1}}{y_{i-2}}
+</annotation></semantics></math></p>
+<br/>
+<ol type="a">
+<li>
+-65.95709
+</li>
+<li>
+-113.3288
+</li>
+<li>
+-78.56528
+</li>
+<li>
+-90.15313
+</li>
+<li>
+-101.741
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>x &lt;- 1:50
+y &lt;- 50:1
+
+# solution using `base`
+z &lt;- (y - c(NA, x[1:(length(x)-1)]))/c(NA, NA, y[1:(length(y)-2)])
+
+# solution with tidyverse (much prettier huh!)
+z &lt;- (y - lag(x, n = 1))/lag(y, n = 2)
+
+# solution (be aware of the NA values)
+my_sol &lt;- sum(z, na.rm = TRUE)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using <code>set.seed (10)</code>, create an object called <code>x</code> with random values from the Normal distribution with a mean of 10 and standard deviation of 10. Using the <code>cut</code> function, create another object that defines two groups based on values of <code>x</code> greater than 15 and lower than 15. How many observations you find in the first group?</p>
+<br/>
+<ol type="a">
+<li>
+668
+</li>
+<li>
+775
+</li>
+<li>
+915
+</li>
+<li>
+1055
+</li>
+<li>
+1195
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>set.seed(10)
+x &lt;- rnorm(n = 1000, mean = 10, sd = 10)
+
+my_group &lt;- cut(x, 
+                breaks = c(-Inf, 15, Inf))
+
+# solution
+my_sol &lt;- table(my_group)[1]</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create the following object with the following code:</p>
+<pre><code>set.seed(15)
+my_char &lt;- paste(sample(letters, 5000, replace = T), 
+                 collapse = &#39;&#39;)</code></pre>
+<p>How many times is the letter <code>'x'</code> found in the resulting text object?</p>
+<br/>
+<ol type="a">
+<li>
+174
+</li>
+<li>
+198
+</li>
+<li>
+231
+</li>
+<li>
+264
+</li>
+<li>
+297
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>set.seed(15)
+my_char &lt;- paste(sample(letters, 5000, replace = T), 
+                 collapse = &#39;&#39;)
+
+# solution
+my_sol &lt;- stringr::str_count(my_char, &#39;x&#39;)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Based on the <code>my_char</code> object created earlier, if we divided it into several smaller pieces using the letter <code>"b"</code>, what is the number of characters in the <strong>largest</strong> piece found?</p>
+<br/>
+<ol type="a">
+<li>
+110
+</li>
+<li>
+125
+</li>
+<li>
+146
+</li>
+<li>
+167
+</li>
+<li>
+188
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>set.seed(15)
+my_char &lt;- paste(sample(letters, 5000, replace = T), 
+                 collapse = &#39;&#39;)
+
+my_split &lt;- stringr::str_split(my_char, pattern = &#39;b&#39;)[[1]]
+
+# find number of characters in each
+n_chars &lt;- sapply(my_split, nchar)
+
+# solution
+my_sol &lt;- n_chars[which.max(n_chars)]</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>At web address <a href="https://www.gutenberg.org/cache/epub/69694/pg69694.txt">https://www.gutenberg.org/cache/epub/69694/pg69694.txt</a> you’ll find the full text of the book <strong>The Devil of East Lupton, Vermont</strong>, by
+William Fitzgerald. Use functions <code>download.file</code> and <code>readr::read_lines</code> to import the entire book as a vector of characters called <code>my_book</code> in R. How many lines does the resulting object have?</p>
+<br/>
+<ol type="a">
+<li>
+1047
+</li>
+<li>
+127
+</li>
+<li>
+350
+</li>
+<li>
+573
+</li>
+<li>
+796
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_link &lt;- &#39;https://www.gutenberg.org/cache/epub/69694/pg69694.txt&#39;
+
+my_book &lt;- readr::read_lines(my_link)
+
+# solution
+my_sol &lt;- length(my_book)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Bind the vector of characters in <code>my_book</code> into a single object called <code>full_text</code> using command <code>paste0(my_book, collapse = '\n')</code>. Using the <code>stringr</code> package, how many times is the word <code>'Vermont'</code> repeated throughout the text?</p>
+<br/>
+<ol type="a">
+<li>
+10
+</li>
+<li>
+4
+</li>
+<li>
+6
+</li>
+<li>
+13
+</li>
+<li>
+23
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_link &lt;- &#39;https://www.gutenberg.org/cache/epub/69694/pg69694.txt&#39;
+
+my_book &lt;- readr::read_lines(my_link)
+
+# solution
+full_text &lt;- paste0(my_book, collapse = &#39;\n&#39;)
+my_sol &lt;- stringr::str_count(full_text, stringr::fixed(&#39;Vermont&#39;))</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>For the <code>full_text</code> object created earlier, use the <code>stringr::str_split()</code> function to split the entire text using blanks. Based on the resulting vector, create a frequency table. What is the most used word in the text? Tip: Remove all cases of empty characters.</p>
+<br/>
+<ol type="a">
+<li>
+the
+</li>
+<li>
+a
+</li>
+<li>
+He
+</li>
+<li>
+to
+</li>
+<li>
+in
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>my_link &lt;- &#39;https://www.gutenberg.org/cache/epub/69694/pg69694.txt&#39;
+
+my_book &lt;- readr::read_lines(my_link)
+
+# solution
+full_text &lt;- paste0(my_book, collapse = &#39;\n&#39;)
+my_split &lt;- stringr::str_split(full_text, 
+                               pattern = stringr::fixed(&#39; &#39;))[[1]]
+
+# remove empty
+my_split &lt;- my_split[my_split != &#39;&#39;]
+
+my_tab &lt;- sort(table(my_split), decreasing = TRUE)
+
+# solution
+my_sol &lt;- names(my_tab[1])</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Assuming that a person born on 2000-05-12 will live for 100 years, what is the number of birthday days that will fall on a weekend (Saturday or Sunday)? Tip: use operator <code>%in%</code> to check for a multiple condition in a vector.</p>
+<br/>
+<ol type="a">
+<li>
+29
+</li>
+<li>
+8
+</li>
+<li>
+22
+</li>
+<li>
+51
+</li>
+<li>
+80
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>b_day &lt;- as.Date(&#39;2000-05-12&#39;)
+n_years &lt;- 100
+
+b_day_vec &lt;- seq(b_day, b_day + n_years*365, by = &#39;1 year&#39;)
+
+w_days &lt;- weekdays(b_day_vec)
+
+n_weekend &lt;- sum(w_days %in% c(&#39;Saturday&#39;, &#39;Sunday&#39;))
+
+# solution
+my_sol &lt;- n_weekend</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>What date and time is found 10<sup>4</sup> <strong>seconds</strong> after 2021-02-02 11:50:02?</p>
+<br/>
+<ol type="a">
+<li>
+2021-02-02 09:39:55
+</li>
+<li>
+2021-02-02 14:36:42
+</li>
+<li>
+2021-02-02 12:39:23
+</li>
+<li>
+2021-02-02 14:22:58
+</li>
+<li>
+2021-02-02 13:23:34
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>time_1 &lt;- as.POSIXct(&#39;2021-02-02 11:50:02&#39;)
+my_sec &lt;- 10000
+
+my_sol &lt;- time_1 + my_sec</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a function called <code>say_my_name</code> that takes a person’s name as input and shows the text <em>Your name is …</em> on the screen. Within the scope of the function, use comments to describe the purpose of the function, its inputs and outputs.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Print a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  #
+  # RETURNS: TRUE, if sucessfull
+  
+  my_msg &lt;- paste0(&#39;Your name is &#39;, name_in)
+  
+  message(my_msg)
+  
+  # invisible will omit output if function is called without definition of output
+  return(invisible(TRUE))
+}
+
+# testing
+say_my_name(&#39;Marcelo&#39;)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Implement a test for the input objects, so that when the input name is not of the <code>character</code> class, an error is returned to the user. Test your new function and verify if it is working as expected.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != &#39;character&#39;) {
+    stop(&#39;Class of input name_in is &#39;, class(name_in), 
+         &#39; and not character!&#39;)
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop(&#39;Input name_in has length &#39;, length(name_in), 
+         &#39; and not 1 (this function only works for one name)!&#39;)
+  }
+  
+  
+  
+  my_msg &lt;- paste0(&#39;Your name is &#39;, name_in, &#39;.&#39;)
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+# testing Ok
+say_my_name(&#39;Marcelo&#39;)
+
+# testing vector
+say_my_name(c(&#39;Richard&#39;, &#39;Michael&#39;))
+
+# testing class
+say_my_name(1)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a vector with any five names, called <code>my_names</code>. Using a <em>loop</em>, apply function <code>say_my_name</code> to each element of <code>my_names</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != &#39;character&#39;) {
+    stop(&#39;Class of input name_in is &#39;, class(name_in), 
+         &#39; and not character!&#39;)
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop(&#39;Input name_in has length &#39;, length(name_in), 
+         &#39; and not 1 (this function only works for one name)!&#39;)
+  }
+  
+  
+  
+  my_msg &lt;- paste0(&#39;Your name is &#39;, name_in, &#39;\n&#39;)
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+my_names &lt;- c(&#39;Marcelo&#39;, &#39;Ricardo&#39;, &#39;Tarcizio&#39;)
+
+for (i_names in my_names) {
+  say_my_name(i_names)
+}</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>In the database of <a href="https://data.brasil.io/dataset/genero-nomes/groups.csv.gz">Brasil.IO</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> you will find a table with names and genres. Import the data from the file and, using a loop, apply function <code>say_my_name</code> to 15 random names in the database. Tip: you can read the data directly from the link using <code>readr::read_csv(LINK)</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != &#39;character&#39;) {
+    stop(&#39;Class of input name_in is &#39;, class(name_in), 
+         &#39; and not character!&#39;)
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop(&#39;Input name_in has length &#39;, length(name_in), 
+         &#39; and not 1 (this function only works for one name)!&#39;)
+  }
+  
+  
+  
+  my_msg &lt;- paste0(&#39;Your name is &#39;, name_in, &#39;.&#39;)
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+library(dplyr)
+library(readr)
+library(stringr)
+
+# get CURRENT url from https://data.chhs.ca.gov/dataset/most-popular-baby-names-2005-current
+my_url &lt;- &#39;https://data.brasil.io/dataset/genero-nomes/grupos.csv.gz&#39;
+
+df_names &lt;- read_csv(my_url, col_types = cols())
+
+my_names &lt;- sample(df_names$name, 15)
+
+for (i_name in my_names) {
+  
+  say_my_name(i_name)
+}</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Redo previous exercises using function <code>sapply</code> or <code>purrr::walk</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>say_my_name &lt;- function(name_in) {
+  # Prints a single name in the prompt
+  #
+  # ARGS: name_in - Name to be printed
+  # RETURNS: TRUE, if sucessfull
+  
+  # check inputs
+  if (class(name_in) != &#39;character&#39;) {
+    stop(&#39;Class of input name_in is &#39;, class(name_in), 
+         &#39; and not character!&#39;)
+  }
+  
+  if (length(name_in) &gt; 1) {
+    stop(&#39;Input name_in has length &#39;, length(name_in), 
+         &#39; and not 1 (this function only works for one name)!&#39;)
+  }
+    
+  my_msg &lt;- paste0(&#39;Your name is &#39;, name_in, &#39;\n&#39;)
+  
+  message(my_msg)
+  
+  # invisible makes sure the fct doesnt return anything if not output is set
+  return(invisible(TRUE))
+}
+
+library(dplyr)
+library(readr)
+library(purrr)
+
+# get CURRENT url from https://data.chhs.ca.gov/dataset/most-popular-baby-names-2005-current
+my_url &lt;- &#39;https://data.brasil.io/dataset/genero-nomes/grupos.csv.gz&#39;
+
+df_names &lt;- read_csv(my_url, col_types = cols())
+
+# using sapply
+vec_out &lt;- sapply(sample(df_names$name, 15),
+                  say_my_name)
+glimpse(vec_out)
+
+# using purrr
+walk(sample(df_names$name, 15),
+    say_my_name)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <strong>{yfR}</strong> package to download data from the SP500 (<code>'^GSPC'</code>), Ibovespa (<code>'^BVSP'</code>), FTSE (<code>'^ FSTE'</code>) and Nikkei 225 (<code>'^N225'</code> index)) from ‘2010-01-01’` to the current date. With the imported data, use a loop to calculate the average, maximum and minimum return for each index during the analyzed period. Save all results in a single table and show it in the <em>prompt</em> of R.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+
+indexes &lt;- c(&#39;^BVSP&#39;, &#39;^GSPC&#39;, &#39;^FTSE&#39;, &#39;^N225&#39;)
+
+df_indices &lt;- yfR::yf_get(indexes, 
+                          &#39;2010-01-01&#39;,
+                          Sys.Date())
+
+tab &lt;- tibble()
+for (index in indexes) {
+  
+  temp_df &lt;- df_indices |&gt;
+    filter(ticker == index)
+  
+  avg_ret &lt;- mean(temp_df$ret_adjusted_prices, 
+                  na.rm = TRUE)
+  max_ret &lt;- max(temp_df$ret_adjusted_prices, 
+                 na.rm = TRUE)
+  min_ret &lt;- min(temp_df$ret_adjusted_prices, 
+                 na.rm = TRUE)
+  
+  # save result
+  tab &lt;- bind_rows(tab, tibble(index = index,
+                               mean_ret = avg_ret, 
+                               max_ret = max_ret, 
+                               min_ret = min_ret))
+  
+}
+
+print(tab)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Redo previous exercise using functions <code>group_by</code> and <code>summarise</code>, both from package <code>dplyr</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+
+indexes &lt;- c(&#39;^BVSP&#39;, &#39;^GSPC&#39;, &#39;^FTSE&#39;, &#39;^N225&#39;)
+
+df_indices &lt;- yfR::yf_get(indexes, 
+                          &#39;2010-01-01&#39;,
+                          Sys.Date())
+
+tab_tidy &lt;- df_indices |&gt;
+  group_by(ticker) |&gt;
+  summarise(mean_ret = mean(ret_adjusted_prices, na.rm = TRUE),
+            max_ret = max(ret_adjusted_prices, na.rm = TRUE),
+            min_ret = min(ret_adjusted_prices, na.rm = TRUE))
+
+print(tab_tidy)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>On the <a href="http://cran-logs.rstudio.com/">Rstudio CRAN logs website</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, you’ll find data on download statistics for the base distribution of R in the <em>Daily R downloads</em> section. Using your programming skills, import all available data between 2022-01-01 and 2022-01-05 and aggregate them into a single table. Which country has the highest download count for R?</p>
+<br/>
+<ol type="a">
+<li>
+IE
+</li>
+<li>
+AL
+</li>
+<li>
+MG
+</li>
+<li>
+US
+</li>
+<li>
+IN
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code># set function that will download the files
+read_cranlogs_files &lt;- function(date_in) {
+  # Reads log files from http://cran-logs.rstudio.com/
+  #
+  # ARGS: date_in - date of log data
+  require(lubridate)
+  
+  url_dl &lt;- paste0(&#39;http://cran-logs.rstudio.com/&#39;, year(date_in), &#39;/&#39;,
+                   date_in, &#39;-r.csv.gz&#39;)
+  
+  cat(&#39;\nReading &#39;, url_dl)
+  
+  df &lt;- readr::read_csv(url_dl, col_types = readr::cols())
+  
+  return(df)
+}
+
+# find out the availabe dates in url
+library(rvest)
+library(lubridate)
+library(stringr)
+library(dplyr)
+
+available_links &lt;- read_html(&#39;http://cran-logs.rstudio.com/&#39;) |&gt;
+  html_nodes(css = &#39;a&#39;) |&gt;
+  html_attr(&#39;href&#39;)
+
+# only keep links for R download (those with -r.csv.gz pattern)
+idx &lt;- str_detect(available_links, &#39;-r.csv.gz&#39;)
+r_links &lt;- available_links[idx]
+
+# find out dates 
+dates_dls &lt;- ymd(basename(r_links))
+max_date &lt;- max(dates_dls)
+
+first_date &lt;- as.Date(&#39;2022-01-01&#39;)
+last_date &lt;- as.Date(&#39;2022-01-05&#39;)
+
+my_dates &lt;- seq(first_date, 
+                last_date, 
+                by = &#39;1 day&#39;)
+
+library(purrr) 
+library(dplyr)
+
+l_out &lt;- map(my_dates, 
+             safely(read_cranlogs_files, 
+                    otherwise = tibble())) # return empty tibble in case of error
+
+df_cranlogs &lt;- bind_rows(map(l_out, &#39;result&#39;))
+
+# solution 
+my_sol &lt;- names(sort(table(df_cranlogs$country), 
+               decreasing = TRUE)[1])</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>For the same daily FTSE data, check the dates and prices of the 20 biggest price drops. If, for each of these cases, an investor bought the index at the price of the biggest drops and kept it for 30 days, what would be his average nominal return per transaction?</p>
+<br/>
+<ol type="a">
+<li>
+2.95%
+</li>
+<li>
+4.51%
+</li>
+<li>
+5.07%
+</li>
+<li>
+3.38%
+</li>
+<li>
+3.94%
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+library(readr)
+
+ticker &lt;- &#39;^FTSE&#39;
+first_date &lt;- &#39;2010-01-01&#39;
+last_date &lt;- &#39;2023-01-01&#39;
+
+df_FTSE_daily &lt;- yfR::yf_get(ticker, 
+                             first_date,
+                             last_date)
+
+# buy at t, sell at t+30
+trade_window &lt;- 30 
+
+# find largest drops
+largest_drops &lt;- df_FTSE_daily |&gt;
+  arrange(ret_adjusted_prices) |&gt;
+  slice(1:20)
+
+# There are many ways to solve the exercise. 
+# Here we will use a loop which is the simplest way to looking at the problem.
+# You could also solve it with the functional approach of package purrrr,
+# that is, writing a function.
+
+tab &lt;- tibble()
+for (i_date in seq_along(largest_drops$ref_date)) {
+  
+  my_date &lt;- largest_drops$ref_date[i_date]
+  # filter data to keep only datapoints in each horizon
+  temp_df &lt;- df_FTSE_daily |&gt;
+    filter(ref_date &gt;= my_date,
+           ref_date &lt;= my_date + trade_window)
+  
+  
+  buy_price &lt;- first(temp_df$price_adjusted)
+  sell_price &lt;- last(temp_df$price_adjusted)
+  return &lt;- sell_price/buy_price - 1
+  
+  tab &lt;- bind_rows(tab, 
+                   tibble(date = my_date, 
+                          buy_price = buy_price, 
+                          sell_price = sell_price, 
+                          return = return))
+}
+
+print(tab)
+
+# solution
+my_sol &lt;- mean(tab$return)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Consider a <code>dataframe</code> created with the following R code:</p>
+<pre><code>library(dplyr)
+
+my_N &lt;- 100
+
+df &lt;- bind_rows(tibble(ticker = rep(&#39;STOCK 1&#39;, my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))),
+                tibble(ticker = rep(&#39;STOCK 2&#39;, my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))) )
+
+print(df)</code></pre>
+<p>Is the <code>dataframe</code> in the long or wide format? Explain your answer.</p>
+<br/>
+<h4>Solution</h4>
+<p>The format is long: we have data stacked for two different stocks. Note that, with the addition of new tickers, the table grows with new lines. New variables can be easily added with new columns.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Change the format of the previous <code>dataframe</code>, from long to wide or vice versa.</p>
+<pre><code>library(dplyr)
+
+my_N &lt;- 100
+
+df &lt;- bind_rows(tibble(ticker = rep(&#39;STOCK 1&#39;, my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))),
+                tibble(ticker = rep(&#39;STOCK 2&#39;, my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))) )
+
+print(df)</code></pre>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+library(readr)
+
+my_N &lt;- 100
+
+df &lt;- bind_rows(tibble(ticker = rep(&#39;STOCK 1&#39;, my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))),
+                tibble(ticker = rep(&#39;STOCK 2&#39;, my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))) )
+
+print(df)
+
+# convert from long to wide
+df_wide &lt;- tidyr::spread(data = df, 
+                  key = &#39;ticker&#39;,
+                  value = &#39;price&#39;)
+
+# print result
+print(df_wide)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Consider the following list:</p>
+<pre><code>library(dplyr)
+
+my_l &lt;- list(df1 = tibble(x = 1:100, 
+                          y = runif(100)),
+             df2 = tibble(x = 1:100, 
+                          y = runif(100), 
+                          v = runif(100)),
+             df3 = tibble(x = 1:100, 
+                          y = runif(100), 
+                          z = runif(100)) 
+            )</code></pre>
+<p>Add all <code>dataframes</code> in <code>my_l</code> to a single object using <code>do.call</code> or <code>dplyr::bind_rows</code> functions. What happened to the <code>df1</code> data where <code>v</code> and <code>z</code> columns do not exist?</p>
+<br/>
+<h4>Solution</h4>
+<p>When <code>bind_rows</code> does not find the same column at the junction of different tables, the missing data is defined as <code>NAs</code>. See below:</p>
+<pre><code>library(dplyr)
+library(readr)
+
+my_l &lt;- list(df1 = tibble(x = 1:100, 
+                          y = runif(100)),
+             df2 = tibble(x = 1:100, 
+                          y = runif(100), 
+                          v = runif(100)),
+             df3 = tibble(x = 1:100, 
+                          y = runif(100), 
+                          z = runif(100)) )
+
+# solution with bind_rows
+bind_df1 &lt;- bind_rows(my_l)
+
+# solution with do.cal
+bind_df2 &lt;- do.call(bind_rows, my_l)
+
+# check solutions match
+identical(bind_df1, bind_df2)
+
+print(bind_df1)
+# the missing data points were set as NA values</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>yfR</code> package to download the SP500 index data (<code>'^GSPC'</code>) from 1950-01-01 to 2021-01-01. What is the sum of the 5 highest positive returns on the index?</p>
+<br/>
+<ol type="a">
+<li>
+0.0909854
+</li>
+<li>
+0.3952476
+</li>
+<li>
+0.501383
+</li>
+<li>
+0.1924061
+</li>
+<li>
+0.2938269
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>ticker &lt;- &#39;^GSPC&#39;
+first_date &lt;- &#39;1950-01-01&#39;
+last_date &lt;- &#39;2021-01-01&#39;
+
+df_sp500 &lt;- yfR::yf_get(&#39;^GSPC&#39;, 
+                            first_date,
+                            last_date)
+
+select_n &lt;- 5
+tab &lt;- dplyr::tibble(position = 1:select_n,
+              top5_positive = sort(df_sp500$ret_adjusted_prices, 
+                                   decreasing = TRUE)[1:select_n],
+              top5_negative = sort(df_sp500$ret_adjusted_prices, 
+                                   decreasing = FALSE)[1:select_n])
+
+print(tab)
+
+my_sol &lt;- sum(tab$top5_positive)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>replace_outliers</code> function from section @ref(outliers) to remove <em>outliers</em> from all numeric columns of the SP500 data previously imported with <code>my_prob = 0.025</code>. How many lines were <strong>lost</strong> in this cleaning process?</p>
+<br/>
+<ol type="a">
+<li>
+12734
+</li>
+<li>
+11291
+</li>
+<li>
+7281
+</li>
+<li>
+9847
+</li>
+<li>
+8403
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(purrr)
+
+ticker &lt;- &#39;^GSPC&#39;
+first_date &lt;- &#39;1950-01-01&#39;
+last_date &lt;- &#39;2021-01-01&#39;
+
+df_sp500 &lt;- yfR::yf_get(&#39;^GSPC&#39;, 
+                            first_date,
+                            last_date)
+
+replace_outliers &lt;- function(col_in, my_prob = 0.05) {
+  # Replaces outliers from a vector
+  #
+  # INPUTS: col_in The vector
+  #         my_prob Probability of quantiles (p and 1-p)
+  #
+  # OUTPUT: A vector
+  
+  # return if class is other than numeric
+  if (!(class(col_in) %in% c(&#39;numeric&#39;, &#39;integer&#39;))) return(col_in)
+  
+  my_outliers &lt;- stats::quantile(x = col_in,
+                                 probs = c(my_prob, 1-my_prob),
+                                 na.rm = TRUE)
+  
+  idx &lt;- (col_in &lt;= my_outliers[1])|(col_in &gt;= my_outliers[2])
+  col_in[idx] &lt;- NA
+  
+  return(col_in)
+  
+}
+
+# remove outlivers from vectors
+l_out &lt;- map(df_sp500, replace_outliers, my_prob = 0.025)
+
+df_sp500_nooutlier &lt;- na.omit(as_tibble(l_out))
+
+nrow_1 &lt;- nrow(df_sp500)
+nrow_2 &lt;- nrow(df_sp500_nooutlier)
+
+my_sol &lt;- nrow_1 - nrow_2</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>yfR::yf_get</code> function to import prices of the FTSE index (<code>'^ FTSE'</code>) from 2010-01-01 to 2021-01-01. Then, reconstruct the data at the annual frequency, defining each year’s value as the <strong>last</strong> observation of the period. Tip: see the <code>dplyr::summary_all</code> function for a functional way to aggregate all the columns of a <code>dataframe</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>ticker &lt;- &#39;^FTSE&#39;
+
+first_date &lt;- &#39;2010-01-01&#39;
+last_date &lt;- &#39;2021-01-01&#39;
+
+df_FTSE_daily &lt;- yfR::yf_get(ticker,
+                            first_date,
+                            last_date)
+
+# change from daily to annual
+df_FTSE_yearly &lt;- df_FTSE_daily |&gt;
+  mutate(ref_year = lubridate::year(ref_date)) |&gt;
+  group_by(ref_year) |&gt;
+  summarise_all(.funs = last)
+
+print(df_FTSE_yearly)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the same daily data as the FTSE and reconstruct the data at the monthly frequency, again using the <strong>first</strong> observation of the period.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>ticker &lt;- &#39;^FTSE&#39;
+first_date &lt;- &#39;2010-01-01&#39;
+last_date &lt;- &#39;2023-01-01&#39;
+
+df_FTSE_daily &lt;- yfR::yf_get(ticker,
+                            first_date,
+                            last_date)
+
+# change from daily to monthly
+df_FTSE_monthly &lt;- df_FTSE_daily |&gt;
+  mutate(ref_month = format(ref_date, &#39;%Y-%m-01&#39;)) |&gt;
+  group_by(ref_month) |&gt;
+  summarise_all(first)
+
+print(df_FTSE_monthly)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Download TESLA (TSLA) stock data with the <code>yfR</code> package for the last 500 days. Display the price line chart adjusted over time using the <strong>ggplot()</strong> function. Make sure that:</p>
+<ul>
+<li>x and y axes are correctly named;</li>
+<li>The chart has a title (“Prices for TESLA”), subtitle (“Data from YYYY-MM-DD to YYYY-MM-DD”) and a <em>caption</em> (“Solution for exercise 01, chapter 10 - afedR”).</li>
+</ul>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(yfR)
+library(ggplot2)
+
+tickers &lt;- &#39;TLSA&#39;
+
+df_tlsa&lt;- yf_get(tickers = tickers, 
+                 first_date = Sys.Date() - 500,
+                 last_date = Sys.Date())
+
+p &lt;- ggplot(df_tlsa, aes(x = ref_date, y = price_adjusted)) + 
+  geom_line() + 
+  labs(title = paste0(&#39;Prices for &#39;, tickers) ,
+       subtitle = paste0(&#39;Data from &#39;, min(df_tlsa$ref_date), &#39; to &#39;, 
+                         max(df_tlsa$ref_date)),
+       caption = &quot;Solution for exercise 01, chapter 10 - afedR&quot;)
+
+print(p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using the <code>yfR</code> package, download stock data for:</p>
+<ul>
+<li>APPLE INC. (AAPL)</li>
+<li>MICROSOFT CORPORATION (MSFT)</li>
+<li>AMAZON.COM, INC. (AMZN)</li>
+<li>ALPHABET INC. (GOOG)</li>
+</ul>
+<p>in the last 1500 days. Display stock prices with different line colors on the same graph. Adapt all other aspects of the graph from previous exercises such as title and axis labels.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(yfR)
+library(ggplot2)
+
+tickers &lt;- c(&#39;AAPL&#39;, 
+             &#39;MSFT&#39;,
+             &#39;AMZN&#39;,
+             &#39;GOOG&#39;) 
+
+df_stocks &lt;- yf_get(
+     tickers = tickers, 
+     first_date = Sys.Date() - 500,
+     last_date = Sys.Date()
+     )
+
+p &lt;- ggplot(df_stocks, aes(x = ref_date, 
+                           y = price_adjusted,
+                           color = ticker)) + 
+  geom_line() + 
+  labs(title = paste0(&#39;Prices for &#39;, tickers) ,
+       subtitle = paste0(&#39;Data from &#39;, min(df_stocks$ref_date), &#39; to &#39;, 
+                         max(df_stocks$ref_date)),
+       caption = &quot;Solution for exercise 02, chapter 10 - afedR&quot;)
+
+print(p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>For the previous plot, add dots in the lines.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(yfR)
+library(ggplot2)
+
+tickers &lt;- c(&#39;AAPL&#39;, 
+             &#39;MSFT&#39;,
+             &#39;AMZN&#39;,
+             &#39;GOOG&#39;) 
+
+df_stocks &lt;- yfR(tickers = tickers, 
+                             first_date = Sys.Date() - 500,
+                             last_date = Sys.Date())
+
+p &lt;- ggplot(df_stocks, aes(x = ref_date, 
+                           y = price_adjusted,
+                           color = ticker)) + 
+  geom_line() + 
+  labs(title = paste0(&#39;Prices for &#39;, tickers) ,
+       subtitle = paste0(&#39;Data from &#39;, min(df_stocks$ref_date), &#39; to &#39;, 
+                         max(df_stocks$ref_date)),
+       caption = &quot;Solution for exercise 03, chapter 10 - afedR&quot;)
+
+
+# add points
+p &lt;- p + geom_point()
+
+print(p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>For the same plot, separate the stock prices on different panels with the <code>ggplot::facet_wrap</code> function. Use the <code>scales = 'free'</code> argument to release the x and y axis of each panel.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(yfR)
+
+tickers &lt;- c(&#39;AAPL&#39;, 
+             &#39;MSFT&#39;,
+             &#39;AMZN&#39;,
+             &#39;GOOG&#39;) 
+
+df_stocks &lt;- yfR(
+  tickers = tickers, 
+  first_date = Sys.Date() - 500,
+  last_date = Sys.Date()) 
+
+p &lt;- ggplot(df_stocks, aes(x = ref_date, 
+                           y = price_adjusted,
+                           color = ticker)) + 
+  geom_line() + 
+  labs(title = paste0(&#39;Prices for &#39;, tickers) ,
+       subtitle = paste0(&#39;Data from &#39;, min(df_stocks$ref_date), &#39; to &#39;, 
+                         max(df_stocks$ref_date)),
+       caption = &quot;Solution for exercise 04, chapter 10 - afedR&quot;)
+
+# add points and facet wrap
+p &lt;- p + 
+  geom_point() + 
+  facet_wrap(~ticker, scales = &#39;free&#39;)
+
+print(p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Change the theme of the previous graph to a black and white scale, both for the graph area and for the colors of the lines.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(yfR)
+
+tickers &lt;- c(&#39;AAPL&#39;, 
+             &#39;MSFT&#39;,
+             &#39;AMZN&#39;,
+             &#39;GOOG&#39;) 
+
+df_stocks &lt;- yfR(tickers = tickers, 
+                             first_date = Sys.Date() - 500,
+                             last_date = Sys.Date())[[2]]
+
+p &lt;- ggplot(df_stocks, aes(x = ref_date, 
+                           y = price_adjusted,
+                           color = ticker)) + 
+  geom_line() + 
+  labs(title = paste0(&#39;Prices for &#39;, tickers) ,
+       subtitle = paste0(&#39;Data from &#39;, min(df_stocks$ref_date), &#39; to &#39;, 
+                         max(df_stocks$ref_date)),
+       caption = &quot;Solution for exercise 05, chapter 10 - afedR&quot;)
+
+# add points and facet_wrap
+p &lt;- p + geom_point() + 
+  facet_wrap(~ticker, scales = &#39;free&#39;) + 
+  theme_bw() + 
+  scale_color_grey()
+
+# 
+print(p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>For the previous data, present the histogram of the returns of the different stocks in different panels and save the result in a file called <code>'histograms.png'</code>.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(ggplot2)
+
+tickers &lt;- c(&#39;AAPL&#39;, 
+             &#39;MSFT&#39;,
+             &#39;AMZN&#39;,
+             &#39;GOOG&#39;) 
+
+df_stocks &lt;- yfR::yf_get(tickers, 
+                         Sys.Date() - 500,
+                         Sys.Date())
+
+p &lt;- ggplot(df_stocks, aes(x = ret_adjusted_prices)) + 
+  geom_histogram() + 
+  facet_wrap(~ticker)
+
+print(p)
+
+# save in temp folder
+my_file &lt;- file.path(tempdir(), &#39;histograms.png&#39;)
+ggsave(filename = my_file, plot = p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>yfR::yf_collection_get()</code> function to download the <strong>annual</strong> return data for all stocks in the DOW index, from 2015-01-01 to the current day. After that, create the average/variance map by plotting the average **annual* return as the y axis and the standard deviation as the x axis. Tip: You’ll find many outliers in the raw data. Make sure that the graph is visible limiting the x and y axes (see the <code>ggplot2::xlim</code> and <code>ggplot2::ylim</code> functions).</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(yfR)
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
+
+df_prices &lt;- yfR::yf_collection_get(
+  &#39;DOW&#39;,
+  first_date = &#39;2015-01-01&#39;,
+  freq_data = &#39;yearly&#39;
+  )
+
+tab &lt;- df_prices |&gt;
+  na.omit() |&gt;
+  group_by(ticker) |&gt;
+  summarise(mean = mean(ret_adjusted_prices),
+            sd = sd(ret_adjusted_prices))
+
+p &lt;- ggplot(tab, aes(x = sd, y = mean)) + 
+  geom_point() + 
+  xlim(0, 0.5) + ylim(-0.5, 0.5)
+
+print(p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Head over to the <a href="https://www.kaggle.com/datasets">Kaggle data website</a><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and choose a particular dataset for your analysis. It need not be related to economics or finance. Feel free to make a decision based on your own interests.</p>
+<p>After downloading the data, create a couple of hypothesis that you might have about the data. Create a visual analysis of the data that helps answering those hypothesis.</p>
+<br/>
+<h4>Solution</h4>
+<p>Head over to <a href="https://www.kaggle.com/datasets">https://www.kaggle.com/datasets</a>:</p>
+<ol style="list-style-type: decimal">
+<li>Choose a dataset</li>
+<li>Build a visualization plot of the chosen data</li>
+</ol>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Simulate the following linear process in R:</p>
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 100
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)</code></pre>
+<p>Now, estimate a linear model where <code>x</code> is the explanatory variable and <code>y</code> is the explained variable. Use the <code>summary</code> function on the estimation return object to get more details about the model. What is the estimated beta value of the simulated data?</p>
+<br/>
+<ol type="a">
+<li>
+0.4002792
+</li>
+<li>
+1.503832
+</li>
+<li>
+0.8707205
+</li>
+<li>
+0.2910268
+</li>
+<li>
+0.633111
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 100
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)
+
+my_lm &lt;- lm(formula = y ~ x, data = tibble::tibble(x, y))
+
+summary(my_lm)
+
+my_sol &lt;- coef(my_lm)[2]</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using the <strong>{car}</strong> package, test the joint hypothesis that the value of alpha is equal to 1.5 and the value of beta is equal to 0.5. What is the value of the resulting F test?</p>
+<br/>
+<ol type="a">
+<li>
+10.72713
+</li>
+<li>
+16.96681
+</li>
+<li>
+7.799261
+</li>
+<li>
+40.30135
+</li>
+<li>
+23.33454
+</li>
+</ol>
+<br/>
+<h4>Solution</h4>
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 100
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)
+
+my_lm &lt;- lm(formula = y ~ x, data = tibble::tibble(x, y))
+
+summary(my_lm)
+
+library(car)
+
+# set test matrix
+test_matrix &lt;- matrix(c(my_alpha,  # alpha test value
+                        my_beta))  # beta test value
+
+# hypothesis matrix 
+hyp_mat &lt;- matrix(c(1.5, 0,
+                    0  , 0.5),
+                  nrow = 2)
+
+# do test
+my_waldtest &lt;- linearHypothesis(my_lm, 
+                                hypothesis.matrix = hyp_mat, 
+                                rhs = test_matrix)
+
+# print result
+my_sol &lt;- my_waldtest$F[2]</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>gvlma</code> package to test the OLS assumptions for the model previously estimated. Does the model pass all tests? If not, increase the value of <code>n_row</code> to 1000 and try again. Did the increase in the number of observations of the model impact the assumptions test? In what way?</p>
+<br/>
+<h4>Solution</h4>
+<p>The estimated model has not passed all the tests. In fact, not even the increase in the number of observations in the simulation resulted in the approval of the model in all aspects.</p>
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 1000
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)
+
+my_lm &lt;- lm(formula = y ~ x, data = tibble::tibble(x, y))
+
+summary(my_lm)
+
+library(gvlma)
+
+# global validation of model
+gvmodel &lt;- gvlma(my_lm) 
+
+# print result
+summary(gvmodel)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use command <code>yfR::yf_index_composition("DOW")</code> to find the ticker of the components of the index and <code>yfR::yf_get</code> to download all available price data. Using the SP500 itself – ticker <code>'^GSPC'</code> – as the market index, calculate the beta for all stocks. Display the histogram of the estimated <em>betas</em>. Note that the SP500 returns are not available in the original database and must be downloaded and added to the original database.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(ggplot2)
+
+tickers &lt;- yfR::yf_index_composition(&quot;DOW&quot;)$ticker
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- yfR::yf_get(tickers, 
+                         first_date, 
+                         last_date)
+
+df_sp500 &lt;- yfR::yf_get(&#39;^GSPC&#39;, 
+                        first_date, 
+                        last_date)
+
+idx &lt;- match(df_stocks$ref_date, df_sp500$ref_date)
+df_stocks$ret_mkt &lt;- df_sp500$ret_closing_prices[idx]
+
+# calculate beta for each stock
+estimate_beta &lt;- function(df) {
+  # Function to estimate beta from dataframe of stocks returns
+  #
+  # Args:
+  #   df - Dataframe with columns ret and ret.sp500
+  #
+  # Returns:
+  #   The value of beta
+  
+  my_model &lt;- lm(data = df, 
+                 formula = ret_adjusted_prices ~ ret_mkt)
+  
+  return(coef(my_model)[2])
+}
+
+my_betas &lt;- by(data = df_stocks, 
+               INDICES = df_stocks$ticker, 
+               FUN = estimate_beta)
+
+glimpse(my_betas)
+
+# solution
+p &lt;- ggplot(tibble::tibble(betas = my_betas), aes(x = betas)) + 
+  geom_histogram()
+
+print(p)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>For previously imported data, estimate a panel data version for the market model (beta). In this version, each stock has a different intercept, but they share the same beta. Is the estimated beta significant at 5%?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(ggplot2)
+
+tickers &lt;- yfR::yf_index_composition(&quot;DOW&quot;)$ticker
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- yfR::yf_get(tickers, 
+                         first_date, 
+                         last_date)
+
+df_sp500 &lt;- yfR::yf_get(&#39;^GSPC&#39;, 
+                        first_date, 
+                        last_date)
+
+idx &lt;- match(df_stocks$ref_date, df_sp500$ref_date)
+df_stocks$ret_mkt &lt;- df_sp500$ret_closing_prices[idx]
+
+# calculate PLM beta
+library(plm)
+
+# estimate panel data model with fixed effects
+my_pdm &lt;- plm(data = df_stocks, 
+              formula = ret_adjusted_prices ~ ret_mkt, 
+              model = &#39;within&#39;,
+              index = c(&#39;ticker&#39;))
+
+# print result
+print(summary(my_pdm))</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using the tidyverse functions, <code>dplyr::group_by</code> and <code>dplyr::do</code>, estimate an ARIMA model for the returns of each stock, available from the import process of previous exercise. In the same output <code>dataframe</code>, create a new column with the forecast in <em>t + 1</em> for each model. Which stock has the highest expected return for <em>t + 1</em>?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+
+tickers &lt;- yfR::yf_index_composition(&quot;DOW&quot;)$ticker
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- yfR::yf_get(tickers, 
+                         first_date, 
+                         last_date)
+
+df_sp500 &lt;- yfR::yf_get(&#39;^GSPC&#39;, 
+                        first_date, 
+                        last_date)
+
+my_tab &lt;- df_stocks |&gt;
+  group_by(ticker) |&gt;
+  do(my_arima = arima(x = .$ret_adjusted_prices, 
+                      order = c(1,0,0))) |&gt;
+  mutate(arima_forecast = predict(my_arima, n.ahead = 1 )$pred[1])
+
+glimpse(my_tab)
+
+# solution
+idx &lt;- which.max(my_tab$arima_forecast )
+print(my_tab$ticker[idx])</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>In the same code used for the previous question, add a new column-list with the estimation of an ARMA (1, 0)-GARCH(1, 1) model for the returns of each stock. Add another column with the volatility forecast (standard deviation) at <em>t + 1</em>.</p>
+<p>By dividing the expected return calculated in the previous item by the expected risk, we have a market direction index, where those stocks with the highest index value have the highest ratio of expected return to risk. Which stock is more attractive and has the highest value of this index?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>tickers &lt;- yfR::yf_index_composition(&quot;DOW&quot;)$ticker
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- yfR::yf_get(tickers, 
+                         first_date, 
+                         last_date)
+
+df_sp500 &lt;- yfR::yf_get(&#39;^GSPC&#39;, 
+                        first_date, 
+                        last_date)
+
+library(dplyr)
+library(fGarch)
+
+tab_models &lt;- df_stocks |&gt;
+  na.omit() |&gt;
+  group_by(ticker) |&gt;
+  do(my_garch = garchFit(formula = ~ arma(1,0) + garch(1,1), 
+                         data = .$ret_adjusted_prices, 
+                         trace = FALSE) ) 
+
+tab_models &lt;- tab_models |&gt;
+  mutate(forecast_mean = predict(my_garch, 
+                                 n.ahead = 1)$meanForecast[1],
+         forecast_sd = predict(my_garch, 
+                               n.ahead = 1)$standardDeviation[1],
+         sharpe_index = forecast_mean/forecast_sd)
+
+glimpse(tab_models)
+
+# solution
+idx &lt;- which.max(tab_models$sharpe_index)
+print(tab_models$ticker[idx])</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using package <strong>{afedR3}</strong>, import the data from file CH11_grunfeld.csv and create a descriptive table of the variables. This table should provide enough information for the reader to understand the data. Use <strong>{xtable}</strong> package to report it in <em>LaTeX</em> or Word/Writer format.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(dplyr)
+
+my_f &lt;-  afedR3::data_path(&#39;CH11_grunfeld.csv&#39;)
+
+df_grunfeld &lt;- readr::read_csv(my_f, col_types = readr::cols())
+
+my_tab &lt;- tibble(nrows = nrow(df_grunfeld),
+                 ncol = ncol(df_grunfeld),
+                 n_companies = length(unique(df_grunfeld$firm)),
+                 n_years = length(unique(df_grunfeld$year)))
+
+my_tab
+
+library(xtable)
+
+# Save to lates
+# save to temp file
+my_tex_file &lt;- tempfile(pattern = &#39;table&#39;, fileext = &#39;.tex&#39;)
+print(xtable(my_tab), file = my_tex_file)
+
+readr::read_lines(my_tex_file)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Using the <code>yfR::yf_index_composition</code> function, select random 4 stocks with <code>set.seed(5)</code> from the SP500 index and download the adjusted price data for the last three years. Estimate an ARIMA(1, 0, 1) model for each stock and report the result on the R screen with the <code>texreg::screenreg</code> function.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>set.seed(5)
+
+library(dplyr)
+
+tickers &lt;- sample(yfR::yf_index_composition(&quot;SP500&quot;)$ticker, 4)
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- yfR::yf_get(tickers, 
+                         first_date, 
+                         last_date)
+
+my_tab &lt;- df_stocks |&gt;
+  na.omit() |&gt;
+  group_by(ticker) |&gt;
+  do(my_arima = arima(x = .$ret_adjusted_prices, 
+                      order = c(1, 0, 1))) 
+
+glimpse(my_tab)
+
+# solution
+library(texreg)
+
+screenreg(my_tab$my_arima)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Create a new <em>Rmarkdown</em> report from previous two exercises. Compile the report in html and open it in your <em>browser</em>.</p>
+<br/>
+<h4>Solution</h4>
+<p>See section @ref(creating-rmarkdown) – Creating Reports with <em>RMarkdown</em> – from the same chapter.</p>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Consider the following code:</p>
+<pre><code>library(forecast)
+
+ticker &lt;- &#39;^GSPC&#39;
+df_prices &lt;- yfR::yf_get(ticker, 
+                         &#39;2010-01-01&#39;)
+
+my_arima &lt;- forecast::auto.arima(df_prices$ret_adjusted_prices)
+summary(my_arima)</code></pre>
+<p>Use functions <code>Rprof</code> and <code>profvis</code> to identify the bottleneck of the code. Which line number is taking the longest execution time?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(fGarch)
+library(profvis)
+
+# set temporary file for results
+profiling_file &lt;-  tempfile(pattern = &#39;profiling_exercise&#39;, 
+                            fileext = &#39;.out&#39;)
+
+# initialize profiling
+Rprof(filename = profiling_file)
+
+# run code
+profiling &lt;- profvis(expr = {
+  
+  ticker &lt;- &#39;^GSPC&#39;
+  df_prices &lt;- yfR::yf_get(ticker, 
+                         &#39;2010-01-01&#39;)
+
+  my_arima &lt;- forecast::auto.arima(df_prices$ret_adjusted_prices)
+  summary(my_arima)
+})
+
+# create visualization
+temp_html &lt;- tempfile(pattern = &#39;profile&#39;,
+                      fileext = &#39;.html&#39;)
+
+htmlwidgets::saveWidget(profiling, temp_html)
+
+# open in browser from R
+browseURL(temp_html)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <code>Rcpp</code> package to write a C++ language function that will add elements of two numerical vectors. The output must be another vector of the same size and with elements equivalent to the <code>x + y</code> operation. Use the <code>identical</code> function to test that all elements of both vectors are equal.</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(Rcpp)
+
+cppFunction(&#39;Rcpp::NumericVector sum_vectors_C(NumericVector x, NumericVector y) {
+  int n = x.size();
+  
+  Rcpp::NumericVector total(x.size());
+  
+  for(int i = 0; i &lt; n; ++i) {
+    total[i] = x[i] + y[i];
+  }
+  return total;
+}&#39;)
+
+x &lt;- runif(100)
+y &lt;- runif(100)
+
+sol_C &lt;- sum_vectors_C(x, y)
+sol_R &lt;- x + y
+
+identical(sol_C, sol_R)</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <strong>{tictoc}</strong> package to compare the performance of the previous function with the native operator <code>+</code>, and a loop-based version with the pre-allocation of the result vector. Which alternative has the shortest execution time and why? Does the <code>Rcpp</code> version beat the loop version?</p>
+<br/>
+<h4>Solution</h4>
+<p>The best way to add vectors is with the native operator <code>+</code>, which is already optimized for fast executions.</p>
+<pre><code>library(Rcpp)
+
+cppFunction(&#39;Rcpp::NumericVector sum_vectors_C(NumericVector x, NumericVector y) {
+  int n = x.size();
+  
+  Rcpp::NumericVector total(x.size());
+  
+  for(int i = 0; i &lt; n; ++i) {
+    total[i] = x[i] + y[i];
+  }
+  return total;
+}&#39;)
+
+x &lt;- runif(100)
+y &lt;- runif(100)
+
+sol_C &lt;- sum_vectors_C(x, y)
+sol_R &lt;- x + y
+
+identical(sol_C, sol_R)
+
+library(tictoc)
+
+tic(&#39;Using Rcpp&#39;)
+sol_C &lt;- sum_vectors_C(x, y)
+toc()
+
+tic(&#39;Using base R&#39;)
+sol_R &lt;- x + y
+toc()
+
+tic(&#39;Using a loop and prealocation&#39;)
+sol_loop &lt;- numeric(length = length(x))
+for (i in 1:length(x)) {
+  sol_loop[i] &lt;- x[i] + y[i]
+}
+toc()</code></pre>
+<br/>
+</li>
+<li>
+<h4>Question</h4>
+<p>Use the <strong>{memoise}</strong> package to create a memorized version of function <code>Quandl::Quandl</code>. Use the new function to import data about the United States Consumer Price Index (quandl code <code>'FRED/DDOE01USA086NWDB'</code>). How much percentage speed gain do you get from the second call to the memorized version?</p>
+<br/>
+<h4>Solution</h4>
+<pre><code>library(Quandl)
+library(memoise)
+library(tictoc)
+
+mem_quandl &lt;- memoise(f = Quandl, cache = cache_memory())
+
+id &lt;- &#39;FRED/DDOE01USA086NWDB&#39;
+
+tic(&#39;Using original Quandl&#39;)
+df &lt;- Quandl(code = id)
+toc()
+
+tic(&#39;Using memoise version (first call)&#39;)
+df &lt;- mem_quandl(code = id)
+toc()
+
+tic(&#39;Using memoise version (second call)&#39;)
+df &lt;- mem_quandl(code = id)
+toc()</code></pre>
+<br/>
+</li>
+</ol>
+
+</body>
+</html>

@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introdução ao R - 7&nbsp; Importação de Dados via Pacotes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./08-objetos-armazenamento.html" rel="next">
+<link href="./06-importacao-exportacao-dados-locais.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR8PLMG1G7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FR8PLMG1G7');
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-importacao-internet.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Importação de Dados via Pacotes</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introdução ao R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefácio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introdução.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-como-o-r-funciona.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Como o R Funciona?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introdução ao RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-pacotes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pacotes do R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-interagindo-computador-internet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Interagindo com o Sistema Operacional e a Internet</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-importacao-exportacao-dados-locais.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Importação e Exportação de Dados Locais</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-importacao-internet.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Importação de Dados via Pacotes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-objetos-armazenamento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dataframes e outros Objetos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-objetos-basicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">As Classes Básicas de Objetos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-intro-programacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introdução a Programação com o R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referências Bibliográficas</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#pacote-yfr-r-yfr" id="toc-pacote-yfr-r-yfr" class="nav-link active" data-scroll-target="#pacote-yfr-r-yfr"><span class="header-section-number">7.1</span> Pacote <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(M. Perlin 2023b)</span></a>
+  <ul class="collapse">
+  <li><a href="#baixando-dados-da-composição-do-ibovespa" id="toc-baixando-dados-da-composição-do-ibovespa" class="nav-link" data-scroll-target="#baixando-dados-da-composição-do-ibovespa"><span class="header-section-number">7.1.1</span> Baixando Dados da Composição do Ibovespa</a></li>
+  </ul></li>
+  <li><a href="#pacote-gettddata-r-gettddata" id="toc-pacote-gettddata-r-gettddata" class="nav-link" data-scroll-target="#pacote-gettddata-r-gettddata"><span class="header-section-number">7.2</span> Pacote <strong>{GetTDData}</strong> <span class="citation" data-cites="R-GetTDData">(M. Perlin 2023a)</span></a></li>
+  <li><a href="#pacote-getbcbdata-r-getbcbdata" id="toc-pacote-getbcbdata-r-getbcbdata" class="nav-link" data-scroll-target="#pacote-getbcbdata-r-getbcbdata"><span class="header-section-number">7.3</span> Pacote <strong>{GetBCBData}</strong> <span class="citation" data-cites="R-GetBCBData">(M. Perlin 2022)</span></a></li>
+  <li><a href="#pacote-getdfpdata2-r-getdfpdata2" id="toc-pacote-getdfpdata2-r-getdfpdata2" class="nav-link" data-scroll-target="#pacote-getdfpdata2-r-getdfpdata2"><span class="header-section-number">7.4</span> Pacote <strong>{GetDFPData2}</strong> <span class="citation" data-cites="R-GetDFPData2">(M. Perlin and Kirch 2023)</span></a></li>
+  <li><a href="#pacote-getfredata-r-getfredata" id="toc-pacote-getfredata-r-getfredata" class="nav-link" data-scroll-target="#pacote-getfredata-r-getfredata"><span class="header-section-number">7.5</span> Pacote <strong>{GetFREData}</strong> <span class="citation" data-cites="R-GetFREData">(M. Perlin and Kirch 2022)</span></a></li>
+  <li><a href="#outros-pacotes" id="toc-outros-pacotes" class="nav-link" data-scroll-target="#outros-pacotes"><span class="header-section-number">7.6</span> Outros Pacotes</a>
+  <ul class="collapse">
+  <li><a href="#pacotes-de-acesso-gratuito" id="toc-pacotes-de-acesso-gratuito" class="nav-link" data-scroll-target="#pacotes-de-acesso-gratuito"><span class="header-section-number">7.6.1</span> Pacotes de Acesso Gratuito</a></li>
+  <li><a href="#pacotes-comerciais" id="toc-pacotes-comerciais" class="nav-link" data-scroll-target="#pacotes-comerciais"><span class="header-section-number">7.6.2</span> Pacotes Comerciais</a></li>
+  </ul></li>
+  <li><a href="#acessando-dados-de-páginas-na-internet-webscraping" id="toc-acessando-dados-de-páginas-na-internet-webscraping" class="nav-link" data-scroll-target="#acessando-dados-de-páginas-na-internet-webscraping"><span class="header-section-number">7.7</span> Acessando Dados de Páginas na Internet (<em>Webscraping</em>)</a>
+  <ul class="collapse">
+  <li><a href="#raspando-dados-do-wikipedia" id="toc-raspando-dados-do-wikipedia" class="nav-link" data-scroll-target="#raspando-dados-do-wikipedia"><span class="header-section-number">7.7.1</span> Raspando Dados do Wikipedia</a></li>
+  </ul></li>
+  <li><a href="#exerc-importacao-pacotes" id="toc-exerc-importacao-pacotes" class="nav-link" data-scroll-target="#exerc-importacao-pacotes"><span class="header-section-number">7.8</span> Exercícios</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="importacao-pacotes" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Importação de Dados via Pacotes</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Uma das grandes vantagens de se utilizar o R é a quantidade de dados que podem ser importados através da internet. Isso é especialmente prático pois uma base de dados pode ser atualizada através de um simples comando, evitando o tedioso trabalho de coleta manual. Ao usarmos pacotes para importar dados, esta etapa da pesquisa se torna reproduzível e mais rápida, facilitando o compartilhamento e futura execução do nosso código.</p>
+<p>Neste capítulo vou descrever e dar exemplos de importação de dados para os mais importantes e estáveis pacotes especializados na importação de para dados financeiros e econômicos no Brasil e exterior. A lista inclui:</p>
+<dl>
+<dt><strong>{GetQuandlData}</strong> <span class="citation" data-cites="R-GetQuandlData">(<a href="99-references.html#ref-R-GetQuandlData" role="doc-biblioref">M. S. Perlin 2023</a>)</span> <span class="citation" data-cites="R-GetQuandlData">(<a href="99-references.html#ref-R-GetQuandlData" role="doc-biblioref">M. S. Perlin 2023</a>)</span></dt>
+<dd>
+Importa dados econômicos e financeiros do vasto repositório de dados da plataforma <em>Quandl</em>.
+</dd>
+<dt><strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span> <span class="citation" data-cites="R-BatchGetSymbols">(<a href="99-references.html#ref-R-BatchGetSymbols" role="doc-biblioref"><strong>R-BatchGetSymbols?</strong></a>)</span></dt>
+<dd>
+Importa dados de preços diários de ações e índices do <em>Yahoo Finance</em>.
+</dd>
+<dt><strong>{GetTDData}</strong> <span class="citation" data-cites="R-GetTDData">(<a href="99-references.html#ref-R-GetTDData" role="doc-biblioref">M. Perlin 2023a</a>)</span> <span class="citation" data-cites="R-GetTDData">(<a href="99-references.html#ref-R-GetTDData" role="doc-biblioref">M. Perlin 2023a</a>)</span></dt>
+<dd>
+Importa dados de títulos de dívida pública do Brasil diretamente do site do Tesouro Direto.
+</dd>
+<dt><strong>{GetBCBData}</strong> <span class="citation" data-cites="R-GetBCBData">(<a href="99-references.html#ref-R-GetBCBData" role="doc-biblioref">M. Perlin 2022</a>)</span> <span class="citation" data-cites="R-GetBCBData">(<a href="99-references.html#ref-R-GetBCBData" role="doc-biblioref">M. Perlin 2022</a>)</span></dt>
+<dd>
+Importa dados do grande repositório de séries temporais do Banco Central do Brasil, local obrigatório para qualquer economista que trabalha com dados.
+</dd>
+<dt><strong>{GetDFPData2}</strong> <span class="citation" data-cites="R-GetDFPData2">(<a href="99-references.html#ref-R-GetDFPData2" role="doc-biblioref">M. Perlin and Kirch 2023</a>)</span> <span class="citation" data-cites="R-GetDFPData2">(<a href="99-references.html#ref-R-GetDFPData2" role="doc-biblioref">M. Perlin and Kirch 2023</a>)</span></dt>
+<dd>
+Importa dados do sistema DFP – Demonstrativos Financeiros Padronizados – de empresas negociadas na B3, a bolsa Brasileira. O repositório inclui documentos financeiros tal como o balanço patrimonial, demonstrativos de resultados, entre vários outros.
+</dd>
+<dt><strong>{GetFREData}</strong> <span class="citation" data-cites="R-GetFREData">(<a href="99-references.html#ref-R-GetFREData" role="doc-biblioref">M. Perlin and Kirch 2022</a>)</span> <span class="citation" data-cites="R-GetFREData">(<a href="99-references.html#ref-R-GetFREData" role="doc-biblioref">M. Perlin and Kirch 2022</a>)</span></dt>
+<dd>
+Importa dados do sistema FRE – Formulário de Referência – da bolsa Brasileira. Esta inclui diversos eventos e informações corporativas tal como composição do conselho e diretoria, remuneração dos conselheiros, entre outras.
+</dd>
+</dl>
+<section id="pacote-yfr-r-yfr" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="pacote-yfr-r-yfr"><span class="header-section-number">7.1</span> Pacote <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span></h2>
+<p></p>
+<p>Pacote <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span> faz a comunicação do R com os dados financeiros disponíveis no <em>Yahoo Finance</em>. Essa gigantesca base de dados inclui valores agregados de preços e volumes negociados de ações na B3 e outras bolsas internacionais na frequência diária. Tudo que se precisa saber para acessar a base de dados são os identificadores das ações (<em>tickers</em>) e um período de tempo.</p>
+<p>Os diferenciais do <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span> são:</p>
+<p><strong>Limpeza e organização</strong>: todos os dados financeiros de diferentes <em>tickers</em> são mantidos no mesmo <code>dataframe</code>, facilitando a análise futura com as ferramentas do <strong>{tidyverse}</strong> <span class="citation" data-cites="R-tidyverse">(<a href="99-references.html#ref-R-tidyverse" role="doc-biblioref">Wickham 2023</a>)</span>.</p>
+<p><strong>Controle de erros de importação</strong>: todos erros de <em>download</em> são registrados na saída do programa. Caso uma ação em particular não exista no <em>Yahoo Finance</em>, esta será ignorada e apenas as demais disponíveis serão retornadas na saída do código;</p>
+<p><strong>Comparação de datas a um <em>benchmark</em></strong>: os dados de ativos individuais são comparados com dados disponíveis para um ativo <em>benchmark</em>, geralmente um índice de mercado. Caso o número de datas faltantes seja maior que um determinado limite imposto pelo usuário, a ação é retirada do <code>dataframe</code> final.</p>
+<p><strong>Uso de sistema de cache</strong>: no momento de acesso aos dados, os mesmos são salvos localmente no computador do usuário e são persistentes para cada sessão. Caso o usuário requisitar os mesmos dados na mesma sessão do R, o sistema de cache será utilizado. Se os dados desejados não estão disponíveis no cache, a função irá comparar e baixar apenas as informações que faltam. Isso aumenta significativamente a velocidade de acesso aos dados, ao mesmo tempo em que minimiza o uso da conexão a Internet;</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Desde versão 2.6 (2020-11-22) de <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span> a pasta <em>default</em> de cache do <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span> se localiza no diretório temporário da sessão do R. Assim, o cache é persistente apenas para a sessão do usuário. Esta mudança foi motivada por quebras estruturais nos dados do <em>Yahoo Finance</em>, onde os dados passados registrados em cache não mais estavam corretos devido a eventos coporativos. O usuário, porém, pode trocar a pasta de cache usando a entrada <code>cache.folder</code>.</p>
+</div>
+</div>
+<p><strong>Acesso a <em>tickers</em> em índices de mercado</strong>: O pacote inclui funções para baixar a composição dos índices Ibovespa, SP500 e FTSE100. Isso facilita a importação de dados para uma grande quantidade de ações. Podes, por exemplo, baixar cotações de todas as ações que fazem parte de certo índice.</p>
+<p><strong>Processamento paralelo</strong>: Caso o usuário estiver baixando um grande volume de dados do <em>Yahoo Finance</em>, uma opção para execução paralela está disponível. Isto é, ao invés de usar apenas um núcleo na requisição dos dados, usamos vários ao mesmo tempo. O efeito prático é, dependendo do número de núcleos do computador, uma diminuição significativa no tempo total de importação.</p>
+<p><strong>Flexibilidade de formato</strong>: O pacote também oferece funções para modificar o formato dos dados. Caso o usuário deseje uma saída do <code>dataframe</code> no formato largo, onde <em>tickers</em> são colunas e as linhas os preços/retornos, basta chamar função <code>BatchGetSymbols::reshape.wide</code>. Da mesma forma, uma transformação temporal também é possível. Se o usuário desejar dados na frequência semanal, mensal ou anual, basta indicar na entrada <code>freq.data</code> da função.</p>
+<p>Como exemplo de uso, vamos baixar dados financeiros referentes a quatro ações no último ano (360 dias) usando a função de mesmo nome do pacote. Os <em>tickers</em> de cada ação podem ser encontrados nos próprios sites do <a href="https://br.financas.yahoo.com/"><em>Yahoo Finance</em></a>. Note que adicionamos texto <code>.SA</code> a cada um deles. Essa é uma notação específica do site e vale para qualquer ação Brasileira.</p>
+<p>Na chamada da função <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span>, utilizamos um valor de <code>0.95</code> (95%) para o <em>input</em> <code>thresh.bad.data</code> e <code>'^BVSP'</code> para <code>bench.ticker</code>. Isso faz com que a função compare as datas obtidas para cada ativo em relação ao nosso <em>benchmark</em>, o índice Ibovespa, cujo <em>ticker</em> no <em>Yahoo Finance</em> é <code>^BVSP</code>. Se, durante o processo de importação, uma ação individual não apresenta mais de 95% de casos válidos em relação ao <em>benchmark</em>, esta é retirada da saída.</p>
+<p> </p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BatchGetSymbols)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set tickers</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>my_tickers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'PETR4.SA'</span>, <span class="st">'CIEL3.SA'</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">'GGBR4.SA'</span>, <span class="st">'GOAU4.SA'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set dates and other inputs</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>first_date <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()<span class="sc">-</span><span class="dv">360</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>last_date <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>thresh_bad_data <span class="ot">&lt;-</span> <span class="fl">0.95</span>   <span class="co"># sets percent threshold for bad data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>bench_ticker <span class="ot">&lt;-</span> <span class="st">'^BVSP'</span>   <span class="co"># set benchmark as ibovespa</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>l_out <span class="ot">&lt;-</span> <span class="fu">BatchGetSymbols</span>(<span class="at">tickers =</span> my_tickers,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">first.date =</span> first_date,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">last.date =</span> last_date,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">bench.ticker =</span> bench_ticker,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">thresh.bad.data =</span> thresh_bad_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; Warning: `BatchGetSymbols()` was deprecated in BatchGetSymbols
+R&gt; 2.6.4.
+R&gt; ℹ Please use `yfR::yf_get()` instead.
+R&gt; ℹ 2022-05-01: Package BatchGetSymbols will soon be replaced
+R&gt;   by yfR.  More details about the change is available at
+R&gt;   github &lt;&lt;www.github.com/msperlin/yfR&gt; You can install yfR
+R&gt;   by executing:
+R&gt; 
+R&gt; remotes::install_github('msperlin/yfR')</code></pre>
+</div>
+</div>
+<p>A saída de <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span> é um objeto do tipo lista, ainda não visto no livro. Por enquanto, tudo que precisas saber é que uma lista é um objeto flexível, acomodando outros objetos em sua composição. O acesso a cada elemento de uma lista pode ser feito pelo operador <code>$</code>. No capítulo @ref(classe-estrutura) iremos estudar melhor esta classe de objetos.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note que as entradas da função <code>BatchGetSymbols::BatchGetSymbols</code> usam o “.” em seus nomes, tal como <code>thresh.bad.data</code>, e <code>bench.ticker</code>, enquanto o livro está escrito usando o traço baixo (<code>_</code>), tal como <code>thresh_bad_data</code>, e <code>bench_ticker</code>. Esta diferença pode resultar em problemas se, na falta de atenção, o usuário trocar um pelo outro. Como regra, procure dar prioridade para o uso de traço baixo nos nomes de objetos. Infelizmente algumas funções escritas no passado acabaram ficando com a estrutura antiga e, para não prejudicar os usuários, os nomes das entradas foram mantidos.</p>
+</div>
+</div>
+<p>Voltando ao nosso exemplo, função <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span> retorna uma lista com dois elementos: um <code>dataframe</code> com o resultado do processo de importação – <code>df_control</code> – e outro <code>dataframe</code> com os dados das ações – <code>df_tickers</code>. Vamos checar o conteúdo do primeiro dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print result of download process</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(l_out<span class="sc">$</span>df.control)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; # A tibble: 4 × 6
+R&gt;   ticker   src   download.status total.obs
+R&gt;   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;               &lt;int&gt;
+R&gt; 1 PETR4.SA yahoo OK                    244
+R&gt; 2 CIEL3.SA yahoo OK                    244
+R&gt; 3 GGBR4.SA yahoo OK                    244
+R&gt; 4 GOAU4.SA yahoo OK                    244
+R&gt; # ℹ 2 more variables: perc.benchmark.dates &lt;dbl&gt;,
+R&gt; #   threshold.decision &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Objeto <code>df.control</code> mostra que todos <em>tickers</em> foram válidos, com um total de 244 observações para cada ativo. Note que as datas batem 100% com o Ibovespa (coluna <code>perc.benchmark.dates</code>).</p>
+<p>Quanto aos dados financeiros, esses estão contidos em <code>l_out$df.tickers</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print df_tickers</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(l_out<span class="sc">$</span>df.tickers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 976
+R&gt; Columns: 10
+R&gt; $ price.open          &lt;dbl&gt; 24.41, 24.11, 25.84, 25.00, 25…
+R&gt; $ price.high          &lt;dbl&gt; 24.50, 25.62, 26.03, 25.95, 26…
+R&gt; $ price.low           &lt;dbl&gt; 23.83, 24.11, 25.00, 24.79, 25…
+R&gt; $ price.close         &lt;dbl&gt; 24.04, 25.52, 25.07, 25.89, 26…
+R&gt; $ volume              &lt;dbl&gt; 31973700, 91797500, 69692900, …
+R&gt; $ price.adjusted      &lt;dbl&gt; 18.62798, 19.77480, 19.42610, …
+R&gt; $ ref.date            &lt;date&gt; 2023-01-16, 2023-01-17, 2023-…
+R&gt; $ ticker              &lt;chr&gt; "PETR4.SA", "PETR4.SA", "PETR4…
+R&gt; $ ret.adjusted.prices &lt;dbl&gt; NA, 0.061564070, -0.017633247,…
+R&gt; $ ret.closing.prices  &lt;dbl&gt; NA, 0.061564039, -0.017633258,…</code></pre>
+</div>
+</div>
+<p>Como esperado, a informação sobre preços, retornos e volumes está lá, com as devidas classes de colunas: <em>dbl</em> (<em>double</em>) para valores numéricos e <em>date</em> para as datas. Observe que uma coluna chamada <code>ticker</code> também está incluída. Essa indica em que linhas da tabela os dados de uma ação começam e terminam. Mais tarde, no capítulo @ref(limpando-estruturando), usaremos essa coluna para fazer diversos cálculos para cada ação.</p>
+<section id="baixando-dados-da-composição-do-ibovespa" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="baixando-dados-da-composição-do-ibovespa"><span class="header-section-number">7.1.1</span> Baixando Dados da Composição do Ibovespa</h3>
+<p>Outra função útil do pacote é <code>BatchGetSymbols::GetIbovStocks</code>, a qual importa a composição atual do índice Ibovespa diretamente do site da B3. Esse índice é um termômetro do mercado local e as ações que o compõem são selecionadas devido sua alta negociabilidade. Portanto, sequenciando o uso de <code>GetIbovStocks</code> e <strong>{yfR}</strong> <span class="citation" data-cites="R-yfR">(<a href="99-references.html#ref-R-yfR" role="doc-biblioref">M. Perlin 2023b</a>)</span>, podemos facilmente baixar uma volumosa quantidade de dados de ações para o mercado Brasileiro. Considere o seguinte fragmento de código, onde realizamos essa operação: </p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BatchGetSymbols)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set tickers</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>df_ibov <span class="ot">&lt;-</span> <span class="fu">GetIbovStocks</span>()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>my_tickers <span class="ot">&lt;-</span> <span class="fu">paste0</span>(df_ibov<span class="sc">$</span>tickers,<span class="st">'.SA'</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set dates and other inputs</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>first_date <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()<span class="sc">-</span><span class="dv">30</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>last_date <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>thresh_bad_data <span class="ot">&lt;-</span> <span class="fl">0.95</span>   <span class="co"># sets percent threshold for bad data</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>bench_ticker <span class="ot">&lt;-</span> <span class="st">'^BVSP'</span>   <span class="co"># set benchmark as ibovespa</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>cache_folder <span class="ot">&lt;-</span> <span class="st">'data/BGS_Cache'</span> <span class="co"># set folder for cache</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>l_out <span class="ot">&lt;-</span> <span class="fu">BatchGetSymbols</span>(<span class="at">tickers =</span> my_tickers,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">first.date =</span> first_date,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">last.date =</span> last_date,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">bench.ticker =</span> bench_ticker,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>                         <span class="at">thresh.bad.data =</span> thresh_bad_data,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                         <span class="at">cache.folder =</span> cache_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note que utilizamos a função <strong>paste0()</strong> para adicionar o texto <code>'.SA'</code> para cada <em>ticker</em> em <code>df_ibov$tickers</code>. A saída do código anterior não foi mostrada para não encher páginas e páginas com as mensagens do processamento. Destaco que, caso necessário, poderíamos facilmente exportar os dados em <code>l_out</code> para um arquivo <code>.rds</code> e futuramente carregá-los localmente para realizar algum tipo de análise.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Cuidado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Saiba que <strong>os preços do Yahoo Finance não são ajustados a dividendos</strong>. O ajuste realizado pelo sistema é apenas para desdobramentos das ações. Isso significa que, ao olhar séries de preços em um longo período, existe um viés de retorno para baixo. Ao comparar com outro software que faça o ajustamento dos preços por dividendos, verás uma grande diferença na rentabilidade total das ações. Como regra, em uma pesquisa formal, <strong>evite usar dados de ações individuais no Yahoo Finance para períodos longos</strong>. A excessão é para índices financeiros, tal como o Ibovespa, onde os dados do Yahoo Finance são bastante confiáveis uma vez que índices não sofrem os mesmos ajustamentos que ações individuais.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="pacote-gettddata-r-gettddata" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="pacote-gettddata-r-gettddata"><span class="header-section-number">7.2</span> Pacote <strong>{GetTDData}</strong> <span class="citation" data-cites="R-GetTDData">(<a href="99-references.html#ref-R-GetTDData" role="doc-biblioref">M. Perlin 2023a</a>)</span></h2>
+<p>Arquivos com informações sobre preços e retornos de títulos emitidos pelo governo brasileiro podem ser baixados manualmente no site do <a href="https://www.tesourodireto.com.br/">Tesouro Nacional</a>. O tesouro direto é um tipo especial de mercado onde pessoa física pode comprar e vender dívida pública. Os contratos de dívida vendidos na plataforma são bastante populares devido a atratividade das taxas de retorno e a alta liquidez oferecida ao investidor comum.</p>
+<p>Pacote <strong>{GetTDData}</strong> <span class="citation" data-cites="R-GetTDData">(<a href="99-references.html#ref-R-GetTDData" role="doc-biblioref">M. Perlin 2023a</a>)</span> importa os dados das planilhas em Excel do site do Tesouro Nacional e os organiza. O resultado é um <code>dataframe</code> com dados empilhados. Como exemplo, vamos baixar dados de um título prefixado do tipo LTN com vencimento em 2021-01-01. Esse é o tipo de contrato de dívida mais simples que o governo brasileiro emite, não pagando nenhum cupom<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> durante sua validade e, na data de vencimento, retorna 1.000 R$ ao comprador. Para baixar os dados da internet, basta usar o código a seguir:</p>
+<p> </p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GetTDData)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>asset_codes <span class="ot">&lt;-</span> <span class="st">'LTN'</span>   <span class="co"># Identifier of assets</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>maturity <span class="ot">&lt;-</span> <span class="st">'010121'</span>  <span class="co"># Maturity date as string (ddmmyy)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># download and read files</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>df_TD <span class="ot">&lt;-</span> <span class="fu">td_get</span>(asset_codes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ── Downloading TD files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2005.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2005.xls' is found, with size 252.9 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2006.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2006.xls' is found, with size 288.8 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2007.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2007.xls' is found, with size 260.1 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2008.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2008.xls' is found, with size 259.6 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2009.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2009.xls' is found, with size 191.0 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2010.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2010.xls' is found, with size 148.5 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2011.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2011.xls' is found, with size 161.8 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2012.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2012.xls' is found, with size 144.9 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2013.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2013.xls' is found, with size 147.5 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2014.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2014.xls' is found, with size 147.5 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2015.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2015.xls' is found, with size 142.3 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2016.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2016.xls' is found, with size 176.1 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2017.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2017.xls' is found, with size 174.6 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2018.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2018.xls' is found, with size 174.6 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2019.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2019.xls' is found, with size 177.2 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2020.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2020.xls' is found, with size 176.1 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2021.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2021.xls' is found, with size 175.1 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2022.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2022.xls' is found, with size 175.6 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2023.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2023.xls' is found, with size 146.9 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2024.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2024.xls' is found, with size 20.5 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ── Checking files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔ Found 20 files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ── Reading files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2005.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 040105</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010405</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010705</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011005</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010106</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010406</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010706</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011006</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010107</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010407</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010707</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010108</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2006.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010406</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010706</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011006</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010107</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010407</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010707</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011007</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010108</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010408</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010109</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2007.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010407</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010707</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011007</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010108</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010408</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011008</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010109</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010709</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011009</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010110</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2008.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010408</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011008</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010109</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010409</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010709</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011009</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010110</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010710</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2009.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010409</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010709</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011009</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010110</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010710</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010112</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2010.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010710</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010711</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010112</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010113</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2011.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010711</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010112</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010113</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010114</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2012.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010113</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010114</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2013.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010114</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2014.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2015.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2016.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010119</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2017.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010119</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010120</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2018.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010119</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010120</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2019.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010120</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010122</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2020.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010122</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2021.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010122</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2022.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010129</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2023.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010129</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2024.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010129</code></pre>
+</div>
+</div>
+<p>Vamos checar o conteúdo do dataframe:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb197"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check content</span></span>
+<span id="cb197-2"><a href="#cb197-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df_TD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 24,465
+R&gt; Columns: 5
+R&gt; $ ref_date   &lt;date&gt; 2005-01-03, 2005-01-03, 2005-01-04, 20…
+R&gt; $ yield_bid  &lt;dbl&gt; 0.1774, 0.1836, 0.1839, 0.1841, 0.1842,…
+R&gt; $ price_bid  &lt;dbl&gt; 1000.00, 960.66, 961.24, 961.85, 962.48…
+R&gt; $ asset_code &lt;chr&gt; "LTN 040105", "LTN 010405", "LTN 010405…
+R&gt; $ matur_date &lt;date&gt; 2005-01-04, 2005-04-01, 2005-04-01, 20…</code></pre>
+</div>
+</div>
+<p>Temos informações sobre data de referência (<code>ref.date</code>), retorno contratado (<code>yield.bid</code>), preço do contrato na data (<code>price.bid</code>), nome do contrato (<code>asset.code</code>) e dia de maturidade (<code>matur.date</code>). No gráfico a seguir checamos os dados:</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; Warning: Using `size` aesthetic for lines was deprecated in ggplot2
+R&gt; 3.4.0.
+R&gt; ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="07-importacao-internet_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Como esperado de um título de dívida pré-fixado, os preços possuem uma tendência positiva ao longo do tempo, chegando ao valor esperado de 1000 R$ no vencimento em 2021-01-01. Podemos também visualizar as mudanças do <em>yield</em> do título:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="07-importacao-internet_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Os retornos do título tiveram forte queda ao longo dos anos. Este resultado é esperado pois o juros do mercado – taxa SELIC – caiu bastante nos últimos cinco anos.</p>
+<p>As funções do <strong>{GetTDData}</strong> <span class="citation" data-cites="R-GetTDData">(<a href="99-references.html#ref-R-GetTDData" role="doc-biblioref">M. Perlin 2023a</a>)</span> também funcionam com vários argumentos como <code>asset.codes</code> e <code>maturity</code>. Suponhamos que desejamos visualizar todos os preços de todos os prazos disponíveis para títulos do tipo LTN a partir de 2010. Tudo o que precisamos fazer é adicionar o valor <code>NULL</code> ao argumento <code>maturity</code> e filtrar as datas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb200"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb200-1"><a href="#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GetTDData)</span>
+<span id="cb200-2"><a href="#cb200-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb200-3"><a href="#cb200-3" aria-hidden="true" tabindex="-1"></a>asset_codes <span class="ot">&lt;-</span> <span class="st">'LTN'</span>   <span class="co"># Name of asset</span></span>
+<span id="cb200-4"><a href="#cb200-4" aria-hidden="true" tabindex="-1"></a>maturity <span class="ot">&lt;-</span> <span class="cn">NULL</span>      <span class="co"># = NULL, downloads all maturities</span></span>
+<span id="cb200-5"><a href="#cb200-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb200-6"><a href="#cb200-6" aria-hidden="true" tabindex="-1"></a><span class="co"># download data</span></span>
+<span id="cb200-7"><a href="#cb200-7" aria-hidden="true" tabindex="-1"></a>df_TD <span class="ot">&lt;-</span> <span class="fu">td_get</span>(asset_codes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ── Downloading TD files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2005.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2006.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2007.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2008.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2009.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2010.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2011.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2012.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2013.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2014.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2015.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2016.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2017.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2018.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2019.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2020.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2021.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2022.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2023.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Found file in folder, skipping it.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Downloading LTN_2024.xls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2024.xls' is found, with size 20.5 kB.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ── Checking files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔ Found 20 files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ── Reading files</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2005.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 040105</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010405</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010705</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011005</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010106</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010406</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010706</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011006</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010107</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010407</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010707</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010108</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2006.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010406</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010706</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011006</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010107</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010407</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010707</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011007</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010108</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010408</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010109</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2007.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010407</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010707</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011007</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010108</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010408</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011008</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010109</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010709</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011009</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010110</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2008.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010408</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010708</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011008</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010109</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010409</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010709</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011009</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010110</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010710</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2009.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010409</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010709</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 011009</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010110</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010710</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010112</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2010.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010710</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010711</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010112</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010113</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2011.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010711</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010112</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010113</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010114</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2012.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010113</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010114</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2013.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010114</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2014.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010115</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2015.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010116</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2016.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010117</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010119</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2017.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010118</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010119</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010120</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2018.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010119</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010120</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2019.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010120</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010122</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2020.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010121</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010122</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2021.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010122</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2022.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010123</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010129</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2023.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010129</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ℹ Reading '/tmp/Rtmp5tTg1S/td-files/LTN/LTN_2024.xls'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010724</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010125</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010126</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; ✔    Reading Sheet LTN 010129</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb389"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb389-1"><a href="#cb389-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove data prior to 2010</span></span>
+<span id="cb389-2"><a href="#cb389-2" aria-hidden="true" tabindex="-1"></a>df_TD <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(df_TD,</span>
+<span id="cb389-3"><a href="#cb389-3" aria-hidden="true" tabindex="-1"></a>                       ref_date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">'2010-01-01'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Após a importação das informações, plotamos os preços dos diferentes ativos:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="07-importacao-internet_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note como todos contratos do tipo LTN terminam com valor R$ 1.000 em sua data de expiração e possuem uma dinâmica linear de crescimento de preço ao longo do tempo.</p>
+<p>Outra funcionalidade do pacote <strong>{GetTDData}</strong> <span class="citation" data-cites="R-GetTDData">(<a href="99-references.html#ref-R-GetTDData" role="doc-biblioref">M. Perlin 2023a</a>)</span> é o acesso a curva de juros atual do sistema financeiro brasileiro diretamente do <a href="https://www.anbima.com.br/pt_br/informar/curvas-de-juros-fechamento.htm">site da Anbima</a>. Para isso, basta utilizar a função <code>get.yield.curve</code>:</p>
+<p></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb390"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb390-1"><a href="#cb390-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GetTDData)</span>
+<span id="cb390-2"><a href="#cb390-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb390-3"><a href="#cb390-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get yield curve</span></span>
+<span id="cb390-4"><a href="#cb390-4" aria-hidden="true" tabindex="-1"></a>df_yield <span class="ot">&lt;-</span> <span class="fu">get.yield.curve</span>()</span>
+<span id="cb390-5"><a href="#cb390-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb390-6"><a href="#cb390-6" aria-hidden="true" tabindex="-1"></a><span class="co"># check result</span></span>
+<span id="cb390-7"><a href="#cb390-7" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(df_yield)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 111
+R&gt; Columns: 5
+R&gt; $ n.biz.days   &lt;dbl&gt; 252, 378, 504, 630, 756, 882, 1008, 1…
+R&gt; $ type         &lt;chr&gt; "real_return", "real_return", "real_r…
+R&gt; $ value        &lt;dbl&gt; 5.6837, 5.3658, 5.2534, 5.2275, 5.236…
+R&gt; $ ref.date     &lt;date&gt; 2025-01-07, 2025-07-10, 2026-01-06, …
+R&gt; $ current.date &lt;date&gt; 2024-01-09, 2024-01-09, 2024-01-09, …</code></pre>
+</div>
+</div>
+<p>Os dados incluem a curva de juros nominal, juros real e da inflação. Para melhor visualizar as informações, vamos plotá-las em um gráfico:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="07-importacao-internet_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A curva de juros é uma ferramente utilizada no mercado financeiro com o propósito de representar graficamente a expectatica do mercado sobre juros futuro. Baseada nos preços dos títulos públicos, calcula-se e extrapola-se o juros implícito para cada período futuro. Uma curva ascendente, o formato esperado, indica que é mais caro (maior o juro) tomar dinheiro emprestado no longo prazo.</p>
+</section>
+<section id="pacote-getbcbdata-r-getbcbdata" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="pacote-getbcbdata-r-getbcbdata"><span class="header-section-number">7.3</span> Pacote <strong>{GetBCBData}</strong> <span class="citation" data-cites="R-GetBCBData">(<a href="99-references.html#ref-R-GetBCBData" role="doc-biblioref">M. Perlin 2022</a>)</span></h2>
+<p>O Banco Central Brasileiro (BCB) disponibiliza em seu <a href="https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries">Sistema de Séries Temporais (SGS)</a> uma vasta quantidade de tabelas relativas a economia do Brasil. Mais importante, estas tabelas são atualizadas constantemente e o acesso é gratuito e sem necessidade de registro.</p>
+<p>Como um exemplo, vamos usar o pacote para estudar a inadimplência de crédito no sistema financeiro Brasileiro. O primeiro passo no uso de <strong>{GetBCBData}</strong> <span class="citation" data-cites="R-GetBCBData">(<a href="99-references.html#ref-R-GetBCBData" role="doc-biblioref">M. Perlin 2022</a>)</span> é procurar o símbolo da série de interesse. Acessando o <a href="https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries">sistema de séries temporais do BCB</a>, vemos que o código identificador para o percentual total de inandimplência no Brasil é 21082.</p>
+<p>No código, basta indicar a série de interesse e o período de tempo desejado:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb392"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb392-1"><a href="#cb392-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GetBCBData)</span>
+<span id="cb392-2"><a href="#cb392-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb392-3"><a href="#cb392-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb392-4"><a href="#cb392-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set ids and dates</span></span>
+<span id="cb392-5"><a href="#cb392-5" aria-hidden="true" tabindex="-1"></a>id_series <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">perc_default =</span> <span class="dv">21082</span>)</span>
+<span id="cb392-6"><a href="#cb392-6" aria-hidden="true" tabindex="-1"></a>first_date <span class="ot">=</span> <span class="st">'2010-01-01'</span></span>
+<span id="cb392-7"><a href="#cb392-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb392-8"><a href="#cb392-8" aria-hidden="true" tabindex="-1"></a><span class="co"># get series from bcb</span></span>
+<span id="cb392-9"><a href="#cb392-9" aria-hidden="true" tabindex="-1"></a>df_cred <span class="ot">&lt;-</span> <span class="fu">gbcbd_get_series</span>(<span class="at">id =</span> id_series,</span>
+<span id="cb392-10"><a href="#cb392-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">first.date =</span> first_date,</span>
+<span id="cb392-11"><a href="#cb392-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">last.date =</span> <span class="fu">Sys.Date</span>(), </span>
+<span id="cb392-12"><a href="#cb392-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">use.memoise =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; 
+R&gt; Fetching perc_default [21082] from BCB-SGS from Online API 
+R&gt;   Found 153 observations</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb394"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb394-1"><a href="#cb394-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check it</span></span>
+<span id="cb394-2"><a href="#cb394-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df_cred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 153
+R&gt; Columns: 4
+R&gt; $ ref.date    &lt;date&gt; 2011-03-01, 2011-04-01, 2011-05-01, 2…
+R&gt; $ value       &lt;dbl&gt; 3.17, 3.24, 3.37, 3.32, 3.42, 3.45, 3.…
+R&gt; $ id.num      &lt;dbl&gt; 21082, 21082, 21082, 21082, 21082, 210…
+R&gt; $ series.name &lt;chr&gt; "perc_default", "perc_default", "perc_…</code></pre>
+</div>
+</div>
+<p>Note que indicamos o nome da coluna na própria definição da entrada <code>id</code>. Assim, coluna <code>series.name</code> toma o nome de <code>perc.default</code>. Esta configuração é importante pois irá diferenciar os dados no caso da importação de diversas séries diferentes. O gráfico apresentado a seguir mostra o valor da série no tempo:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="07-importacao-internet_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Como podemos ver, a percentagem de inadimplência aumentou a partir de 2015. Para ter uma idéia mais clara do problema, vamos incluir no gráfico a percentagem para pessoa física e pessoa jurídica. Olhando novamente o sistema do BCB, vemos que o símbolos de interesse são 21083 e 21084, respectivamente. O próximo código baixa os dados das duas séries.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb396"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb396-1"><a href="#cb396-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set ids</span></span>
+<span id="cb396-2"><a href="#cb396-2" aria-hidden="true" tabindex="-1"></a>id.series <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">credit_default_people =</span> <span class="dv">21083</span>,</span>
+<span id="cb396-3"><a href="#cb396-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">credit_default_companies =</span> <span class="dv">21084</span>)</span>
+<span id="cb396-4"><a href="#cb396-4" aria-hidden="true" tabindex="-1"></a>first.date <span class="ot">=</span> <span class="st">'2010-01-01'</span></span>
+<span id="cb396-5"><a href="#cb396-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb396-6"><a href="#cb396-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get series from bcb</span></span>
+<span id="cb396-7"><a href="#cb396-7" aria-hidden="true" tabindex="-1"></a>df_cred <span class="ot">&lt;-</span> <span class="fu">gbcbd_get_series</span>(<span class="at">id =</span> id.series,</span>
+<span id="cb396-8"><a href="#cb396-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">first.date =</span> first.date,</span>
+<span id="cb396-9"><a href="#cb396-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">last.date =</span> <span class="fu">Sys.Date</span>(), </span>
+<span id="cb396-10"><a href="#cb396-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">use.memoise =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; 
+R&gt; Fetching credit_default_people [21083] from BCB-SGS from Online API 
+R&gt;   Found 153 observations
+R&gt; Fetching credit_default_companies [21084] from BCB-SGS from Online API 
+R&gt;   Found 153 observations</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb398"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb398-1"><a href="#cb398-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check output</span></span>
+<span id="cb398-2"><a href="#cb398-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df_cred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 306
+R&gt; Columns: 4
+R&gt; $ ref.date    &lt;date&gt; 2011-03-01, 2011-04-01, 2011-05-01, 2…
+R&gt; $ value       &lt;dbl&gt; 1.96, 2.04, 2.15, 2.09, 2.18, 2.15, 2.…
+R&gt; $ id.num      &lt;dbl&gt; 21083, 21083, 21083, 21083, 21083, 210…
+R&gt; $ series.name &lt;chr&gt; "credit_default_people", "credit_defau…</code></pre>
+</div>
+</div>
+<p>A diferença na saída do código anterior é que agora temos duas séries temporais empilhadas no mesmo <code>dataframe</code>. Partimos então para a visualização das séries</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="07-importacao-internet_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Como podemos ver, a inadimplência de crédito para pessoa física aumentou muito mais do que a para pessoa jurídica (empresas) nos últimos anos. Poderiámos, facilmente, integrar o código anterior para uma análise mais completa dos dados em algum problema de pesquisa.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O sistema BCB-SGS é local obrigatório para qualquer economista sério. A quantidade e variedade de dados é imensa. Podes usar os dados do sistema para automatizar qualquer tipo de relatório econômico.</p>
+</div>
+</div>
+</section>
+<section id="pacote-getdfpdata2-r-getdfpdata2" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="pacote-getdfpdata2-r-getdfpdata2"><span class="header-section-number">7.4</span> Pacote <strong>{GetDFPData2}</strong> <span class="citation" data-cites="R-GetDFPData2">(<a href="99-references.html#ref-R-GetDFPData2" role="doc-biblioref">M. Perlin and Kirch 2023</a>)</span></h2>
+<p>Pacote <strong>{GetDFPData2}</strong> <span class="citation" data-cites="R-GetDFPData2">(<a href="99-references.html#ref-R-GetDFPData2" role="doc-biblioref">M. Perlin and Kirch 2023</a>)</span> <span class="citation" data-cites="R-GetDFPData2">(<a href="99-references.html#ref-R-GetDFPData2" role="doc-biblioref">M. Perlin and Kirch 2023</a>)</span> é uma evolução do pacote <code>GetDFPData</code> <span class="citation" data-cites="R-GetDFPData">(<a href="99-references.html#ref-R-GetDFPData" role="doc-biblioref"><strong>R-GetDFPData?</strong></a>)</span> e fornece uma interface aberta para todas as demonstrações financeiras distribuídas pela B3 e pela CVM nos sistemas DFP (dados anuais) e ITR (dados trimestrais). Ele não só faz o <em>download</em> dos dados, mas também ajusta à inflação e torna as tabelas prontas para pesquisa dentro de um formato tabular. Os diferenciais do pacote em relação a outros distribuidores de dados comerciais são: livre acesso, facilidade para baixar dados em larga escala e a variedade de dados disponíveis.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dados históricos completos e atualizados a partir de 2010 do DFP e ITR estão disponibilizados na seção <a href="https://www.msperlin.com/data/">Data</a> do meu site pessoal. Estes dados são atualizados anualmente.</p>
+</div>
+</div>
+<p>O ponto de partida no uso de <strong>{GetDFPData2}</strong> <span class="citation" data-cites="R-GetDFPData2">(<a href="99-references.html#ref-R-GetDFPData2" role="doc-biblioref">M. Perlin and Kirch 2023</a>)</span> é baixar informações atuais sobre empresas disponíveis. O acesso a tabela é possível com a função <code>get_info_companies</code>: </p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb400"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb400-1"><a href="#cb400-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GetDFPData2)</span>
+<span id="cb400-2"><a href="#cb400-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb400-3"><a href="#cb400-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get info for companies in B3</span></span>
+<span id="cb400-4"><a href="#cb400-4" aria-hidden="true" tabindex="-1"></a>df_info <span class="ot">&lt;-</span> <span class="fu">get_info_companies</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; Fetching info on B3 companies</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt;  Dowloading file from CVM</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt;  File not found, downloading it..</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt;  Success</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt;  Reading file from CVM</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt;  Saving cache data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt;  Got 2595 lines for 2461 companies [Actives = 699 Inactives = 1774]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb408"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb408-1"><a href="#cb408-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check it</span></span>
+<span id="cb408-2"><a href="#cb408-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_info)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1] "CNPJ"               "DENOM_SOCIAL"      
+R&gt;  [3] "DENOM_COMERC"       "DT_REG"            
+R&gt;  [5] "DT_CONST"           "DT_CANCEL"         
+R&gt;  [7] "MOTIVO_CANCEL"      "SIT_REG"           
+R&gt;  [9] "DT_INI_SIT"         "CD_CVM"            
+R&gt; [11] "SETOR_ATIV"         "TP_MERC"           
+R&gt; [13] "CATEG_REG"          "DT_INI_CATEG"      
+R&gt; [15] "SIT_EMISSOR"        "DT_INI_SIT_EMISSOR"
+R&gt; [17] "CONTROLE_ACIONARIO" "TP_ENDER"          
+R&gt; [19] "LOGRADOURO"         "COMPL"             
+R&gt; [21] "BAIRRO"             "MUN"               
+R&gt; [23] "UF"                 "PAIS"              
+R&gt; [25] "CEP"                "DDD_TEL"           
+R&gt; [27] "TEL"                "DDD_FAX"           
+R&gt; [29] "FAX"                "EMAIL"             
+R&gt; [31] "TP_RESP"            "RESP"              
+R&gt; [33] "DT_INI_RESP"        "LOGRADOURO_RESP"   
+R&gt; [35] "COMPL_RESP"         "BAIRRO_RESP"       
+R&gt; [37] "MUN_RESP"           "UF_RESP"           
+R&gt; [39] "PAIS_RESP"          "CEP_RESP"          
+R&gt; [41] "DDD_TEL_RESP"       "TEL_RESP"          
+R&gt; [43] "DDD_FAX_RESP"       "FAX_RESP"          
+R&gt; [45] "EMAIL_RESP"         "CNPJ_AUDITOR"      
+R&gt; [47] "AUDITOR"</code></pre>
+</div>
+</div>
+<p>Essa tabela disponibiliza os identificadores numéricos das empresas, setores de atividades, atual segmento de governança, <em>tickers</em> negociados na bolsa e situação atual (ativa ou não). O número atual de empresas ativas e inativas, a partir de 2024-01-10, está disponível na coluna <code>SIT_REG</code>. Observa-se 781 empresas ativas e 1811 canceladas. Essa é uma excelente fonte de informação para um estudo exploratório. Pode-se facilmente filtrar empresas para datas, setores, <em>tickers</em> ou segmentos de governança corporativa.</p>
+<p>Toda empresa no banco de dados é identificada pelo seu número único da CVM. Função <code>search_company</code> permite que o usuário procure o identificador de uma empresa através de seu nome. Dado um texto de entrada – o nome da empresa –, a função procurará uma correspondência parcial com os nomes de todas as empresas disponíveis no banco de dados. Em seu uso, caracteres latinos e maiúsculas e minúsculas são ignorados. Vamos encontrar o nome oficial nome da Grendene, uma das maiores empresas do Brasil. Para isso, basta usar o comando <code>search_company('grendene')</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb410"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb410-1"><a href="#cb410-1" aria-hidden="true" tabindex="-1"></a>df_search <span class="ot">&lt;-</span> <span class="fu">search_company</span>(<span class="st">'grendene'</span>)</span>
+<span id="cb410-2"><a href="#cb410-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb410-3"><a href="#cb410-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(df_search)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; # A tibble: 1 × 3
+R&gt;   CD_CVM DENOM_SOCIAL SIT_REG
+R&gt;    &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;  
+R&gt; 1  19615 GRENDENE SA  ATIVO</code></pre>
+</div>
+</div>
+<p>Vemos que existe um registro para a Grendene: “GRENDENE SA”, com código identificador equivalente a 19615. </p>
+<p>Com o identificador da empresa disponível, usamos a função principal do pacote, <code>get_dfp_data</code>, para baixar os dados. Definimos o nome oficial da empresa como entrada <code>companies_cvm_codes</code> e o período de tempo como entradas <code>first_year</code> e <code>last_year</code>.</p>
+<p></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb412"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb412-1"><a href="#cb412-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GetDFPData2)</span>
+<span id="cb412-2"><a href="#cb412-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb412-3"><a href="#cb412-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb412-4"><a href="#cb412-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set options</span></span>
+<span id="cb412-5"><a href="#cb412-5" aria-hidden="true" tabindex="-1"></a>id_companies <span class="ot">&lt;-</span> <span class="dv">19615</span></span>
+<span id="cb412-6"><a href="#cb412-6" aria-hidden="true" tabindex="-1"></a>first_year <span class="ot">&lt;-</span> <span class="dv">2017</span></span>
+<span id="cb412-7"><a href="#cb412-7" aria-hidden="true" tabindex="-1"></a>last_year  <span class="ot">&lt;-</span> <span class="dv">2018</span></span>
+<span id="cb412-8"><a href="#cb412-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb412-9"><a href="#cb412-9" aria-hidden="true" tabindex="-1"></a><span class="co"># download data</span></span>
+<span id="cb412-10"><a href="#cb412-10" aria-hidden="true" tabindex="-1"></a>l_dfp <span class="ot">&lt;-</span> <span class="fu">get_dfp_data</span>(<span class="at">companies_cvm_codes =</span> id_companies,</span>
+<span id="cb412-11"><a href="#cb412-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">type_docs =</span> <span class="st">'*'</span>, <span class="co"># get all docs  </span></span>
+<span id="cb412-12"><a href="#cb412-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">type_format =</span> <span class="st">'con'</span>, <span class="co"># consolidated</span></span>
+<span id="cb412-13"><a href="#cb412-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">first_year =</span> first_year,</span>
+<span id="cb412-14"><a href="#cb412-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">last_year =</span> last_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As mensagens de <code>GetDFPData2::get_dfp_data</code> relatam os estágios do processo, desde a aquisição de dados da tabela de referência ao download e leitura dos arquivos da B3. Observe que os arquivos de três sistemas são acessados: DFP (<em>Demostrativos Financeiros Padronizados</em>), FRE (<em>Formulário de Referência</em>) e FCA (<em>Formulário Cadastral</em>). Observe também o uso de um sistema de cache, o qual acelera significativamente o uso do software ao salvar localmente as informações importadas.</p>
+<p>Explicando as demais entradas da função <code>GetDFPData2::get_dfp_data</code>:</p>
+<dl>
+<dt>companies_cvm_codes</dt>
+<dd>
+Código numérico das empresas (encontrado via <code>GetDFPData2::search_company('ambev')</code>)
+</dd>
+<dt>type_docs</dt>
+<dd>
+Símbolo do tipo de documento financeiro a ser retornado. Definições: ’*’ = retorna todos documentos, ‘BPA’ = Ativo, ‘BPP’ = passivo, ‘DRE’ = demonstrativo de resultados do exercício, ‘DFC_MD’ = fluxo de caixa pelo metodo direto, ‘DFC_MI’ = fluxo de caixa pelo metodo indireto, ‘DMPL’ = mutacoes do patrimonio liquido, ‘DVA’ = demonstrativo de valor agregado.
+</dd>
+<dt>type_format</dt>
+<dd>
+Tipo de formato dos documentos: consolidado (‘con’) ou individual (‘ind’). Como regra, dê preferência ao tipo consolidado, o qual incluirá dados completos de subsidiárias.
+</dd>
+<dt>first_year</dt>
+<dd>
+Primeiro ano para os dados
+</dd>
+<dt>last_year</dt>
+<dd>
+Último ano para os dados
+</dd>
+</dl>
+<p>O objeto resultante de <code>get_dfp_data</code> é uma <code>lista</code> com diversas tabelas. Vamos dar uma olhada no conteúdo de <code>l_dfp</code> ao buscar os nomes dos itens da lista, limitando o número de caracteres:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb413"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb413-1"><a href="#cb413-1" aria-hidden="true" tabindex="-1"></a>stringr<span class="sc">::</span><span class="fu">str_sub</span>(<span class="fu">names</span>(l_dfp), <span class="dv">1</span>, <span class="dv">40</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "DF Consolidado - Balanço Patrimonial Ati"
+R&gt; [2] "DF Consolidado - Balanço Patrimonial Pas"
+R&gt; [3] "DF Consolidado - Demonstração das Mutaçõ"
+R&gt; [4] "DF Consolidado - Demonstração de Valor A"
+R&gt; [5] "DF Consolidado - Demonstração do Fluxo d"
+R&gt; [6] "DF Consolidado - Demonstração do Resulta"</code></pre>
+</div>
+</div>
+<p>Como podemos ver, os dados retornados são vastos. Cada item da lista em <code>l_dfp</code> é um tabela indexada ao tempo. A explicação de cada coluna não cabe aqui mas, para fins de exemplo, vamos dar uma olhada no balanço patrimonial da empresa, disponível em <code>l_dfp$"DF Consolidado - Balanço Patrimonial Ativo"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb415"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb415-1"><a href="#cb415-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save assets in df</span></span>
+<span id="cb415-2"><a href="#cb415-2" aria-hidden="true" tabindex="-1"></a>fr_assets <span class="ot">&lt;-</span> l_dfp<span class="sc">$</span><span class="st">`</span><span class="at">DF Consolidado - Balanço Patrimonial Ativo</span><span class="st">`</span></span>
+<span id="cb415-3"><a href="#cb415-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb415-4"><a href="#cb415-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check it</span></span>
+<span id="cb415-5"><a href="#cb415-5" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(fr_assets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 122
+R&gt; Columns: 16
+R&gt; $ CNPJ_CIA     &lt;chr&gt; "89.850.341/0001-60", "89.850.341/000…
+R&gt; $ CD_CVM       &lt;dbl&gt; 19615, 19615, 19615, 19615, 19615, 19…
+R&gt; $ DT_REFER     &lt;date&gt; 2017-12-31, 2017-12-31, 2017-12-31, …
+R&gt; $ DT_INI_EXERC &lt;date&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+R&gt; $ DT_FIM_EXERC &lt;date&gt; 2017-12-31, 2017-12-31, 2017-12-31, …
+R&gt; $ DENOM_CIA    &lt;chr&gt; "GRENDENE S.A.", "GRENDENE S.A.", "GR…
+R&gt; $ VERSAO       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+R&gt; $ GRUPO_DFP    &lt;chr&gt; "DF Consolidado - Balanço Patrimonial…
+R&gt; $ MOEDA        &lt;chr&gt; "REAL", "REAL", "REAL", "REAL", "REAL…
+R&gt; $ ESCALA_MOEDA &lt;chr&gt; "MIL", "MIL", "MIL", "MIL", "MIL", "M…
+R&gt; $ ORDEM_EXERC  &lt;chr&gt; "ÚLTIMO", "ÚLTIMO", "ÚLTIMO", "ÚLTIMO…
+R&gt; $ CD_CONTA     &lt;chr&gt; "1", "1.01", "1.01.01", "1.01.02", "1…
+R&gt; $ DS_CONTA     &lt;chr&gt; "Ativo Total", "Ativo Circulante", "C…
+R&gt; $ VL_CONTA     &lt;dbl&gt; 3576008, 2846997, 30119, 1537477, 836…
+R&gt; $ COLUNA_DF    &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+R&gt; $ source_file  &lt;chr&gt; "dfp_cia_aberta_BPA_con_2017.csv", "d…</code></pre>
+</div>
+</div>
+<p>A exportação dos dados para o Excel também é fácil, basta usar função <code>GetDFPData2::export_xlsx</code>: </p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb417"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb417-1"><a href="#cb417-1" aria-hidden="true" tabindex="-1"></a>temp_xlsx <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">'.xlsx'</span>)</span>
+<span id="cb417-2"><a href="#cb417-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb417-3"><a href="#cb417-3" aria-hidden="true" tabindex="-1"></a><span class="fu">export_xlsx</span>(<span class="at">l_dfp =</span> l_dfp, <span class="at">f_xlsx =</span> temp_xlsx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; Warning in writexl::write_xlsx(x = l_dfp, path = f_xlsx):
+R&gt; Truncating sheet name(s) to 31 characters</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; Warning in writexl::write_xlsx(x = l_dfp, path = f_xlsx):
+R&gt; Deduplicating sheet names</code></pre>
+</div>
+</div>
+<p>O arquivo Excel resultante conterá cada tabela de <code>l_dpf</code> em uma aba diferente da planilha, com uma truncagem nos nomes. Podemos checar o resultado com função <code>readxl::excel_sheets</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb420"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb420-1"><a href="#cb420-1" aria-hidden="true" tabindex="-1"></a>readxl<span class="sc">::</span><span class="fu">excel_sheets</span>(temp_xlsx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "DF Consolidado - Balanço Pat"  
+R&gt; [2] "DF Consolidado - Balanço Pat_1"
+R&gt; [3] "DF Consolidado - Demonstraçã"  
+R&gt; [4] "DF Consolidado - Demonstraçã_1"
+R&gt; [5] "DF Consolidado - Demonstraçã_2"
+R&gt; [6] "DF Consolidado - Demonstraçã_3"</code></pre>
+</div>
+</div>
+</section>
+<section id="pacote-getfredata-r-getfredata" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="pacote-getfredata-r-getfredata"><span class="header-section-number">7.5</span> Pacote <strong>{GetFREData}</strong> <span class="citation" data-cites="R-GetFREData">(<a href="99-references.html#ref-R-GetFREData" role="doc-biblioref">M. Perlin and Kirch 2022</a>)</span></h2>
+<p>O pacote <strong>{GetFREData}</strong> <span class="citation" data-cites="R-GetFREData">(<a href="99-references.html#ref-R-GetFREData" role="doc-biblioref">M. Perlin and Kirch 2022</a>)</span> importa dados do sistema FRE – Formulário de Referência – da bolsa Brasileira, incluindo eventos e informações corporativas tal como composição do conselho e diretoria, remuneração dos conselhos, entre outras.</p>
+<p>A estrutura de uso e a saída das funções de <strong>{GetFREData}</strong> <span class="citation" data-cites="R-GetFREData">(<a href="99-references.html#ref-R-GetFREData" role="doc-biblioref">M. Perlin and Kirch 2022</a>)</span> são muito semelhante as do pacote <strong>{GetDFPData2}</strong> <span class="citation" data-cites="R-GetDFPData2">(<a href="99-references.html#ref-R-GetDFPData2" role="doc-biblioref">M. Perlin and Kirch 2023</a>)</span>. Veja a seguir um exemplo de uso.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb422"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb422-1"><a href="#cb422-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GetFREData)</span>
+<span id="cb422-2"><a href="#cb422-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb422-3"><a href="#cb422-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set options</span></span>
+<span id="cb422-4"><a href="#cb422-4" aria-hidden="true" tabindex="-1"></a>id_companies <span class="ot">&lt;-</span> <span class="dv">23264</span></span>
+<span id="cb422-5"><a href="#cb422-5" aria-hidden="true" tabindex="-1"></a>first_year <span class="ot">&lt;-</span> <span class="dv">2021</span></span>
+<span id="cb422-6"><a href="#cb422-6" aria-hidden="true" tabindex="-1"></a>last_year  <span class="ot">&lt;-</span> <span class="dv">2022</span></span>
+<span id="cb422-7"><a href="#cb422-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb422-8"><a href="#cb422-8" aria-hidden="true" tabindex="-1"></a><span class="co"># download data</span></span>
+<span id="cb422-9"><a href="#cb422-9" aria-hidden="true" tabindex="-1"></a>l_fre <span class="ot">&lt;-</span> <span class="fu">get_fre_data</span>(<span class="at">companies_cvm_codes =</span> id_companies,</span>
+<span id="cb422-10"><a href="#cb422-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">first_year =</span> first_year,</span>
+<span id="cb422-11"><a href="#cb422-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">last_year =</span> last_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note que o tempo de execução de <code>get_fre_data</code> é significativo. Isto deve-se ao <em>download</em> e leitura dos arquivos do sistema FRE direto da bolsa. Cada tabela do FRE é importada na lista de saída:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb423"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb423-1"><a href="#cb423-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(l_fre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1] "df_stockholders"            
+R&gt;  [2] "df_capital"                 
+R&gt;  [3] "df_stock_values"            
+R&gt;  [4] "df_mkt_value"               
+R&gt;  [5] "df_increase_capital"        
+R&gt;  [6] "df_capital_reduction"       
+R&gt;  [7] "df_compensation"            
+R&gt;  [8] "df_compensation_summary"    
+R&gt;  [9] "df_transactions_related"    
+R&gt; [10] "df_other_events"            
+R&gt; [11] "df_stock_repurchases"       
+R&gt; [12] "df_debt_composition"        
+R&gt; [13] "df_board_composition"       
+R&gt; [14] "df_committee_composition"   
+R&gt; [15] "df_family_relations"        
+R&gt; [16] "df_family_related_companies"
+R&gt; [17] "df_auditing"                
+R&gt; [18] "df_responsible_docs"        
+R&gt; [19] "df_stocks_details"          
+R&gt; [20] "df_dividends_details"       
+R&gt; [21] "df_intangible_details"</code></pre>
+</div>
+</div>
+<p>Por exemplo, vamos verificar conteúdo da tabela <code>df_board_composition</code>, a qual contém informações sobre os componentes dos conselhos das empresas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb425"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb425-1"><a href="#cb425-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(l_fre<span class="sc">$</span>df_board_composition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 65
+R&gt; Columns: 22
+R&gt; $ CNPJ_CIA                 &lt;chr&gt; "07.526.557/0001-00", "07…
+R&gt; $ DENOM_CIA                &lt;chr&gt; "AMBEV S.A.", "AMBEV S.A.…
+R&gt; $ DT_REFER                 &lt;date&gt; 2021-01-01, 2021-01-01, …
+R&gt; $ CD_CVM                   &lt;dbl&gt; 23264, 23264, 23264, 2326…
+R&gt; $ ID_DOC                   &lt;dbl&gt; 114809, 114809, 114809, 1…
+R&gt; $ VERSAO                   &lt;dbl&gt; 12, 12, 12, 12, 12, 12, 1…
+R&gt; $ person.name              &lt;chr&gt; "Leticia Rudge Barbosa Ki…
+R&gt; $ person.cpf               &lt;dbl&gt; 25572648817, 7234352783, …
+R&gt; $ person.profession        &lt;chr&gt; "Advogada", "Engenheiro C…
+R&gt; $ person.cv                &lt;chr&gt; "Ocupa o cargo de Diretor…
+R&gt; $ person.dob               &lt;date&gt; 1976-06-12, 1977-01-15, …
+R&gt; $ code.type.board          &lt;chr&gt; "1", "1", "1", "1", "1", …
+R&gt; $ desc.type.board          &lt;chr&gt; "Director", "Director", "…
+R&gt; $ desc.type.board2         &lt;chr&gt; "Diretora Vice-Presidente…
+R&gt; $ code.type.job            &lt;chr&gt; "19", "19", "19", "19", "…
+R&gt; $ desc.job                 &lt;chr&gt; "Não aplicável, uma vez q…
+R&gt; $ date.election            &lt;date&gt; 2021-12-22, 2021-12-22, …
+R&gt; $ date.effective           &lt;date&gt; 2022-01-01, 2022-01-01, …
+R&gt; $ mandate.duration         &lt;chr&gt; "31/12/2024", "31/12/2024…
+R&gt; $ ellected.by.controller   &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, F…
+R&gt; $ qtd.consecutive.mandates &lt;dbl&gt; 2, 2, 1, 2, 3, 1, 3, 2, 3…
+R&gt; $ percentage.participation &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0…</code></pre>
+</div>
+</div>
+<p>Como podemos ver, para um pesquisador de finanças corporativas, o sistema FRE oferece uma série de informações interessantes. Discutir o conteúdo de cada tabela, porém, vai muito além do propósito dessa seção. Aos interessados, mais detalhes sobre as tabelas do FRE estão disponíveis em <span class="citation" data-cites="perlin2018accessing">(<a href="99-references.html#ref-perlin2018accessing" role="doc-biblioref"><strong>perlin2018accessing?</strong></a>)</span>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note que a importação dos dados do FRE inclui uma versão dos arquivos. Toda vez que uma empresa modifica as informações oficiais no sistema da B3, uma nova versão do FRE é criada. Devido a isso, é bastante comum que os dados de um ano para uma empresa possua diferentes versões. Para resolver este problema, o código do <strong>{GetFREData}</strong> <span class="citation" data-cites="R-GetFREData">(<a href="99-references.html#ref-R-GetFREData" role="doc-biblioref">M. Perlin and Kirch 2022</a>)</span>, por <em>default</em>, importa a versão mais antiga para cada ano. Caso o usuário queira mudar, basta utilizar a entrada <code>fre_to_read</code>.</p>
+</div>
+</div>
+</section>
+<section id="outros-pacotes" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="outros-pacotes"><span class="header-section-number">7.6</span> Outros Pacotes</h2>
+<p>Nas seções anteriores destacamos os principais pacotes gratuitos para aquisição de dados financeiros e econômicos no Brasil. Muitos desses foram escritos pelo próprio autor do livro e representam uma pequena parcela da totalidade. Não seria justo ignorar o trabalho de outros autores. Assim, reporto abaixo uma seleção de pacotes que vale a pena conhecer:</p>
+<section id="pacotes-de-acesso-gratuito" class="level3" data-number="7.6.1">
+<h3 data-number="7.6.1" class="anchored" data-anchor-id="pacotes-de-acesso-gratuito"><span class="header-section-number">7.6.1</span> Pacotes de Acesso Gratuito</h3>
+<dl>
+<dt><code>BETS</code> <span class="citation" data-cites="R-BETS">(<a href="99-references.html#ref-R-BETS" role="doc-biblioref"><strong>R-BETS?</strong></a>)</span></dt>
+<dd>
+Pacote construído e mantido pela equipe da <a href="http://portal.fgv.br/en">FGV</a>. Permite o acesso aos dados do BCB (Banco Central do Brasil) e IBGE (Instituto Brasileiro de Geografia e Estatística). Também inclui ferramentas para a administração, análise e manipulação dos dados em relatórios técnicos.
+</dd>
+<dt><code>simfinapi</code> <span class="citation" data-cites="R-simfinapi">(<a href="99-references.html#ref-R-simfinapi" role="doc-biblioref"><strong>R-simfinapi?</strong></a>)</span></dt>
+<dd>
+Pacote para acesso ao projeto <a href="https://simfin.com/">simfin</a>, incluindo dados financeiros de diversas empresas internacionais. O acesso livre é restrito a um número de chamadas diárias.
+</dd>
+</dl>
+</section>
+<section id="pacotes-comerciais" class="level3" data-number="7.6.2">
+<h3 data-number="7.6.2" class="anchored" data-anchor-id="pacotes-comerciais"><span class="header-section-number">7.6.2</span> Pacotes Comerciais</h3>
+<dl>
+<dt><code>Rblpapi</code> <span class="citation" data-cites="R-Rblpapi">(<a href="99-references.html#ref-R-Rblpapi" role="doc-biblioref"><strong>R-Rblpapi?</strong></a>)</span></dt>
+<dd>
+Permite acesso aos dados da <a href="https://www.bloomberg.com/">Bloomberg</a>, sendo necessário uma conta comercial.
+</dd>
+<dt><code>IBrokers</code> <span class="citation" data-cites="R-IBrokers">(<a href="99-references.html#ref-R-IBrokers" role="doc-biblioref"><strong>R-IBrokers?</strong></a>)</span></dt>
+<dd>
+API para o acesso aos dados da <a href="https://www.interactivebrokers.com/en/home.php">Interactive Brokers</a>. Também é necessário uma conta comercial.
+</dd>
+</dl>
+<p>No CRAN você encontrará muitos outros. A interface para fontes de dados comerciais também é possível. Várias empresas fornecem APIs para facilitar o envio de dados aos seus clientes. Se a empresa de fornecimento de dados que você usa no trabalho não for apresentada aqui, a <a href="https://cran.r-project.org/">lista de pacotes CRAN</a> pode ajudá-lo a encontrar uma alternativa viável.</p>
+</section>
+</section>
+<section id="acessando-dados-de-páginas-na-internet-webscraping" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="acessando-dados-de-páginas-na-internet-webscraping"><span class="header-section-number">7.7</span> Acessando Dados de Páginas na Internet (<em>Webscraping</em>)</h2>
+<p>Os pacotes destacados anteriormente são muito úteis pois facilitam a importação de dados específicos diretamente da internet. Em muitos casos, porém, os dados de interesse não estão disponíveis via API formal, mas sim em uma página na internet - geralmente no formato de uma tabela. O processo de extrair informações de páginas da internet chama-se <em>webscraping</em> (raspagem de dados). Dependendo da estrutura e da tecnologia da página da <em>web</em> acessada, importar essas informações diretamente para o R pode ser um procedimento trivial – mas também pode se tornar um processo extremamente trabalhoso. Como um exemplo, a seguir vamos raspar dados do Wikipedia sobre a composição do índice SP500.</p>
+<section id="raspando-dados-do-wikipedia" class="level3" data-number="7.7.1">
+<h3 data-number="7.7.1" class="anchored" data-anchor-id="raspando-dados-do-wikipedia"><span class="header-section-number">7.7.1</span> Raspando Dados do Wikipedia</h3>
+<p>Em seu site, a Wikipedia oferece uma <a href="https://en.wikipedia.org/wiki/List_of_S%26P_500_companies">seção</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> com os componentes do Índice SP500. Essas informações são apresentadas em um formato tabular, Figura @ref(fig:SP500-wikipedia).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="resources/figs/SP500-Wikipedia.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption class="figure-caption">Imagem da página do Wikipedia</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>As informações desta página são constantemente atualizadas, e podemos utilizá-las para importar informações sobre as ações pertencentes ao índice SP500. Antes de nos aprofundarmos no código R, precisamos entender como uma página da web funciona. Resumidamente, uma página da web nada mais é do que uma árvore com nódulos, representada por um código HTML (<em>Hypertext Markup Language</em>) extenso interpretado pelo seu navegador. Um valor numérico ou texto apresentado no site geralmente pode ser encontrado dentro do próprio código. Este código tem uma estrutura particular em forma de árvore com ramificações, classes, nomes e identificadores. Além disso, cada elemento de uma página da web possui um endereço, denominado <em>xpath</em>. Nos navegadores Chrome e Firefox, você pode ver o código HTML de uma página da web usando o mouse. Para isto, basta clicar com o botão direito em qualquer parte da página e selecionar <em>View Page Source</em> (ou “Ver Código Fonte”).</p>
+<p>A primeira etapa do processo de raspagem de dados é descobrir a localização das informações de que você precisa. No navegador Chrome, você pode fazer isso clicando com o botão direito no local específico do número/texto no site e selecionando <em>inspect</em>. Isso abrirá uma janela extra no navegador a direita. Depois de fazer isso, clique com o botão direito na seleção e escolha <em>copy</em> e <em>copy xpath</em>. Na Figura @ref(fig:SP500-Wikipedia-webscraping), vemos um espelho do que você deve estar vendo em seu navegador.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="resources/figs/SP500-Wikipedia_webscraping.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption class="figure-caption">Encontrando o xpath da tabela</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Aqui, o texto copiado é:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb427"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb427-1"><a href="#cb427-1" aria-hidden="true" tabindex="-1"></a><span class="st">'//*[@id="mw-content-text"]/table[1]/thead/tr/th[2]'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Este é o endereço do cabeçalho da tabela. Para todo o conteúdo da tabela, incluindo cabeçalho, linhas e colunas, precisamos definir um nível superior da árvore. Isso é equivalente ao endereço <code>//*[@id =" mw-content-text"]/table[1]</code>.</p>
+<p>Agora que temos a localização do que queremos, vamos carregar o pacote <code>rvest</code> <span class="citation" data-cites="R-rvest">(<a href="99-references.html#ref-R-rvest" role="doc-biblioref"><strong>R-rvest?</strong></a>)</span> e usar as funções <code>read_html</code>, <code>html_nodes</code> e<code>html_table</code> para importar a tabela desejada para o R: </p>
+<div class="cell" data-hash="07-importacao-internet_cache/html/unnamed-chunk-30_1d843fa11d6ccdfe19376dfc12c64309">
+<div class="sourceCode cell-code" id="cb428"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb428-1"><a href="#cb428-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb428-2"><a href="#cb428-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb428-3"><a href="#cb428-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set url and xpath</span></span>
+<span id="cb428-4"><a href="#cb428-4" aria-hidden="true" tabindex="-1"></a>my_url <span class="ot">&lt;-</span> <span class="st">'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'</span></span>
+<span id="cb428-5"><a href="#cb428-5" aria-hidden="true" tabindex="-1"></a>my_xpath <span class="ot">&lt;-</span> <span class="st">'//*[@id="mw-content-text"]/div/table[1]'</span></span>
+<span id="cb428-6"><a href="#cb428-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb428-7"><a href="#cb428-7" aria-hidden="true" tabindex="-1"></a><span class="co"># get nodes from html</span></span>
+<span id="cb428-8"><a href="#cb428-8" aria-hidden="true" tabindex="-1"></a>out_nodes <span class="ot">&lt;-</span> <span class="fu">html_nodes</span>(<span class="fu">read_html</span>(my_url),</span>
+<span id="cb428-9"><a href="#cb428-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">xpath =</span> my_xpath)</span>
+<span id="cb428-10"><a href="#cb428-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb428-11"><a href="#cb428-11" aria-hidden="true" tabindex="-1"></a><span class="co"># get table from nodes (each element in </span></span>
+<span id="cb428-12"><a href="#cb428-12" aria-hidden="true" tabindex="-1"></a><span class="co"># list is a table)</span></span>
+<span id="cb428-13"><a href="#cb428-13" aria-hidden="true" tabindex="-1"></a>df_SP500_comp <span class="ot">&lt;-</span> <span class="fu">html_table</span>(out_nodes)</span>
+<span id="cb428-14"><a href="#cb428-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb428-15"><a href="#cb428-15" aria-hidden="true" tabindex="-1"></a><span class="co"># isolate it </span></span>
+<span id="cb428-16"><a href="#cb428-16" aria-hidden="true" tabindex="-1"></a>df_SP500_comp <span class="ot">&lt;-</span> df_SP500_comp[[<span class="dv">1</span>]]</span>
+<span id="cb428-17"><a href="#cb428-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb428-18"><a href="#cb428-18" aria-hidden="true" tabindex="-1"></a><span class="co"># change column names (remove space)</span></span>
+<span id="cb428-19"><a href="#cb428-19" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df_SP500_comp) <span class="ot">&lt;-</span> <span class="fu">make.names</span>(<span class="fu">names</span>(df_SP500_comp))</span>
+<span id="cb428-20"><a href="#cb428-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb428-21"><a href="#cb428-21" aria-hidden="true" tabindex="-1"></a><span class="co"># print it</span></span>
+<span id="cb428-22"><a href="#cb428-22" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df_SP500_comp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 503
+R&gt; Columns: 8
+R&gt; $ Symbol                &lt;chr&gt; "MMM", "AOS", "ABT", "ABBV",…
+R&gt; $ Security              &lt;chr&gt; "3M", "A. O. Smith", "Abbott…
+R&gt; $ GICS.Sector           &lt;chr&gt; "Industrials", "Industrials"…
+R&gt; $ GICS.Sub.Industry     &lt;chr&gt; "Industrial Conglomerates", …
+R&gt; $ Headquarters.Location &lt;chr&gt; "Saint Paul, Minnesota", "Mi…
+R&gt; $ Date.added            &lt;chr&gt; "1957-03-04", "2017-07-26", …
+R&gt; $ CIK                   &lt;int&gt; 66740, 91142, 1800, 1551152,…
+R&gt; $ Founded               &lt;chr&gt; "1902", "1916", "1888", "201…</code></pre>
+</div>
+</div>
+<p>O objeto <code>df_SP500_comp</code> contém um espelho dos dados do site da Wikipedia. Os nomes das colunas requerem algum trabalho de limpeza, mas o principal está ali. Observe como a saída é semelhante aos dados da função <code>BatchGetSymbols::GetSP500Stocks</code>. A razão é simples, ambas buscaram a informação na mesma origem. A diferença é que função <code>GetSP500Stocks</code> vai um passo além, limpando os dados importados.</p>
+</section>
+</section>
+<section id="exerc-importacao-pacotes" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="exerc-importacao-pacotes"><span class="header-section-number">7.8</span> Exercícios</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-R-GetBCBData" class="csl-entry" role="listitem">
+Perlin, Marcelo. 2022. <em>GetBCBData: Imports Datasets from BCB (Central Bank of Brazil) Using Its Official API</em>. <a href="https://github.com/msperlin/GetBCBData/">https://github.com/msperlin/GetBCBData/</a>.
+</div>
+<div id="ref-R-GetTDData" class="csl-entry" role="listitem">
+———. 2023a. <em>GetTDData: Get Data for Brazilian Bonds (Tesouro Direto)</em>. <a href="https://github.com/msperlin/GetTDData/">https://github.com/msperlin/GetTDData/</a>.
+</div>
+<div id="ref-R-yfR" class="csl-entry" role="listitem">
+———. 2023b. <em>yfR: Downloads and Organizes Financial Data from Yahoo Finance</em>. <a href="https://github.com/ropensci/yfR">https://github.com/ropensci/yfR</a>.
+</div>
+<div id="ref-R-GetQuandlData" class="csl-entry" role="listitem">
+Perlin, Marcelo S. 2023. <em>GetQuandlData: Fast and Cached Import of Data from Quandl Using the Json API</em>. <a href="https://github.com/msperlin/GetQuandlData/">https://github.com/msperlin/GetQuandlData/</a>.
+</div>
+<div id="ref-R-GetFREData" class="csl-entry" role="listitem">
+Perlin, Marcelo, and Guilherme Kirch. 2022. <em>GetFREData: Reading FRE Corporate Data of Public Traded Companies from B3</em>. <a href="https://github.com/msperlin/GetFREData/">https://github.com/msperlin/GetFREData/</a>.
+</div>
+<div id="ref-R-GetDFPData2" class="csl-entry" role="listitem">
+———. 2023. <em>GetDFPData2: Reading Annual and Quarterly Financial Reports from B3</em>. <a href="https://github.com/msperlin/GetDFPData2/">https://github.com/msperlin/GetDFPData2/</a>.
+</div>
+<div id="ref-R-tidyverse" class="csl-entry" role="listitem">
+Wickham, Hadley. 2023. <em>Tidyverse: Easily Install and Load the Tidyverse</em>. <a href="https://tidyverse.tidyverse.org">https://tidyverse.tidyverse.org</a>.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>O cupom é um pagamento intermediário pago periodicamente durante a validade do contrato financeiro.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>https://en.wikipedia.org/wiki/List_of_S%26P_500_companies<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./06-importacao-exportacao-dados-locais.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Importação e Exportação de Dados Locais</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./08-objetos-armazenamento.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Dataframes e outros Objetos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

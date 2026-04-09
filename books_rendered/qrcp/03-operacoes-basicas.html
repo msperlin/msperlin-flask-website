@@ -1,0 +1,2680 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Questões de R em Concursos Públicos - 1&nbsp; Operações Básicas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04-loops.html" rel="next">
+<link href="./02-sobre-as-questoes.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR8PLMG1G7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FR8PLMG1G7');
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-operacoes-basicas.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operações Básicas</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Questões de R em Concursos Públicos</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefácio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-sobre-as-questoes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sobre as questões</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-operacoes-basicas.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operações Básicas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-loops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Repetição estruturada de código (<em>loops</em>)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-tabelas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Operações com tabelas (<em>dataframes</em> e <em>tibbles</em>)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-graficos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Gráficos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-outros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Outros temas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referências Bibliográficas</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-funcao-c-assign-print" id="toc-sec-funcao-c-assign-print" class="nav-link active" data-scroll-target="#sec-funcao-c-assign-print"><span class="header-section-number">1.1</span> Questão 01 [DPF 2018]</a></li>
+  <li><a href="#questão-02-dpf-2018" id="toc-questão-02-dpf-2018" class="nav-link" data-scroll-target="#questão-02-dpf-2018"><span class="header-section-number">1.2</span> Questão 02 [DPF 2018]</a></li>
+  <li><a href="#sec-caracteres" id="toc-sec-caracteres" class="nav-link" data-scroll-target="#sec-caracteres"><span class="header-section-number">1.3</span> Questão 03 [DPF 2018]</a></li>
+  <li><a href="#sec-funcao-matrix-array" id="toc-sec-funcao-matrix-array" class="nav-link" data-scroll-target="#sec-funcao-matrix-array"><span class="header-section-number">1.4</span> Questão 04 [MJSP 2020]</a></li>
+  <li><a href="#questão-05-mjsp-2020" id="toc-questão-05-mjsp-2020" class="nav-link" data-scroll-target="#questão-05-mjsp-2020"><span class="header-section-number">1.5</span> Questão 05 [MJSP 2020]</a></li>
+  <li><a href="#questão-06-mjsp-2020" id="toc-questão-06-mjsp-2020" class="nav-link" data-scroll-target="#questão-06-mjsp-2020"><span class="header-section-number">1.6</span> Questão 06 [MJSP 2020]</a></li>
+  <li><a href="#sec-funcoes-e-escopo" id="toc-sec-funcoes-e-escopo" class="nav-link" data-scroll-target="#sec-funcoes-e-escopo"><span class="header-section-number">1.7</span> Questão 07 [DPF 2021]</a></li>
+  <li><a href="#questão-08-agergs-2022" id="toc-questão-08-agergs-2022" class="nav-link" data-scroll-target="#questão-08-agergs-2022"><span class="header-section-number">1.8</span> Questão 08 [AGERGS 2022]</a></li>
+  <li><a href="#questão-09-agergs-2022" id="toc-questão-09-agergs-2022" class="nav-link" data-scroll-target="#questão-09-agergs-2022"><span class="header-section-number">1.9</span> Questão 09 [AGERGS 2022]</a></li>
+  <li><a href="#questão-10-agergs-2022" id="toc-questão-10-agergs-2022" class="nav-link" data-scroll-target="#questão-10-agergs-2022"><span class="header-section-number">1.10</span> Questão 10 [AGERGS 2022]</a></li>
+  <li><a href="#sec-funcoes-recursivas" id="toc-sec-funcoes-recursivas" class="nav-link" data-scroll-target="#sec-funcoes-recursivas"><span class="header-section-number">1.11</span> Questão 11 [ANP 2022]</a></li>
+  <li><a href="#sec-funcao-sum-rep-seq" id="toc-sec-funcao-sum-rep-seq" class="nav-link" data-scroll-target="#sec-funcao-sum-rep-seq"><span class="header-section-number">1.12</span> Questão 12 [ANP 2022]</a></li>
+  <li><a href="#questão-13-anp-2022" id="toc-questão-13-anp-2022" class="nav-link" data-scroll-target="#questão-13-anp-2022"><span class="header-section-number">1.13</span> Questão 13 [ANP 2022]</a></li>
+  <li><a href="#questão-14-mpsc-2022" id="toc-questão-14-mpsc-2022" class="nav-link" data-scroll-target="#questão-14-mpsc-2022"><span class="header-section-number">1.14</span> Questão 14 [MPSC 2022]</a></li>
+  <li><a href="#questão-15-mpsc-2022" id="toc-questão-15-mpsc-2022" class="nav-link" data-scroll-target="#questão-15-mpsc-2022"><span class="header-section-number">1.15</span> Questão 15 [MPSC 2022]</a></li>
+  <li><a href="#questão-16-rfb-2022" id="toc-questão-16-rfb-2022" class="nav-link" data-scroll-target="#questão-16-rfb-2022"><span class="header-section-number">1.16</span> Questão 16 [RFB 2022]</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operações Básicas</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="sec-funcao-c-assign-print" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="sec-funcao-c-assign-print"><span class="header-section-number">1.1</span> Questão 01 [DPF 2018]</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2018</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Departamento de Polícia Federal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Agente de Polícia Federal</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">93</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Duas alternativas, uma resposta (C, E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">E</td>
+</tr>
+</tbody>
+</table>
+<p>Considere o programa a seguir, escrito em R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">9</span>, <span class="dv">11</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x <span class="sc">+</span> y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Após a execução do programa, será obtido o seguinte resultado.</p>
+<p>[1] 36</p>
+<hr>
+<p>Alternativas:</p>
+<p>C - Correto</p>
+<p>E - Errado</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Operadores <code>&lt;-</code> e <code>-&gt;</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Também chamado de função <em>assign</em>, os operadores <code>&lt;-</code> e <code>-&gt;</code> definem um objeto no lado esquerdo ou direito da chamada em código. Exemplos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># uso tradicional do operador assign </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># uso inverso do operador assign (não recomendado)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="ot">-&gt;</span> y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Saiba que, apesar de não ser recomendado, o símbolo <code>=</code> tem o mesmo uso que <code>&lt;-</code> e <code>-&gt;</code>. Assim, o código anterior é equivalente a:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># uso do operador =</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>c()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Uma dos operadores mais usados no R. O termo <code>c</code> significa <em>concatenate</em> (concatenar, agrupar) e serve para combinar valores em um vetor atômico onde todos elementos são da mesma classe. A função <strong>c()</strong> serve tanto para combinar elementos individuais, quanto para combinar vetores já existentes (veja terceira linha do código).Exemplos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># definição de vetores com c()</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">11</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">c</span>(x, y, <span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Uma propriedade de <strong>c()</strong> é que a função força todos os elementos da saída a serem da mesma classe. Se, por acaso, misturarmos classes, diferentes, o R busca converter os elementos individuais para a classe mais complexa. Veja o exemplo abaixo, onde misturamos um texto com números:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de conversão de elementos com c()</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="st">"abc"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "1"   "abc"</code></pre>
+</div>
+</div>
+<p>Aqui, a classe de caractere é mais complexa, forçando a conversão. Veja que a saída é um vetor do tipo caractere. O primeiro elemento, o qual era originalmente um valor numérico, torna-se um texto.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Operadores de soma <code>+</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Um dos operadores matemáticos mais utilizados no R, o operador de soma serve para somar elementos de objetos diferentes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># uso o operador de soma +</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x <span class="sc">+</span> y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1]  7  9 11 13 15</code></pre>
+</div>
+</div>
+<p>Na adição de vetores, é importante saber que as operações são sempre efetuadas elemento por elemento. Veja o exemplo acima, onde o primeiro elemento do vetor de saída é a soma dos primeiros elementos de <code>x</code> e <code>y</code>.</p>
+<p>Outra propriedade importante no uso do operador de soma é a <strong>regra de reciclagem</strong>, a qual define como vetores de tamanhos diferentes são somados. Veja <span class="quarto-unresolved-ref">?sec-regra-reciclagem</span> para mais detalhes.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>print()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O comando <strong>print()</strong> mostra algum resultado no <em>prompt</em> do R. Comumente, utiliza-se o <strong>print()</strong> para averiguar se o código executado está correto. A função <strong>print()</strong> é adaptável, e pode ter diferentes comportamentos de acordo com a classe do objeto que está sendo apresentada no <em>prompt</em>. Veja alguns exemplos abaixo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplos de print()</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"abc"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "abc"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">y =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;   x y
+R&gt; 1 1 2
+R&gt; 2 2 3
+R&gt; 3 3 4</code></pre>
+</div>
+</div>
+<p>Outro ponto importante aqui é que o comando <strong>print()</strong> é automaticamente utilizado quando o nome do objeto é executado no <em>prompt</em>. Assim, o comando <code>print(x)</code> é equivalente a simplesmente <code>x</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `x` é equivalente a `print(x)`</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 10</code></pre>
+</div>
+</div>
+<p>Portanto, em uma questão de concurso, ao ver um objeto sozinho em sua própria linhas, saiba que o comando <strong>print()</strong> é executado automaticamente, mostrando uma representação do objeto no <em>prompt</em>.</p>
+</div>
+</div>
+<hr>
+<p>O enunciado da questão está <strong>errado</strong>. Caso executarmos o código, veremos que a saída <strong>não é o valor 36</strong>, mas sim um vetor com a soma dos elementos individuais de <code>x</code> e <code>y</code>. Para explicar, considere o código comentado abaixo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-2"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>)</span>
+<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">9</span>, <span class="dv">11</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-2-3" class="code-annotation-target"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x <span class="sc">+</span> y)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="1,2" data-code-cell="annotated-cell-2">O comando <code>&lt;-</code> define um objeto no lado esquerdo do código. A função <strong>c()</strong> combina valores para definir um vetor atômico, onde todos elementos possuem a mesma classe. Neste caso, o objeto com nome <code>x</code> toma o valor de <code>c(3, 5, 7)</code>, enquanto <code>y</code> toma o valor de <code>c(1, 9, 11)</code>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="3" data-code-cell="annotated-cell-2">o resultado da soma é apresentado com o comando <strong>print()</strong> , o qual mostra um resultado no <em>prompt</em> do R. No R, uma soma de vetores é realizada elemento por elemento. Por exemplo, ao somarmos <code>c(1, 2)</code> com <code>c(3, 4)</code>, o resultado é <code>c(1+3, 2+4)</code>, isto é, 4, 6. Portanto, voltando ao problema, ao somarmos <code>x</code> com <code>y</code>, o resultado é c(4, 14, 18).</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>Executando o código, temos o seguinte resultado:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x <span class="sc">+</span> y)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1]  4 14 18</code></pre>
+</div>
+</div>
+<p>Como podemos ver a, a saída do código é <code>[1] 4 14 18</code>, e não 36.</p>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-02-dpf-2018" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="questão-02-dpf-2018"><span class="header-section-number">1.2</span> Questão 02 [DPF 2018]</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2018</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Departamento de Polícia Federal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Agente de Polícia Federal</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">94</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Duas alternativas, uma resposta (C, E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">E</td>
+</tr>
+</tbody>
+</table>
+<p>Considere o programa a seguir, escrito em R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span> (xy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Após a execução do programa, será obtido o seguinte resultado.</p>
+<p>[1] FALSE</p>
+<hr>
+<p>Alternativas:</p>
+<p>C - Correto</p>
+<p>E - Errado</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Conceitos Prévios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>Uso de <code>&lt;-</code></dt>
+<dd>
+veja conceito na <a href="#sec-funcao-c-assign-print"><span>Section&nbsp;1.1</span></a>
+</dd>
+<dt>Função <strong>print()</strong> </dt>
+<dd>
+veja conceito na <a href="#sec-funcao-c-assign-print"><span>Section&nbsp;1.1</span></a>
+</dd>
+</dl>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objetos do tipo lógico (<code>TRUE</code> | <code>FALSE</code>)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Objetos do tipo <em>logical</em> servem para indicar eventos verdadeiros (<em>TRUE</em>) ou falsos (<em>FALSE</em>). Veja que, na linguagem R, o nome TRUE e FALSE são reservados e válidos para a definição de objetos e vetores. Geralmente, estes são saídas de testes de condições sobre objetos. Por exemplo, se testarmos no <em>prompt</em> do R que <code>1 &gt; 2</code>, o resultado é <code>FALSE</code>. O mesmo teste pode ser realizado para vetores, elemento por elemento. Neste caso, a saída é um vetor lógico (e não valor único). Veja exemplos abaixo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de teste lógico</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="dv">1</span> <span class="sc">&gt;</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo em vetores</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(x <span class="sc">&lt;</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1]  TRUE  TRUE FALSE FALSE FALSE</code></pre>
+</div>
+</div>
+</div>
+</div>
+<hr>
+<p>O enunciado da questão está <strong>errado</strong>. Um olho treinado facilmente percebe que, no comando <code>print (xy)</code>, não existe operador entre as variáveis <code>x</code> e <code>y</code>. O código apresentado terminaria a sua execução com um erro. Ao executar o código, o interpretador do R entende que <code>xy</code> é um objeto por si só. Obviamente o mesmo não existe e, portanto, a execução do código resultaria em uma mensagem de erro: “<em>Error: object ‘xy’ not found</em>”. A maneira correta de executar o código seria definir algum operador entre <code>x</code> e <code>y</code>, tal como <code>print(x+y)</code> ou <code>print(x*y)</code>, os quais, respectivamente, iriam somar ou multiplicar os elementos de <code>x</code> e <code>y</code>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Dica do Perlin
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Aqui um ponto importante. Note que o comando <code>print (xy)</code> não tem espaço entre o <code>print</code> e <code>(xy)</code>. <strong>Isto não é usual em programação do R</strong>, porém o compilador executa sem problemas. É impossível saber se isso foi “pegadinha” do autor da questão, ou simplesmente um erro de edição. De qualquer maneira, lembre que, neste caso específico de chamar uma função, é válido, mas não comum, adicionar um espaço entre o nome da função e o primeiro parêntese.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-caracteres" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="sec-caracteres"><span class="header-section-number">1.3</span> Questão 03 [DPF 2018]</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2018</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Departamento de Polícia Federal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Nível Superior</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Duas alternativas, uma resposta (C, E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+<p>Com relação à programação R, julgue os itens que se seguem.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>helloStr <span class="ot">&lt;-</span> <span class="st">"Hello world!"</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(helloStr) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nesse caso, após a execução dos comandos, será obtido o resultado a seguir.</p>
+<p>[1] “Hello world!”</p>
+<hr>
+<p>Alternativas:</p>
+<p>C - Correto</p>
+<p>E - Errado</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Conceitos Prévios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>Uso de <code>&lt;-</code></dt>
+<dd>
+veja conceito na <a href="#sec-funcao-c-assign-print"><span>Section&nbsp;1.1</span></a>
+</dd>
+<dt>Função <strong>print()</strong> </dt>
+<dd>
+veja conceito na <a href="#sec-funcao-c-assign-print"><span>Section&nbsp;1.1</span></a>
+</dd>
+</dl>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objetos do tipo caractere (texto)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Objetos do tipo <code>character</code> servem para representar textos no R. A criação dos mesmos se dá pelo uso de aspas duplas ou simples:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de criação de objetos do tipo texto</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"abc"</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="st">'cba'</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O R oferece uma ampla gama de operações com objetos de texto. É possível procurar por letras e padrões específicos de texto, quebrar texto com base em um símbolo, e várias outras operações. Veja <a href="https://msperlin.com/adfer/classes-basicas.html#classe-de-caracteres-texto">capítulo 7</a> de <span class="citation" data-cites="adfeR">Perlin (<a href="99-references.html#ref-adfeR" role="doc-biblioref">2021</a>)</span> para mais detalhes sobre as principais operações disponíveis para objetos do tipo texto.</p>
+</div>
+</div>
+<hr>
+<p>O enunciado da questão está <strong>correto</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-6"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-6-1" class="code-annotation-target"><a href="#annotated-cell-6-1" aria-hidden="true" tabindex="-1"></a>helloStr <span class="ot">&lt;-</span> <span class="st">"Hello world!"</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-6" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-6-2" class="code-annotation-target"><a href="#annotated-cell-6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(helloStr)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-6" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-6">a primeira etapa é a definição de variáveis no R: <code>helloStr &lt;- "Hello world!"</code>. Veja que, para o R, sempre que texto é envolvido por aspas duplas (ou simples), o objeto criado é do tipo <code>character</code> (ou caractere/texto).</span>
+</dd>
+<dt data-target-cell="annotated-cell-6" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="2" data-code-cell="annotated-cell-6">Ao usarmos o comando <strong>print()</strong> para um objeto do tipo texto, a saída é o texto em si. Portanto, ao rodarmos o código do enunciado, o resultado é exatamente [1] “Hello world!”:</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "Hello world!"</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-funcao-matrix-array" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="sec-funcao-matrix-array"><span class="header-section-number">1.4</span> Questão 04 [MJSP 2020]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ministério da Justiça e Segurança Pública</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Analista (Superior)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">d</td>
+</tr>
+</tbody>
+</table>
+<p>Um analista do MJSP necessita criar a seguinte matriz em linguagem R:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figs/2020_MinistériodaJustiçaeSegurançaPública_Analista(Superior)_RMD_FIG01.png" class="img-fluid figure-img" style="width:35.0%"></p>
+<figcaption class="figure-caption">matriz a ser criada</figcaption>
+</figure>
+</div>
+<p>Sabendo disso, assinale a alternativa que apresenta corretamente o código que o analista deverá escrever em linguagem R.</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) array(data=c(45,75,51,0.17),nrow=2,ncol=2).</p>
+<p>b ) array(c=(45,75,51,0.17),row=2,col=2).</p>
+<p>c ) data=c(45,75,51,0.17),nrow=2,ncol=2.</p>
+<p>d ) matrix(data=c(45,75,51,0.17),nrow=2,ncol=2).</p>
+<p>e ) matrix(c=(45,75,51,0.17),row=2,col=2).</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>matrix()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta serve para criar matrizes no R. Uma matriz nada mais é do que um conjunto de valores numéricos organizados em um objeto de duas dimensões, uma tabela, com linhas e colunas. Estas são geralmente utilizadas para simplificar operações matemáticas.</p>
+<p>Para criar uma matriz com <strong>matrix()</strong> , basta indicar os valores a serem preenchidos, e o tamanho da matriz desejada:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cria matriz com 4 linhas e 3 colunas</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="at">data =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;      [,1] [,2] [,3]
+R&gt; [1,]    1    5    9
+R&gt; [2,]    2    6   10
+R&gt; [3,]    3    7   11
+R&gt; [4,]    4    8   12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cria matriz com 3 linhas e 4 colunas</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="at">data =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;      [,1] [,2] [,3] [,4]
+R&gt; [1,]    1    4    7   10
+R&gt; [2,]    2    5    8   11
+R&gt; [3,]    3    6    9   12</code></pre>
+</div>
+</div>
+<p>Note que a <strong>ordem de preenchimento</strong> da matriz segue a ordem das dimensões: primeiro as linhas, e depois as colunas. Isso é importante pois define os elementos da matriz criada, e pode ser conhecimento necessário para a resolução de questões de concurso.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>array()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Este comando é semelhante a <strong>matrix()</strong> , porém sem a restrição no número de dimensões. A função <strong>array()</strong> pode criar objetos com qualquer número de dimensões, enquanto <strong>matrix()</strong> é restrita a duas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cria objeto com 2 dimensões</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">array</span>(<span class="at">data =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; , , 1
+R&gt; 
+R&gt;      [,1] [,2] [,3]
+R&gt; [1,]    1    5    9
+R&gt; [2,]    2    6   10
+R&gt; [3,]    3    7   11
+R&gt; [4,]    4    8   12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cria objeto com 3 dimensões</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">array</span>(<span class="at">data =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>, <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; , , 1, 1
+R&gt; 
+R&gt;      [,1] [,2]
+R&gt; [1,]    1    3
+R&gt; [2,]    2    4
+R&gt; 
+R&gt; , , 2, 1
+R&gt; 
+R&gt;      [,1] [,2]
+R&gt; [1,]    5    7
+R&gt; [2,]    6    8
+R&gt; 
+R&gt; , , 1, 2
+R&gt; 
+R&gt;      [,1] [,2]
+R&gt; [1,]    9   11
+R&gt; [2,]   10   12
+R&gt; 
+R&gt; , , 2, 2
+R&gt; 
+R&gt;      [,1] [,2]
+R&gt; [1,]   13   15
+R&gt; [2,]   14   16</code></pre>
+</div>
+</div>
+<p>Veja que o argumento <code>dim</code> indica a quantidade e o tamanho de cada dimensão na forma de um vetor. Assim como para a função <strong>matrix()</strong> , os elementos individuais também são preenchidos seguindo a ordem das dimensões.</p>
+</div>
+</div>
+<hr>
+<p>A resposta correta é a alternativa <strong>d) matrix(data=c(45,75,51,0.17), nrow=2, ncol=2)</strong>.</p>
+<p>A forma mais usual de criação de matrizes no R se dá pelo uso da função <strong>matrix()</strong> . Porém, função <strong>array()</strong> também possibilita a criação de matrizes. A diferença é que <strong>matrix()</strong> é restrita a objetos com duas dimensões (matrizes e vetores), enquanto <strong>array()</strong> permite a criação de objects com qualquer número de dimensões, incluindo matrizes (2 dimensões), ou <em>arrays</em> com número <em>k</em> de dimensões.</p>
+<p>Assim, o nome da função, isoladamente, não permite resolver o problema, mas já indica o caminho. Sabendo que apenas funções <strong>matrix()</strong> e <strong>array()</strong> podem criar matrizes, já podemos excluir com segurança a alternativa c).</p>
+<p>O próximo passo é analisar as entradas utilizadas para as funções em cada alternativa. Saiba que ambas as funções compartilham o argumento <code>data</code>, porém apenas <strong>matrix()</strong> se utiliza das entradas <code>nrow</code> e <code>ncol</code>. Explicando com exemplos, podemos criar uma matriz com a função <strong>array()</strong> com o código abaixo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criação de array com 2 dimensões</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">array</span>(<span class="at">data=</span><span class="fu">c</span>(<span class="dv">45</span>,<span class="dv">75</span>,<span class="dv">51</span>,<span class="fl">0.17</span>), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;      [,1]  [,2]
+R&gt; [1,]   45 51.00
+R&gt; [2,]   75  0.17</code></pre>
+</div>
+</div>
+<p>o qual resulta em objeto equivalente a solução do problema:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criação de matriz com 2 dimensões</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="at">data=</span><span class="fu">c</span>(<span class="dv">45</span>, <span class="dv">75</span>, <span class="dv">51</span>, <span class="fl">0.17</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;      [,1]  [,2]
+R&gt; [1,]   45 51.00
+R&gt; [2,]   75  0.17</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Dica do Perlin
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nota-se um certo gosto dos avaliadores em questões relativas a criação de matrizes. Assim, memorize os argumentos das funções <strong>matrix()</strong> e <strong>array()</strong> , e lembre também que, na criação de uma matriz, <strong>a ordem dos elementos do objeto de saída segue a ordem das dimensões</strong>: primeiro preenche-se as linhas da primeira coluna, depois as linhas da segunda coluna e assim por diante.</p>
+<p>Outro ponto importante é que, para ambas as funções, pode ocorrer a <strong>reciclagem de elementos</strong> (veja <span class="quarto-unresolved-ref">?sec-regra-reciclagem</span>) caso o número de valores na entrada em <code>data</code> não sejam suficientes para preencher o objeto desejado. Em resumo, o R repete o vetor de entrada quantas vezes for necessário para preencher a matriz inteira. Veja o exemplo abaixo, onde argumento <code>data</code> é igual a <code>c(1, 2)</code>, com <code>nrow=2</code> e <code>ncol=2</code>. Claramente, o vetor de entrada não tem elementos suficientes para preencher os quatro elementos de uma matrix com duas linhas e duas colunas. Assim, seguindo a regra de reciclagem, o vetor <code>c(1, 2)</code> é repetido uma vez para preencher a matriz. Veja o resultado abaixo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de reciclagem de valores em matrizes</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;      [,1] [,2]
+R&gt; [1,]    1    1
+R&gt; [2,]    2    2</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-05-mjsp-2020" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="questão-05-mjsp-2020"><span class="header-section-number">1.5</span> Questão 05 [MJSP 2020]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ministério da Justiça e Segurança Pública</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Cientista Social</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">59</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">b</td>
+</tr>
+</tbody>
+</table>
+<p>A linguagem R é uma poderosa linguagem para se trabalhar com dados. Assinale a alternativa que apresenta somente funções da Linguagem R.</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) input(), output(), floor(), avg().</p>
+<p>b ) mean(), summary(), quantile(), var().</p>
+<p>c ) sum(), avarage(), clean(), goto().</p>
+<p>d ) class(), vetor(), sum(), min().</p>
+<p>e ) for(), loop(), data(), math().</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<p>A resposta correta é alternativa <strong>b) mean(), summary(), quantile(), var()</strong>.</p>
+<p>Esta é uma questão que exige certa memorização. O R possui um conjunto imenso de funções em seus módulos e, certamente, até mesmo usuários avançados teriam dificuldade em memorizar todos os nomes das funções disponíveis. Porém, com alguns atalhos, é possível chegar na resposta correta sem necessitar um esforço de memorização.</p>
+<p>Para começar, vamos olhar quais alternativas e funções realmente existem no R. Aquelas que não existem são <del>sobrescritas</del> abaixo:</p>
+<ol type="a">
+<li><p><del>input()</del>, <del>output()</del>, floor(), <del>avg()</del>.</p></li>
+<li><p>mean(), summary(), quantile(), var().</p></li>
+<li><p>sum(), <del>avarage()</del>, <del>clean()</del>, <del>goto()</del>.</p></li>
+<li><p>class(), <del>vetor()</del>, sum(), min().</p></li>
+<li><p><del>for()</del>, <del>loop()</del>, data(), <del>math()</del>.</p></li>
+</ol>
+<p>Primeiro, lembre que a função de calcular média no R é <strong>mean()</strong> . Esta tende a ser parte da primeira lição aprendida no R, e um conhecimento bastante acessível. Assim, os nomes <code>avg()</code> da alternativa (a) e <code>avarage()</code> (sim, tem erro de digitação) da alternativa (c) já poderiam ser excluídos.</p>
+<p>Na alternativa (c), veja que existe o nome <code>vetor</code>, o qual é a tradução de <em>vector</em> para o português. Como as funções do R estão <strong>todas escritas em inglês</strong>, claramente esta também não pode ser a resposta correta. Note, porém, que todos os demais nomes da alternativa (c): <code>class()</code>, <code>sum()</code>, <code>min()</code> são nomes válidos de funções no R.</p>
+<p>Na alternativa (e), note que o nome <code>for()</code> não é uma função, mas sim um nome reservado para iniciar um <em>loop</em>. E outra, <em>loop</em> é um conceito, e não função. Esta alternativa também pode ser excluída.</p>
+<p>Assim, com um pouco de lógica, podemos chegar na resposta ou, no mínimo, excluir algumas alternativas, sem a necessidade de decorar todas as funções do R.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Dica do Perlin
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Infelizmente, questões de memorização de nomes de funções no R são comuns em concursos públicos. Como professor, deixo aqui minha crítica a este tipo de questão “decoreba”, pois esta não medem o conhecimento de R de um candidato.</p>
+<p>Porém um atalho pode ajudar. Suspeito fortemente que funções exigidas em concursos devem se limitar aos pacotes básicos do R, aqueles que são inicializados com o software. Por exemplo, pacote <strong>{base}</strong> é carregado no início da sessão do R, permitindo o uso direto de suas funções, tal como <strong>mean()</strong>.</p>
+<p>Assim, saiba que os pacotes automaticamente inicializados com o R são: <strong>{stats}</strong>, <strong>{graphics}</strong>, <strong>{grDevices}</strong>, <strong>{utils}</strong>, <strong>{datasets}</strong> e <strong>{base}</strong>. No mínimo, recomendo que o leitor se familiarize com as as principais funções do pacote <strong>{base}</strong> e <strong>{stats}</strong>.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-06-mjsp-2020" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="questão-06-mjsp-2020"><span class="header-section-number">1.6</span> Questão 06 [MJSP 2020]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ministério da Justiça e Segurança Pública</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Cientista Social</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">d</td>
+</tr>
+</tbody>
+</table>
+<p>Assinale a alternativa que apresenta o comando que informa à Linguagem R em qual pasta ela deve ler os arquivos de dados.</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) filter().</p>
+<p>b ) select().</p>
+<p>c ) read_fwf().</p>
+<p>d ) setwd().</p>
+<p>e ) library().</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>setwd()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta função modifica o diretório de trabalho em uma sessão do R. O seu nome é uma abreviatura da frase <em>set working directory</em>. A sua entrada é o diretório para onde a sessão do R deve se dirigir. Isto permite que arquivos de dados sejam importados com referência relativa. Por exemplo, imagine que existe um arquivo chamado <em>dados.csv</em> no diretório <em>C:/Trabalho-R/</em>. Para mudar o diretório e importar os dados na sua sessão, basta usar o código abaixo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"C:/Trabalho-R/"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"dados.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<hr>
+<p>A resposta correta é alternativa <strong>d) setwd()</strong>, a qual muda o diretório de trabalho em uma sessão do R. Para esclarecer e explicar a negativa das demais funções, segue abaixo uma descrição simplificada de cada:</p>
+<dl>
+<dt><strong>filter()</strong> </dt>
+<dd>
+Originária do pacote <strong>{stats}</strong>, esta função aplica um filtro linear a uma (ou mais) séries temporais. Este é um método estatístico de modelagem de dados. A função também é encontrada no pacote <strong>{dplyr}</strong> e, neste caso, serve para filtrar as linhas de um <em>dataframe</em> (veja <span class="quarto-unresolved-ref">?sec-pipeline</span>).
+</dd>
+<dt><strong>select()</strong></dt>
+<dd>
+Esta função não existe nos pacotes básicos do R, porém pode ser encontrada no <strong>{dplyr}</strong> . Neste caso, a função serve para selecionar colunas de um <em>dataframe</em> (tabela). O retorno da função é um outro <em>dataframe</em> com apenas as colunas selecionadas.
+</dd>
+<dt><strong>read_fwf()</strong></dt>
+<dd>
+Esta função também não existe nos pacotes básicos do R, porém pode ser encontrada no pacote <strong>{readr}</strong> . A mesma serve para importar dados de texto para sua sessão do R. O termo <em>fwf</em> significa <em>fixed width file</em>, arquivo de texto onde uma quantidade de espaços define a separação de colunas.
+</dd>
+<dt><strong>library()</strong> </dt>
+<dd>
+Função para carregar pacotes em uma sessão do R. Por exemplo, para carregar todas as funções do pacote <strong>{readr}</strong> , basta executar o comando <code>library(readr)</code>.
+</dd>
+</dl>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-funcoes-e-escopo" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="sec-funcoes-e-escopo"><span class="header-section-number">1.7</span> Questão 07 [DPF 2021]</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2021</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Departamento de Polícia Federal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Agente de Polícia Federal</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Duas alternativas, uma resposta (C, E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">E</td>
+</tr>
+</tbody>
+</table>
+<p>Com relação a conceitos de programação Python e R, julgue os itens que se seguem.</p>
+<p>O resultado do código R seguinte será “12”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>f<span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="cf">function</span>(y) {</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">+</span> z</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="fu">g</span>(x)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p>Alternativas:</p>
+<p>C - Correto</p>
+<p>E - Errado</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Cuidado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta questão apresenta um enunciado complicado, e pode ser entendida de diferentes formas. O problema é que, ao rodar o código R, a solução é o valor numérico 12, e não o texto “12”. Relembre que, no R, ao colocar aspas duplas ou simples em um objeto, o valor é do tipo caractere (veja <a href="#sec-caracteres"><span>Section&nbsp;1.3</span></a>), e não numérico. Assim, se levarmos a risca o enunciado, o gabarito está errado, pois o tipo de objeto de saída não bate com o valor encontrado pelo código. Porém, se ignorarmos o uso de aspas duplas, o gabarito está correto, pois a saída do código apresentado é exatamente o valor 12.</p>
+<p>Para manter a integridade e coerência do material do livro, o gabarito desta e de outras questões irá sempre levar a notação do R a risca. Assim, aceita-se a solução de que o enunciado está errado.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Funções customizadas no R
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Todo usuário do R pode escrever suas próprias funções. Isto facilita a construção e manutenção de códigos. Conforme <span class="citation" data-cites="adfeR">Perlin (<a href="99-references.html#ref-adfeR" role="doc-biblioref">2021</a>)</span>, <a href="https://msperlin.com/adfer/programacao.html">capítulo 8</a>, abaixo seguem os principais pontos sobre a construção de funções customizadas no R:</p>
+<ul>
+<li>Toda função possui três partes conexas: as entradas, o processamento e a saída. As entradas são os argumentos definidos na instanciação da função. Por exemplo, para a função <code>fct &lt;- function(arg1, arg2)</code>, os nomes <code>arg1</code> e <code>arg2</code> são as entradas. O processamento ocorre no miolo da função, com o uso de chaves (<code>{ }</code>). Já a saída é definida com o comando <code>return()</code>. Este define o fim da execução da função, e o retorno de um objeto para o usuário.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de função customizada no R</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>fct <span class="ot">&lt;-</span> <span class="cf">function</span>(arg1, <span class="at">arg2 =</span> <span class="dv">5</span>) { <span class="co"># entradas</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># miolo da função (processamento)</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(arg1)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(arg2)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> arg1 <span class="sc">+</span> arg2</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># saída da função e retorno para usuário</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>O usuário pode definir as entradas de uma função tanto por posição quanto por nome. Veja que, na função anterior, a primeira entrada de <strong>fct()</strong> é <code>arg1</code> e a segunda <code>arg2</code>. Assim, o comando <code>fct(1, 2)</code> é equivalente a <code>fct(arg2=2, arg1=1)</code>.</p></li>
+<li><p>O uso de igualdade nas definições de entrada, tal qual <code>f &lt;- function(x = 1)</code>, registra o valor padrão (ou <em>default</em>) para o argumento em questão. Quando o usuário não usa o argumento, ele toma o valor padrão. Assim, o comando <code>fct(1)</code> é equivalente a <code>fct(1, 5)</code>, uma vez que o valor padrão de <code>arg2</code> é 5.</p></li>
+<li><p>Para rodar uma função customizada no R, primeiro é necessário registrá-la na sessão, isto é, rodar o código de definição da função. Caso a função não for registrada, o R retornará um erro indicando que a função não foi encontrada.</p></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Escopo de objetos
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O <strong>escopo de objetos</strong> define a forma como a plataforma R procura objetos na execução de códigos. Este é um tema que pode ser complexo, mas vou simplificar aqui. Primeiro, saiba que todo código R é executado em determinado ambiente de trabalho, chamado de <em>namespace</em>. Este ambiente muda ao executarmos código dentro de funções e carregarmos pacotes. Quando definimos um objeto em código, o R procura o valor da variável seguindo uma ordem própria sobre as áreas de trabalho (<em>namespace</em>), funções e pacotes:</p>
+<ol type="1">
+<li><p>Primeiro, o R procura pela variável no ambiente da função em que o nome é requisitado, incluindo entre as entradas da função.</p></li>
+<li><p>Caso não encontrada, o objeto é buscado em quaisquer outras funções acima da função de requisição, seguindo a ordem de chamada do código.</p></li>
+<li><p>Se não encontrada, o R procura pela variável no ambiente global, sua área de trabalho original. O ambiente global nada mais é do que a sessão do R que você iniciou.</p></li>
+<li><p>Por fim, o R procura pelo objeto no ambiente (<em>namespace</em>) dos pacotes carregados na sua sessão.</p></li>
+</ol>
+<p>É usando as regras anteriores que o R encontra os nomes de objetos e funções. <strong>Isso é importante pois define quais objetos são utilizados em cálculos.</strong> Note que é devido a esta propriedade que uma função de determinado pacote se torna disponível após carregarmos o módulo com a função <strong>library()</strong> . Primeiro o R procura pelo nome da função em todos os ambientes de trabalho, e depois encontra no ambiente do pacote.</p>
+<p>A dinâmica do escopo de variáveis muda quando temos funções próprias no código. Saiba que cada função possui seu próprio ambiente de execução e, como foi destacado anteriormente, <strong>quando um objeto não é encontrado no ambiente de execução da função, o R procura sequencialmente nos demais ambientes, até chegar no ambiente global</strong>. Um exemplo vai elucidar. Considere o código a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-1"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"esse é x do ambiente global"</span></span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-1-3" class="code-annotation-target"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a>fct_1 <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="annotated-cell-1-4"><a href="#annotated-cell-1-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="st">"esse é x do ambiente da função"</span>   </span>
+<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(x)</span>
+<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="annotated-cell-1-7"><a href="#annotated-cell-1-7" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-1-8" class="code-annotation-target"><a href="#annotated-cell-1-8" aria-hidden="true" tabindex="-1"></a>fct_2 <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(x)</span>
+<span id="annotated-cell-1-10"><a href="#annotated-cell-1-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="annotated-cell-1-11"><a href="#annotated-cell-1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-1-12"><a href="#annotated-cell-1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fct_1</span>()</span>
+<span id="annotated-cell-1-13"><a href="#annotated-cell-1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">fct_2</span>()</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-1">Variável <code>x</code> é definida no ambiente global (fora da função)</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="3" data-code-cell="annotated-cell-1">Função <code>fct_1</code> define uma variável de mesmo nome, <code>x</code>, no ambiente da função, e mostra a mesma no <em>prompt</em> com função <strong>print()</strong> ;</span>
+</dd>
+<dt data-target-cell="annotated-cell-1" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-annotation="3" data-code-lines="8" data-code-cell="annotated-cell-1">Função <code>fct_2</code> não define uma variável <code>x</code> no ambiente da função, mas mostra o valor de <code>x</code> no <em>prompt</em>.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "esse é x do ambiente da função"
+R&gt; [1] "esse é x do ambiente global"</code></pre>
+</div>
+</div>
+<p>Veja que, na chamada para <strong>fct_1()</strong>, o resultado é o valor de <code>x</code> no ambiente da função. Quando chamamos <strong>fct_2()</strong>, a qual <strong>não define <code>x</code></strong> em nenhum momento, o retorno é o valor de <code>x</code> no ambiente global.</p>
+<p>Para entender um pouco mais, veja o exemplo a seguir onde temos uma função definida dentro de outra função.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"esse é x do ambiente global"</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>fct_3 <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="st">"esse é x do ambiente da função fct_3()"</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  fct_2 <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(x)</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fct_2</span>()</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a><span class="fu">fct_3</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "esse é x do ambiente da função fct_3()"</code></pre>
+</div>
+</div>
+<p>Neste caso, como <strong>fct_2()</strong> foi definida dentro de <strong>fct_3()</strong>, a procura pela variável passa antes pelo ambiente de execução da função <strong>fct_3()</strong>, antes de chegar no ambiente de execução global. Assim, o valor de <code>x</code> é aquele definido em <strong>fct_3()</strong>.</p>
+</div>
+</div>
+<hr>
+<p>O enunciado está <strong>errado</strong>. O retorno do código é o valor numérico 12, e não o texto “12”. Esta questão envolve dois conceitos avançados no R: <strong>criação de funções customizadas</strong> e <strong>escopo de variáveis</strong> (veja definições acima).</p>
+<p>Voltando a questão, explica-se a resolução com o comentário em código:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-10"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1" aria-hidden="true" tabindex="-1"></a>f<span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="annotated-cell-10-2"><a href="#annotated-cell-10-2" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="cf">function</span>(y) {      <span class="co"># </span></span>
+<span id="annotated-cell-10-3"><a href="#annotated-cell-10-3" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">+</span> z                 </span>
+<span id="annotated-cell-10-4"><a href="#annotated-cell-10-4" aria-hidden="true" tabindex="-1"></a>  }</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-10-5" class="code-annotation-target"><a href="#annotated-cell-10-5" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-10-6" class="code-annotation-target"><a href="#annotated-cell-10-6" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="fu">g</span>(x)</span>
+<span id="annotated-cell-10-7"><a href="#annotated-cell-10-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="annotated-cell-10-8"><a href="#annotated-cell-10-8" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-10-9" class="code-annotation-target"><a href="#annotated-cell-10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="dv">4</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-10" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="9" data-code-cell="annotated-cell-10">Após a chamada de <code>f(4)</code>, a função <strong>g()</strong> é definida na linha 2.</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="5" data-code-cell="annotated-cell-10">Define o valor de <code>z &lt;- 4</code>, o qual, seguindo a lógica do escopo de variáveis, é o valor de <code>z</code> criado no miolo da função <strong>f()</strong> e utilizado na função <strong>g()</strong>. Portanto, o resultado de <code>g(x)</code> é igual a 8.</span>
+</dd>
+<dt data-target-cell="annotated-cell-10" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-annotation="3" data-code-lines="6" data-code-cell="annotated-cell-10">Consequentemente, a soma <code>x + g(x)</code> da linha (4) é equivalente a <code>4 + 8</code>, resultando no valor 12.</span>
+</dd>
+</dl>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Dica do Perlin
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O tema de escopo de variáveis é muito propício de cair em concursos futuros. Me colocando no papel de autor de questões, veja que o enunciado da pergunta pode ser feito de forma enxuta, com complexidade flexível, e com gabarito inquestionável (é um simples código que pode ser rodado, dando sempre a mesma solução). Ao mesmo tempo, o assunto é complexo e pode filtrar candidatos bem preparados dos demais. Assim, aqui fica a recomendação de que entendas bem o conceito de escopo de variáveis no R, facilitando a resolução de potenciais futuras questões.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-08-agergs-2022" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="questão-08-agergs-2022"><span class="header-section-number">1.8</span> Questão 08 [AGERGS 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ag. Est. de Regulação dos Serv. Púb. Delegados do RS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Engenheiro de Processamento Digital</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">c</td>
+</tr>
+</tbody>
+</table>
+<p>Estamos interessados em ajustar um modelo de regressão linear simples no pacote estatístico R. O comando a ser utilizado para esse fim é:</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) ts</p>
+<p>b ) glm</p>
+<p>c ) lm</p>
+<p>d ) cor</p>
+<p>e ) road</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>lm()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta estima uma regressão linear com base em dados, tendo como saída os coeficientes estimados, assim como também alguns testes estatístico. A regressão linear é um dos modelos estatísticos mais simples, assumindo uma relação linear entre as variáveis do modelo. Veja o exemplo abaixo, onde criamos uma tabela com dados artificiais, e estimamos um simples modelo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cria um dataframe</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">5</span>),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">3</span>, <span class="dv">8</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># estima um modelo de regressão linear</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>my_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> y <span class="sc">~</span>x, <span class="at">data =</span> dados)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="co"># mostra resultado</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; 
+R&gt; Call:
+R&gt; lm(formula = y ~ x, data = dados)
+R&gt; 
+R&gt; Coefficients:
+R&gt; (Intercept)            x  
+R&gt;     5.15306      0.05612</code></pre>
+</div>
+</div>
+<p>Para obter mais informações sobre o modelo estimado, usamos a função <strong>summary()</strong> .</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(my_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; 
+R&gt; Call:
+R&gt; lm(formula = y ~ x, data = dados)
+R&gt; 
+R&gt; Residuals:
+R&gt;       1       2       3       4       5 
+R&gt; -3.2092  0.7347  2.5663 -2.6582  2.5663 
+R&gt; 
+R&gt; Coefficients:
+R&gt;             Estimate Std. Error t value Pr(&gt;|t|)
+R&gt; (Intercept)  5.15306    2.68100   1.922     0.15
+R&gt; x            0.05612    0.51406   0.109     0.92
+R&gt; 
+R&gt; Residual standard error: 3.219 on 3 degrees of freedom
+R&gt; Multiple R-squared:  0.003957,   Adjusted R-squared:  -0.3281 
+R&gt; F-statistic: 0.01192 on 1 and 3 DF,  p-value: 0.92</code></pre>
+</div>
+</div>
+</div>
+</div>
+<hr>
+<p>A solução é a alternativa <strong>c) lm</strong>, a qual estima uma regressão linear com base em dados (veja quadro acima). Para explicar a negativa das demais opções, abaixo apresenta-se uma explicação simplificada de cada um:</p>
+<dl>
+<dt><strong>ts()</strong> </dt>
+<dd>
+serve para criar objetos representam séries temporais.
+</dd>
+<dt><strong>glm()</strong> </dt>
+<dd>
+função utilizada para a estimação de modelos generalizados (<em>Generalized Linear Models</em>).
+</dd>
+<dt><strong>cor()</strong> </dt>
+<dd>
+função utilizada para o cálculo de correlação entre duas séries numéricas.
+</dd>
+<dt><strong>road()</strong></dt>
+<dd>
+esta função não existe nos pacotes tradicionais do R. A única menção encontrada é para a importação de dados de mortes relacionadas ao trânsito de estradas dos Estados Unidos (veja pacote <strong>{MASS}</strong> ).
+</dd>
+</dl>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-09-agergs-2022" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="questão-09-agergs-2022"><span class="header-section-number">1.9</span> Questão 09 [AGERGS 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ag. Est. de Regulação dos Serv. Púb. Delegados do RS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Engenheiro de Processamento Digital</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">e</td>
+</tr>
+</tbody>
+</table>
+<p>Quando usamos o símbolo “=” ou “&lt;” seguido de “-” estamos criando objetos com um nome que aparece à esquerda e que contém alguns elementos (o que vem à direita do símbolo). Quando criamos um objeto, ele fica guardado na memória do R até que se feche o programa. Porém, os objetos criados ficam ocultos. Para ver a lista de arquivos ocultos, basta dar o seguinte comando:</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) tuple()</p>
+<p>b ) console()</p>
+<p>c ) rain()</p>
+<p>d ) table_rain()</p>
+<p>e ) ls()</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>ls()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Este comando, o qual é uma abreviatura da frase <em>list objects</em>, quando chamado sem argumentos, retorna um vetor com todos os objetos e funções disponíveis no ambiente de trabalho do R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lista todos objetos da area de trabalho</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<hr>
+<p>A solução é alternativa <strong>e) ls()</strong>. Para as demais funções, segue abaixo as explicações simplificadas.</p>
+<dl>
+<dt><strong>tuple()</strong></dt>
+<dd>
+esta função não existe no R, porém é encontrada na linguagem de programação <em>Python</em>.
+</dd>
+<dt><strong>console()</strong></dt>
+<dd>
+esta função não existe nos módulos básicos do R.
+</dd>
+<dt><strong>rain()</strong></dt>
+<dd>
+esta função não existe nos módulos básicos do R.
+</dd>
+<dt><strong>table_rain()</strong></dt>
+<dd>
+esta função não existe nos módulos básicos do R.
+</dd>
+</dl>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Dica do Perlin
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Um ponto importante, existe no R o conceito de objetos ocultos (<em>hidden</em>). O nome destes inicia com <code>.</code>, tal qual <code>.Random.seed</code> ou <code>.x</code>, e servem para guardar alguma informação que não é relevante para o usuário saber. Na prática, podemos definir uma variável iniciando o nome com um ponto, tal como em <code>.x &lt;- 1</code>. Este objeto será oculto, não aparecendo na chamada de <strong>ls()</strong> . Veja que estes detalhes formam um conhecimento específico muito interessante para ser requisitado em prova.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-10-agergs-2022" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="questão-10-agergs-2022"><span class="header-section-number">1.10</span> Questão 10 [AGERGS 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ag. Est. de Regulação dos Serv. Púb. Delegados do RS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Engenheiro de Processamento Digital</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">d</td>
+</tr>
+</tbody>
+</table>
+<p>Sobre os comandos R, analise as assertivas abaixo e assinale a alternativa correta.</p>
+<p>I - license - detalha as condições de distribuição do R.</p>
+<p>II - contributors - lista a equipe do time-cerne de desenvolvimento.</p>
+<p>III - Citation - ensina como citar o R em trabalhos acadêmicos.</p>
+<p>IV - Demo -inicia uma sessão interativa de demonstração do R.</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) Todas estão corretas.</p>
+<p>b ) Todas estão incorretas.</p>
+<p>c ) Apenas I está correta.</p>
+<p>d ) Apenas I e II estão corretas.</p>
+<p>e ) Apenas III e IV estão corretas.</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Cuidado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta questão possui uma solução inconsistente com a linguagem do R. O gabarito oficial marca a alternativa (a) – todas estão corretas – como solução. Porém, levando a letra o nome das funções do R, o correto seria alternativa (d) – somente I e II estão corretas. Nas afirmativas III e IV, as funções <strong>Citation()</strong> e <strong>Demo()</strong> deveriam ser <strong>citation()</strong> e <strong>demo()</strong>, sem a caixa alta na primeira letra.</p>
+<p>Esta é outra questão que deveria ter o gabarito modificado. Para não criar confusão, a solução do problema vai levar a letra da linguagem R, indicando um novo gabarito.</p>
+</div>
+</div>
+<p>Analisando cada uma das afirmativas:</p>
+<p>I - Correta. A função <strong>license()</strong> existe e serve para mostrar na tela os detalhes da licença de distribuição do R.</p>
+<p>II - Correta. A função <strong>contributors()</strong> mostra na tela todos as pessoas que contribuíram para o desenvolvimento da plataforma.</p>
+<p>IV - Errada. A função <strong>citation()</strong> existe e mostra a forma de citação do R, porém sem a caixa alta da primeira letra.</p>
+<p>III - Errada. A função <strong>demo()</strong> existe e inicia um processo de demonstração do R, porém sem a caixa alta da primeira letra.</p>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-funcoes-recursivas" class="level2" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="sec-funcoes-recursivas"><span class="header-section-number">1.11</span> Questão 11 [ANP 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Agência Nacional do Petróleo, Gás Natural e Biocombustíveis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Nível Superior Especialista- Projetos Análise Econômica</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">104</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Duas alternativas, uma resposta (C, E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+<p>Julgue os itens a seguir, relativos a conceitos de R.</p>
+<p>A execução do seguinte código R retorna 10100 como resultado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>funcaoXX <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>) {</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">funcaoXX</span>(<span class="fu">as.integer</span>(n<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(n <span class="sc">%%</span> <span class="dv">2</span>)</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="fu">funcaoXX</span>(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p>Alternativas:</p>
+<p>C - Correto</p>
+<p>E - Errado</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Conceitos Prévios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>Funções customizadas no R</dt>
+<dd>
+veja conceito na <a href="#sec-funcoes-e-escopo"><span>Section&nbsp;1.7</span></a>
+</dd>
+</dl>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>cat()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta é semelhante a <strong>print()</strong> e direciona um texto para o <em>prompt</em> ou arquivo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define objeto de texto</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>my_text <span class="ot">&lt;-</span> <span class="st">"abcd"</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># mostra no prompt</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(my_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; abcd</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># escreve em arquivo temporário</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">fileext =</span> <span class="st">'txt'</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(my_text, <span class="at">file =</span> my_f)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Saiba que, diferente de <strong>print()</strong> , <strong>cat()</strong> também aceita operadores de quebra de linha (<code>n</code>) e <em>tab</em> (<code>t</code>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># quebra linha no meio</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>my_text <span class="ot">&lt;-</span> <span class="st">"abncd"</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(my_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; abncd</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># usa espaço tab</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>my_text <span class="ot">&lt;-</span> <span class="st">"abtcd"</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(my_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; abtcd</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Operador <code>%%</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Este retorna o resto de uma <a href="https://en.wikipedia.org/wiki/Modulo">divisão de integrais</a>. Por exemplo, <code>10%%2 = 0</code>, pois 10 dividido por 2 equivale a 5, sem resto de divisão. Já <code>10 %% 3 = 1</code>, uma vez que o o fator de 3 mais próximo de 10 é 9, restando assim 1 para fechar a divisão.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplos de cálculo de resto</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> <span class="sc">%%</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> <span class="sc">%%</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 1</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Funções recursivas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Talvez um dos temas mais difíceis em programação, e <strong>ótimo candidato para questões de concurso</strong>, as <strong>funções recursivas</strong> são aquelas em que a própria função chama a si mesmo em sua execução. No exercício em questão, veja na linha 3 que a função chama a si mesmo com o comando <code>funcaoXX(as.integer(n/2))</code>. Isso cria um efeito unusual e complexo, necessitando de certa atenção para entender a execução do código.</p>
+<p>Uma das propriedades de toda função recursiva é a existência de uma <strong>condição de saída</strong>, isto é, a regra que faz com que a recursividade termine. Caso essa regra não exista, então a função executa a si mesmo para sempre, sem retorno para o usuário. Note que, no código da questão, a linha 3 somente é executada quando <code>n &gt; 1</code>. Portanto, a condição de saída da recursividade é <code>n &lt;= 1</code>, isto é, o lado oposto de <code>n &gt; 1</code>.</p>
+<p>Note também que as repetidas chamadas a <code>funcaoXX()</code> diminuem o valor da entrada com a fórmula <code>as.integer(n/2)</code>. Isto é, a cada iteração, o valor da entrada é diminuído, até chegar na condição de saída. Assim, sequencialmente, as chamadas a função serão:</p>
+<blockquote class="blockquote">
+<p><code>funcaoXX(20)</code> –&gt; <code>funcaoXX(10)</code> –&gt; <code>funcaoXX(5)</code> –&gt; <code>funcaoXX(2)</code> –&gt; <code>funcaoXX(1)</code>.</p>
+</blockquote>
+<p>A ordem de saída, porém, será inversa, começando com <code>funcaoXX(1)</code>. Veja que <code>funcaoXX(1)</code> é a primeira execução a atingir a condição de término (<code>n&lt;=1</code>), assim a primeira a atingir o código de saída <code>cat(n %% 2)</code>. Assim, a sua saída é o valor “1”.</p>
+<p>O segundo código a atingir saída é <code>funcaoXX(2)</code>, resultando no valor “0” pois <code>cat(2 %% 2) = 0</code>. Sucessivamente, começando em <code>funcaoXX(1)</code> e terminando em <code>funcaoXX(20)</code>, as funções apresentam suas saídas.</p>
+</div>
+</div>
+<p>A afirmativa do exercício está <strong>correta</strong>, com uma saída de código equivalente a 10100.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-12"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a>funcaoXX <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="annotated-cell-12-2"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>) {</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-12-3" class="code-annotation-target"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">funcaoXX</span>(<span class="fu">as.integer</span>(n<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="annotated-cell-12-4"><a href="#annotated-cell-12-4" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="annotated-cell-12-5"><a href="#annotated-cell-12-5" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-12-6" class="code-annotation-target"><a href="#annotated-cell-12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(n <span class="sc">%%</span> <span class="dv">2</span>)</span>
+<span id="annotated-cell-12-7"><a href="#annotated-cell-12-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="annotated-cell-12-8"><a href="#annotated-cell-12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">funcaoXX</span>(<span class="dv">20</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-12" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="3" data-code-cell="annotated-cell-12">esta é uma chamada recursiva da própria função, explicada em quadro acima.</span>
+</dd>
+<dt data-target-cell="annotated-cell-12" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="6" data-code-cell="annotated-cell-12">função <strong>cat()</strong> é semelhante a <strong>print()</strong> e apresenta um texto no <em>prompt</em>. Operador <code>%%</code> retorna o resto de uma divisão de integrais (veja quadro acima)</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>Para comprovar, abaixo executa-se o código mostrando a saída:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>funcaoXX <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>) {</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">funcaoXX</span>(<span class="fu">as.integer</span>(n<span class="sc">/</span><span class="dv">2</span>))   </span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(n <span class="sc">%%</span> <span class="dv">2</span>)              </span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="fu">funcaoXX</span>(<span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; 10100</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="sec-funcao-sum-rep-seq" class="level2" data-number="1.12">
+<h2 data-number="1.12" class="anchored" data-anchor-id="sec-funcao-sum-rep-seq"><span class="header-section-number">1.12</span> Questão 12 [ANP 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Agência Nacional do Petróleo, Gás Natural e Biocombustíveis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Nível Superior Especialista- Projetos Análise Econômica</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">105</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Duas alternativas, uma resposta (C, E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+<p>Julgue os itens a seguir, relativos a conceitos de R.</p>
+<p>A execução do seguinte código R resulta em 1000.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">rep</span>(<span class="dv">5</span>,<span class="dv">20</span>))<span class="sc">+</span><span class="fu">sum</span>(<span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">200</span>,<span class="dv">25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p>Alternativas:</p>
+<p>C - Correto</p>
+<p>E - Errado</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>rep()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta repete um objeto determinado número de vezes. O primeiro argumento é o objeto em si, e o segundo é o número de vezes que desejamos repeti-lo. Ao executarmos o código <code>rep(5,20)</code>, o resultado é um vetor com o número 5 repetido 20 vezes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de rep()</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rep</span>(<span class="dv">5</span>, <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1] 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>seq()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cria uma sequência entre um valor inicial (primeiro argumento), valor final (segundo argumento) e o intervalo entre cada (terceiro argumento). Ao executarmos <code>seq(0, 200, 25)</code>, o resultado é um vetor com início em 0, final em 200, com 25 de intervalo entre cada elemento.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de seq()</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">200</span>,<span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1]   0  25  50  75 100 125 150 175 200</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Função <strong>sum()</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Soma todos os elementos de um vetor. Assim, ao chamarmos <code>sum(1:5)</code>, estamos simplesmente somando todos os valores da sequência. O resultado é um valor único.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de sum()</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 15</code></pre>
+</div>
+</div>
+</div>
+</div>
+<hr>
+<p>A afirmativa da questão está <strong>correta</strong>.</p>
+<p>A solução do exercício envolve a definição de diversas funções. Para facilitar, vamos quebrar o problema em variáveis e comentar as etapas. Note que o código abaixo é equivalente ao do enunciado, porém com a criação das variáveis <code>x</code> e <code>y</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-15"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-15-1" class="code-annotation-target"><a href="#annotated-cell-15-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">5</span>,<span class="dv">20</span>)</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-15-2" class="code-annotation-target"><a href="#annotated-cell-15-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">200</span>,<span class="dv">25</span>)</span>
+<span id="annotated-cell-15-3"><a href="#annotated-cell-15-3" aria-hidden="true" tabindex="-1"></a></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-15-4" class="code-annotation-target"><a href="#annotated-cell-15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x)<span class="sc">+</span><span class="fu">sum</span>(y)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-15" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-15">Função <strong>rep()</strong> repete um objeto determinado número de vezes.</span>
+</dd>
+<dt data-target-cell="annotated-cell-15" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="2" data-code-cell="annotated-cell-15">Função <strong>seq()</strong> cria uma sequência entre 0 e 200, com 25 de intervalo entre cada elemento.</span>
+</dd>
+<dt data-target-cell="annotated-cell-15" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-annotation="3" data-code-lines="4" data-code-cell="annotated-cell-15">a função <strong>sum()</strong> soma todos os elementos de um vetor. Assim, ao chamarmos <code>sum(x)</code>, estamos simplesmente somando o valor 5, vinte vezes, resultando em 100. Para <code>sum(y)</code>, estamos somando a sequência [0, 25, 50, 75, 100, 125, 150, 175, 200], resultando no valor 900.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 1000</code></pre>
+</div>
+</div>
+<p>Finalizando, ao somarmos 100 com 900, o resultado é 1000 e, portanto, o enunciado está correto.</p>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-13-anp-2022" class="level2" data-number="1.13">
+<h2 data-number="1.13" class="anchored" data-anchor-id="questão-13-anp-2022"><span class="header-section-number">1.13</span> Questão 13 [ANP 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Agência Nacional do Petróleo, Gás Natural e Biocombustíveis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Nível Superior Especialista- Projetos Análise Econômica</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">106</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Duas alternativas, uma resposta (C, E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+<p>Considere-se o script R que se segue.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">19</span>, <span class="dv">205</span>, <span class="dv">34</span>, <span class="dv">506</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> X</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>X[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">91</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>Y[<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="dv">71</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(X)</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O resultado da execução desse script é o apresentado a seguir.</p>
+<p>0 91 205 34 506</p>
+<p>0 19 205 34 506 71</p>
+<hr>
+<p>Alternativas:</p>
+<p>C - Correto</p>
+<p>E - Errado</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Conceitos Prévios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>Uso de <code>&lt;-</code>, <code>c()</code> e <code>print()</code></dt>
+<dd>
+veja conceitos na <a href="#sec-funcao-c-assign-print"><span>Section&nbsp;1.1</span></a>
+</dd>
+</dl>
+</div>
+</div>
+<hr>
+<p>O enunciado do exercício está <strong>correto</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-17"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-17-1"><a href="#annotated-cell-17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># definição de vetores</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-17-2" class="code-annotation-target"><a href="#annotated-cell-17-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">19</span>, <span class="dv">205</span>, <span class="dv">34</span>, <span class="dv">506</span>)</span>
+<span id="annotated-cell-17-3"><a href="#annotated-cell-17-3" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> X</span>
+<span id="annotated-cell-17-4"><a href="#annotated-cell-17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-17-5"><a href="#annotated-cell-17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># mudança de elementos</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-17-6" class="code-annotation-target"><a href="#annotated-cell-17-6" aria-hidden="true" tabindex="-1"></a>X[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">91</span></span>
+<span id="annotated-cell-17-7"><a href="#annotated-cell-17-7" aria-hidden="true" tabindex="-1"></a>Y[<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="dv">71</span></span>
+<span id="annotated-cell-17-8"><a href="#annotated-cell-17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="annotated-cell-17-9"><a href="#annotated-cell-17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># apresentação na tela</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-17-10" class="code-annotation-target"><a href="#annotated-cell-17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(X)</span>
+<span id="annotated-cell-17-11"><a href="#annotated-cell-17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(Y)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-17" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="2,3" data-code-cell="annotated-cell-17">Função <strong>c()</strong> combina valores em um vetor chamado <code>X</code>. Veja que objeto <code>Y</code> é uma simples cópia do objeto <code>X</code>.</span>
+</dd>
+<dt data-target-cell="annotated-cell-17" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="6,7" data-code-cell="annotated-cell-17">O operador de colchetes (<code>[ ]</code>) modifica os elementos dos vetores por posição. Neste caso, o código <code>X[2] &lt;- 91</code> está modificando o segundo elemento de <code>X</code> para o valor 91. Já o código <code>Y[6] &lt;- 71</code> substitui o sexto elemento de <code>Y</code> pelo valor de 71.</span>
+</dd>
+<dt data-target-cell="annotated-cell-17" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-annotation="3" data-code-lines="10,11" data-code-cell="annotated-cell-17">A última etapa é mostrar os vetores resultantes com a função <strong>print()</strong> .</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>Executando o código inteiro, vemos que a saída é como indicada no enunciado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">19</span>, <span class="dv">205</span>, <span class="dv">34</span>, <span class="dv">506</span>) </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> X                      </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>X[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">91</span>                  </span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>Y[<span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="dv">71</span>                  </span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(X)                    </span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(Y)                    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-14-mpsc-2022" class="level2" data-number="1.14">
+<h2 data-number="1.14" class="anchored" data-anchor-id="questão-14-mpsc-2022"><span class="header-section-number">1.14</span> Questão 14 [MPSC 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ministério Público de Santa Catarina</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Analista de banco de dados</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">b</td>
+</tr>
+</tbody>
+</table>
+<p>Analise o código da linguagem de programação R a seguir.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>xpto <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>))</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span> (xpto[<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Na execução desse código, o print produz o valor:</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) 5</p>
+<p>b ) 7</p>
+<p>c ) 10</p>
+<p>d ) 18</p>
+<p>e ) 19</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Conceitos Prévios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>Função <strong>array()</strong> </dt>
+<dd>
+veja conceito na <a href="#sec-funcao-matrix-array"><span>Section&nbsp;1.4</span></a>
+</dd>
+<dt>Uso de <code>&lt;-</code>, <code>c()</code> e <code>print()</code></dt>
+<dd>
+veja conceitos na <a href="#sec-funcao-c-assign-print"><span>Section&nbsp;1.1</span></a>
+</dd>
+</dl>
+</div>
+</div>
+<hr>
+<p>A resposta correta é alternativa <strong>b) 7</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-20"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><a class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-20-1" class="code-annotation-target"><a href="#annotated-cell-20-1" aria-hidden="true" tabindex="-1"></a>xpto <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>))</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-20" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-20-2" class="code-annotation-target"><a href="#annotated-cell-20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span> (xpto[<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>])</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-20" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="1" data-code-cell="annotated-cell-20">Objeto <code>xpto</code> é definido com comando <strong>array()</strong> , tendo como entradas <code>c(1:24)</code> e <code>dim = c(4, 3, 2)</code>. O operador <code>:</code> constrói uma sequência, entre um valor mínimo e outro máximo. A primeira entrada é o conteúdo do objeto, neste caso uma sequência entre 1 e 24. A segunda entrada indica as dimensões desejadas para o objeto de saída. No caso, o usuário está pedindo um objeto com 3 dimensões, onde a primeira dimensão tem tamanho 4, a segunda 3 e a terceira 2.</span>
+</dd>
+<dt data-target-cell="annotated-cell-20" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="2" data-code-cell="annotated-cell-20">Comando <strong>array()</strong> busca o elemento localizado em <code>[3, 2, 1]</code>. Neste caso, será a linha 3 da coluna 2, dimensão 1.</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>Para explicar melhor o uso da função <strong>array()</strong> , veja o exemplo abaixo onde, primeiro, construímos um objeto mais simples, com 2 dimensões:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">array</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;      [,1] [,2]
+R&gt; [1,]    1    4
+R&gt; [2,]    2    5
+R&gt; [3,]    3    6</code></pre>
+</div>
+</div>
+<p>Note que a ordem de alocação dos vetores começa pelas linhas, e depois as colunas. Os primeiros três elementos de <code>c(1:6)</code> foram alocados para a primeira coluna, enquanto o quarto ao sexto elemento foram para a segunda coluna. Esta regra de alocação é importante pois define quais são os valores dos elementos do objeto resultante. Em outras palavras, a função <strong>array()</strong> vai preenchendo de acordo com as dimensões: primeiro as linhas, e depois as colunas. Esta regra segue também para as demais dimensões. Veja abaixo o resultado quando criamos um <em>array</em> de três dimensões:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">array</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; , , 1
+R&gt; 
+R&gt;      [,1] [,2]
+R&gt; [1,]    1    4
+R&gt; [2,]    2    5
+R&gt; [3,]    3    6
+R&gt; 
+R&gt; , , 2
+R&gt; 
+R&gt;      [,1] [,2]
+R&gt; [1,]    7   10
+R&gt; [2,]    8   11
+R&gt; [3,]    9   12</code></pre>
+</div>
+</div>
+<p>Note que, após preencher os seis elementos da primeira matriz, o código segue preenchendo os valores da segunda matriz.</p>
+<p>Voltando ao exercício, para descobrir qual o elemento da posição <code>[3, 2, 1]</code>, basta ir preenchendo as linhas e colunas seguindo a ordem definida anteriormente. Primeiro preenchemos a primeira coluna da primeira dimensão de <code>xpto</code> com 1:4, e a segunda coluna com 5:8. Chegamos, assim, na solução: o valor na linha 3, coluna 2 da primeira matriz é 7. Abaixo executa-se o código para demonstrar os objetos criados e a solução.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>xpto <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>))</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(xpto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; , , 1
+R&gt; 
+R&gt;      [,1] [,2] [,3]
+R&gt; [1,]    1    5    9
+R&gt; [2,]    2    6   10
+R&gt; [3,]    3    7   11
+R&gt; [4,]    4    8   12
+R&gt; 
+R&gt; , , 2
+R&gt; 
+R&gt;      [,1] [,2] [,3]
+R&gt; [1,]   13   17   21
+R&gt; [2,]   14   18   22
+R&gt; [3,]   15   19   23
+R&gt; [4,]   16   20   24</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(xpto[<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 7</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-15-mpsc-2022" class="level2" data-number="1.15">
+<h2 data-number="1.15" class="anchored" data-anchor-id="questão-15-mpsc-2022"><span class="header-section-number">1.15</span> Questão 15 [MPSC 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Ministério Público de Santa Catarina</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Analista de banco de dados</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">74</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">b</td>
+</tr>
+</tbody>
+</table>
+<p>No contexto da linguagem de programação R, analise as afirmativas a seguir.</p>
+<p>I - Vetores (vectors) são listas de itens que devem ter o mesmo tipo.</p>
+<p>II - R trabalha com vários tipos de dados (data types), numéricos, lógicos e textuais, mas as variáveis podem mudar de tipo mesmo depois da instanciação.</p>
+<p>III - Os itens de uma lista (list) não podem ser substituídos. São permitidas apenas a inserção e a remoção de itens.</p>
+<p>Está correto somente o que se afirma em:</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) I;</p>
+<p>b ) II;</p>
+<p>c ) III;</p>
+<p>d ) I e II;</p>
+<p>e ) II e III.</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Cuidado
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta questão possui uma solução incoerente com a linguagem R. O problema está na afirmativa I, a qual afirma que “Vetores (vectors) são listas de itens que devem ter o mesmo tipo”. No R, objetos do tipo vetor (<em>vector</em>) são diferentes de objetos do tipo lista (<em>list</em>). Assim, não é possível afirmar decisivamente que vetores são listas.</p>
+<p>Para evitar confusão, aqui iremos indicar um gabarito que segue a risca a linguagem R.</p>
+</div>
+</div>
+<hr>
+<p>A solução é alternativa <strong>b) II</strong>, apesar do gabarito oficial indicar alternativa d) I e II.</p>
+<p>Explicando melhor, a afirmativa I diz: “Vetores (vectors) são listas de itens que devem ter o mesmo tipo”. <strong>Errado</strong>. Veja bem, na linguagem R, vetores são diferentes de listas, com propriedades e usos diferentes. Por exemplo, em um vetor, todos elementos devem ser da mesma classe, enquanto uma lista é flexível quando ao tipo de objetos que a mesma comporta. O uso do termo “lista” é dúbio no enunciado, pois não fica claro se a referência é para listas do R, ou listas em geral.</p>
+<p>A afirmativa II diz: “R trabalha com vários tipos de dados (data types), numéricos, lógicos e textuais, mas as variáveis podem mudar de tipo mesmo depois da instanciação”. <strong>Correto</strong>. Sim, R tem uma grande flexibilidade ao lidar com diferentes tipos de dados. E sim, no R, é possível mudar o tipo de classe de uma variável após a sua criação/instanciação.</p>
+<p>Afirmativa III diz: “Os itens de uma lista (list) não podem ser substituídos. São permitidas apenas a inserção e a remoção de itens”. <strong>Errado</strong>. No R, os elementos de uma lista podem ser facilmente substituídos por outros.</p>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="questão-16-rfb-2022" class="level2" data-number="1.16">
+<h2 data-number="1.16" class="anchored" data-anchor-id="questão-16-rfb-2022"><span class="header-section-number">1.16</span> Questão 16 [RFB 2022]</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Informações</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ano</td>
+<td style="text-align: left;">2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Órgão</td>
+<td style="text-align: left;">Receita Federal do Brasil</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cargo</td>
+<td style="text-align: left;">Analista Tributário da Receita Federal</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Número na prova</td>
+<td style="text-align: left;">64</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tipo de questão</td>
+<td style="text-align: left;">Cinco alternativas, uma resposta (a, b, c, d, e)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Resposta correta</td>
+<td style="text-align: left;">d</td>
+</tr>
+</tbody>
+</table>
+<p>Analise o código R a seguir.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>lista <span class="ot">&lt;-</span> <span class="cf">function</span> (param) {</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (param <span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">3</span>) {</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>        temp <span class="ot">&lt;-</span> param <span class="sc">+</span> <span class="fu">lista</span>(param <span class="sc">-</span> <span class="dv">3</span>)</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(temp)</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="dv">0</span>)</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lista</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Assinale os valores exibidos pela execução desse código, na ordem.</p>
+<hr>
+<p>Alternativas:</p>
+<p>a ) 45, 30, 18, 9, 3, 0</p>
+<p>b ) 63, 45, 30, 18, 9, 3</p>
+<p>c ) 0, 0, 0, 0, 0, 0</p>
+<p>d ) 0, 3, 9, 18, 30, 45</p>
+<p>e ) 3, 9, 18, 30, 45, 63</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Solução</strong></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Conceitos Prévios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>Uso de <code>&lt;-</code> e <code>print()</code></dt>
+<dd>
+veja conceitos na <a href="#sec-funcao-c-assign-print"><span>Section&nbsp;1.1</span></a>
+</dd>
+<dt>Funções customizadas no R</dt>
+<dd>
+veja conceito na <a href="#sec-funcoes-e-escopo"><span>Section&nbsp;1.7</span></a>
+</dd>
+<dt>Funções recursivas</dt>
+<dd>
+veja conceito na <a href="#sec-funcoes-recursivas"><span>Section&nbsp;1.11</span></a>
+</dd>
+</dl>
+</div>
+</div>
+<hr>
+<p>A alternativa correta é <strong>d) 0, 3, 9, 18, 30, 45</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-26"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-26-1"><a href="#annotated-cell-26-1" aria-hidden="true" tabindex="-1"></a>lista <span class="ot">&lt;-</span> <span class="cf">function</span> (param) {</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-26" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-26-2" class="code-annotation-target"><a href="#annotated-cell-26-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (param <span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">3</span>) {</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-26" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-26-3" class="code-annotation-target"><a href="#annotated-cell-26-3" aria-hidden="true" tabindex="-1"></a>        temp <span class="ot">&lt;-</span> param <span class="sc">+</span> <span class="fu">lista</span>(param <span class="sc">-</span> <span class="dv">3</span>)</span>
+<span id="annotated-cell-26-4"><a href="#annotated-cell-26-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(temp)</span>
+<span id="annotated-cell-26-5"><a href="#annotated-cell-26-5" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="annotated-cell-26-6"><a href="#annotated-cell-26-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="dv">0</span>)</span>
+<span id="annotated-cell-26-7"><a href="#annotated-cell-26-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="annotated-cell-26-8"><a href="#annotated-cell-26-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="annotated-cell-26-9"><a href="#annotated-cell-26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lista</span>(<span class="dv">15</span>)</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-26" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-annotation="1" data-code-lines="2" data-code-cell="annotated-cell-26">a primeira linha de código, execução da função <strong>lista()</strong>, define a condição de saída da função recursiva. Se <code>param</code> é maior do que 3, as linhas 3 e 4 são executadas, caso contrário o retorno é zero (linha 6).</span>
+</dd>
+<dt data-target-cell="annotated-cell-26" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-annotation="2" data-code-lines="3" data-code-cell="annotated-cell-26">Chamada recursiva da própria função.</span>
+</dd>
+</dl>
+</div>
+</div>
+<p>Conforme colocado em <a href="#sec-funcoes-recursivas"><span>Section&nbsp;1.11</span></a>, o primeiro ponto a analisar em uma função recursiva é a condição de saída. Neste caso, a recursividade acaba quando <code>param &lt;= -3</code>, o contrário de <code>param &gt;-3</code> (veja linha 2). Note também que, na chamada recursiva, a entrada é diminuída de 3 a cada execução. Assim, temos a seguinte ordem de chamada da função:</p>
+<blockquote class="blockquote">
+<p><code>lista(15)</code> –&gt; <code>lista(12)</code> –&gt; … –&gt; <code>lista(0)</code> –&gt; <code>lista(-3)</code>.</p>
+</blockquote>
+<p>A ordem de saída no <em>prompt</em> será inversa, começando com <code>lista(-3)</code> e terminando com <code>lista(15)</code>. Assim, o resultado de <code>lista(-3)</code> é o valor 0, uma vez que a entrada <code>param= -3</code> aciona a saída da função (veja linha 2 do código). Assim, quando o código chama <code>lista(0)</code>, temos que a saída é <code>temp &lt;- param + lista(param - 3)</code>, onde, substituindo os valores, encontramos <code>temp &lt;- 0 + 0</code>. O resultado da primeira chamada é 0. Isso já permitiria excluir todas alternativas senão c) e d).</p>
+<p>A segunda saída será a chamada quando <code>param = 3</code>, e a linha <code>temp &lt;- param + lista(param - 3)</code> é executada. Relembre agora que <code>lista(0) = 0</code>, portanto, com <code>param=3</code>, temos <code>temp &lt;- 3 + 0</code>, resultando no valor 3.</p>
+<p>Poderíamos continuar os cálculos, porém a resposta correta já está clara, alternativa d). Para comprovar, abaixo executamos o código do enunciado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>lista <span class="ot">&lt;-</span> <span class="cf">function</span> (param) {</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (param <span class="sc">&gt;</span> <span class="sc">-</span><span class="dv">3</span>) {</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>        temp <span class="ot">&lt;-</span> param <span class="sc">+</span> <span class="fu">lista</span>(param <span class="sc">-</span> <span class="dv">3</span>)</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">print</span>(temp)</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="dv">0</span>)</span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb88-9"><a href="#cb88-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lista</span>(<span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] 0
+R&gt; [1] 3
+R&gt; [1] 9
+R&gt; [1] 18
+R&gt; [1] 30
+R&gt; [1] 45</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-adfeR" class="csl-entry" role="listitem">
+Perlin, M. S. 2021. <em>Análise de Dados Financeiros e Econômicos Com o r</em>. Terceira edição. publicação independente.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./02-sobre-as-questoes.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Sobre as questões</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04-loops.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Repetição estruturada de código (<em>loops</em>)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

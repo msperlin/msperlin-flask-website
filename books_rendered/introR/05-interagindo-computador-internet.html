@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introdução ao R - 5&nbsp; Interagindo com o Sistema Operacional e a Internet</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./06-objetos-basicos.html" rel="next">
+<link href="./04-pacotes.html" rel="prev">
+<link href="./resources/figs/Rlogo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-VX8M6YQMC1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VX8M6YQMC1');
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-interagindo-computador-internet.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Interagindo com o Sistema Operacional e a Internet</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introdução ao R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Procurar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefácio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introdução.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-primeiros-passos-rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Primeiros Passos com o RStudio</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-primeiros-passos-R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Primeiros Passos com o R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-pacotes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pacotes do R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-interagindo-computador-internet.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Interagindo com o Sistema Operacional e a Internet</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-objetos-basicos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">As Classes Básicas de Objetos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-objetos-armazenamento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">As Classes de Armazenamento</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-importacao-exportacao-dados.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Importação e Exportação de Dados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referências Bibliográficas</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Índice</h2>
+   
+  <ul>
+  <li><a href="#mostrando-e-mudando-o-diretório-de-trabalho" id="toc-mostrando-e-mudando-o-diretório-de-trabalho" class="nav-link active" data-scroll-target="#mostrando-e-mudando-o-diretório-de-trabalho"><span class="header-section-number">5.1</span> Mostrando e Mudando o Diretório de Trabalho</a></li>
+  <li><a href="#listando-arquivos-e-pastas" id="toc-listando-arquivos-e-pastas" class="nav-link" data-scroll-target="#listando-arquivos-e-pastas"><span class="header-section-number">5.2</span> Listando Arquivos e Pastas</a></li>
+  <li><a href="#apagando-arquivos-e-diretórios" id="toc-apagando-arquivos-e-diretórios" class="nav-link" data-scroll-target="#apagando-arquivos-e-diretórios"><span class="header-section-number">5.3</span> Apagando Arquivos e Diretórios</a></li>
+  <li><a href="#utilizando-arquivos-e-diretórios-temporários" id="toc-utilizando-arquivos-e-diretórios-temporários" class="nav-link" data-scroll-target="#utilizando-arquivos-e-diretórios-temporários"><span class="header-section-number">5.4</span> Utilizando Arquivos e Diretórios Temporários</a></li>
+  <li><a href="#baixando-arquivos-da-internet" id="toc-baixando-arquivos-da-internet" class="nav-link" data-scroll-target="#baixando-arquivos-da-internet"><span class="header-section-number">5.5</span> Baixando Arquivos da Internet</a></li>
+  <li><a href="#interagindo-com-apis" id="toc-interagindo-com-apis" class="nav-link" data-scroll-target="#interagindo-com-apis"><span class="header-section-number">5.6</span> Interagindo com APIs</a></li>
+  <li><a href="#exercícios" id="toc-exercícios" class="nav-link" data-scroll-target="#exercícios"><span class="header-section-number">5.7</span> Exercícios</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Interagindo com o Sistema Operacional e a Internet</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Um dos grandes benefícios obtidos ao aprender programação é automatizar tarefas cotidianas com código. Na maioria das situações, iremos criar novas pastas, listar e remover arquivos, além de várias outras operações. Na internet, podemos realizar o <em>download</em> de arquivos via código, interagir com serviços online através de APIs (<em>Application Programming Interface</em>) ou repositórios de arquivos na nuvem, tal como o Google Drive.</p>
+<section id="mostrando-e-mudando-o-diretório-de-trabalho" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="mostrando-e-mudando-o-diretório-de-trabalho"><span class="header-section-number">5.1</span> Mostrando e Mudando o Diretório de Trabalho</h2>
+<p>Assim como outros softwares, <strong>o R sempre trabalha em algum diretório</strong>. O diretório de trabalho é onde o R procura arquivos para importar dados. É nesse mesmo diretório que o R salva arquivos, caso não definirmos um endereço no computador explicitamente. Essa saída pode ser um arquivo de uma figura, um arquivo de texto ou uma planilha eletrônica.</p>
+<p>Em sua inicialização, o R possui como diretório padrão a pasta de documentos do usuário cujo atalho é o tilda (<code>'~'</code>). Como boa prática de criação e organização de <em>scripts</em>, deve-se sempre mudar o diretório de trabalho para onde o arquivo do <em>script</em> está localizado. Isso facilita a importação e exportação de dados de arquivos. Uma forma simples e direta de mudar o diretório de trabalho é utilizar o sistema de projetos do RStudio. Toda vez que um projeto é aberto, a sessão do R automaticamente será direcionado ao diretório do projeto (veja <a href="#fig-rstudio-projects" class="quarto-xref">Figura&nbsp;<span>5.1</span></a>).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rstudio-projects" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rstudio-projects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<img src="resources/gifs/gif_rstudio-project.gif" class="img-fluid figure-img">
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rstudio-projects-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5.1: Usando o sistema de projetos do RStudio
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Adicionalmente, para buscar o diretório atual de trabalho, basta utilizar a função <strong>getwd()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get current directory</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>my_dir <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># print it</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_dir)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; [1] "/tmp/RtmpdPNhH9/book-compile__23b73546d7f6"</code></pre>
+</div>
+</div>
+<p>O resultado do código anterior mostra a pasta onde este livro foi escrito. Esse é o diretório onde os arquivos do livro foram compilados dentro do ambiente Linux.</p>
+<p>A mudança de diretório de trabalho é realizada através do comando <strong>setwd()</strong> . Por exemplo, caso quiséssemos mudar o nosso diretório de trabalho para uma pasta do <em>Windows</em> chamada <em>C:/Minha pesquisa/</em>, basta digitar no <em>prompt</em>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set dir</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>my_d <span class="ot">&lt;-</span> <span class="st">'C:/Minha Pesquisa/'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(my_d)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Caso o descobrimento da pasta de trabalho for difícil, uma estratégia eficiente é utilizar um explorador de arquivos, tal como o <em>Explorer</em> no Windows. Abra esse aplicativo e vá até o local onde quer trabalhar com o seu <em>script</em>. Após isso, coloque o cursor na barra de endereço e selecione todo o endereço. Aperte <em>control+c</em> para copiar o endereço para a área de transferência. Volte para o seu código e cole o mesmo no código. <strong>Atenção nesta etapa, o Windows utiliza a barra invertida para definir endereços no computador, enquanto o R utiliza a barra normal</strong>. Caso tente utilizar a barra invertida, um erro será mostrado na tela. Veja o exemplo a seguir.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>my_d <span class="ot">&lt;-</span> <span class="st">'C:\Minha pesquisa</span><span class="sc">\'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">setwd(my_d)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O erro terá a seguinte mensagem:</p>
+<pre><code>Error: '\M' is an unrecognized escape in character string..."</code></pre>
+<p>A justificativa para o erro é que a barra invertida <code>\</code> é um caractere reservado no R e não pode ser utilizado isoladamente. Caso precises, podes defini-lo no objeto de texto com dupla barra, tal como em <code>\\</code>. Veja no exemplo a seguir, onde a dupla barra é substituída por uma barra única:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set char with \</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>my_char <span class="ot">&lt;-</span> <span class="st">'using </span><span class="sc">\\</span><span class="st">'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># print it</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(my_char)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; using \</code></pre>
+</div>
+</div>
+<p>A solução do problema é simples. Após copiar o endereço, modifique todas as barras para a barra normal, assim como no código a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>my_d <span class="ot">&lt;-</span> <span class="st">'C:/Minha pesquisa/'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(my_d)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>É possível também utilizar barras invertidas duplas <code>\\</code> na definição de diretórios, porém não se recomenda essa formatação, pois não é compatível com outros sistemas operacionais.</p>
+<p>Outro ponto importante aqui é o uso de endereços relativos. Por exemplo, caso esteja trabalhando em um diretório que contém um subdiretório chamado <code>Data</code>, podes entrar nele com o seguinte código:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change to subfolder</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">'Data'</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Outra possibilidade pouco conhecida no uso de <strong>setwd()</strong> é que é possível entrar em níveis inferiores do sistema de diretórios com <code>..</code>, tal como em:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change to previous level</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">'..'</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Portanto, caso estejas trabalhando no diretório <code>C:/My Research/</code> e executar o comando <code>setwd('..')</code>, o diretório atual de trabalho viraria <code>C:/</code>, um nível inferior a pasta <code>C:/My Research/</code>.</p>
+<p>Uma maneira mais moderna e pouco conhecida de definir o diretório de trabalho é usar as funções internas do RStudio. Este é um conjunto de funções que só funcionam dentro do RStudio e fornecem diversas informações sobre o arquivo sendo editado. Para descobrir o caminho do arquivo atual que está sendo editado no RStudio e configurar o diretório de trabalho para lá, você pode escrever:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>my_path <span class="ot">&lt;-</span> <span class="fu">dirname</span>(rstudioapi<span class="sc">::</span><span class="fu">getActiveDocumentContext</span>()<span class="sc">$</span>path)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(my_path)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dessa forma, o <em>script</em> mudará o diretório para sua própria localização. Apesar de não ser um código compacto ou elegante, ele é bastante funcional. Caso copie o arquivo para outro diretório, o valor de <code>my_path</code> muda para o novo diretório. Esteja ciente, no entanto, de que esse truque só funciona no editor de rotinas do RStudio e dentro de um arquivo salvo. O código não funcionará a partir do <em>prompt</em> ou se utilizar o <em>vscode</em> como sua plataforma de escrita de códigos.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Utilizando a pasta “Documentos”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Outro truque bastante útil para definir diretórios de trabalho no R é usar o símbolo <code>~</code>. Esse define a pasta <code>'Documentos'</code> no <em>Windows</em>, a qual é única para cada usuário. No ambiente Linux e Mac, o <code>~</code> define a pasta <em>home</em>. Portanto, ao executar <code>setwd('~')</code>, irás direcionar o R a uma pasta de fácil acesso e livre modificação pelo usuário atual do computador.</p>
+</div>
+</div>
+</section>
+<section id="listando-arquivos-e-pastas" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="listando-arquivos-e-pastas"><span class="header-section-number">5.2</span> Listando Arquivos e Pastas</h2>
+<p>Para listar arquivos do computador, basta utilizar o função <strong>list.files()</strong> ou então a alternativa do <code>tidyverse</code>, <strong>fs</strong>::<strong>dir_ls()</strong> . O primeiro argumento define o diretório para listar os arquivos. Na construção deste livro foi criado um diretório chamado <em>resources/figs</em>, onde as figuras utilizadas no livro estão salvas são salvos. Pode-se verificar os arquivos nessa pasta com o seguinte código:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">dir_ls</span>(<span class="at">path =</span> <span class="st">"resources/figs"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_f[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; resources/figs/CAPA-Introducao-ao-R-ebook.jpg
+R&gt; resources/figs/Command_view.png
+R&gt; resources/figs/ExemploAjuda.png
+R&gt; resources/figs/Exemplo_inline_code.png
+R&gt; resources/figs/Favicon</code></pre>
+</div>
+</div>
+<p>Observe que nesse diretório encontram-se vários arquivos com extensão <em>.png</em>. Destaca-se que também é possível listar os arquivos de forma recursiva, isto é, listar os arquivos de subpastas do endereço original. Para verificar, tente utilizar o seguinte código no seu computador:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># list all files recursively</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_ls</span>(<span class="at">path =</span> <span class="fu">getwd</span>(),  </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">recurse =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O comando anterior irá listar todos os arquivos existentes na pasta atual e subpastas de trabalho. Dependendo de onde o comando foi executado, pode levar um certo tempo para o término do processo. Caso precisar cancelar a execução, aperte <em>esc</em> no teclado. Caso o retorno da chamada for um objeto vazio, então é porque estás trabalhando com o R em uma pasta vazia!</p>
+<p>Para listar diretórios do computador, basta utilizar o comando <strong>list.dirs()</strong> ou então a função <strong>fs</strong>::<strong>dir_ls()</strong> com argumento <code>type = "directory"</code>. Veja a seguir.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># list directories</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>my_dirs <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">dir_ls</span>(<span class="st">"."</span>, <span class="at">type =</span> <span class="st">"directory"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(my_dirs)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; EOCE-Rmd     _book        backup       gdfpd2_cache 
+R&gt; gfred_cache  resources    site_libs</code></pre>
+</div>
+</div>
+<p>No caso anterior, o comando lista todos os diretórios do trabalho atual sem recursividade. A saída do comando mostra os diretórios que utilizei para escrever este livro. Nesse mesmo diretório, encontram-se os capítulos do livro, organizados por arquivos e baseados na linguagem <em>Quarto</em>. Para listar somente os arquivos com extensão <code>.qmd</code>, utiliza-se o argumento <code>glob = ".qmd"</code> da função <strong>fs</strong>::<strong>dir_ls()</strong> , como a seguir:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>qmd_files <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">dir_ls</span>(<span class="st">"."</span>, <span class="at">glob =</span> <span class="st">"*.qmd$"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(qmd_files)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; 00a-prefacio.qmd
+R&gt; 00b-agradecimentos.qmd
+R&gt; 01-introdução.qmd
+R&gt; 02-primeiros-passos-rstudio.qmd
+R&gt; 03-primeiros-passos-R.qmd
+R&gt; 04-pacotes.qmd
+R&gt; 05-interagindo-computador-internet.qmd
+R&gt; 06-objetos-basicos.qmd
+R&gt; 07-objetos-armazenamento.qmd
+R&gt; 08-importacao-exportacao-dados.qmd
+R&gt; 99-references.qmd
+R&gt; _BemVindo.qmd
+R&gt; index.qmd</code></pre>
+</div>
+</div>
+<p>O texto <code>*.qmd$</code> orienta o R a procurar todos arquivos que terminam o seu nome com o texto <em>.qmd</em>. Os símbolos <code>'*''</code> e <code>'$'</code> são operadores específicos para o encontro de padrões em texto em uma linguagem chamada regex (<em>regular expressions</em>). O símbolo <code>*</code> diz para ignorar qualquer texto anterior a “.qmd” e <code>$</code> indica o fim do nome do arquivo. Os arquivos apresentados anteriormente contêm todo o conteúdo deste livro, incluindo este próprio parágrafo!</p>
+</section>
+<section id="apagando-arquivos-e-diretórios" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="apagando-arquivos-e-diretórios"><span class="header-section-number">5.3</span> Apagando Arquivos e Diretórios</h2>
+<p>A remoção de arquivos é realizada através do comando <strong>file.remove()</strong> ou então <strong>fs</strong>::<strong>file_delete()</strong> . O próximo código cria um arquivo .csv e depois o remove da memória do computador:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create temporary file in docs folder</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> <span class="st">'~/MyTemp.csv'</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(<span class="at">x =</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">file =</span> my_file)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># delete it</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">file_delete</span>(my_file)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Lembre-se que deves ter permissão do seu sistema operacional para apagar um arquivo.</p>
+<p>Para deletar diretórios e todos os seus elementos, utilizamos <strong>unlink()</strong> ou então <strong>fs</strong>::<strong>dir_delete()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create temp dir</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>name_temp <span class="ot">&lt;-</span> <span class="st">"TEMP"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_create</span>(name_temp)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fill it with file</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>my_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(name_temp, <span class="st">"tempfile.csv"</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(<span class="at">x =</span> <span class="fu">data.frame</span>(<span class="at">x=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">file =</span> my_file)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_delete</span>(name_temp)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A função, neste caso, não retorna nada. Podes checar se o diretório existe com <strong>fs</strong>::<strong>dir_exists()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_exists</span>(name_temp)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  TEMP 
+R&gt; FALSE</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Cuidado com a remoção de arquivos e diretórios!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tenha muito <strong>cuidado</strong> com comandos de remover pastas e arquivos no R, principalmente quando utilizar recursividade, isto é, quanto apagar todas as pastas e arquivos existentes no caminho desejado. Uma execução errada e partes importantes do seu disco rígido podem ser apagadas, deixando o seu computador inoperável. Saiba que o R <strong>realmente apaga</strong> os arquivos e não somente manda para a lixeira. Portanto, ao apagar diretórios inteiros, não poderás recuperar os arquivos facilmente.</p>
+</div>
+</div>
+</section>
+<section id="utilizando-arquivos-e-diretórios-temporários" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="utilizando-arquivos-e-diretórios-temporários"><span class="header-section-number">5.4</span> Utilizando Arquivos e Diretórios Temporários</h2>
+<p>Toda vez que uma nova sessão do R é inicializada, o programa automaticamente cria uma pasta temporária no seu sistema. É nesse diretório que o R guarda quaisquer arquivos e pastas descartáveis que possam ser necessárias na sua sessão. No momento que a sessão do R é finalizada, tal como quando fechamos o RStudio, as pastas temporárias são removidas da memória do computador.</p>
+<p>O endereço do diretório temporário de uma sessão do R é verificado com <strong>tempdir()</strong> ou <strong>fs</strong>::<strong>path_temp()</strong> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>my_tempdir <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path_temp</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(stringr<span class="sc">::</span><span class="fu">str_glue</span>(<span class="st">'My tempdir is {my_tempdir}'</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; My tempdir is /tmp/RtmpfGn0jk</code></pre>
+</div>
+</div>
+<p>O último texto do diretório, neste caso RtmpfGn0jk é aleatóriamente definido e irá trocar a cada nova sessão do R.</p>
+<p>A mesma dinâmica é encontrada para nomes de arquivos. Caso queira, por algum motivo, utilizar um nome temporário e aleatório para algum arquivo com extensão <em>.txt</em>, utilize <strong>tempfile()</strong> ou <strong>fs</strong>::<strong>file_temp()</strong> e defina o tipo de arquivo com as entradas da função:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>my_tempfile <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">'.txt'</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(my_tempfile)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>R&gt; /tmp/RtmpfGn0jk/file2c0ecfef94d.txt</code></pre>
+</div>
+</div>
+<p>Note que o nome do arquivo – file2c0ecfef94d.txt – é totalmente aleatório e mudará a cada chamada da função. Note também que o arquivo temporário está localizado na pasta /tmp/RtmpfGn0jk.</p>
+</section>
+<section id="baixando-arquivos-da-internet" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="baixando-arquivos-da-internet"><span class="header-section-number">5.5</span> Baixando Arquivos da Internet</h2>
+<p>O R pode baixar arquivos da Internet diretamente no código. Isso é realizado com a função <strong>download.file()</strong> . Veja o exemplo a seguir, onde baixamos uma planilha de Excel do site da Microsoft, e salvamos em um arquivo temporário:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set link</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>link_dl <span class="ot">&lt;-</span> <span class="st">'go.microsoft.com/fwlink/?LinkID=521962'</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>local_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">'.xlsx'</span>) <span class="co"># name of local file</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> link_dl,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> local_file)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>O uso de <strong>download.file()</strong> é bastante prático quando se está trabalhando com dados da Internet que são constantemente atualizados. Basta baixar e atualizar o arquivo com dados no início do <em>script</em>. Poderíamos continuar a rotina lendo o arquivo baixado e realizando a nossa análise dos dados disponíveis.</p>
+<p>Um exemplo nesse caso é a tabela de empresas listadas na bolsa divulgada pela CVM (comissão de valores mobiliários). A tabela está disponível em um arquivo no <a href="http://dados.cvm.gov.br/dados/CIA_ABERTA/CAD/DADOS/cad_cia_aberta.csv">site</a>. Podemos baixar o arquivo e, logo em seguida, ler os dados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set destination link and file</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>my_link <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">'http://dados.cvm.gov.br/'</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'dados/CIA_ABERTA/CAD/DADOS/cad_cia_aberta.csv'</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>my_destfile <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">'.csv'</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># download file</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(my_link, </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> my_destfile, </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># set locale options</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>my_locale <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">locale</span>(</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">encoding =</span> <span class="st">'Latin1'</span>,</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">decimal_mark =</span> <span class="st">","</span>)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co"># read it</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>df_cvm <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv2</span>(my_destfile,</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">locale =</span> my_locale,</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col_types =</span> readr<span class="sc">::</span><span class="fu">cols</span>())</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="co"># check available columns</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">names</span>(df_cvm))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt;  [1] "CNPJ_CIA"           "DENOM_SOCIAL"      
+R&gt;  [3] "DENOM_COMERC"       "DT_REG"            
+R&gt;  [5] "DT_CONST"           "DT_CANCEL"         
+R&gt;  [7] "MOTIVO_CANCEL"      "SIT"               
+R&gt;  [9] "DT_INI_SIT"         "CD_CVM"            
+R&gt; [11] "SETOR_ATIV"         "TP_MERC"           
+R&gt; [13] "CATEG_REG"          "DT_INI_CATEG"      
+R&gt; [15] "SIT_EMISSOR"        "DT_INI_SIT_EMISSOR"
+R&gt; [17] "CONTROLE_ACIONARIO" "TP_ENDER"          
+R&gt; [19] "LOGRADOURO"         "COMPL"             
+R&gt; [21] "BAIRRO"             "MUN"               
+R&gt; [23] "UF"                 "PAIS"              
+R&gt; [25] "CEP"                "DDD_TEL"           
+R&gt; [27] "TEL"                "DDD_FAX"           
+R&gt; [29] "FAX"                "EMAIL"             
+R&gt; [31] "TP_RESP"            "RESP"              
+R&gt; [33] "DT_INI_RESP"        "LOGRADOURO_RESP"   
+R&gt; [35] "COMPL_RESP"         "BAIRRO_RESP"       
+R&gt; [37] "MUN_RESP"           "UF_RESP"           
+R&gt; [39] "PAIS_RESP"          "CEP_RESP"          
+R&gt; [41] "DDD_TEL_RESP"       "TEL_RESP"          
+R&gt; [43] "DDD_FAX_RESP"       "FAX_RESP"          
+R&gt; [45] "EMAIL_RESP"         "CNPJ_AUDITOR"      
+R&gt; [47] "AUDITOR"</code></pre>
+</div>
+</div>
+<p>Existem diversas informações interessantes nestes dados incluindo nome e CNPJ de empresas listadas (ou de-listadas) da bolsa de valores Brasileira. E, mais importante, o arquivo está sempre atualizado. O código anterior estará sempre buscando os dados mais recentes a cada execução.</p>
+</section>
+<section id="interagindo-com-apis" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="interagindo-com-apis"><span class="header-section-number">5.6</span> Interagindo com APIs</h2>
+<p>As APIs (<em>Application Programming Interfaces</em>) são sistemas que permitem a iteração entre diferentes <em>softwares</em>. O caso mais comum é um sistema local, seu computador, requisitando algum serviço da internet. As aplicações do uso de API com o R são imensas:</p>
+<dl>
+<dt>Acesso a dados</dt>
+<dd>
+APIs fornecem acesso a uma grande variedade de dados, desde informações climáticas e notícias até dados de mercado e APIs de redes sociais.
+</dd>
+<dt>Integração com outras ferramentas</dt>
+<dd>
+APIs permitem integrar o R com outras ferramentas, como dashboards, plataformas de análise e sistemas de BI.
+</dd>
+<dt>Automação de tarefas</dt>
+<dd>
+APIs podem ser usadas para automatizar tarefas repetitivas, como a coleta de dados ou a geração de relatórios.
+</dd>
+</dl>
+<p>Aqui, vamos apresentar um exemplo simples de requisição de dados de um API do tipo json. O site <a href="https://api.sampleapis.com" class="uri">https://api.sampleapis.com</a> apresenta um API para requisição de um banco de dados atualizado sobre cervejas. Para importar os dados, é muito simples, basta usar função <strong>jsonlite</strong>::<strong>fromJSON()</strong> com o endereço do API.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://api.sampleapis.com/beers/stouts"</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>df_beer <span class="ot">&lt;-</span> jsonlite<span class="sc">::</span><span class="fu">fromJSON</span>(url)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(df_beer)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R&gt; Rows: 117
+R&gt; Columns: 5
+R&gt; $ price  &lt;chr&gt; "$29.99", "$26.99", "$9.99", "$249.99", "$1…
+R&gt; $ name   &lt;chr&gt; "Founders CBS", "Founders KBS (Kentucky Bre…
+R&gt; $ rating &lt;df[,2]&gt; &lt;data.frame[20 x 2]&gt;
+R&gt; $ image  &lt;chr&gt; "https://www.totalwine.com/media/sys_mas…
+R&gt; $ id     &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, …</code></pre>
+</div>
+</div>
+<p>Os dados retornamos já estão no formato de tabela (dataframe), com 117 linhas e 5 colunas. As informações incluem preço, nome, <em>rating</em>, e imagem. Saiba, porém, que os dados são atualizados frequentemente. Assim, a cada nova chamada de <strong>jsonlite</strong>::<strong>fromJSON()</strong> , teremos novos dados sobre cervejas a serem processados.</p>
+</section>
+<section id="exercícios" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="exercícios"><span class="header-section-number">5.7</span> Exercícios</h2>
+<hr>
+<p>Q.1 - Crie um novo e mostre no <em>prompt</em> o diretório atual de trabalho (veja função <strong>getwd()</strong> , tal como em <code>print(getwd())</code>). Agora, modifique o seu diretório de trabalho para o <em>Desktop</em> (<em>Área de Trabalho</em>) e mostre a seguinte mensagem na tela do <em>prompt</em>: <code>'My desktop address is ....'</code>. Dica: use e abuse da ferramenta <em>autocomplete</em> do RStudio para rapidamente encontrar a pasta do <em>desktop</em>.</p>
+<hr>
+<p>Q.2 - Utilize o R para baixar o arquivo compactado disponível neste <a href="my_url">link</a>. Salve o mesmo como um arquivo na pasta temporária da sessão (veja função <code>fs::file_temp</code>) e com a correta extensão zip.</p>
+<hr>
+<p>Q.3 - Após resolver a questão anterior, utilize o R para descompactar o arquivo baixado para uma pasta temporária. Quantos arquivos estão disponíveis no arquivo compactado?</p>
+<ol type="a">
+<li>2</li>
+<li>7</li>
+<li>5</li>
+<li>3</li>
+<li>4</li>
+</ol>
+<hr>
+<p>Q.4 - O comando <code>Sys.getenv ('R_LIBS_USER')</code> retorna a pasta onde o R guarda todos os arquivos dos diferente pacotes. Use função <code>fs::dir_ls</code> para listar todas as subpastas do diretório anterior.</p>
+<hr>
+<p>Q.5 - O site <a href="https://sampleapis.com/">https://sampleapis.com/</a> possui um API aberto ao público para a importação de dados sobre a série Futurama. Com base no seu conhecimento de R, baixe a lista de episódios da série utilizando o serviço do site. Quantas episódios estão disponíveis nos dados?</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiada");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiada");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./04-pacotes.html" class="pagination-link  aria-label=" &lt;span="" do="" r&lt;="" span&gt;"="">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pacotes do R</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./06-objetos-basicos.html" class="pagination-link" aria-label="<span class='chapter-number'>6</span>&nbsp; <span class='chapter-title'>As Classes Básicas de Objetos</span>">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">As Classes Básicas de Objetos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

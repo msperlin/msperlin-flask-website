@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 9 Estruturando e Limpando Dados | Análise de Dados Financeiros e Econômicos com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 9 Estruturando e Limpando Dados | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 9 Estruturando e Limpando Dados | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00-code-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Análise de Dados Financeiros e Econômicos com o R - Versão Online</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="sobre-nova-edi%C3%A7%C3%A3o.html">Sobre Nova Edição</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="operacoes-basicas.html"><span class="header-section-number">2</span> Operações Básicas no R</a></li>
+<li><a class="" href="scripts-pesquisa.html"><span class="header-section-number">3</span> Desenvolvendo Rotinas de Pesquisa</a></li>
+<li><a class="" href="importacao-exportacao.html"><span class="header-section-number">4</span> Importação e Exportação de Dados Locais</a></li>
+<li><a class="" href="importacao-pacotes.html"><span class="header-section-number">5</span> Importação de Dados via Pacotes</a></li>
+<li><a class="" href="classe-estrutura.html"><span class="header-section-number">6</span> Dataframes e outros Objetos</a></li>
+<li><a class="" href="classes-basicas.html"><span class="header-section-number">7</span> As Classes Básicas de Objetos</a></li>
+<li><a class="" href="programacao.html"><span class="header-section-number">8</span> Programando com o R</a></li>
+<li><a class="active" href="limpando-estruturando.html"><span class="header-section-number">9</span> Estruturando e Limpando Dados</a></li>
+<li><a class="" href="figuras.html"><span class="header-section-number">10</span> Visualizando Dados</a></li>
+<li><a class="" href="modelos.html"><span class="header-section-number">11</span> Econometria Financeira com o R</a></li>
+<li><a class="" href="reportando-resultados.html"><span class="header-section-number">12</span> Reportando Resultados e Criando Relatórios</a></li>
+<li><a class="" href="otimizacao.html"><span class="header-section-number">13</span> Otimização de Código</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-120530145-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-120530145-1');
+</script><div id="limpando-estruturando" class="section level1" number="9">
+<h1>
+<span class="header-section-number">Capítulo 9</span> Estruturando e Limpando Dados<a class="anchor" aria-label="anchor" href="#limpando-estruturando"><i class="fas fa-link"></i></a>
+</h1>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="o-formato-do-dataframe" class="section level2" number="9.1">
+<h2>
+<span class="header-section-number">9.1</span> O Formato do <code>dataframe</code><a class="anchor" aria-label="anchor" href="#o-formato-do-dataframe"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="conversão-entre-long-e-wide" class="section level3" number="9.1.1">
+<h3>
+<span class="header-section-number">9.1.1</span> Conversão entre <em>long</em> e <em>wide</em><a class="anchor" aria-label="anchor" href="#convers%C3%A3o-entre-long-e-wide"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="convertendo-listas-em-dataframes" class="section level2" number="9.2">
+<h2>
+<span class="header-section-number">9.2</span> Convertendo Listas em <code>dataframes</code><a class="anchor" aria-label="anchor" href="#convertendo-listas-em-dataframes"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="fct-replace" class="section level2" number="9.3">
+<h2>
+<span class="header-section-number">9.3</span> Eliminando Outliers<a class="anchor" aria-label="anchor" href="#fct-replace"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="desinflacionando-dados-de-preços" class="section level2" number="9.4">
+<h2>
+<span class="header-section-number">9.4</span> Desinflacionando Dados de Preços<a class="anchor" aria-label="anchor" href="#desinflacionando-dados-de-pre%C3%A7os"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="modificando-a-frequência-temporal-dos-dados" class="section level2" number="9.5">
+<h2>
+<span class="header-section-number">9.5</span> Modificando a Frequência Temporal dos Dados<a class="anchor" aria-label="anchor" href="#modificando-a-frequ%C3%AAncia-temporal-dos-dados"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="exerc-limpando-estruturando" class="section level2" number="9.6">
+<h2>
+<span class="header-section-number">9.6</span> Exercícios<a class="anchor" aria-label="anchor" href="#exerc-limpando-estruturando"><i class="fas fa-link"></i></a>
+</h2>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+<div id="q.1-7" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-7"><i class="fas fa-link"></i></a>
+</h3>
+<p>Considere o <code>dataframe</code> criado com o código a seguir:</p>
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+
+my_N &lt;- 100
+
+df &lt;- bind_rows(tibble(ticker = rep('STOCK 1', my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))),
+                tibble(ticker = rep('STOCK 2', my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))) )
+
+print(df)</a></code></pre>
+<p>O formato do <code>dataframe</code> é longo ou largo? Explique sua resposta.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf1e1355c3" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf1e1355c3" class="collapse">
+<div class="card card-body">
+<p>O formato é longo: temos dados empilhados para duas ações diferentes. Note que, com a adição de novas tickers, a tabela cresce com novas linhas. Novas variáveis podem ser facilmente adicionadas com novas colunas.</p>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.2-7" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-7"><i class="fas fa-link"></i></a>
+</h3>
+<p>Modifique o formato do <code>dataframe</code> anterior, de longo para largo ou vice-versa.</p>
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+
+my_N &lt;- 100
+
+df &lt;- bind_rows(tibble(ticker = rep('STOCK 1', my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))),
+                tibble(ticker = rep('STOCK 2', my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))) )
+
+print(df)</a></code></pre>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf2a766093" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf2a766093" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+
+my_N &lt;- 100
+
+df &lt;- bind_rows(tibble(ticker = rep('STOCK 1', my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))),
+                tibble(ticker = rep('STOCK 2', my_N),
+                       ref_date = Sys.Date() + 1:my_N,
+                       price = 100 + cumsum(rnorm(my_N))) )
+
+print(df)
+
+# convert from long to wide
+df_wide &lt;- spread(data = df, 
+                  key = 'ticker',
+                  value = 'price')
+
+# print result
+print(df_wide)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.3-6" class="section level3 unnumbered">
+<h3>Q.3<a class="anchor" aria-label="anchor" href="#q.3-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Considere a seguinte lista:</p>
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+
+my_l &lt;- list(df1 = tibble(x = 1:100, y = runif(100)),
+             df2 = tibble(x = 1:100, y = runif(100), v = runif(100)),
+             df3 = tibble(x = 1:100, y = runif(100), z = runif(100)) )</a></code></pre>
+<p>Agrege todos <code>dataframes</code> em <code>my_l</code> para um objeto único usando funções <code>do.call</code> ou <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows</a></code>. O que aconteceu com os dados de <code>df1</code> onde colunas <code>v</code> e <code>z</code> não existem?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf8dc1789" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf8dc1789" class="collapse">
+<div class="card card-body">
+<p>Quando <code>bind_rows</code> não encontra a mesma coluna na junção de tabelas diferentes, os dados faltantes são definidos como <code>NAs</code>. Veja a seguir:</p>
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+
+my_l &lt;- list(df1 = tibble(x = 1:100, y = runif(100)),
+             df2 = tibble(x = 1:100, y = runif(100), v = runif(100)),
+             df3 = tibble(x = 1:100, y = runif(100), z = runif(100)) )
+
+# solution with bind_rows
+bind_df1 &lt;- bind_rows(my_l)
+
+# solution with do.cal
+bind_df2 &lt;- do.call(bind_rows, my_l)
+
+# check solutions match
+identical(bind_df1, bind_df2)
+
+print(bind_df1)
+# the missing data points were set as NA values</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.4-6" class="section level3 unnumbered">
+<h3>Q.4<a class="anchor" aria-label="anchor" href="#q.4-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Utilize pacote <code>BatchGetSymbols</code> para baixar os dados do índice SP500 (<code>'^GSPC'</code>) desde 1950-01-01 até 2021-01-01. Quais é a soma dos 5 maiores retornos positivos do índice?</p>
+<br> Resposta: <select class="webex-select"><option value="blank"></option>
+<option value="answer">0.5014</option>
+<option value="">0.6770</option>
+<option value="">0.8568</option>
+<option value="">0.5871</option>
+<option value="">0.7669</option></select><div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf4e455051" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf4e455051" class="collapse">
+A solução é 0.5014. Para chegar no resultado anterior, deves executar o código abaixo. Para isso, abra um novo script no RStudio (Control+shift+N), copie e cole o código, e rode o script inteiro apertando Control+Shift+Enter ou por linha com Control+Enter.
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+
+ticker &lt;- '^GSPC'
+first_date &lt;- '1950-01-01'
+last_date &lt;- '2021-01-01'
+df_SP500 &lt;- BatchGetSymbols(tickers = '^GSPC', 
+                            first.date = first_date,
+                            last.date = last_date)[[2]]
+
+select_n &lt;- 5
+tab &lt;- dplyr::tibble(position = 1:select_n,
+              top5_positive = sort(df_SP500$ret.adjusted.prices, 
+                                   decreasing = TRUE)[1:select_n],
+              top5_negative = sort(df_SP500$ret.adjusted.prices, 
+                                   decreasing = FALSE)[1:select_n])
+
+print(tab)
+
+my_sol &lt;- sum(tab$top5_positive)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.5-6" class="section level3 unnumbered">
+<h3>Q.5<a class="anchor" aria-label="anchor" href="#q.5-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use função <code>replace_outliers</code> (veja seção <a href="limpando-estruturando.html#fct-replace">9.3</a>), criada neste capítulo, para remover <em>outliers</em> de todas as colunas numéricas dos dados do SP500 importados anteriormente com <code>my_prob = 0.025</code>. Quantas linhas foram perdidas neste processo de limpeza?</p>
+<br> Resposta: <select class="webex-select"><option value="blank"></option>
+<option value="">4326</option>
+<option value="">2848</option>
+<option value="">1370</option>
+<option value="">5805</option>
+<option value="answer">7281</option></select><div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf51f9ea1f" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf51f9ea1f" class="collapse">
+A solução é 7281. Para chegar no resultado anterior, deves executar o código abaixo. Para isso, abra um novo script no RStudio (Control+shift+N), copie e cole o código, e rode o script inteiro apertando Control+Shift+Enter ou por linha com Control+Enter.
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+library(purrr)
+
+ticker &lt;- '^GSPC'
+first_date &lt;- '1950-01-01'
+last_date &lt;- '2021-01-01'
+df_SP500 &lt;- BatchGetSymbols(tickers = '^GSPC', 
+                            first.date = first_date,
+                            last.date = last_date)[[2]]
+
+replace_outliers &lt;- function(col_in, my_prob = 0.05) {
+  # Replaces outliers from a vector
+  #
+  # INPUTS: col_in The vector
+  #         my_prob Probability of quantiles (p and 1-p)
+  #
+  # OUTPUT: A vector
+  
+  # return if class is other than numeric
+  if (!(class(col_in) %in% c('numeric', 'integer'))) return(col_in)
+  
+  my_outliers &lt;- stats::quantile(x = col_in,
+                                 probs = c(my_prob, 1-my_prob),
+                                 na.rm = TRUE)
+  
+  idx &lt;- (col_in &lt;= my_outliers[1])|(col_in &gt;= my_outliers[2])
+  col_in[idx] &lt;- NA
+  
+  return(col_in)
+  
+}
+
+# remove outlivers from vectors
+l_out &lt;- map(df_SP500, replace_outliers, my_prob = 0.025)
+
+df_SP500_nooutlier &lt;- na.omit(as_tibble(l_out))
+
+nrow_1 &lt;- nrow(df_SP500)
+nrow_2 &lt;- nrow(df_SP500_nooutlier)
+
+my_sol &lt;- nrow_1 - nrow_2</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.6-6" class="section level3 unnumbered">
+<h3>Q.6<a class="anchor" aria-label="anchor" href="#q.6-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use a função <code><a href="https://rdrr.io/pkg/BatchGetSymbols/man/BatchGetSymbols.html">BatchGetSymbols::BatchGetSymbols</a></code> para baixar os preços do índice FTSE (<code>'^FTSE'</code>) de 2010-01-01 até 2021-01-01. Em seguida, reconstrua os dados na frequência anual, definindo cada valor do ano como sendo a última observação do período. Dica: veja a função <code>dplyr::summary_all</code> para uma forma funcional de agregar todas as colunas de um <code>dataframe</code>.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf107e31f3" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf107e31f3" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+
+ticker &lt;- '^FTSE'
+
+first_date &lt;- '2010-01-01'
+last_date &lt;- '2021-01-01'
+
+df_FTSE_daily &lt;- BatchGetSymbols(tickers = ticker, 
+                            first.date = first_date,
+                            last.date = last_date)[[2]]
+
+# change from daily to annual
+df_FTSE_yearly &lt;- df_FTSE_daily %&gt;%
+  mutate(ref_year = lubridate::year(ref.date)) %&gt;%
+  group_by(ref_year) %&gt;%
+  summarise_all(.funs = last)
+
+print(df_FTSE_yearly)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.7-6" class="section level3 unnumbered">
+<h3>Q.7<a class="anchor" aria-label="anchor" href="#q.7-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Use os mesmos dados diários do FTSE e reconstrua os dados na frequência mensal, novamente utilizando a última observação do período.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf508985c5" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf508985c5" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+
+ticker &lt;- '^FTSE'
+
+first_date &lt;- '2010-01-01'
+last_date &lt;- '2021-01-01'
+
+df_FTSE_daily &lt;- BatchGetSymbols(tickers = ticker, 
+                            first.date = first_date,
+                            last.date = last_date)[[2]]
+
+# change from daily to monthly
+df_FTSE_monthly &lt;- df_FTSE_daily %&gt;%
+  mutate(ref_month = format(ref.date, '%Y-%m-01')) %&gt;%
+  group_by(ref_month) %&gt;%
+  summarise_all(last)
+
+print(df_FTSE_monthly)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.8-5" class="section level3 unnumbered">
+<h3>Q.8<a class="anchor" aria-label="anchor" href="#q.8-5"><i class="fas fa-link"></i></a>
+</h3>
+<p>Para os mesmos dados diários do FTSE, verifique as datas e preços das 20 maiores quedas de preços. Se, para cada um desses casos, um investidor comprasse o índice no preço das maiores quedas e o mantivesse por 30 dias, qual seria seu retorno nominal médio por transação?</p>
+<br> Resposta: <select class="webex-select"><option value="blank"></option>
+<option value="">4,42%</option>
+<option value="answer">2,53%</option>
+<option value="">3,94%</option>
+<option value="">2,98%</option>
+<option value="">3,46%</option></select><div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf2f333b9a" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf2f333b9a" class="collapse">
+A solução é 2,53%. Para chegar no resultado anterior, deves executar o código abaixo. Para isso, abra um novo script no RStudio (Control+shift+N), copie e cole o código, e rode o script inteiro apertando Control+Shift+Enter ou por linha com Control+Enter.
+<div class="card card-body">
+<pre><code><a href="https://tidyverse.tidyverse.org">library(tidyverse)
+library(BatchGetSymbols)
+
+ticker &lt;- '^FTSE'
+
+first_date &lt;- '2010-01-01'
+last_date &lt;- '2021-01-01'
+
+df_FTSE_daily &lt;- BatchGetSymbols(tickers = ticker, 
+                            first.date = first_date,
+                            last.date = last_date)[[2]]
+
+# buy at t, sell at t+30
+trade_window &lt;- 30 
+
+# find largest drops
+largest_drops &lt;- df_FTSE_daily %&gt;%
+  arrange(ret.adjusted.prices) %&gt;%
+  slice(1:20)
+
+# There are many ways to solve the exercise. 
+# Here we will use a loop which is the simplest way to looking at the problem.
+# You could also solve it with the functional approach of package purrrr,
+# that is, writing a function.
+
+tab &lt;- tibble()
+for (i_date in seq_along(largest_drops$ref.date)) {
+  
+  my_date &lt;- largest_drops$ref.date[i_date]
+  # filter data to keep only datapoints in each horizon
+  temp_df &lt;- df_FTSE_daily %&gt;%
+    filter(ref.date &gt;= my_date,
+           ref.date &lt;= my_date + trade_window)
+  
+  
+  buy_price &lt;- first(temp_df$price.adjusted)
+  sell_price &lt;- last(temp_df$price.adjusted)
+  return &lt;- sell_price/buy_price - 1
+  
+  tab &lt;- bind_rows(tab, 
+                   tibble(date = my_date, 
+                          buy_price = buy_price, 
+                          sell_price = sell_price, 
+                          return = return))
+}
+
+print(tab)
+
+# solution
+my_sol &lt;- mean(tab$return)</a></code></pre>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://padfer.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="programacao.html"><span class="header-section-number">8</span> Programando com o R</a></div>
+<div class="next"><a href="figuras.html"><span class="header-section-number">10</span> Visualizando Dados</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#limpando-estruturando"><span class="header-section-number">9</span> Estruturando e Limpando Dados</a></li>
+<li>
+<a class="nav-link" href="#o-formato-do-dataframe"><span class="header-section-number">9.1</span> O Formato do dataframe</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#convers%C3%A3o-entre-long-e-wide"><span class="header-section-number">9.1.1</span> Conversão entre long e wide</a></li></ul>
+</li>
+<li><a class="nav-link" href="#convertendo-listas-em-dataframes"><span class="header-section-number">9.2</span> Convertendo Listas em dataframes</a></li>
+<li><a class="nav-link" href="#fct-replace"><span class="header-section-number">9.3</span> Eliminando Outliers</a></li>
+<li><a class="nav-link" href="#desinflacionando-dados-de-pre%C3%A7os"><span class="header-section-number">9.4</span> Desinflacionando Dados de Preços</a></li>
+<li><a class="nav-link" href="#modificando-a-frequ%C3%AAncia-temporal-dos-dados"><span class="header-section-number">9.5</span> Modificando a Frequência Temporal dos Dados</a></li>
+<li>
+<a class="nav-link" href="#exerc-limpando-estruturando"><span class="header-section-number">9.6</span> Exercícios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-7">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-7">Q.2</a></li>
+<li><a class="nav-link" href="#q.3-6">Q.3</a></li>
+<li><a class="nav-link" href="#q.4-6">Q.4</a></li>
+<li><a class="nav-link" href="#q.5-6">Q.5</a></li>
+<li><a class="nav-link" href="#q.6-6">Q.6</a></li>
+<li><a class="nav-link" href="#q.7-6">Q.7</a></li>
+<li><a class="nav-link" href="#q.8-5">Q.8</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Análise de Dados Financeiros e Econômicos com o R - Versão Online</strong>" was written by Marcelo S. Perlin (<a href="mailto:marcelo.perlin@ufrgs.br" class="email">marcelo.perlin@ufrgs.br</a>). It was last built on 2022-11-23.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

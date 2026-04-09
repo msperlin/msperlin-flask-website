@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Awards</h2>
+    <ul>
+        {% for i_data in data %}
+        <li>
+            <b>{{ i_data.name }}</b>: {{ i_data.description }} <a href="{{ i_data.link}}">Link</a>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <ul>
+        {% for award in awards %}
+        <li>
+            [{{ award.year }}] <b>{{ award.title }}</b> granted by <b> {{award.organization }} </b>: {{ award.description }}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

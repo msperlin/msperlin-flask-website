@@ -1,0 +1,5 @@
+Flask
+gunicorn
+scholarly
+free-proxy
+httpx<0.28

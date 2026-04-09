@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Coverage by News</h2>
+    <ul>
+        {% for item in news %}
+        <li>
+           [{{ item.year }}] <a href="{{item.link}}"> {{ item.title }} </a> published by <b>{{item.source }}</b>.
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

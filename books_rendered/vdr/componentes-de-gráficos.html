@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 3 Componentes de Gráficos | Visualização de Dados com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Os componentes de uma figura baseada em dados...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 3 Componentes de Gráficos | Visualização de Dados com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Os componentes de uma figura baseada em dados...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 3 Componentes de Gráficos | Visualização de Dados com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'G-Y2ZEBB973N');  Os componentes de uma figura baseada em dados...">
+<meta name="twitter:image" content="/00b-text-resources/figs/CAPA-VisualizacaoDadosR-EBOOK.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Open_Sans-0.4.3/font.css" rel="stylesheet">
+<link href="libs/Source_Code_Pro-0.4.3/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00a-compile-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="Aplicações para Finanças e Economia">Visualização de Dados com o R - Versão Online</a>:
+        <small class="text-muted">Aplicações para Finanças e Economia</small>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Navegação"><h2>Navegação</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="agradecimentos.html">Agradecimentos</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="principios.html"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></li>
+<li><a class="active" href="componentes-de-gr%C3%A1ficos.html"><span class="header-section-number">3</span> Componentes de Gráficos</a></li>
+<li><a class="" href="intro-ggplot.html"><span class="header-section-number">4</span> Visualização de Dados com o R</a></li>
+<li><a class="" href="gr%C3%A1ficos-estat%C3%ADsticos.html"><span class="header-section-number">5</span> Gráficos Estatísticos</a></li>
+<li><a class="" href="mapas.html"><span class="header-section-number">6</span> Mapas</a></li>
+<li><a class="" href="programando-com-o-ggplot2.html"><span class="header-section-number">7</span> Programando com o ggplot2</a></li>
+<li><a class="" href="conclus%C3%A3o.html"><span class="header-section-number">8</span> Conclusão</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2ZEBB973N"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y2ZEBB973N');
+</script><div id="componentes-de-gráficos" class="section level1" number="3">
+<h1>
+<span class="header-section-number">Capítulo 3</span> Componentes de Gráficos<a class="anchor" aria-label="anchor" href="#componentes-de-gr%C3%A1ficos"><i class="fas fa-link"></i></a>
+</h1>
+<p>Os componentes de uma figura baseada em dados separam-se entre textuais e gráficos. Os <strong>elementos textuais</strong> referem-se a textos explícitos que auxiliam o entendimento da mensagem. Pense neles como o esqueleto do gráfico, suportando toda a estrutura visual controlada pelos dados, tal como pontos e linhas. Isto inclui textos dos eixos, legendas, títulos e subtítulos.</p>
+<p>Os <strong>elementos gráficos</strong> são aqueles que representam formas geométricas relacionadas com os dados em si. Isto é, quando novos dados são inseridos, os elementos gráficos mudam. Estes são canais de visualização, os quais traduzem medidas numéricas ou categóricas em elementos gráficos na forma de linhas, pontos, formas e cores.</p>
+<p>Com esta separação entre elementos textuais e gráficos, vamos montar uma figura sequencialmente, etapa por etapa, explicando cada elemento no processo.</p>
+<div id="elementos-textuais" class="section level2" number="3.1">
+<h2>
+<span class="header-section-number">3.1</span> Elementos textuais<a class="anchor" aria-label="anchor" href="#elementos-textuais"><i class="fas fa-link"></i></a>
+</h2>
+<p>Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:esqueleto">3.1</a> apresenta os componentes textuais de um gráfico, incluindo títulos, subtítulos e texto do eixo horizontal e vertical. Este é um típico exemplo de <strong>gráfico de dispersão</strong>, o qual mostra a relação entre duas variáveis, <em>x</em> (coordenada horizontal) e <em>y</em> (coordenada vertical).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:esqueleto"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/esqueleto-1.png" alt="Esqueleto de um gráfico com elementos textuais" width="672"><p class="caption">
+Figure 3.1: Esqueleto de um gráfico com elementos textuais
+</p>
+</div>
+<p>Os componentes da Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:esqueleto">3.1</a> são:</p>
+<dl>
+<dt>Título</dt>
+<dd>
+Texto que inicia o gráfico e provavelmente será o <strong>primeiro elemento a ser lido pelo leitor</strong>. Busque usar poucas e informativas palavras, sem detalhes técnicos e focando em um público ingênuo. Ao mesmo tempo, use o título para introduzir o tema e a mensagem do gráfico. Por exemplo, o título “Performance Financeira das Ações da Petrobrás” é melhor e mais fácil de entender do que “Preços ajustados a dividendos e outros eventos corporativos, entre 2010 e 2020”. Todo conteúdo técnico e específico sobre os dados utilizados deve ser colocado no subtítulo ou texto inferior (<em>caption</em>).
+</dd>
+<dt>Subtítulo da Figura</dt>
+<dd>
+O subtítulo é um dos pontos mais importantes sobre um gráfico, e onde um olhar técnico irá focar. O subtítulo pode, por exemplo, oferecer descrições do tamanho e forma de coleta da amostra de dados. Saiba que o subtítulo é um ponto muito indicativo da capacidade técnica do autor. Por exemplo, a informação de como os dados foram calculados, tal como “Dados ajustados a dividendos e outros eventos corporativos”, pode ser colocada no subtítulo. Como sugestão, procure não repetir informações já disponíveis em outros locais e busque sempre oferecer o máximo de informações para entender o gráfico.
+</dd>
+<dt>Texto do eixo vertical (<em>y</em>)</dt>
+<dd>
+Texto explicativo no eixo vertical, definindo a principal variável de interesse. Relembre que, em um gráfico de dispersão, lê-se como “variável <em>y</em> é afetada por variável <em>x</em>”. Portanto, <em>y</em> é a variável que merece maior atenção nos componentes textuais, tal como título e subtítulo.
+</dd>
+<dt>Texto do eixo horizontal (<em>x</em>)</dt>
+<dd>
+Texto correspondente ao eixo horizontal. Geralmente utiliza-se algo como <em>tempo</em> ou outra variável de interesse. Em um gráfico de barras, por exemplo, o eixo <em>x</em> pode ser algum tipo de grupo existente nos dados (exemplo: masculino/feminino). Reforço que a variável do eixo horizontal é secundária em relação a variável do eixo vertical.
+</dd>
+<dt>Texto inferior (<em>caption</em>)</dt>
+<dd>
+É o texto de menor fonte, geralmente indicado no lado direito e abaixo do gráfico, com informações secundárias sobre a origem dos dados brutos ou sobre o autor, incluindo link para verificação. Por exemplo, “Dados obtidos em <a href="https://www.transparencia.rs.gov.br/" class="uri">https://www.transparencia.rs.gov.br/</a>”.
+</dd>
+</dl>
+<div class="rmdimportant">
+<p>
+Quando formatando os elementos textuais de um gráfico, um exercício
+que costumo fazer é tentar prever quais questões sobre o gráfico serão
+perguntadas pelo público técnico. Se alguma informação não está clara e
+for fácil de inserir, não hesite em fazê-lo. Da mesma forma, antes de
+publicar um gráfico, apresente o mesmo para diferentes pessoas e preste
+atenção nas respostas, posteriormente ajustando o código onde
+necessário.
+</p>
+</div>
+<p>Um exemplo trabalhado de elementos textuais de um gráfico, porém ainda sem incluir elementos dinâmicos tal como pontos ou linhas, é apresentado a seguir, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:esqueleto-2">3.2</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:esqueleto-2"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/esqueleto-2-1.png" alt="Esqueleto melhorado de um gráfico com elementos textuais" width="672"><p class="caption">
+Figure 3.2: Esqueleto melhorado de um gráfico com elementos textuais
+</p>
+</div>
+<p>Note que, mesmo sem adicionar os dados em si, o esqueleto já diz quais informações podemos esperar no gráfico: a performance da ação da Petrobrás ao longo do tempo, obtidos do Yahoo Finance. Os elementos textuais são formatados de acordo com os dados de entrada. Saiba que os anos do título – 2015 a 2022 – são obtidos diretamente dos dados. O efeito que procuramos é que, a cada nova entrada de dados, os elementos textuais mudem automaticamente.</p>
+<div class="databox">
+<p>
+As ações de uma empresa, tal qual Petrobrás, são contratos
+financeiros que permitem a participação no controle e resultado (lucro)
+de uma empresa. Em resumo, ao comprar uma ação, passas a ser um dos
+donos da empresa, com direito a recebimento de participação proporcional
+ao lucro da mesma. Estes contratos são negociados diariamente no mercado
+financeiro, com forte variação de preços. Todas ações são identificadas
+por um símbolo chamado <em>ticker</em>, composto por quatro letras e
+números. A ações do tipo ordinária da Petrobrás, por exemplo, são
+identificadas por PETR3, enquanto ações do tipo preferencial são
+representadas pelo ticker PETR4.
+</p>
+</div>
+</div>
+<div id="elementos-gráficos" class="section level2" number="3.2">
+<h2>
+<span class="header-section-number">3.2</span> Elementos gráficos<a class="anchor" aria-label="anchor" href="#elementos-gr%C3%A1ficos"><i class="fas fa-link"></i></a>
+</h2>
+<p>Os componentes gráficos – miolo da figura – são os canais visuais vinculadas ao dados, incluindo:</p>
+<ul>
+<li>Linhas (sólida, tracejada, ..);</li>
+<li>Formas (círculos, triângulos, quadrados, ..);</li>
+<li>Cores (azul, vermelho, verde, ..);</li>
+<li>Tamanhos (1mm, 5mm, ..).</li>
+</ul>
+<p>Os mais comuns, e fáceis de lidar, são os gráficos com linhas e formas, tal como um círculo ou quadrado. Ao adicionarmos mais camadas ao gráfico, mais complexo ele fica. Na prática, usamos a interação entre os canais para reforçar uma mensagem. Por exemplo, se temos grupos dentro dos dados, podemos usar linhas diferentes (tracejada, sólida, etc) para separar cada grupo. <strong>Os gráficos mais impactantes são aqueles em que usamos o conhecimento da área para construir a interação dos canais visuais</strong>.</p>
+
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:canais"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/canais-1.png" alt="Os canais de visualização mais utilizados: posição, formato, tamanho, cores (Claus O. Wilke 2019)" width="576"><p class="caption">
+Figure 3.3: Os canais de visualização mais utilizados: posição, formato, tamanho, cores <span class="citation">(<a href="refer%C3%AAncias.html#ref-wilke2019fundamentals" role="doc-biblioref">Claus O. Wilke 2019</a>)</span>
+</p>
+</div>
+<p>Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:canais">3.3</a> mostra os principais canais de visualização de dados. A primeira, <strong>posição</strong>, usa o próprio espaço para indicar relações entre duas variáveis, <em>x</em> e <em>y</em>, e é tipicamente utilizada em gráficos de dispersão. A segunda, <strong>formato</strong>, representa a forma geométrica a ser inserida nas coordenadas, seja um círculo, quadrado ou outra. Podemos também usar o canal <strong>tamanho</strong>, o qual controla a escala espacial da forma geométrica utilizada.</p>
+<p>Na criação de figuras, raramente utilizaremos apenas um canal de visualização. O mais comum é mesclarmos o uso de posição, formato e cores para salientar um resultado. Assim, usamos diferentes canais para representar as diferentes dimensões dos dados analisados.</p>
+<p>Como um primeiro exemplo, vamos reconstruir o gráfico anterior, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:esqueleto-2">3.2</a>, adicionando uma camada gráfica com linhas e pontos no gráfico:</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:esqueleto-3"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/esqueleto-3-1.png" alt="Gráfico de linhas e pontos para os preços da PETR3" width="672"><p class="caption">
+Figure 3.4: Gráfico de linhas e pontos para os preços da PETR3
+</p>
+</div>
+<p>O gráfico em <a href="componentes-de-gr%C3%A1ficos.html#fig:esqueleto-3">3.4</a> se utiliza dos canais visuais posição, linhas e pontos para construir a figura. Os pontos são dados pelas coordenadas <em>x</em> e <em>y</em>, enquanto as linhas conectam os pontos.</p>
+<p>Agora, com a adição de um objetivo de comunicação ou mensagem do gráfico, podemos usar outros elementos visuais para salientar informações a respeito dos dados. Vamos assumir que o objetivo do gráfico é analisar a rentabilidade das ações da Petrobrás (PETR3) no período. Para isso, é intuitivo e tecnicamente correto comparar o retorno acumulado da ação contra o índice Ibovespa, um <em>benchmark</em> para investimentos em empresas. O que procuramos entender é se as ações da Petrobrás tivem performance superior a uma média do mercado como um todo.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:esqueleto-4"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/esqueleto-4-1.png" alt="Gráfico melhorado de linhas e pontos para os preços da PETR3" width="672"><p class="caption">
+Figure 3.5: Gráfico melhorado de linhas e pontos para os preços da PETR3
+</p>
+</div>
+<p>Note que, apesar de serem exatamente os mesmos dados, as escolhas dos canais impactam diretamente o gráfico e a percepção do leitor. Observo os seguintes pontos adicionais:</p>
+<ul>
+<li><p>Ao contrário de se utilizar valores nominais de preço da Petrobrás e valores do índice Ibovespa, calculou-se o retorno acumulado partindo de 100% (linha cinza horizontal). Isso permite a comparação visual entre o comportamento de ambos investimentos.</p></li>
+<li><p>A linha <strong>escura e densa</strong> dos preços da ação PETR3 se destaca em relação a linha <strong>tracejada e menos densa</strong> do Ibovespa. Esta escolha é para atrair a atenção do leitor e, implicitamente, mandar a mensagem de que “Petrobrás é maior e mais forte do que o índice Ibovespa”.</p></li>
+<li><p>O texto com o retorno acumulado total e o equivalente anual foi adicionado ao gráfico. A cor azul para PETR3 destaca a melhor performance das ações da Petrobrás. A escolha das cores reflete princípios de contabilidade onde, a cor azul é relacionada com lucro, enquanto a vermelha é prejuízo. Ou seja, azul indica algo financeiramente positivo, e vermelho algo negativo.</p></li>
+</ul>
+<p>Em resumo, os elementos em <a href="componentes-de-gr%C3%A1ficos.html#fig:esqueleto-4">3.5</a> foram escolhidos para reforçar a mensagem do gráfico: as ações da Petrobrás tiveram, no período analisado, melhor performance financeira do que o índice Ibovespa. Enquanto as ações da Petrobrás retornaram 775,93% de lucro para o investidor, o índice retornou apenas 138,92%. Este é um exemplo simples e direto de como podemos melhorar uma visualização de dados ao adicionar informações precisas e claras para o leitor com a seleção de tamanho, tipo de linha, cores, transparência e adição de textos.</p>
+</div>
+<div id="a-escolha-dos-canais" class="section level2" number="3.3">
+<h2>
+<span class="header-section-number">3.3</span> A escolha dos canais<a class="anchor" aria-label="anchor" href="#a-escolha-dos-canais"><i class="fas fa-link"></i></a>
+</h2>
+<p>Partindo do caso mais simples, a primeira decisão na construção de um gráfico baseado em dados é qual a forma de traduzir números em imagens. Podemos usar linhas, pontos ou barras. Apesar de existirem regras gerais, alguns gráficos fazem mais sentido com linhas, enquanto outros com pontos ou colunas. O uso de cores no gráfico também é discutível: enquanto um pouco de cor pode ajudar o leitor, o uso de muitas cores pode atrapalhar.</p>
+<div id="uso-de-linhas" class="section level3" number="3.3.1">
+<h3>
+<span class="header-section-number">3.3.1</span> Uso de linhas<a class="anchor" aria-label="anchor" href="#uso-de-linhas"><i class="fas fa-link"></i></a>
+</h3>
+<p>O uso de <strong>linhas</strong> faz sentido quando os dados adjacentes tem conexão entre si, tal como o próprio tempo. Por exemplo, no caso anterior, visualizamos os preços da ação da Petrobrás com linhas. Faz sentido conectar os pontos dos preços das ações pois o resultado final representa o caminho do preços ao longo dos dias, onde pontos adjacentes são conectados pelo tempo.</p>
+<p>Veja o exemplo na Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-linhas">3.6</a>, onde apresentamos o gráfico de preços da EGIE3 – empresa do setor elétrico – em três formatos diferentes. O primeiro gráfico, usando pontos, é razoável. O segundo é somente estranho e mais parece um código de barras, sem muita relação com o problema em si. Como regra, o uso de barras sempre força o eixo vertical a partir do valor zero, o que pode resultar em gráficos pouco atrativos. Como esperado, o terceiro gráfico, painel C, é o que tem forma mais intuitiva: linhas para preços de ações, representando a dependência temporal entre um preço e outro.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-linhas"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-linhas-1.png" alt="Exemplo de gráfico de linhas" width="960"><p class="caption">
+Figure 3.6: Exemplo de gráfico de linhas
+</p>
+</div>
+</div>
+<div id="uso-de-formas" class="section level3" number="3.3.2">
+<h3>
+<span class="header-section-number">3.3.2</span> Uso de formas<a class="anchor" aria-label="anchor" href="#uso-de-formas"><i class="fas fa-link"></i></a>
+</h3>
+<p>O uso de <strong>pontos e formas</strong> fazem mais sentido em gráficos onde cada ponto pode ser entendido como <strong>independente</strong> dos demais. Este é o caso clássico de <strong>gráficos de dispersão</strong>, onde buscamos explicar uma variável numérica com base em outra. Por exemplo, considere analisar a relação entre sobra de salário (<em>disposable income</em>) e poupança (<em>savings ratio</em>) para diferentes países, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-pontos">3.7</a>. Cada ponto do gráfico é um país diferente. Aqui, os dados do Brasil, por exemplo, não tem relação direta com os dados da Espanha. Assim, não faz sentido ligar os dados com linhas, mas sim usar pontos independentes.</p>
+<div class="databox">
+<p>
+Os dados de razão de poupança (<em>savings ratio</em>) referem-se a
+divisão do valor poupado e o salário. O mesmo é calculado por país,
+tirando uma média regional de salário e poupança em determinado período.
+Em geral, quanto maior a razão de poupança para determinado país,
+melhor. Isso indica uma superior capacidade da população em poupar os
+seus rendimentos para o consumo futuro, aumentando a estabilidade
+financeira da região.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-pontos"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-pontos-1.png" alt="Exemplo de gráfico de formas" width="960"><p class="caption">
+Figure 3.7: Exemplo de gráfico de formas
+</p>
+</div>
+<p>Comparando as imagens da Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-pontos">3.7</a>, note que o gráfico de barras (painel B) e linhas (painel C) resultam em figuras sem muita intuição e são difíceis de entender. Isso ocorre por que os canais de visualização com barras e linhas não funcionam para o problema. O uso de linhas, por exemplo, reforça uma dependência inexistente entre os pontos adjacentes e confunde a análise. Todavia, painel A – uso de pontos – deixa claro na visualização de que pessoas com renda maior tem uma proporção de poupança menor do que pessoas com renda menor.</p>
+</div>
+<div id="uso-de-barras" class="section level3" number="3.3.3">
+<h3>
+<span class="header-section-number">3.3.3</span> Uso de barras<a class="anchor" aria-label="anchor" href="#uso-de-barras"><i class="fas fa-link"></i></a>
+</h3>
+<p>Os <strong>gráficos de barras</strong> funcionam muito bem quando a variável explicativa é uma categoria. Por exemplo, utilizando os mesmos dados anteriores, considere comparar a capacidade de poupança dos cinco países com maior valor, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-barras">3.8</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-barras"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-barras-1.png" alt="Exemplo de gráfico de barras" width="960"><p class="caption">
+Figure 3.8: Exemplo de gráfico de barras
+</p>
+</div>
+<p>Painéis A e B apresentam resultados razoáveis e intuitivos. Particularmente, o ordenamento dos dados faz com o que painel B tenha o formato de uma escada (ou pódio de premiação), o que facilita a mensagem do gráfico de que país com identificador 1 tem maior poder de poupança. Note também que o uso de barras (painel B) força o eixo <em>y</em> a iniciar em zero. Painel C é difícil de entender pois transmite a mensagem de interligação entre os países (eixo <em>x</em>), o que, dada a natureza dos dados, não é visualmente intuitivo.</p>
+</div>
+</div>
+<div id="intro-cores" class="section level2" number="3.4">
+<h2>
+<span class="header-section-number">3.4</span> Cores<a class="anchor" aria-label="anchor" href="#intro-cores"><i class="fas fa-link"></i></a>
+</h2>
+<p>Muito utilizado pela indústria de marketing, as <strong>cores</strong> direcionam a atenção e incitam algum tipo de sentimento pelo leitor. Na construção de figuras baseadas em dados, o uso de cores serve para distinguir grupos ou intensidades. Quando usado com parcimônia, as cores funcionam muito bem e facilitam o entendimento da mensagem do gráfico. Cuidado, porém, com excessos.</p>
+<p>É indiscutível que o uso de cores funciona. Um exemplo clássico sobre o efeito do uso de cores em finanças é o artigo <em><span style="color: red;">In the red: The effects of color on investment behavior</span></em> <span class="citation">(<a href="refer%C3%AAncias.html#ref-bazley2017red" role="doc-biblioref">Bazley, Cronqvist, and Mormann 2017</a>)</span>. Os autores conduziram experimentos para verificar se o uso da cor vermelha em relatórios de investimentos mudaria o comportamento futuro dos investidores. Os resultados mostraram que, quando a cor vermelha é utilizada para destacar prejuízos, os investidores se tornam mais avessos ao risco e diminuem as suas expectativas de retorno futuro. Perceba como uma pequena decisão nas cores pode causar um grande impacto na audiência.</p>
+<p>No dia a dia, a melhor forma de trabalhar com cores no R é se utilizar de paletas – conjunto de cores pré-estabelecidas – e deixar que o próprio <em>software</em> escolha as cores específicas do gráfico. O uso de paletas automatiza o processo de construção de um gráfico pois as cores são predeterminadas em uma fila e selecionadas a medida que são necessárias. Adicionalmente, cada paleta de cores possui um tema, tal como quente/frio, claro/escuro, facilitando a escolha de acordo com o objetivo da mensagem. Para melhor entender o uso de paletas, vamos explorar os três tipos de paletas de cores: sequenciais, divergentes e qualitativas.</p>
+<div id="paletas-sequenciais" class="section level3" number="3.4.1">
+<h3>
+<span class="header-section-number">3.4.1</span> Paletas sequenciais<a class="anchor" aria-label="anchor" href="#paletas-sequenciais"><i class="fas fa-link"></i></a>
+</h3>
+<p>As paletas de cores sequenciais servem para indicar diferentes intensidades para um mesmo efeito. Pode-se usar apenas um tom ou múltiplos para criar a paleta sequencial. Por exemplo, podemos usar vermelho escuro para representar dados em uma extremidade da distribuição, e vermelho claro para a outra. Como regra, as cores desse tipo de paleta tem o mesmo tom, com luminosidade decrescente ao longo das cores.</p>
+<div id="paletas-sequenciais-de-tom-único" class="section level4" number="3.4.1.1">
+<h4>
+<span class="header-section-number">3.4.1.1</span> Paletas sequenciais de tom único<a class="anchor" aria-label="anchor" href="#paletas-sequenciais-de-tom-%C3%BAnico"><i class="fas fa-link"></i></a>
+</h4>
+<p>A seguir, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:pal-seq-tom-unico">3.9</a>, apresenta-se cinco paletas sequenciais de tom único, proveniente do pacote <strong>colorspace</strong> .</p>
+
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:pal-seq-tom-unico"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/pal-seq-tom-unico-1.png" alt="Exemplo de cinco paletas de cores sequenciais em tom único do pacote colorspace ." width="672"><p class="caption">
+Figure 3.9: Exemplo de cinco paletas de cores sequenciais em tom <strong>único</strong> do pacote <strong>colorspace</strong> .
+</p>
+</div>
+<div class="rmdcaution">
+<p>
+Entender a acessibilidade e a mídia é importante! Muito cuidado com a
+escolha das cores para uma audiência maior. Pessoas com incapacidade de
+diferenciar cores podem ter problema em analisar os seus gráficos. Se
+possível, tenha em mente uma maneira alternativa – usando formas de
+pontos, por exemplo – para formatar a sua figura. Adicionalmente, busque
+saber como o material será consumido pelo público. Por exemplo, livros
+são geralmente impressos em preto e branco e, portanto, qualquer uso de
+cores sequer será notado.
+</p>
+</div>
+<p>Todas as paletas em <a href="componentes-de-gr%C3%A1ficos.html#fig:pal-seq-tom-unico">3.9</a> se utilizam do mesmo tom (<em>single hue</em>), diminuindo a intensidade sequencialmente, da esquerda para a direita. Os nomes (“Grays”, “Blues 2”, ..) são pré-definidos pelo módulo de paletas. Futuramente, seção <a href="intro-ggplot.html#ggplot2-paletas">4.8</a> do livro, iremos mais a fundo no uso de paletas do pacote <strong>colorspace</strong> .</p>
+<p>Na Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-tom-unico">3.10</a> apresenta-se um exemplo de aplicação de paleta sequencial com tom único para um gráfico de barras. Note como os países com maiores razões de poupança são salientados pela maior intensidade das cores.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-tom-unico"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-tom-unico-1.png" alt="Exemplo de paleta sequencial com tom único para um gráfico de barras" width="672"><p class="caption">
+Figure 3.10: Exemplo de paleta sequencial com tom único para um gráfico de barras
+</p>
+</div>
+</div>
+<div id="paletas-sequenciais-de-tons-múltiplos" class="section level4" number="3.4.1.2">
+<h4>
+<span class="header-section-number">3.4.1.2</span> Paletas sequenciais de tons múltiplos<a class="anchor" aria-label="anchor" href="#paletas-sequenciais-de-tons-m%C3%BAltiplos"><i class="fas fa-link"></i></a>
+</h4>
+<p>Em <a href="componentes-de-gr%C3%A1ficos.html#fig:pal-seq-tom-mult">3.11</a> apresenta-se paletas sequenciais com tons múltiplos (<em>multi-hue</em>). Neste caso, além da mudança da intensidade, muda-se também as cores nos extremos.</p>
+
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:pal-seq-tom-mult"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/pal-seq-tom-mult-1.png" alt="Exemplo de cinco paletas de cores sequenciais em tons múltiplos do pacote colorspace ." width="672"><p class="caption">
+Figure 3.11: Exemplo de cinco paletas de cores sequenciais em tons <strong>múltiplos</strong> do pacote <strong>colorspace</strong> .
+</p>
+</div>
+<p>O uso de paletas sequenciais com tons múltiplos resulta em gráficos mais elegantes do que para tons únicos. Veja a seguir, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-tons-multiplos">3.12</a>, um exemplo de aplicação de tons múltiplos para o mesmo gráfico de barras anterior.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-tons-multiplos"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-tons-multiplos-1.png" alt="Exemplo de paleta sequencial com tons múltiplos para um gráfico de barras" width="672"><p class="caption">
+Figure 3.12: Exemplo de paleta sequencial com tons múltiplos para um gráfico de barras
+</p>
+</div>
+<p>O resultado em <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-tons-multiplos">3.12</a> é elegante para qualquer paleta de cores. Particularmente, a paleta “Blues 2” me parece mais apropriada por utilizar a cor azul, a qual é geralmente relacionada com coisas positivas. Assim, a mensagem reforçada é de que países com maior razão de poupança são mais positivos.</p>
+</div>
+</div>
+<div id="paletas-divergentes" class="section level3" number="3.4.2">
+<h3>
+<span class="header-section-number">3.4.2</span> Paletas divergentes<a class="anchor" aria-label="anchor" href="#paletas-divergentes"><i class="fas fa-link"></i></a>
+</h3>
+<p>Paletas de cores divergentes realçam a diferença entre os extremos e servem para indicar intensidades. Definimos uma cor para o mínimo, outra para o máximo e todas as cores intermediárias são escolhidas como um ponto intermediário das cores nos extremos. A finalidade das paletas divergentes é destacar as diferenças entre os valores extremos dos dados. Veja na Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:pal-div">3.13</a> um exemplo de cinco paletas de cores divergentes do pacote <strong>colorspace</strong> .</p>
+
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:pal-div"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/pal-div-1.png" alt="Exemplo de cinco paletas de cores divergentes do pacote colorspace ." width="672"><p class="caption">
+Figure 3.13: Exemplo de cinco paletas de cores divergentes do pacote <strong>colorspace</strong> .
+</p>
+</div>
+<p>Um exemplo de uso de paletas divergentes é o gráfico de dispersão dos dados de poder de poupança, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-paleta-divergente">3.14</a>, onde utilizamos a média da razão de poupança como a cor do centro. Assim, as diferenças da média definem os extremos utilizados pela paleta escolhida.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-paleta-divergente"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-paleta-divergente-1.png" alt="Exemplo de uso de paleta divergente em gráfico de dispersão" width="672"><p class="caption">
+Figure 3.14: Exemplo de uso de paleta divergente em gráfico de dispersão
+</p>
+</div>
+<p>Para a Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-paleta-divergente">3.14</a>, os pontos próximos da média possuem tom cinzento em todos os gráficos. A medida que os valores mudam de um extremo para o outro, as cores se distinguem de acordo com a paleta escolhida. Esta é uma ótima técnica para salientar escalas numéricas. Na mesma figura, note como os pontos abaixo de 4,75% – média de <em>savings ratio</em> – ficam com cores semelhantes, enquanto aqueles acima possuem cores mais fortes e diferenciadas, destacando os países com maiores razões de poupança (<em>savings ratio</em>).</p>
+</div>
+<div id="paletas-qualitativas" class="section level3" number="3.4.3">
+<h3>
+<span class="header-section-number">3.4.3</span> Paletas qualitativas<a class="anchor" aria-label="anchor" href="#paletas-qualitativas"><i class="fas fa-link"></i></a>
+</h3>
+<p>Paletas de cores qualitativas servem para indicar grupos heterogêneos nos dados. Isto é, queremos distinguir pontos no gráfico, porém não indicando intensidade. Um exemplo de cinco paletas qualitativas do pacote <strong>colorspace</strong> são apresentadas na Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:pal-qual">3.15</a>.</p>
+
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:pal-qual"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/pal-qual-1.png" alt="Exemplo de quatro paletas de cores divergentes do pacote colorspace ." width="672"><p class="caption">
+Figure 3.15: Exemplo de quatro paletas de cores divergentes do pacote <strong>colorspace</strong> .
+</p>
+</div>
+<p>Veja que as cores em <a href="componentes-de-gr%C3%A1ficos.html#fig:pal-qual">3.15</a> não indicam sequência, e sim contraste. Um exemplo de uso de paletas qualitativas é o gráfico de dispersão dos dados de poder de poupança, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-palette-qualitativas">3.16</a>, onde utilizamos uma paleta de cores para distinguir os diferentes países.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-palette-qualitativas"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-palette-qualitativas-1.png" alt="Exemplo de uso de paletas qualitativas" width="672"><p class="caption">
+Figure 3.16: Exemplo de uso de paletas qualitativas
+</p>
+</div>
+</div>
+</div>
+<div id="tamanho" class="section level2" number="3.5">
+<h2>
+<span class="header-section-number">3.5</span> Tamanho<a class="anchor" aria-label="anchor" href="#tamanho"><i class="fas fa-link"></i></a>
+</h2>
+<p>O canal tamanho refere-se ao espaço tomado por determinada forma como linha, círculos ou triângulos. O uso é simples, aumentamos ou diminuímos a forma para salientar escalas numéricas. Em outras palavras, vinculamos a escala geométrica a escala numérica dos dados. Veja na Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-tamanho">3.17</a> um exemplo simples de uso do tamanho dos pontos.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-tamanho"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-tamanho-1.png" alt="Exemplo de uso de tamanho para um gráfico de dispersão" width="672"><p class="caption">
+Figure 3.17: Exemplo de uso de tamanho para um gráfico de dispersão
+</p>
+</div>
+<p>Note no gráfico anterior como os círculos são maiores de acordo com o valor de <em>Savings Ratio</em>, eixo vertical, com uma escala numérica disponível na legenda do gráfico. Podemos também utilizar o canal de tamanho juntamente com o canal de cor, Figura <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-tamanho-e-cor">3.18</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ex-tamanho-e-cor"></span>
+<img src="vdr_ed01_ONLINE_files/figure-html/ex-tamanho-e-cor-1.png" alt="Exemplo de uso de tamanho para diferenciar pontos" width="672"><p class="caption">
+Figure 3.18: Exemplo de uso de tamanho para diferenciar pontos
+</p>
+</div>
+<p>Cuidado, porém, com excessos. O gráfico em <a href="componentes-de-gr%C3%A1ficos.html#fig:ex-tamanho-e-cor">3.18</a> contém bastante informação ao mesclar o uso do canal de cor e tamanho. Como regra, busque construir gráficos simples e intuitivos: não espere que o leitor gaste muita energia mental para entender o gráfico. Caso precisar, construa mais de uma figura para passar a sua mensagem.</p>
+</div>
+<div id="exercícios-2" class="section level2" number="3.6">
+<h2>
+<span class="header-section-number">3.6</span> Exercícios<a class="anchor" aria-label="anchor" href="#exerc%C3%ADcios-2"><i class="fas fa-link"></i></a>
+</h2>
+<p>A solução dos exercícios de final de capítulo pode ser compilada localmente com o comando <code><a href="https://rdrr.io/pkg/vdr/man/exercises_compile_solution.html">vdr::exercises_compile_solution()</a></code>. Alternativamente, podes baixar uma versão do arquivo compilado no site do livro<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://www.msperlin.com/vdr/vdr-eoc-solutions.html" class="uri"&gt;https://www.msperlin.com/vdr/vdr-eoc-solutions.html&lt;/a&gt;&lt;/p&gt;'><sup>6</sup></a>.</p>
+<hr>
+<div id="q.1-1" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Em 22/09/2022, o grupo <a href="https://latinometrics.substack.com/">LatinoMetrics</a> publicou uma visualização de dados a respeito da impressão de confiança da população brasileira em relação as diferens mídias jornalísticas. O conteúdo pode ser acessado no <a href="%5Bhttps://www.instagram.com/p/Ciz8mFSrZj7/%5D">Instagram</a>, e é disponilizado abaixo:</p>
+<div class="figure">
+<img src="00b-text-resources/figs/exercises-latinometrics-instagram_02.png" alt=""><p class="caption">Postagem do LatinoMetrics em 22/09/2022</p>
+</div>
+<p>Observando a figura, destaque os elementos <strong>textuais</strong> e <strong>gráficos</strong> utilizados pelo autor.</p>
+<hr>
+</div>
+<div id="q.2-1" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-1"><i class="fas fa-link"></i></a>
+</h3>
+<p><a href="https://www.instagram.com/statspanda/?hl=en">Statspanda</a> é outro grupo especializado em produção de conteúdo relacionado a visualização de dados, porém com assuntos muito mais abrangentes que o LatinoMetrics. Em 17/09/2022, o grupo publicou a seguinte figura no <a href="https://www.instagram.com/p/CaFZoVpO3gc/?hl=en">Instagram</a>:</p>
+<div class="figure">
+<img src="00b-text-resources/figs/exercises-statspanda-instagram_01.png" alt=""><p class="caption">Postagem do Statspanda em 19/09/2022</p>
+</div>
+<p>Neste caso, quais foram os elementos <strong>gráficos</strong> utilizados pelo autor e como os mesmos se associam a mensagem da figura.</p>
+<hr>
+</div>
+<div id="q.3" class="section level3 unnumbered">
+<h3>Q.3<a class="anchor" aria-label="anchor" href="#q.3"><i class="fas fa-link"></i></a>
+</h3>
+<p>No <a href="https://www.reddit.com/r/dataisbeautiful/comments/xoqi8w/revenue_and_budget_comparison_for_every_star_wars/">Reddit/dataisbeautiful</a> é possível encontrar a visualização da receita de todos os filmes da franchise <em>Star Wars</em>.</p>
+<div class="figure">
+<img src="00b-text-resources/figs/exercises-starwars-reddit_01.png" alt=""><p class="caption">Postagem do Reddit/dataisbeautiful</p>
+</div>
+<p>Apesar de ser esteticamante interessante, o mesmo poderia ser melhorado. Com base no que aprendeu neste capítulo do livro, analise o gráfico e faça recomendações para sua melhoria buscando sempre maior claridade e simplicidade.</p>
+
+</div>
+</div>
+</div>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://vdr-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="principios.html"><span class="header-section-number">2</span> Princípios de Visualização de Dados</a></div>
+<div class="next"><a href="intro-ggplot.html"><span class="header-section-number">4</span> Visualização de Dados com o R</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="Nesta Página"><h2>Nesta Página</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#componentes-de-gr%C3%A1ficos"><span class="header-section-number">3</span> Componentes de Gráficos</a></li>
+<li><a class="nav-link" href="#elementos-textuais"><span class="header-section-number">3.1</span> Elementos textuais</a></li>
+<li><a class="nav-link" href="#elementos-gr%C3%A1ficos"><span class="header-section-number">3.2</span> Elementos gráficos</a></li>
+<li>
+<a class="nav-link" href="#a-escolha-dos-canais"><span class="header-section-number">3.3</span> A escolha dos canais</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#uso-de-linhas"><span class="header-section-number">3.3.1</span> Uso de linhas</a></li>
+<li><a class="nav-link" href="#uso-de-formas"><span class="header-section-number">3.3.2</span> Uso de formas</a></li>
+<li><a class="nav-link" href="#uso-de-barras"><span class="header-section-number">3.3.3</span> Uso de barras</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#intro-cores"><span class="header-section-number">3.4</span> Cores</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#paletas-sequenciais"><span class="header-section-number">3.4.1</span> Paletas sequenciais</a></li>
+<li><a class="nav-link" href="#paletas-divergentes"><span class="header-section-number">3.4.2</span> Paletas divergentes</a></li>
+<li><a class="nav-link" href="#paletas-qualitativas"><span class="header-section-number">3.4.3</span> Paletas qualitativas</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#tamanho"><span class="header-section-number">3.5</span> Tamanho</a></li>
+<li>
+<a class="nav-link" href="#exerc%C3%ADcios-2"><span class="header-section-number">3.6</span> Exercícios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-1">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-1">Q.2</a></li>
+<li><a class="nav-link" href="#q.3">Q.3</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Visualização de Dados com o R - Versão Online</strong>: Aplicações para Finanças e Economia" foi escrito por <strong>Marcelo S. Perlin</strong>  (marceloperlin@gmail.com).</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Este livro foi compilado com amor em 2022-11-23. Deixo aqui meu profundo agradecimento aos autores do fantástico pacote <a class="text-light" href="https://bookdown.org">bookdown</a>.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>

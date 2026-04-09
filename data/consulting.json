@@ -1,0 +1,26 @@
+{
+  "title": "Consulting Services",
+  "intro": "I offer consulting services in the areas of data science, financial analysis, and programming in R and Python. I have the flexibility to work on small (couple of weeks) or large projects (over a year). I have experience in:",
+  "intro_list": [
+    "conducting **empirical research** in the topic of finance, from data importation to analysis and reporting;",
+    "using R and Python to write data pipelines, import and analyze larger-than-RAM and **unstructured** datasets;",
+    "using **machine learning models** in R (tidymodels) and Python (scikit-learn) in prediction problems, with real world business applications such as fraud detection;",
+    "using LLM (large language models) for solving research problems in large scale;",
+    "writing open source R packages and publishing in CRAN;",
+    "using cloud tools such as servers, storage and APIs from the usual suspects (AWS, Google Cloud, Azure)."    
+  ],
+  "services": [
+    {
+      "name": "Data Analysis & Visualization",
+      "description": "Transforming raw, unstructured data into clean, organized formats ready for analysis and modeling. This includes data cleaning, exploratory analysis and compelling data visualizations."
+    },
+    {
+      "name": "Modelling & Simulation",
+      "description": "Transforming data into actionable business insights. This includes supervised and unsupervised machine learning models, financial econometrics and the use of LLMs (large language models) for data analysis."
+    },
+    {
+      "name": "Custom Programming Solutions",
+      "description": "Developing custom scripts and applications in R and Python for automating data-related tasks and research. This includes webscrapping scripts and general automation of data tasks. If you got an idea and want to test it over large quantities of real data, get in touch."
+    }
+  ]
+}

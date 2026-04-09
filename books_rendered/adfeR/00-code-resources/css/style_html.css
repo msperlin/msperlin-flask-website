@@ -1,0 +1,157 @@
+/* Link format */
+
+a:link {
+  color: #004cbe;
+}
+
+/* visited link */
+a:visited {
+  color: #004cbe;
+}
+
+/* mouse over link */
+a:hover {
+  color: rgb(45, 173, 41);
+}
+
+/* selected link */
+a:active {
+  color: rgb(0, 0, 0);
+}
+
+
+/* Special boxes ..*/
+
+.rmdcaution {
+  padding: 1em 1em 1em 4em;
+  background: #ffdbdb 5px center/3em no-repeat;
+  background-image: url("../../00-text-resources/images/caution2.png");
+  box-shadow: 5px 5px 5px red;
+  border-color: red;
+  margin: 0em 1em 1em 0em;
+}
+
+.rmdimportant {
+  padding: 1em 1em 1em 4em;
+  background: #e6f5ff 5px center/3em no-repeat;
+  background-image: url("../../00-text-resources/images/important2.png");
+  box-shadow: 5px 5px 5px blue;
+  border-color: blue;
+  margin: 0em 1em 1em 0em;
+}
+
+.pleasebuyit {
+  padding: 1em 1em 1em 16em;
+  background: white 5px center/14em no-repeat;
+  background-image: url("../../00-text-resources/images/my_dog.jpg");
+  border-color: #294fe6;
+  border-style: solid;
+  border-width: thin;
+  margin: 1em 0em 0em 0em;
+}
+
+/* Text */
+.caption {
+  color: #0050c7;
+  margin-top: 10px;
+}
+
+p {
+  text-align: justify;
+}
+
+/* Code */
+p code {
+  white-space: inherit;
+}
+
+pre {
+  word-break: normal;
+  word-wrap: normal;
+  margin: 0em 0em 1em 0em;
+}
+
+pre code {
+  white-space: inherit;
+  padding-left: 0cm;
+}
+
+div.sourceCode {
+  background-color: #f6f6f6;
+  border-left: solid thick;
+  border-color: tomato;
+  padding-left: 8px;
+
+}
+
+
+.flushright {
+  text-align: right;
+}
+
+blockquote > p:last-child {
+  text-align: right;
+}
+blockquote > p:first-child {
+  text-align: inherit;
+}
+
+/* Control h1 h2 ..*/
+
+.header-section-number {
+  padding-right: .2em;
+  font-weight: 600;
+  color: #0058db;
+}
+
+.level1 .header-section-number {
+  display: inline-block;
+  border-bottom: 2px solid;
+}
+
+.level1 h1 {
+  border-bottom: 1.5px solid;
+  border-color:black;
+}
+
+.level1 h2 h3 h4 h5 {
+  border-bottom: 1px solid;
+  border-color:black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  color: #0066ff;
+}
+
+h1.title {
+  font-weight: 500;
+}
+
+.smallcaps {
+  font-variant: small-caps;
+}
+
+
+.book .book-body .page-wrapper .page-inner .normal strong {
+  font-weight: 600;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal a {
+    color: #00ff22;
+}
+
+
+/* styles for solveme */
+
+.solveme {
+  border: 2px dotted red;
+  border-color: blue;
+  border-width: 0.1cm;
+  background-color: beige;
+}
+.solveme.correct {
+  border-color: blue;
+  border-width: 0.1cm;
+  background-color: rgb(115, 245, 103);
+}

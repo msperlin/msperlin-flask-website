@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+  <div class="profile-photo">
+    <img src="{{ url_for('static', filename='img/profile.png') }}" alt="{{ about.name }}">
+  </div>
+  <div class="bio">
+    <h2>Welcome</h2>
+    <p>{{ about.bio }}</p>
+    {% if about.email %}
+    <p><strong>Email:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>
+    {% endif %}
+
+    <p>
+      <a href="{{ about.lattes_link }}">Lattes CV</a> | <a href="{{ about.gscholar_link }}">Google Scholar</a> |
+      <a href="{{ about.linkedin_link }}">LinkedIn</a> | <a href="{{ about.github_link }}">Github</a>
+    </p>
+  </div>
+</section>
+
+<!-- 
+<section class="cta-section">
+  <h2>Need Help with Financial Data or Analytics?</h2>
+  <p>I offer specialized consulting services in financial data science, R/Python programming, and predictive modeling.
+  </p>
+  <a href="{{ url_for('consulting') }}" class="cta-button">View Consulting Services</a>
+</section>
+-->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "{{ request.url_root }}#person",
+      "name": "Marcelo S. Perlin",
+      "url": "{{ request.url_root }}",
+      "image": "{{ url_for('static', filename='img/profile.png', _external=True) }}",
+      "description": "{{ about.bio }}",
+      "sameAs": [
+        "{{ about.lattes_link }}",
+        "{{ about.gscholar_link }}",
+        "{{ about.linkedin_link }}",
+        "{{ about.github_link }}"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{ request.url_root }}#website",
+      "url": "{{ request.url_root }}",
+      "name": "Marcelo S. Perlin - Academic Website",
+      "description": "Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.",
+      "publisher": {
+        "@id": "{{ request.url_root }}#person"
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}

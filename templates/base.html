@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block meta_description %}
+    <meta name="description"
+        content="{{ description | default('Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.') }}">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{{ title }} - Marcelo S. Perlin">
+    <meta property="og:description" content="{{ description | default('Academic website of Marcelo S. Perlin...' ) }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:image" content="{{ url_for('static', filename='img/profile.png', _external=True) }}">
+    <meta property="og:site_name" content="Marcelo S. Perlin - Academic Website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ title }} - Marcelo S. Perlin">
+    <meta name="twitter:description" content="{{ description | default('Academic website of Marcelo S. Perlin...') }}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='img/profile.png', _external=True) }}">
+    {% endblock %}
+    <title>{{ title }} - Marcelo S. Perlin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo"><a href="{{ url_for('index') }}">Marcelo S. Perlin</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}"
+                            class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ url_for('publications') }}"
+                            class="{% if request.endpoint == 'publications' %}active{% endif %}">Publications</a></li>
+                    <li><a href="{{ url_for('books') }}"
+                            class="{% if request.endpoint == 'books' %}active{% endif %}">Books</a></li>
+
+
+                    <li class="dropdown">
+                        <a href="javascript:void(0)"
+                            class="dropbtn {% if request.endpoint in ['code', 'data', 'news', 'awards'] %}active{% endif %}">Research</a>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('code') }}">Code</a>
+                            <a href="{{ url_for('data') }}">Data</a>
+                            <a href="{{ url_for('news') }}">News Coverage</a>
+                            <a href="{{ url_for('awards') }}">Awards</a>
+                        </div>
+                    </li>
+                    <li><a href="{{ url_for('consulting') }}"
+                            class="{% if request.endpoint == 'consulting' %}active{% endif %}">Consulting</a></li>
+                    <li><a href="https://msperlin.github.io/site-slides/">Class Slides</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ year }} Marcelo S. Perlin. All rights reserved. <br> Page made with <a
+                    href="https://flask.palletsprojects.com/">Flask</a>. Source code available on <a
+                    href="https://github.com/msperlin/msperlin-flask-website">GitHub</a>.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>{{ content.title }}</h2>
+
+    <p class="lead">{{ content.intro }}</p>
+
+    {% if content.intro_list %}
+    <ul>
+        {% for item in content.intro_list %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <hr>
+
+    <h3>Services Offered</h3>
+    <div class="services-grid">
+        {% for service in content.services %}
+        <div class="service-card">
+            <h4>{{ service.name }}</h4>
+            <p>{{ service.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <hr>
+    <p>If you have an interesting and challenging data problem, please reach out via email (<a
+            href="mailto:marceloperlin@gmail.com">marceloperlin@gmail.com</a>).</p>
+
+</section>
+{% endblock %}

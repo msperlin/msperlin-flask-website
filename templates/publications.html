@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Publications</h2>
+
+
+    <h4><a href="https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ">Google Scholar Statistics</a>
+        <br>
+        <font size="2">(last update at {{ gscholar_stats.date_retrieval }})</font>
+    </h4>
+
+    <div class="stats-container">
+        <div class="stat-card" data-tooltip="Total number of unique research papers published.">
+            <h4>Published papers</h4>
+            <p>{{ total_publications }}</p>
+        </div>
+        <div class="stat-card"
+            data-tooltip="Total number of citations received by my work, including papers, books, book chapters and news articles, as reported by Google Scholar.">
+            <h4>Total citations</h4>
+            <p>{{ gscholar_stats.citedby }}</p>
+        </div>
+        <div class="stat-card"
+            data-tooltip="A metric that indicates both the productivity and citation impact of a researcher. An h-index of X means X papers have at least X citations each.">
+            <h4>h-index</h4>
+            <p>{{ gscholar_stats.hindex }}</p>
+        </div>
+        <div class="stat-card" data-tooltip="The number of publications with at least 10 citations.">
+            <h4>i10-index</h4>
+            <p>{{ gscholar_stats.i10index }}</p>
+        </div>
+    </div>
+    <ul class="item-list">
+        {% for pub in publications %}
+        <li class="item-card publication-item">
+            <div class="publication-content">
+                <h3><a href="{{ pub.link }}">{{ pub.title }}</a></h3>
+                {% if pub.authors %}
+                <p class="meta"><strong>{{ pub.authors }}</strong></p>
+                {% endif %}
+                <p class="meta">{{ pub.year }} | {{ pub.journal }} {% if pub.issn %}| ISSN: {{ pub.issn }} {% endif %}{%
+                    if pub.impact_factor %} | IF: {{ pub.impact_factor
+                    }}{% endif %}
+                    <button class="cite-btn" data-title="{{ pub.title }}" data-authors="{{ pub.authors }}"
+                        data-year="{{ pub.year }}" data-journal="{{ pub.journal }}">
+                        Cite This
+                    </button>
+                </p>
+                {% if pub.abstract %}
+                <p class="abstract">{{ pub.abstract }}</p>
+                {% endif %}
+            </div>
+            {% if pub.image %}
+            <div class="publication-image">
+                <img src="{{ url_for('static', filename=pub.image.replace('static/', '')) }}" alt="Journal Cover">
+            </div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<!-- Cite Modal -->
+<div id="citeModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Cite this publication</h3>
+        <p>BibTeX format:</p>
+        <textarea id="bibtexOutput" class="modal-textarea" readonly></textarea>
+        <button id="copyBtn" class="copy-btn">Copy BibTeX</button>
+
+        <p>APA format:</p>
+        <textarea id="apaOutput" class="modal-textarea" readonly></textarea>
+        <button id="copyApaBtn" class="copy-btn">Copy APA</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById("citeModal");
+        const closeBtn = document.querySelector(".close-btn");
+        const bibtexOutput = document.getElementById("bibtexOutput");
+        const apaOutput = document.getElementById("apaOutput");
+        const copyBtn = document.getElementById("copyBtn");
+        const copyApaBtn = document.getElementById("copyApaBtn");
+        const citeBtns = document.querySelectorAll(".cite-btn");
+
+        function formatApaAuthors(authorsStr) {
+            const authors = authorsStr.split(',').map(a => a.trim());
+            const formattedAuthors = authors.map(author => {
+                const parts = author.split(' ');
+                const lastName = parts.pop();
+                const initials = parts.map(p => p[0] + '.').join(' ');
+                return `${lastName}, ${initials}`;
+            });
+
+            if (formattedAuthors.length === 1) {
+                return formattedAuthors[0];
+            } else if (formattedAuthors.length > 1) {
+                const lastAuthor = formattedAuthors.pop();
+                return `${formattedAuthors.join(', ')}, & ${lastAuthor}`;
+            }
+            return "";
+        }
+
+        citeBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+                const title = this.getAttribute("data-title");
+                const authors = this.getAttribute("data-authors");
+                const year = this.getAttribute("data-year");
+                const journal = this.getAttribute("data-journal");
+
+                // Construct BibTeX key (FirstAuthorYear)
+                const firstAuthor = authors.split(',')[0].split(' ').pop().toLowerCase().replace(/[^a-z]/g, '');
+                const bibKey = `${firstAuthor}${year}`;
+
+                const bibtex = `@article{${bibKey},
+  title = {${title}},
+  author = {${authors}},
+  journal = {${journal}},
+  year = {${year}}
+}`;
+                bibtexOutput.value = bibtex;
+
+                // APA Format
+                const apaAuthors = formatApaAuthors(authors);
+                const apa = `${apaAuthors} (${year}). ${title}. ${journal}.`;
+                apaOutput.value = apa;
+
+                modal.style.display = "block";
+            });
+        });
+
+        closeBtn.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function copyToClipboard(element, btn) {
+            element.select();
+            document.execCommand("copy"); // Fallback for older browsers
+
+            // Modern API if available
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(element.value).then(() => {
+                    const originalText = btn.innerText;
+                    btn.innerText = "Copied!";
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                    }, 2000);
+                });
+            } else {
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                }, 2000);
+            }
+        }
+
+        copyBtn.onclick = function () {
+            copyToClipboard(bibtexOutput, copyBtn);
+        }
+
+        copyApaBtn.onclick = function () {
+            copyToClipboard(apaOutput, copyApaBtn);
+        }
+    });
+</script>
+{% endblock %}

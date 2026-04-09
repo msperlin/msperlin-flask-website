@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Books</h2>
+    <p>Number of books: {{n_books}}</p>
+    <div class="grid">
+        {% for book in books %}
+        <div class="card">
+            <img src="{{ book.cover_image }}" alt="{{ book.title }}">
+            <h3> {{ book.title }}</h3>
+            <p>{{ book.publisher }}, {{ book.year }}</p>
+            <h3><a href="{{ book.link_amazon}}">Buy on Amazon</a></h3>
+            <p><a href="{{ book.link_online}}">Online Version</a></p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {% for book in books %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "item": {
+            "@type": "Book",
+            "name": "{{ book.title }}",
+            "author": {
+              "@type": "Person",
+              "name": "Marcelo S. Perlin"
+            },
+            "datePublished": "{{ book.year }}",
+            "publisher": "{{ book.publisher }}",
+            "image": "{{ request.url_root.rstrip('/') }}{{ book.cover_image }}",
+            "url": "{% if book.link_online.startswith('http') %}{{ book.link_online }}{% else %}{{ request.url_root.rstrip('/') }}{{ book.link_online }}{% endif %}",
+             "offers": {
+                "@type": "Offer",
+                "url": "{{ book.link_amazon }}",
+                "availability": "https://schema.org/InStock"
+            }
+          }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+    </script>
+</section>
+{% endblock %}

@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 11 Econometria Financeira com o R | Análise de Dados Financeiros e Econômicos com o R - Versão Online</title>
+<meta name="author" content="Marcelo S. Perlin (marcelo.perlin@ufrgs.br)">
+<meta name="description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="generator" content="bookdown 0.30 with bs4_book()">
+<meta property="og:title" content="Capítulo 11 Econometria Financeira com o R | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta property="og:type" content="book">
+<meta property="og:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<meta property="og:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 11 Econometria Financeira com o R | Análise de Dados Financeiros e Econômicos com o R - Versão Online">
+<meta name="twitter:description" content="window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-120530145-1');   Você chegou ao fim da versão online do livro...">
+<meta name="twitter:image" content="/00-text-resources/cover/CAPAdigital-AnaliseDadosR.jpg">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.4.1/transition.js"></script><script src="libs/bs3compat-0.4.1/tabs.js"></script><script src="libs/bs3compat-0.4.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script>
+
+        /* update total correct if #total_correct exists */
+        update_total_correct = function() {
+          if (t = document.getElementById("total_correct")) {
+            t.innerHTML =
+              document.getElementsByClassName("correct").length + " of " +
+              document.getElementsByClassName("solveme").length + " correct";
+          }
+        }
+        
+        /* solution button toggling function */
+        b_func = function() {
+          var cl = this.parentElement.classList;
+          if (cl.contains('open')) {
+            cl.remove("open");
+          } else {
+            cl.add("open");
+          }
+        }
+        
+        /* function for checking solveme answers */
+        solveme_func = function(e) {
+          var real_answers = JSON.parse(this.dataset.answer);
+          var my_answer = this.value;
+          var cl = this.classList;
+          if (cl.contains("ignorecase")) {
+            my_answer = my_answer.toLowerCase();
+          }
+          if (cl.contains("nospaces")) {
+            my_answer = my_answer.replace(/ /g, "");
+          }
+          
+          if (my_answer !== "" & real_answers.includes(my_answer)) {
+            cl.add("correct");
+          } else {
+            cl.remove("correct");
+          }
+        
+          // match numeric answers within a specified tolerance
+          if(this.dataset.tol > 0){
+            var tol = JSON.parse(this.dataset.tol);  
+            var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+            if (matches.reduce((a, b) => a + b, 0) > 0) {
+              cl.add("correct");
+            } else {
+              cl.remove("correct");
+            }  
+          }
+        
+          // added regex bit
+          if (cl.contains("regex")){
+            answer_regex = RegExp(real_answers.join("|"))
+            if (answer_regex.test(my_answer)) {
+              cl.add("correct");
+            }  
+          }
+          
+          update_total_correct();
+        }
+        
+        window.onload = function() {
+          /* set up solution buttons */
+          var buttons = document.getElementsByTagName("button");
+        
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].parentElement.classList.contains('solution')) {
+              buttons[i].onclick = b_func;
+            }
+          }
+          
+          /* set up solveme inputs */
+          var solveme = document.getElementsByClassName("solveme");
+        
+          for (var i = 0; i < solveme.length; i++) {
+            /* make sure input boxes don't auto-anything */
+            solveme[i].setAttribute("autocomplete","off");
+            solveme[i].setAttribute("autocorrect", "off");
+            solveme[i].setAttribute("autocapitalize", "off"); 
+            solveme[i].setAttribute("spellcheck", "false");
+            solveme[i].value = "";
+            
+            /* adjust answer for ignorecase or nospaces */
+            var cl = solveme[i].classList;
+            var real_answer = solveme[i].dataset.answer;
+            if (cl.contains("ignorecase")) {
+              real_answer = real_answer.toLowerCase();
+            }
+            if (cl.contains("nospaces")) {
+              real_answer = real_answer.replace(/ /g, "");
+            }
+            solveme[i].dataset.answer = real_answer;
+            
+            /* attach checking function */
+            solveme[i].onkeyup = solveme_func;
+            solveme[i].onchange = solveme_func;
+          }
+          
+          update_total_correct();
+        }
+        
+        </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+<style type="text/css">
+    /* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+        }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+<link rel="stylesheet" href="00-code-resources/css/style_html.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Análise de Dados Financeiros e Econômicos com o R - Versão Online</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bem vindo!</a></li>
+<li><a class="" href="sobre-nova-edi%C3%A7%C3%A3o.html">Sobre Nova Edição</a></li>
+<li><a class="" href="pref%C3%A1cio.html">Prefácio</a></li>
+<li><a class="" href="introducao.html"><span class="header-section-number">1</span> Introdução</a></li>
+<li><a class="" href="operacoes-basicas.html"><span class="header-section-number">2</span> Operações Básicas no R</a></li>
+<li><a class="" href="scripts-pesquisa.html"><span class="header-section-number">3</span> Desenvolvendo Rotinas de Pesquisa</a></li>
+<li><a class="" href="importacao-exportacao.html"><span class="header-section-number">4</span> Importação e Exportação de Dados Locais</a></li>
+<li><a class="" href="importacao-pacotes.html"><span class="header-section-number">5</span> Importação de Dados via Pacotes</a></li>
+<li><a class="" href="classe-estrutura.html"><span class="header-section-number">6</span> Dataframes e outros Objetos</a></li>
+<li><a class="" href="classes-basicas.html"><span class="header-section-number">7</span> As Classes Básicas de Objetos</a></li>
+<li><a class="" href="programacao.html"><span class="header-section-number">8</span> Programando com o R</a></li>
+<li><a class="" href="limpando-estruturando.html"><span class="header-section-number">9</span> Estruturando e Limpando Dados</a></li>
+<li><a class="" href="figuras.html"><span class="header-section-number">10</span> Visualizando Dados</a></li>
+<li><a class="active" href="modelos.html"><span class="header-section-number">11</span> Econometria Financeira com o R</a></li>
+<li><a class="" href="reportando-resultados.html"><span class="header-section-number">12</span> Reportando Resultados e Criando Relatórios</a></li>
+<li><a class="" href="otimizacao.html"><span class="header-section-number">13</span> Otimização de Código</a></li>
+<li><a class="" href="refer%C3%AAncias.html">Referências</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-120530145-1"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-120530145-1');
+</script><div id="modelos" class="section level1" number="11">
+<h1>
+<span class="header-section-number">Capítulo 11</span> Econometria Financeira com o R<a class="anchor" aria-label="anchor" href="#modelos"><i class="fas fa-link"></i></a>
+</h1>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="modelos-lineares-ols" class="section level2" number="11.1">
+<h2>
+<span class="header-section-number">11.1</span> Modelos Lineares (OLS)<a class="anchor" aria-label="anchor" href="#modelos-lineares-ols"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="simulando-um-modelo-linear" class="section level3" number="11.1.1">
+<h3>
+<span class="header-section-number">11.1.1</span> Simulando um Modelo Linear<a class="anchor" aria-label="anchor" href="#simulando-um-modelo-linear"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="estimating-ols" class="section level3" number="11.1.2">
+<h3>
+<span class="header-section-number">11.1.2</span> Estimando um Modelo Linear<a class="anchor" aria-label="anchor" href="#estimating-ols"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="testing-ols" class="section level3" number="11.1.3">
+<h3>
+<span class="header-section-number">11.1.3</span> Inferência Estatística em Modelos Lineares<a class="anchor" aria-label="anchor" href="#testing-ols"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="modelos-lineares-generalizados-glm" class="section level2" number="11.2">
+<h2>
+<span class="header-section-number">11.2</span> Modelos Lineares Generalizados (GLM)<a class="anchor" aria-label="anchor" href="#modelos-lineares-generalizados-glm"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="simulando-um-modelo-glm" class="section level3" number="11.2.1">
+<h3>
+<span class="header-section-number">11.2.1</span> Simulando um Modelo GLM<a class="anchor" aria-label="anchor" href="#simulando-um-modelo-glm"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="estimando-um-modelo-glm" class="section level3" number="11.2.2">
+<h3>
+<span class="header-section-number">11.2.2</span> Estimando um Modelo GLM<a class="anchor" aria-label="anchor" href="#estimando-um-modelo-glm"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="modelos-para-dados-em-painel" class="section level2" number="11.3">
+<h2>
+<span class="header-section-number">11.3</span> Modelos para Dados em Painel<a class="anchor" aria-label="anchor" href="#modelos-para-dados-em-painel"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="simulando-dados-em-painel" class="section level3" number="11.3.1">
+<h3>
+<span class="header-section-number">11.3.1</span> Simulando Dados em Painel<a class="anchor" aria-label="anchor" href="#simulando-dados-em-painel"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="estimando-modelos-de-dados-em-painel" class="section level3" number="11.3.2">
+<h3>
+<span class="header-section-number">11.3.2</span> Estimando Modelos de Dados em Painel<a class="anchor" aria-label="anchor" href="#estimando-modelos-de-dados-em-painel"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="modelos-arima" class="section level2" number="11.4">
+<h2>
+<span class="header-section-number">11.4</span> Modelos ARIMA<a class="anchor" aria-label="anchor" href="#modelos-arima"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="simulando-modelos-arima" class="section level3" number="11.4.1">
+<h3>
+<span class="header-section-number">11.4.1</span> Simulando Modelos ARIMA<a class="anchor" aria-label="anchor" href="#simulando-modelos-arima"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="arima-estimating" class="section level3" number="11.4.2">
+<h3>
+<span class="header-section-number">11.4.2</span> Estimando Modelos ARIMA<a class="anchor" aria-label="anchor" href="#arima-estimating"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="prevendo-modelos-arima" class="section level3" number="11.4.3">
+<h3>
+<span class="header-section-number">11.4.3</span> Prevendo Modelos ARIMA<a class="anchor" aria-label="anchor" href="#prevendo-modelos-arima"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="modelos-garch" class="section level2" number="11.5">
+<h2>
+<span class="header-section-number">11.5</span> Modelos GARCH<a class="anchor" aria-label="anchor" href="#modelos-garch"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="simulando-modelos-garch" class="section level3" number="11.5.1">
+<h3>
+<span class="header-section-number">11.5.1</span> Simulando Modelos GARCH<a class="anchor" aria-label="anchor" href="#simulando-modelos-garch"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="estimating-garch" class="section level3" number="11.5.2">
+<h3>
+<span class="header-section-number">11.5.2</span> Estimando Modelos GARCH<a class="anchor" aria-label="anchor" href="#estimating-garch"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="prevendo-modelos-garch" class="section level3" number="11.5.3">
+<h3>
+<span class="header-section-number">11.5.3</span> Prevendo Modelos GARCH<a class="anchor" aria-label="anchor" href="#prevendo-modelos-garch"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="mudanca-regime" class="section level2" number="11.6">
+<h2>
+<span class="header-section-number">11.6</span> Modelos de Mudança de Regime<a class="anchor" aria-label="anchor" href="#mudanca-regime"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+<div id="simulando-modelos-de-mudança-de-regime" class="section level3" number="11.6.1">
+<h3>
+<span class="header-section-number">11.6.1</span> Simulando Modelos de Mudança de Regime<a class="anchor" aria-label="anchor" href="#simulando-modelos-de-mudan%C3%A7a-de-regime"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="estimando-modelos-de-mudança-de-regime" class="section level3" number="11.6.2">
+<h3>
+<span class="header-section-number">11.6.2</span> Estimando Modelos de Mudança de Regime<a class="anchor" aria-label="anchor" href="#estimando-modelos-de-mudan%C3%A7a-de-regime"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="prevendo-modelos-de-mudança-de-regime" class="section level3" number="11.6.3">
+<h3>
+<span class="header-section-number">11.6.3</span> Prevendo Modelos de Mudança de Regime<a class="anchor" aria-label="anchor" href="#prevendo-modelos-de-mudan%C3%A7a-de-regime"><i class="fas fa-link"></i></a>
+</h3>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+</div>
+<div id="trabalhando-com-diversos-modelos" class="section level2" number="11.7">
+<h2>
+<span class="header-section-number">11.7</span> Trabalhando com Diversos Modelos<a class="anchor" aria-label="anchor" href="#trabalhando-com-diversos-modelos"><i class="fas fa-link"></i></a>
+</h2>
+<div class="pleasebuyit">
+<p>
+Você chegou ao fim da versão online do livro <strong>Análise de Dados
+Financeiros e Econômicos com o R</strong>, terceira edição. O conteúdo
+integral da obra pode ser adquirido na loja da Amazon como <a href="https://www.amazon.com.br/dp/B08WNC27ZY">ebook</a> ou <a href="https://www.amazon.com/dp/B08WP8CCDB">livro impresso</a>. A compra
+do livro é uma ótima maneira de suportar este e outros projetos do
+autor.
+</p>
+</div>
+</div>
+<div id="exerc-modelos" class="section level2" number="11.8">
+<h2>
+<span class="header-section-number">11.8</span> Exercícios<a class="anchor" aria-label="anchor" href="#exerc-modelos"><i class="fas fa-link"></i></a>
+</h2>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+<div id="q.1-9" class="section level3 unnumbered">
+<h3>Q.1<a class="anchor" aria-label="anchor" href="#q.1-9"><i class="fas fa-link"></i></a>
+</h3>
+<p>Simule o seguinte processo linear no R:</p>
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 100
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)</code></pre>
+<p>A partir de <code>x</code> e <code>y</code>, estime um modelo linear onde <code>x</code> é a variável explicativa e <code>y</code> é a variável explicada. Use função <code>summary</code> no objeto de retorno da estimação para obter mais detalhes sobre o modelo. Qual é o valor do beta estimado dos dados simulados?</p>
+<br> Resposta: <select class="webex-select"><option value="blank"></option>
+<option value="">0.4003</option>
+<option value="">0.8707</option>
+<option value="">0.2910</option>
+<option value="answer">0.6331</option>
+<option value="">1.5038</option></select><div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf2572ee2f" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf2572ee2f" class="collapse">
+A solução é 0.6331. Para chegar no resultado anterior, deves executar o código abaixo. Para isso, abra um novo script no RStudio (Control+shift+N), copie e cole o código, e rode o script inteiro apertando Control+Shift+Enter ou por linha com Control+Enter.
+<div class="card card-body">
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 100
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)
+
+library(tidyverse)
+
+my_lm &lt;- lm(formula = y ~ x, data = tibble(x, y))
+
+summary(my_lm)
+
+my_sol &lt;- coef(my_lm)[2]</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.2-9" class="section level3 unnumbered">
+<h3>Q.2<a class="anchor" aria-label="anchor" href="#q.2-9"><i class="fas fa-link"></i></a>
+</h3>
+<p>Utilizando pacote <code>car</code>, teste a hipótese conjunta de que o valor de alpha é igual a 1.5 e beta igual a 0.5. Qual o valor do teste F resultante?</p>
+<br> Resposta: <select class="webex-select"><option value="blank"></option>
+<option value=""> 7.799</option>
+<option value="">10.727</option>
+<option value="">40.301</option>
+<option value="">23.335</option>
+<option value="answer">16.967</option></select><div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf42100747" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf42100747" class="collapse">
+A solução é 16.967. Para chegar no resultado anterior, deves executar o código abaixo. Para isso, abra um novo script no RStudio (Control+shift+N), copie e cole o código, e rode o script inteiro apertando Control+Shift+Enter ou por linha com Control+Enter.
+<div class="card card-body">
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 100
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)
+
+library(tidyverse)
+
+my_lm &lt;- lm(formula = y ~ x, data = tibble(x, y))
+
+summary(my_lm)
+
+library(car)
+
+# set test matrix
+test_matrix &lt;- matrix(c(my_alpha,  # alpha test value
+                        my_beta))  # beta test value
+
+# hypothesis matrix 
+hyp_mat &lt;- matrix(c(1.5, 0,
+                    0  , 0.5),
+                  nrow = 2)
+
+# do test
+my_waldtest &lt;- linearHypothesis(my_lm, 
+                                hypothesis.matrix = hyp_mat, 
+                                rhs = test_matrix)
+
+# print result
+my_sol &lt;- my_waldtest$F[2]</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.3-8" class="section level3 unnumbered">
+<h3>Q.3<a class="anchor" aria-label="anchor" href="#q.3-8"><i class="fas fa-link"></i></a>
+</h3>
+<p>Utilize pacote <code>gvlma</code> para testar as premissas do OLS para o modelo estimado anteriormente. O modelo passa em todos os testes? Em caso negativo, aumente o valor de <code>n_row</code> para 1000 e tente novamente. O aumento do número de observações do modelo impactou no teste das premissas? De que forma?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf652812db" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf652812db" class="collapse">
+<div class="card card-body">
+<p>O modelo estimado não passou todos os testes. De fato, nem o aumento do número de observações na simulação resultou em aprovação do modelo em todos os quesitos.</p>
+<pre><code>set.seed(5)
+
+# number of obs
+n_row &lt;- 1000
+
+# set x as Normal (0, 1)
+x &lt;- rnorm(n_row)
+
+# set coefficients
+my_alpha &lt;- 1.5
+my_beta &lt;- 0.5
+
+# build y
+y &lt;- my_alpha + my_beta*x + rnorm(n_row)
+
+library(tidyverse)
+
+my_lm &lt;- lm(formula = y ~ x, data = tibble(x, y))
+
+summary(my_lm)
+
+library(gvlma)
+
+# global validation of model
+gvmodel &lt;- gvlma(my_lm) 
+
+# print result
+summary(gvmodel)</code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.4-8" class="section level3 unnumbered">
+<h3>Q.4<a class="anchor" aria-label="anchor" href="#q.4-8"><i class="fas fa-link"></i></a>
+</h3>
+<p>Utilize função <code><a href="https://rdrr.io/pkg/BatchGetSymbols/man/GetSP500Stocks.html">BatchGetSymbols::GetSP500Stocks</a></code> para baixar dados de todas ações pertencentes ao atual índice SP500 para os últimos três anos. Usando o SP500 como o índice de mercado, calcule o beta para cada uma das ações. Apresente o histograma dos <em>betas</em> estimados. Note que os retornos do SP500 (<code>'^GSPC'</code>) não estão disponíveis na base de dados original e devem ser baixados e agregados a base de dados original.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf404a5570" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf404a5570" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+library(tidyverse)
+
+tickers &lt;- GetSP500Stocks()$Tickers
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- BatchGetSymbols(tickers = tickers, 
+                             first.date = first_date, 
+                             last.date = last_date)[[2]]
+
+df_sp500 &lt;- BatchGetSymbols(tickers =  '^GSPC', 
+                            first.date = first_date, 
+                            last.date = last_date)[[2]]
+
+idx &lt;- match(df_stocks$ref.date, df_sp500$ref.date)
+df_stocks$ret_mkt &lt;- df_sp500$ret.closing.prices[idx]
+
+# calculate beta for each stock
+estimate_beta &lt;- function(df) {
+  # Function to estimate beta from dataframe of stocks returns
+  #
+  # Args:
+  #   df - Dataframe with columns ret and ret.sp500
+  #
+  # Returns:
+  #   The value of beta
+  
+  my_model &lt;- lm(data = df, 
+                 formula = ret.adjusted.prices ~ ret_mkt)
+  
+  return(coef(my_model)[2])
+}
+
+my_betas &lt;- by(data = df_stocks, 
+               INDICES = df_stocks$ticker, 
+               FUN = estimate_beta)
+
+glimpse(my_betas)
+
+# solution
+p &lt;- ggplot(tibble(betas = my_betas), aes(x = betas)) + 
+  geom_histogram()
+
+print(p)</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.5-8" class="section level3 unnumbered">
+<h3>Q.5<a class="anchor" aria-label="anchor" href="#q.5-8"><i class="fas fa-link"></i></a>
+</h3>
+<p>Para os dados importados anteriormente, estime uma versão em dados de painel para o modelo de mercado (beta). Nesta versão, cada ação possui um intercepto diferente, porém compartilham o mesmo beta. O beta estimado é significativo a 5%?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf2df941d" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf2df941d" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+library(tidyverse)
+
+tickers &lt;- GetSP500Stocks()$Tickers
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- BatchGetSymbols(tickers = tickers, 
+                             first.date = first_date, 
+                             last.date = last_date)[[2]]
+
+df_sp500 &lt;- BatchGetSymbols(tickers =  '^GSPC', 
+                            first.date = first_date, 
+                            last.date = last_date)[[2]]
+
+idx &lt;- match(df_stocks$ref.date, df_sp500$ref.date)
+df_stocks$ret_mkt &lt;- df_sp500$ret.closing.prices[idx]
+
+# calculate PLM beta
+library(plm)
+
+# estimate panel data model with fixed effects
+my_pdm &lt;- plm(data = df_stocks, 
+              formula = ret.adjusted.prices ~ ret_mkt, 
+              model = 'within',
+              index = c('ticker'))
+
+# print result
+print(summary(my_pdm))</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.6-8" class="section level3 unnumbered">
+<h3>Q.6<a class="anchor" aria-label="anchor" href="#q.6-8"><i class="fas fa-link"></i></a>
+</h3>
+<p>Utilizando as funções do tidyverse, <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">dplyr::group_by</a></code> e <code><a href="https://dplyr.tidyverse.org/reference/do.html">dplyr::do</a></code>, estime um modelo ARIMA para os retornos de cada ação dos dados importados no exercício do SP500. No mesmo <code>dataframe</code> de saída, crie uma nova coluna com a previsão em <em>t+1</em> de cada modelo. Qual ação possui maior expectativa de retorno para <em>t+1</em>?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf61cfdab" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf61cfdab" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+library(tidyverse)
+
+tickers &lt;- GetSP500Stocks()$Tickers
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- BatchGetSymbols(tickers = tickers, 
+                             first.date = first_date, 
+                             last.date = last_date)[[2]]
+
+df_sp500 &lt;- BatchGetSymbols(tickers =  '^GSPC', 
+                            first.date = first_date, 
+                            last.date = last_date)[[2]]
+
+library(dplyr)
+
+my_tab &lt;- df_stocks %&gt;%
+  group_by(ticker) %&gt;%
+  do(my_arima = arima(x = .$ret.adjusted.prices, 
+                      order = c(1,0,0))) %&gt;%
+  mutate(arima_forecast = predict(my_arima, n.ahead = 1 )$pred[1])
+
+glimpse(my_tab)
+
+# solution
+idx &lt;- which.max(my_tab$arima_forecast )
+print(my_tab$ticker[idx])</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.7-8" class="section level3 unnumbered">
+<h3>Q.7<a class="anchor" aria-label="anchor" href="#q.7-8"><i class="fas fa-link"></i></a>
+</h3>
+<p>No mesmo código utilizado na questão anterior, adicione uma nova coluna-lista com a estimação de um modelo ARMA(1,0)-GARCH(1,1) para os retornos de cada ação. Adicione outra coluna com a previsão de volatilidade (desvio padrão) em <em>t+1</em>. Ao dividir o retorno esperado calculado no item anterior pelo risco previsto, temos um índice de direção do mercado, onde aquelas ações com maior valor de índice apresentam maior retorno esperado por menor risco. Qual ação é mais atrativa e possui maior valor deste índice?</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf4f103dd7" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf4f103dd7" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+library(tidyverse)
+
+tickers &lt;- GetSP500Stocks()$Tickers
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- BatchGetSymbols(tickers = tickers, 
+                             first.date = first_date, 
+                             last.date = last_date)[[2]]
+
+library(dplyr)
+library(fGarch)
+
+tab_models &lt;- df_stocks %&gt;%
+  na.omit() %&gt;%
+  group_by(ticker) %&gt;%
+  do(my_garch = garchFit(formula = ~ arma(1,0) + garch(1,1), 
+                         data = .$ret.adjusted.prices, 
+                         trace = FALSE) ) 
+
+tab_models &lt;- tab_models %&gt;%
+  mutate(forecast_mean = predict(my_garch, 
+                                 n.ahead = 1)$meanForecast[1],
+         forecast_sd = predict(my_garch, 
+                               n.ahead = 1)$standardDeviation[1],
+         sharpe_index = forecast_mean/forecast_sd)
+
+glimpse(tab_models)
+
+# solution
+idx &lt;- which.max(tab_models$sharpe_index)
+print(tab_models$ticker[idx])</a></code></pre>
+</div>
+</div>
+<hr>
+<p><span id="webex-total_correct"></span></p>
+</div>
+<div id="q.8-6" class="section level3 unnumbered">
+<h3>Q.8<a class="anchor" aria-label="anchor" href="#q.8-6"><i class="fas fa-link"></i></a>
+</h3>
+<p>Para a mesma base de dados do SP500, selecione 4 ações aleatoriamente e estime um modelo de mudança de regime markoviano equivalente ao apresentado no item <a href="modelos.html#mudanca-regime">11.6</a> para cada ação. Utilize função <code>plot</code> para apresentar o gráfico das probabilidades suavizadas e salve cada figura em uma pasta chamada <code>'fig'</code>.</p>
+<div style="text-align: left; margin-top: 2px; padding: 13px 0 10px 0;">
+<p>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_11cf7252d158" aria-expanded="false" aria-controls="collapseExample">
+Solução
+</button>
+</p>
+</div>
+<div id="collapse_11cf7252d158" class="collapse">
+<div class="card card-body">
+<pre><code><a href="https://rdrr.io/r/base/library.html">library(BatchGetSymbols)
+library(tidyverse)
+
+tickers &lt;- GetSP500Stocks()$Tickers
+first_date &lt;- Sys.Date() - 3*365
+last_date  &lt;- Sys.Date()
+
+df_stocks &lt;- BatchGetSymbols(tickers = tickers, 
+                             first.date = first_date, 
+                             last.date = last_date)[[2]]
+
+library(tidyverse)
+library(fMarkovSwitching)
+
+set.seed(10)
+
+random_stocks &lt;- sample(unique(df_stocks$ticker), 4)
+
+temp_df &lt;- df_stocks %&gt;%
+  dplyr::filter(ticker %in% random_stocks)
+
+  tab_switching_model &lt;- temp_df %&gt;%
+  na.omit() %&gt;%
+  group_by(ticker) %&gt;%
+  do(ms_model = MS_Regress_Fit(dep = .$ret.adjusted.prices,
+                               indep = rep(1, nrow(.)),
+                               S = c(1), 
+                               k = 2))  # fitting the model)
+
+
+# using temp folder for solution
+
+plot_and_save &lt;- function(model_in, ticker_in) {
+  
+  if (!dir.exists('figs')) dir.create('figs')
+  
+  out_file &lt;- file.path('figs', paste0('plot_', ticker_in, '.jpg'))
+  
+  jpeg(out_file)
+  plot(model_in)
+  dev.off()
+  
+  return(TRUE)
+  
+  
+}
+
+library(purrr)
+
+l_out &lt;- pmap(.l = list(model_in = tab_switching_model$ms_model,
+                        ticker_in = tab_switching_model$ticker), 
+              .f =  plot_and_save)</a></code></pre>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+<div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://padfer.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+  <div class="chapter-nav">
+<div class="prev"><a href="figuras.html"><span class="header-section-number">10</span> Visualizando Dados</a></div>
+<div class="next"><a href="reportando-resultados.html"><span class="header-section-number">12</span> Reportando Resultados e Criando Relatórios</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#modelos"><span class="header-section-number">11</span> Econometria Financeira com o R</a></li>
+<li>
+<a class="nav-link" href="#modelos-lineares-ols"><span class="header-section-number">11.1</span> Modelos Lineares (OLS)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simulando-um-modelo-linear"><span class="header-section-number">11.1.1</span> Simulando um Modelo Linear</a></li>
+<li><a class="nav-link" href="#estimating-ols"><span class="header-section-number">11.1.2</span> Estimando um Modelo Linear</a></li>
+<li><a class="nav-link" href="#testing-ols"><span class="header-section-number">11.1.3</span> Inferência Estatística em Modelos Lineares</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modelos-lineares-generalizados-glm"><span class="header-section-number">11.2</span> Modelos Lineares Generalizados (GLM)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simulando-um-modelo-glm"><span class="header-section-number">11.2.1</span> Simulando um Modelo GLM</a></li>
+<li><a class="nav-link" href="#estimando-um-modelo-glm"><span class="header-section-number">11.2.2</span> Estimando um Modelo GLM</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modelos-para-dados-em-painel"><span class="header-section-number">11.3</span> Modelos para Dados em Painel</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simulando-dados-em-painel"><span class="header-section-number">11.3.1</span> Simulando Dados em Painel</a></li>
+<li><a class="nav-link" href="#estimando-modelos-de-dados-em-painel"><span class="header-section-number">11.3.2</span> Estimando Modelos de Dados em Painel</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modelos-arima"><span class="header-section-number">11.4</span> Modelos ARIMA</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simulando-modelos-arima"><span class="header-section-number">11.4.1</span> Simulando Modelos ARIMA</a></li>
+<li><a class="nav-link" href="#arima-estimating"><span class="header-section-number">11.4.2</span> Estimando Modelos ARIMA</a></li>
+<li><a class="nav-link" href="#prevendo-modelos-arima"><span class="header-section-number">11.4.3</span> Prevendo Modelos ARIMA</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#modelos-garch"><span class="header-section-number">11.5</span> Modelos GARCH</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simulando-modelos-garch"><span class="header-section-number">11.5.1</span> Simulando Modelos GARCH</a></li>
+<li><a class="nav-link" href="#estimating-garch"><span class="header-section-number">11.5.2</span> Estimando Modelos GARCH</a></li>
+<li><a class="nav-link" href="#prevendo-modelos-garch"><span class="header-section-number">11.5.3</span> Prevendo Modelos GARCH</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#mudanca-regime"><span class="header-section-number">11.6</span> Modelos de Mudança de Regime</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simulando-modelos-de-mudan%C3%A7a-de-regime"><span class="header-section-number">11.6.1</span> Simulando Modelos de Mudança de Regime</a></li>
+<li><a class="nav-link" href="#estimando-modelos-de-mudan%C3%A7a-de-regime"><span class="header-section-number">11.6.2</span> Estimando Modelos de Mudança de Regime</a></li>
+<li><a class="nav-link" href="#prevendo-modelos-de-mudan%C3%A7a-de-regime"><span class="header-section-number">11.6.3</span> Prevendo Modelos de Mudança de Regime</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#trabalhando-com-diversos-modelos"><span class="header-section-number">11.7</span> Trabalhando com Diversos Modelos</a></li>
+<li>
+<a class="nav-link" href="#exerc-modelos"><span class="header-section-number">11.8</span> Exercícios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q.1-9">Q.1</a></li>
+<li><a class="nav-link" href="#q.2-9">Q.2</a></li>
+<li><a class="nav-link" href="#q.3-8">Q.3</a></li>
+<li><a class="nav-link" href="#q.4-8">Q.4</a></li>
+<li><a class="nav-link" href="#q.5-8">Q.5</a></li>
+<li><a class="nav-link" href="#q.6-8">Q.6</a></li>
+<li><a class="nav-link" href="#q.7-8">Q.7</a></li>
+<li><a class="nav-link" href="#q.8-6">Q.8</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Análise de Dados Financeiros e Econômicos com o R - Versão Online</strong>" was written by Marcelo S. Perlin (<a href="mailto:marcelo.perlin@ufrgs.br" class="email">marcelo.perlin@ufrgs.br</a>). It was last built on 2022-11-23.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>
