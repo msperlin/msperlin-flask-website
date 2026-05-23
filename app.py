@@ -2,6 +2,9 @@ import json
 import os
 from flask import Flask, render_template, send_from_directory, make_response, url_for
 import datetime 
+import subprocess
+import urllib.request
+import urllib.error
 
 app = Flask(__name__)
 
@@ -136,6 +139,40 @@ def awards():
 def consulting():
     consulting_data = load_data('consulting.json')
     return render_template('consulting.html', title='Consulting Services', content=consulting_data, description="Expert Financial Data Science Consulting by Marcelo S. Perlin. Services include R/Python programming, financial modeling, machine learning, and data visualization.")
+
+@app.route('/site-log')
+def site_log():
+    # Git Commits
+    try:
+        git_log_output = subprocess.check_output(['git', 'log', '-n', '50', '--pretty=format:%h|%ar|%s']).decode('utf-8')
+        commits = []
+        for line in git_log_output.strip().split('\n'):
+            if line:
+                parts = line.split('|', 2)
+                if len(parts) == 3:
+                    commits.append({'hash': parts[0], 'date': parts[1], 'message': parts[2]})
+    except Exception as e:
+        commits = []
+        
+    # GitHub Actions
+    actions = []
+    try:
+        url = "https://api.github.com/repos/msperlin/msperlin-flask-website/actions/runs?per_page=15"
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response:
+            data = json.loads(response.read().decode())
+            for run in data.get('workflow_runs', []):
+                actions.append({
+                    'name': run.get('name'),
+                    'status': run.get('status'),
+                    'conclusion': run.get('conclusion'),
+                    'created_at': run.get('created_at', '')[:10],
+                    'html_url': run.get('html_url')
+                })
+    except Exception as e:
+        pass
+
+    return render_template('site_log.html', title='Site Log', commits=commits, actions=actions, description="Website action logs and commit history.")
 
 @app.route('/sitemap.xml')
 def sitemap():

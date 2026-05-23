@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-section">
+    <h2>Site Log</h2>
+    
+    <h3>GitHub Actions (Recent Runs)</h3>
+    {% if actions %}
+        <ul class="action-list">
+        {% for action in actions %}
+            <li>
+                <strong>{{ action.name }}</strong>: 
+                {% if action.conclusion == 'success' %}
+                    <span style="color: green;">Success</span>
+                {% elif action.conclusion == 'failure' %}
+                    <span style="color: red;">Failed</span>
+                {% else %}
+                    <span>{{ action.status }} ({{ action.conclusion }})</span>
+                {% endif %}
+                - <a href="{{ action.html_url }}" target="_blank">View Run</a> ({{ action.created_at }})
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No actions found or unable to fetch.</p>
+    {% endif %}
+
+    <h3>Git Commits</h3>
+    {% if commits %}
+        <ul class="commit-list">
+        {% for commit in commits %}
+            <li>
+                <strong>{{ commit.hash }}</strong> ({{ commit.date }}): {{ commit.message }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No commits found or unable to fetch.</p>
+    {% endif %}
+</div>
+{% endblock %}

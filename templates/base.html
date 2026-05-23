@@ -61,6 +61,8 @@
                     <li><a href="{{ url_for('consulting') }}"
                             class="{% if request.endpoint == 'consulting' %}active{% endif %}">Consulting</a></li>
                     <li><a href="https://msperlin.github.io/site-slides/">Class Slides</a></li>
+                    <li style="margin-left: auto;"><a href="{{ url_for('site_log') }}"
+                            class="{% if request.endpoint == 'site_log' %}active{% endif %}">Site Log</a></li>
                 </ul>
             </nav>
         </div>

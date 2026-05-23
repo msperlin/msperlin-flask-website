@@ -51,6 +51,7 @@ def main():
         pkg_data["number_of_downloads"] = downloads_last_month
         pkg_data["downloads_last_month"] = downloads_last_month
         pkg_data["total_downloads"] = total_downloads
+        pkg_data["updated_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         with open(filepath, "w") as f:
             json.dump(pkg_data, f, indent=4)
