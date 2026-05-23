@@ -16,7 +16,7 @@
         {% for pkg in code_r %}
         <li>
             <strong><a href="{{ pkg.link }}">{{ pkg.title }}</a></strong>: {{ pkg.description }}<br>
-            <small><em>Submitted to CRAN on: {{ pkg.date_of_submission }} | Downloads last month: {{ pkg.number_of_downloads }}</em></small>
+            <small><em>Submitted to CRAN on: {{ pkg.date_of_submission }} | Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em></small>
         </li>
         {% endfor %}
     </ul>

@@ -2,6 +2,8 @@
     "title": "GetLattesData",
     "description": "Reading Bibliometric Data from Lattes Platform",
     "date_of_submission": "2017-09-05",
-    "number_of_downloads": 284,
-    "link": "https://msperlin.r-universe.dev/GetLattesData"
+    "number_of_downloads": 291,
+    "link": "https://msperlin.r-universe.dev/GetLattesData",
+    "downloads_last_month": 291,
+    "total_downloads": 46637
 }
