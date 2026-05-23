@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h2>Code (Python)</h2>
+    <p>
+        Here are some Python projects and scripts I've developed, mostly related to data science, automated cleaning, and analysis.
+    </p>
+
+    <h3>Python Projects:</h3>
+    <ul>
+        {% for pkg in code_python %}
+        <li>
+            <strong><a href="{{ pkg.link }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}<br>
+        </li>
+        {% endfor %}
+    </ul>
+    <ul>
+        <li>
+            <a href="https://github.com/msperlin/">https://github.com/msperlin/</a>
+        </li>
+    </ul>
+
+</section>
+{% endblock %}

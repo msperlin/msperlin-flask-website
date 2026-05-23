@@ -43,9 +43,10 @@
 
                     <li class="dropdown">
                         <a href="javascript:void(0)"
-                            class="dropbtn {% if request.endpoint in ['code', 'data', 'news', 'awards'] %}active{% endif %}">Research</a>
+                            class="dropbtn {% if request.endpoint in ['code_r', 'code_python', 'data', 'news', 'awards'] %}active{% endif %}">Research</a>
                         <div class="dropdown-content">
-                            <a href="{{ url_for('code') }}">Code</a>
+                            <a href="{{ url_for('code_r') }}">Code (R)</a>
+                            <a href="{{ url_for('code_python') }}">Code (Python)</a>
                             <a href="{{ url_for('data') }}">Data</a>
                             <a href="{{ url_for('news') }}">News Coverage</a>
                             <a href="{{ url_for('awards') }}">Awards</a>

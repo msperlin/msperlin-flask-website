@@ -90,14 +90,19 @@ def books():
 
     return render_template('books.html', title='Books', books=books_data, n_books=n_books, description="Books authored by Marcelo S. Perlin on financial data analysis, R, and Python.")
 
-@app.route('/code')
-def code():
-    code_data = {
-        'r': load_data_from_folder('code/r'),
-        'python': load_data_from_folder('code/python'),
-        'matlab': load_data_from_folder('code/matlab')
-    }
-    return render_template('code.html', title='Code', code=code_data, description="Open source code and repositories in R, Python, and Matlab.")
+@app.route('/code/r')
+def code_r():
+    code_data_r = load_data_from_folder('code/r')
+    
+    # Sort R packages by number of downloads (descending)
+    code_data_r.sort(key=lambda x: int(x.get('number_of_downloads', 0)), reverse=True)
+    
+    return render_template('code_r.html', title='Code (R)', code_r=code_data_r, description="Open source code and repositories in R.")
+
+@app.route('/code/python')
+def code_python():
+    code_data_python = load_data_from_folder('code/python')
+    return render_template('code_python.html', title='Code (Python)', code_python=code_data_python, description="Open source code and repositories in Python.")
 
 @app.route('/data')
 def data():
