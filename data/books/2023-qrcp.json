@@ -4,5 +4,6 @@
     "publisher": "Amazon KDP (independent publication)",
     "link_amazon": "https://www.amazon.com.br/dp/B0C6GZ6V8T",
     "link_online": "/books/qrcp/",
-    "cover_image": "/static/img/cover-book-qrcp.jpg"
+    "cover_image": "/static/img/cover-book-qrcp.jpg",
+    "summary": "Voltado para candidatos que precisam dominar a linguagem R para provas de concursos que exigem análise de dados. Apresenta uma curadoria de questões reais exigindo conhecimento de sintaxe e manipulação de dados, oferecendo soluções detalhadas e comentários explicativos sobre o raciocínio por trás de cada questão."
 }

@@ -4,5 +4,6 @@
     "publisher": "Amazon KDP (independent publication)",
     "link_amazon": "https://www.amazon.com/dp/B0BZ98RYFW",
     "link_online": "/books/afedr/",
-    "cover_image": "/static/img/cover-book-afedr.jpg"
+    "cover_image": "/static/img/cover-book-afedr.jpg",
+    "summary": "A comprehensive, practical guide designed to teach students, researchers, and data analysts how to use R and RStudio for professional data analysis in finance and economics. Follows a structured approach from basic setup to data acquisition, manipulation, visualization with ggplot2, and econometric modeling."
 }

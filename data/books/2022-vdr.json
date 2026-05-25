@@ -4,5 +4,6 @@
     "publisher": "Amazon KDP (independent publication)",
     "link_amazon": "https://www.amazon.com.br/dp/B0BK2V4HTB",
     "link_online": "/books/vdr/",
-    "cover_image": "/static/img/cover-book-vdr.jpg"
+    "cover_image": "/static/img/cover-book-vdr.jpg",
+    "summary": "Uma obra técnica voltada para o aprendizado prático da criação de gráficos e representações visuais utilizando R. O livro funciona como extensão natural da análise de dados focando em técnicas e boas práticas para transformar dados em visualizações eficazes utilizando o pacote ggplot2 e ferramentas do ecossistema R."
 }

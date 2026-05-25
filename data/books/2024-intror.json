@@ -4,5 +4,6 @@
     "publisher": "Amazon KDP (independent publication)",
     "link_amazon": "https://www.amazon.com.br/dp/B0CYN25PD6",
     "link_online": "/books/introR/",
-    "cover_image": "/static/img/cover-book-intror.jpg"
+    "cover_image": "/static/img/cover-book-intror.jpg",
+    "summary": "Guia prático e acessível voltado para iniciantes aprenderem a linguagem R e o RStudio para análise de dados, mesmo sem conhecimento prévio de programação. Cobre fundamentos, manipulação de dados com dataframes e conceitos fundamentais de programação estruturados com exemplos práticos reais do mercado financeiro e econômico."
 }

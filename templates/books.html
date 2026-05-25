@@ -4,17 +4,30 @@
 <section>
     <h2>Books</h2>
     <p>Number of books: {{n_books}}</p>
-    <div class="grid">
+    <ul class="item-list">
         {% for book in books %}
-        <div class="card">
-            <img src="{{ book.cover_image }}" alt="{{ book.title }}">
-            <h3> {{ book.title }}</h3>
-            <p>{{ book.publisher }}, {{ book.year }}</p>
-            <h3><a href="{{ book.link_amazon}}">Buy on Amazon</a></h3>
-            <p><a href="{{ book.link_online}}">Online Version</a></p>
-        </div>
+        <li class="item-card publication-item">
+            <div class="publication-content">
+                <h3><a href="{{ book.link_amazon }}">{{ book.title }}</a></h3>
+                
+                <p>
+                    <a href="{{ book.link_amazon }}">Amazon</a>
+                    {% if book.link_online %}
+                    | <a href="{{ book.link_online }}">Online Version</a>
+                    {% endif %}
+                </p>
+                {% if book.summary %}
+                <p class="abstract">{{ book.summary }}</p>
+                {% endif %}
+            </div>
+            {% if book.cover_image %}
+            <div class="publication-image book-image">
+                <img src="{{ book.cover_image }}" alt="Book Cover">
+            </div>
+            {% endif %}
+        </li>
         {% endfor %}
-    </div>
+    </ul>
 
     <script type="application/ld+json">
     {
