@@ -1,0 +1,13 @@
+{
+    "title": "The use of AI in 10-K filings: An empirical analysis",
+    "authors": "Marcelo S. Perlin, Cristian R. Foguesatto, Aliki K. Galanos, Felipe Affonso",
+    "publication": "Finance Research Letters",
+    "year": "2026",
+    "journal": "Finance Research Letters",
+    "journal_abs": "FRL",
+    "abstract": "With the rise on the use of AI in the corporate setting and the associated downside risk of bad disclose and overall credibility, we ask how much and which type of organizations rely on these tools when preparing their annual reports. Using a custom, publicly available, prediction model finetuned on FinBERT, we estimate the probability of AI-generated content and analyze the sentiment of three sections of the 10-K reports of Russell 1000 constituent companies from 2018 to 2024. Results indicate a relatively stable use of AI over the period, with distinct patterns across report sections, being the Business Description the section with the highest probability of AI adoption. Additionally, older, higher-risk (beta), and higher asset turnover firms appear more likely to adopt AI-assisted writing, in contrast to firms with higher accrual ratios and greater leverage. Moreover, there is a positive association between sentiment scores and AI detection within the Risk Factors section. These findings offer valuable insights for researchers who need to further examine AI-assisted writing in annual reports. They also carry important implications for practitioners such as investors and policy-makers who should pay closer attention to this emerging organizational practice.",
+    "link": "https://doi.org/10.1016/j.frl.2026.110161",
+    "image": "static/img/2025_FRL_Can AI beat a naive portf.jpg",
+    "impact_factor": "6.9",
+    "issn": "1544-6131"
+}
