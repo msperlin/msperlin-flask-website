@@ -28,10 +28,7 @@ jobs:
         
     - name: Run scholarly script
       run: python scripts/run_scholarly.py
-
-    - name: Run R packages script
-      run: python scripts/update_r_packages.py
-      
+  
     - name: Check for changes
       id: git-check
       run: |
