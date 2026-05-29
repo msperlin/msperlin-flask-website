@@ -1,0 +1,25 @@
+name: Outbound Link Checker (Link Rot Audit)
+
+on:
+  schedule:
+    - cron: '0 0 1 * *' # Run on the 1st of every month at midnight
+  workflow_dispatch:      # Allow manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  link-checker:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+        
+    - name: Run broken link checker script
+      run: python scripts/check_broken_links.py
