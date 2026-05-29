@@ -2,11 +2,11 @@
   "title": "Consulting Services",
   "intro": "I offer consulting services in the areas of data science, financial analysis, and programming in R and Python. I have the flexibility to work on small (couple of weeks) or large projects (over a year). I have experience in:",
   "intro_list": [
-    "conducting **empirical research** in the topic of finance, from data importation to analysis and reporting;",
-    "using R and Python to write data pipelines, import and analyze larger-than-RAM and **unstructured** datasets;",
-    "using **machine learning models** in R (tidymodels) and Python (scikit-learn) in prediction problems, with real world business applications such as fraud detection;",
+    "the full cycle of a data based research, from data importation to analysis and reporting;",
+    "using R and Python to write data pipelines, import and analyze larger-than-RAM and unstructured datasets;",
+    "using machine learning models in R (tidymodels) and Python (scikit-learn) in prediction problems, with real world business applications such as fraud detection;",
     "using LLM (large language models) for solving research problems in large scale;",
-    "writing open source R packages and publishing in CRAN;",
+    "writing open source R and Python packages, publishing in CRAN and pypi.org;",
     "using cloud tools such as servers, storage and APIs from the usual suspects (AWS, Google Cloud, Azure)."    
   ],
   "services": [
