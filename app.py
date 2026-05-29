@@ -25,7 +25,9 @@ def load_data_from_folder(folder_path):
         if filename.endswith('.json'):
             filepath = os.path.join(full_path, filename)
             with open(filepath, 'r') as f:
-                data_list.append(json.load(f))
+                item = json.load(f)
+                item['filename_stem'] = filename[:-5]
+                data_list.append(item)
     return data_list
 
 @app.route('/')
@@ -87,7 +89,21 @@ def publications():
 @app.route('/books')
 def books():
     books_data = load_data_from_folder('books')
-    books_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
+    
+    # Load Amazon stats if available
+    try:
+        amazon_stats = load_data('stats/amazon_books.json')
+        books_stats = amazon_stats.get('books', {})
+    except Exception:
+        books_stats = {}
+        
+    for book in books_data:
+        stem = book.get('filename_stem')
+        if stem and stem in books_stats:
+            book['amazon_rating'] = books_stats[stem].get('rating')
+            book['amazon_ratings_count'] = books_stats[stem].get('ratings_count')
+            
+    books_data.sort(key=lambda x: (int(x.get('amazon_ratings_count', 0)), int(x.get('year', 0))), reverse=True)
 
     n_books = len(books_data)
 

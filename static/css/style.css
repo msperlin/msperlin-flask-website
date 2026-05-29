@@ -1047,3 +1047,49 @@ footer {
     z-index: 1000;
     pointer-events: none;
 }
+
+/* Amazon Star Ratings */
+.rating-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    font-size: 0.95rem;
+}
+
+.stars-outer {
+    position: relative;
+    display: inline-block;
+    color: #e2e8f0; /* light gray star border/outline */
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.stars-outer::before {
+    content: "★★★★★";
+}
+
+.stars-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #f39c12; /* beautiful warm amber/gold star color */
+    width: 0;
+    transition: width 0.5s ease-in-out;
+}
+
+.stars-inner::before {
+    content: "★★★★★";
+}
+
+.rating-value {
+    font-weight: bold;
+    color: #1a202c;
+}
+
+.rating-count {
+    color: #4a5568;
+    font-size: 0.85rem;
+}

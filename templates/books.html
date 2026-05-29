@@ -16,6 +16,20 @@
                     | <a href="{{ book.link_online }}">Online Version</a>
                     {% endif %}
                 </p>
+                {% if book.amazon_rating %}
+                <div class="rating-container" title="{{ book.amazon_rating }} out of 5 stars">
+                    <div class="stars-outer">
+                        <div class="stars-inner" style="width: {{ (book.amazon_rating / 5) * 100 }}%"></div>
+                    </div>
+                    {% if 'com.br' in book.link_amazon %}
+                        <span class="rating-value">{{ "%.1f"|format(book.amazon_rating)|replace('.', ',') }}</span>
+                        <span class="rating-count">({{ book.amazon_ratings_count }} avaliações na Amazon)</span>
+                    {% else %}
+                        <span class="rating-value">{{ "%.1f"|format(book.amazon_rating) }}</span>
+                        <span class="rating-count">({{ book.amazon_ratings_count }} ratings on Amazon)</span>
+                    {% endif %}
+                </div>
+                {% endif %}
                 {% if book.summary %}
                 <p class="abstract">{{ book.summary }}</p>
                 {% endif %}
