@@ -212,5 +212,10 @@ def sitemap():
 def robots():
     return send_from_directory(app.static_folder, 'robots.txt')
 
+@app.route('/f6d89283e4a24c25bcf682e06180dfd3.txt')
+def indexnow_key():
+    return send_from_directory(app.static_folder, 'f6d89283e4a24c25bcf682e06180dfd3.txt')
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
