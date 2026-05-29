@@ -7,6 +7,11 @@
     <ul class="item-list">
         {% for book in books %}
         <li class="item-card publication-item">
+            {% if book.cover_image %}
+            <div class="publication-image book-image">
+                <img src="{{ book.cover_image }}" alt="Book Cover">
+            </div>
+            {% endif %}
             <div class="publication-content">
                 <h3><a href="{{ book.link_amazon }}">{{ book.title }}</a></h3>
                 
@@ -34,11 +39,6 @@
                 <p class="abstract">{{ book.summary }}</p>
                 {% endif %}
             </div>
-            {% if book.cover_image %}
-            <div class="publication-image book-image">
-                <img src="{{ book.cover_image }}" alt="Book Cover">
-            </div>
-            {% endif %}
         </li>
         {% endfor %}
     </ul>

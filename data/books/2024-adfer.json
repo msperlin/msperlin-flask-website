@@ -5,5 +5,5 @@
     "link_amazon": "https://www.amazon.com.br/dp/B08WNC27ZY",
     "link_online": "/books/adfeR/",
     "cover_image": "/static/img/cover-book-adfer.jpg",
-    "summary": "Uma obra de referência para utilizar a linguagem R para resolver problemas práticos em finanças e economia. Cobre o fluxo de trabalho de um analista de dados, desde a preparação até a comunicação de resultados, abordando fundamentos, econometria, modelos lineares, relatórios reproduzíveis e otimização de performance."
+    "summary": "Este livro introduz o leitor ao uso do R e RStudio como plataforma de análise de dados financeiros e econômicos. O livro apresenta toda a base de conhecimento necessária para utilizar o R, desde a sua instalação até a criação de códigos de pesquisa. O livro está organizado com exemplos práticos de uso do código que contextualizam e facilitam o aprendizado em cada etapa do processo. Este livro é recomendado a profissionais e alunos de pós-graduação que tenham interesse em aprender a utilizar o R. Não é necessário nenhum conhecimento prévio de programação para aproveitar o material. Após a leitura, é esperado que o leitor tenha o conhecimento suficiente para desenvolver suas própria pesquisa de forma autônoma, seja essa a confecção de documentos acadêmicos ou então o trabalho de pesquisa em empresas públicas e privadas."
 }
