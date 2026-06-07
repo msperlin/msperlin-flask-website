@@ -2,9 +2,9 @@
     "title": "BatchGetSymbols",
     "description": "Downloads and Organizes Financial Data for Multiple Tickers",
     "date_of_submission": "2016-11-06",
-    "number_of_downloads": 550,
+    "number_of_downloads": 587,
     "link": "https://msperlin.r-universe.dev/BatchGetSymbols",
-    "downloads_last_month": 550,
-    "total_downloads": 187550,
-    "updated_at": "2026-05-31 04:44:39"
+    "downloads_last_month": 587,
+    "total_downloads": 187722,
+    "updated_at": "2026-06-07 04:49:49"
 }
