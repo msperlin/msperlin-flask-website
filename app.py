@@ -134,21 +134,37 @@ def news():
     # Sort by date descending
     news_data.sort(key=lambda x: x.get('date', ''), reverse=True)
     
-    # Extract year for display
+    # Group news items by year while maintaining sorting
+    grouped_news = {}
     for item in news_data:
-        if 'date' in item:
-            item['year'] = item['date'].split('-')[0]
+        date_str = item.get('date', '')
+        if date_str:
+            year = date_str.split('-')[0]
+        else:
+            year = str(item.get('year', 'Unknown'))
+        item['year'] = year
+        if year not in grouped_news:
+            grouped_news[year] = []
+        grouped_news[year].append(item)
             
-    return render_template('news.html', title='News', news=news_data, description="News coverage, interviews, and media appearances.")
+    return render_template('news.html', title='News', news=grouped_news, description="News coverage, interviews, and media appearances.")
 
 @app.route('/awards')
 def awards():
     awards_data = load_data_from_folder('awards')
 
     # sort by year
-    awards_data.sort(key=lambda x: x.get('year', 0), reverse=True)
+    awards_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
 
-    return render_template('awards.html', title='Awards', awards=awards_data, description="Academic awards and honors received by Marcelo S. Perlin.")
+    # Group awards by year while maintaining sorting
+    grouped_awards = {}
+    for award in awards_data:
+        year = str(award.get('year', 'Unknown'))
+        if year not in grouped_awards:
+            grouped_awards[year] = []
+        grouped_awards[year].append(award)
+
+    return render_template('awards.html', title='Awards', awards=grouped_awards, description="Academic awards and honors received by Marcelo S. Perlin.")
 
 
 @app.route('/consulting')
