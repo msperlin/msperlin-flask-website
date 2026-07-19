@@ -2,10 +2,10 @@
   "books": {
     "2019-pirf": {
       "rating": 4.7,
-      "ratings_count": 524,
+      "ratings_count": 529,
       "title": "Poupando e Investindo em Renda Fixa: Uma Abordagem Baseada em Dados",
       "link_amazon": "https://www.amazon.com.br/dp/B07RR9K9PV",
-      "last_updated": "2026-06-21 06:05:44"
+      "last_updated": "2026-07-19 04:22:15"
     },
     "2022-vdr": {
       "rating": 4.8,
@@ -19,29 +19,29 @@
       "ratings_count": 3,
       "title": "Analyzing Financial and Economic Data with R (Third Edition)",
       "link_amazon": "https://www.amazon.com/dp/B0BZ98RYFW",
-      "last_updated": "2026-06-28 05:19:17"
+      "last_updated": "2026-07-19 04:22:20"
     },
     "2023-qrcp": {
       "rating": 4.0,
       "ratings_count": 1,
       "title": "Quest\u00f5es de R em Concursos P\u00fablicos: Solu\u00e7\u00f5es e coment\u00e1rios",
       "link_amazon": "https://www.amazon.com.br/dp/B0C6GZ6V8T",
-      "last_updated": "2026-07-12 04:26:31"
+      "last_updated": "2026-07-19 04:22:23"
     },
     "2024-adfer": {
       "rating": 4.7,
-      "ratings_count": 239,
+      "ratings_count": 240,
       "title": "An\u00e1lise de Dados Financeiros e Econ\u00f4micos com o R (Terceira Edi\u00e7\u00e3o)",
       "link_amazon": "https://www.amazon.com.br/dp/B08WNC27ZY",
-      "last_updated": "2026-06-14 05:52:40"
+      "last_updated": "2026-07-19 04:22:26"
     },
     "2024-intror": {
       "rating": 4.9,
       "ratings_count": 15,
       "title": "Introdu\u00e7\u00e3o ao R - Um guia pr\u00e1tico para iniciantes",
       "link_amazon": "https://www.amazon.com.br/dp/B0CYN25PD6",
-      "last_updated": "2026-07-05 04:59:22"
+      "last_updated": "2026-07-19 04:22:28"
     }
   },
-  "date_retrieval": "2026-07-12"
+  "date_retrieval": "2026-07-19"
 }
