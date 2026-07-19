@@ -2,9 +2,9 @@
     "title": "GetQuandlData",
     "description": "Fast and Cached Import of Data from 'Quandl' Using the 'json\nAPI'",
     "date_of_submission": "2019-10-20",
-    "number_of_downloads": 266,
+    "number_of_downloads": 255,
     "link": "https://msperlin.r-universe.dev/GetQuandlData",
-    "downloads_last_month": 266,
-    "total_downloads": 25801,
-    "updated_at": "2026-07-12 03:42:39"
+    "downloads_last_month": 255,
+    "total_downloads": 25857,
+    "updated_at": "2026-07-19 03:38:38"
 }
