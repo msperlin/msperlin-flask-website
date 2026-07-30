@@ -5,9 +5,9 @@
     "the full cycle of a data based research, from data importation to analysis and reporting;",
     "using R and Python to write data pipelines, import and analyze larger-than-RAM and unstructured datasets;",
     "using machine learning models in R (tidymodels) and Python (scikit-learn) in prediction problems, with real world business applications such as fraud detection;",
-    "using LLM (large language models) for solving research problems in large scale;",
-    "writing open source R and Python packages, publishing in CRAN and pypi.org;",
-    "using cloud tools such as servers, storage and APIs from the usual suspects (AWS, Google Cloud, Azure)."    
+    "using LLM (large language models) such as ChatGPT and Gemini for solving research problems in large scale;",
+    "writing open source R and Python packages, and publishing in CRAN and pypi.org;",
+    "using cloud tools such as servers/computing, storage and APIs from the usual suspects (AWS, Google Cloud, Azure)."    
   ],
   "services": [
     {
