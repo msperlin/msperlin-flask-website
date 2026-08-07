@@ -143,6 +143,8 @@ def news():
         else:
             year = str(item.get('year', 'Unknown'))
         item['year'] = year
+        if item.get('pdf'):
+            item['pdf_url'] = url_for('serve_news_pdf', filename=os.path.basename(item['pdf']))
         if year not in grouped_news:
             grouped_news[year] = []
         grouped_news[year].append(item)
@@ -239,6 +241,11 @@ def sitemap():
     response.headers["Content-Type"] = "application/xml"
     
     return response
+
+@app.route('/news/pdfs/<path:filename>')
+def serve_news_pdf(filename):
+    pdf_folder = os.path.join(os.getcwd(), 'data', 'news', 'pdfs')
+    return send_from_directory(pdf_folder, filename)
 
 @app.route('/robots.txt')
 def robots():
