@@ -6,7 +6,7 @@
     "journal": "Computational Economics",
     "journal_abs": "CE",
     "abstract": "This paper investigates risk measurement within the Decentralized Finance (DeFi) ecosystem, focusing on liquidity pools that utilize Constant Product Market Makers (CPMMs). The study evaluates and compares the performance of various market risk forecasting models, specifically Value-at-Risk (VaR) and Expected Shortfall (ES), applied to decentralized liquidity pool data.",
-    "link": "https://doi.org/10.1007/s10614-024-10602-0",
+    "link": "https://doi.org/10.1007/s10614-024-10585-6",
     "image": "",
     "impact_factor": "2.2",
     "issn": "1572-9974"
