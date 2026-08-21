@@ -1,0 +1,13 @@
+{
+    "title": "Risk Forecasting Comparisons in Decentralized Finance: An Approach in Constant Product Market Makers",
+    "authors": "Lucas Mussoi, Fernanda Maria Müller, Marcelo S. Perlin",
+    "publication": "Computational Economics",
+    "year": "2024",
+    "journal": "Computational Economics",
+    "journal_abs": "CE",
+    "abstract": "This paper investigates risk measurement within the Decentralized Finance (DeFi) ecosystem, focusing on liquidity pools that utilize Constant Product Market Makers (CPMMs). The study evaluates and compares the performance of various market risk forecasting models, specifically Value-at-Risk (VaR) and Expected Shortfall (ES), applied to decentralized liquidity pool data.",
+    "link": "https://doi.org/10.1007/s10614-024-10602-0",
+    "image": "",
+    "impact_factor": "2.2",
+    "issn": "1572-9974"
+}
