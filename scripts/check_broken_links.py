@@ -14,7 +14,8 @@ ssl_context = ssl._create_unverified_context()
 # Domains that aggressively block automated scrapers or are placeholders, and should be skipped or warned rather than failing the build
 IGNORED_DOMAINS = [
     "linkedin.com",
-    "example.com"
+    "example.com",
+    "msperlin.com"
 ]
 
 def extract_urls(data):

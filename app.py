@@ -13,7 +13,7 @@ SLIDES_FOLDER = os.path.join(os.getcwd(), 'data', 'slides')
 
 def load_data(filename):
     filepath = os.path.join('data', filename)
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def load_data_from_folder(folder_path):
@@ -25,7 +25,7 @@ def load_data_from_folder(folder_path):
     for filename in sorted(os.listdir(full_path)): # Sort for consistent order
         if filename.endswith('.json'):
             filepath = os.path.join(full_path, filename)
-            with open(filepath, 'r') as f:
+            with open(filepath, 'r', encoding='utf-8') as f:
                 item = json.load(f)
                 item['filename_stem'] = filename[:-5]
                 data_list.append(item)
@@ -67,12 +67,12 @@ def publications():
     for pub in publications_with_if:
         total_if += float(pub.get('impact_factor', 0))
     
-    avg_if = total_if / total_publications_with_if
-    avg_if = round(avg_if, 2)
+    avg_if = round(total_if / total_publications_with_if, 2) if total_publications_with_if > 0 else 0
     
-    # restrict size of abstract to 200 characters
+    # restrict size of abstract to 400 characters
     for publication in publications_data:
-        publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
+        if publication.get('abstract'):
+            publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
 
     # add gscholar stats
     gscholar_stats = load_data('stats/gscholar.json')
@@ -192,15 +192,10 @@ def serve_slide(slide_folder, path=None):
         # Check root folder first
         html_files = [f for f in os.listdir(slide_dir) if f.endswith('.html')]
         if 'index.html' in html_files:
-            path = 'index.html'
             return send_from_directory(slide_dir, 'index.html')
         elif html_files:
-            path = sorted(html_files)[0]
-        else:
-            return "Presentation HTML not found", 404
             return send_from_directory(slide_dir, sorted(html_files)[0])
             
-    return send_from_directory(slide_dir, path)
         # Check 'slides' subfolder
         slides_sub = os.path.join(slide_dir, 'slides')
         if os.path.exists(slides_sub) and os.path.isdir(slides_sub):
