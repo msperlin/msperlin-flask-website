@@ -1,0 +1,16 @@
+{
+    "title": "Can AI beat a naive portfolio? An experiment with anonymized data",
+    "subtitle": "Finance Research Letters v. 78 2025",
+    "authors": "Marcelo S. Perlin, Cristian Foguesatto, Fernanda Muller, Marcelo Righi",
+    "event": "Research Seminar @ Department of Statistics (UFRGS)",
+    "institute": "EA-UFRGS",
+    "date": "2025-11-04",
+    "year": "2025",
+    "description": "Presentation evaluating the performance of Google's Gemini 1.5 Flash in making investment decisions using 30,000 simulations over 20 years of anonymized U.S. market data, published in Finance Research Letters.",
+    "link": "/slides/20251104_EstatUFRGS_AI-investor/",
+    "folder": "20251104_EstatUFRGS_AI-investor",
+    "html_file": "slides/20251104_Estat-UFRGS_AI-investor.html",
+    "thumbnail": "static/img/thumbnail-20251104_EstatUFRGS_AI-investor.png",
+    "pdf_link": "/slides/20251104_EstatUFRGS_AI-investor/2025_FRL_AI-investor.pdf",
+    "paper_link": "https://doi.org/10.1016/j.frl.2025.107126"
+}

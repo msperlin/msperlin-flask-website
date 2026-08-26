@@ -1,0 +1,30 @@
+
+\usepackage{dcolumn}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l D{)}{)}{11)3} D{)}{)}{11)3} D{)}{)}{11)2}}
+\hline
+ & \multicolumn{1}{c}{Business Description} & \multicolumn{1}{c}{Risk Factors} & \multicolumn{1}{c}{Management Discussion} \\
+\hline
+ROE            & -0.027 \; (0.019)       & -0.001 \; (0.016)       & -0.004 \; (0.020)       \\
+Age            & 0.003 \; (0.001)^{***}  & -0.003 \; (0.001)^{***} & 0.002 \; (0.001)^{*}    \\
+Log Size       & -0.077 \; (0.026)^{***} & 0.153 \; (0.021)^{***}  & 0.024 \; (0.026)        \\
+Risk (Beta)    & 0.026 \; (0.030)        & 0.065 \; (0.025)^{**}   & 0.014 \; (0.031)        \\
+Leverage       & -0.024 \; (0.056)       & 0.008 \; (0.047)        & -0.127 \; (0.058)^{**}  \\
+Sentiment      & -0.016 \; (0.019)       & 0.196 \; (0.089)^{**}   & -0.025 \; (0.027)       \\
+Asset Turnover & 0.018 \; (0.025)        & 0.056 \; (0.021)^{***}  & 0.049 \; (0.026)^{*}    \\
+Accrual Ratio  & -0.739 \; (0.203)^{***} & -0.314 \; (0.170)^{*}   & -0.299 \; (0.211)       \\
+Year           & 0.038 \; (0.014)^{***}  & 0.048 \; (0.012)^{***}  & 0.023 \; (0.015)        \\
+\hline
+Year effect    & \multicolumn{1}{c}{Yes} & \multicolumn{1}{c}{Yes} & \multicolumn{1}{c}{Yes} \\
+Sector dummies & \multicolumn{1}{c}{Yes} & \multicolumn{1}{c}{Yes} & \multicolumn{1}{c}{Yes} \\
+Deviance       & 115.543                 & 63.518                  & 104.962                 \\
+Num. obs.      & 2409                    & 2409                    & 2409                    \\
+\hline
+\multicolumn{4}{l}{\scriptsize{$^{***}p<0.01$; $^{**}p<0.05$; $^{*}p<0.1$}}
+\end{tabular}
+\caption{Estimation Results for GLM Model (Equation \ref{eq:logistic_function})}
+\label{tab:glm}
+\end{center}
+\end{table}

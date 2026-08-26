@@ -1,0 +1,17 @@
+{
+    "title": "The Use of AI in 10-K Filings",
+    "subtitle": "An Empirical Analysis on Russell 1000 Constituent Companies (2018-2024)",
+    "authors": "Marcelo S. Perlin, Cristian R. Foguesatto, Aliki K. Galanos, Felipe Affonso",
+    "event": "Café com Pesquisa",
+    "institute": "Federal University of Rio Grande do Sul (UFRGS)",
+    "date": "2026-08-26",
+    "year": "2026",
+    "description": "Empirical study evaluating the adoption of AI-assisted writing and sentiment analysis across 10-K annual reports of Russell 1000 companies from 2018 to 2024 using a custom FinBERT prediction model.",
+    "link": "/slides/20260826_cafe-com-pesquisa/",
+    "folder": "20260826_cafe-com-pesquisa",
+    "html_file": "20260819_SLIDES_cafe-com-pesquisa.html",
+    "thumbnail": "static/img/thumbnail-20260826_cafe-com-pesquisa.png",
+    "pdf_link": "/slides/20260826_cafe-com-pesquisa/frl.pdf",
+    "paper_link": "https://doi.org/10.1016/j.frl.2026.110161"
+}
+

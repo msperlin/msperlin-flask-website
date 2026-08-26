@@ -1,0 +1,271 @@
+/*-- scss:defaults --*/
+
+// Fonts
+$font-family-sans-serif: "Inter", "Outfit", system-ui, -apple-system, sans-serif;
+$presentation-heading-font: "Outfit", "Inter", sans-serif;
+
+// Colors
+$body-bg: #F8FAFC; // Soft Slate 50 (clean off-white)
+$body-color: #1E293B; // Dark Slate 800 for high-contrast readability
+$link-color: #0284C7; // Rich Ocean Blue
+$selection-bg: rgba(2, 132, 199, 0.15);
+
+// Heading colors
+$heading-color: #0F172A; // Deepest Slate 900
+$presentation-title-color: #0F172A;
+
+// Custom theme colors
+$primary-color: #0284C7; // Blue
+$secondary-color: #7C3AED; // Royal Purple
+$accent-color: #E11D48; // Vivid Rose/Coral
+
+/*-- scss:rules --*/
+
+// Custom styling for slide background and gradients (full viewport)
+body.reveal-viewport {
+  background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F1F5F9 100%) !important;
+}
+
+.reveal {
+  background: transparent !important;
+}
+
+.reveal .slides {
+  background: transparent !important;
+}
+
+// Center Title Page text over full-bleed background
+.reveal .title-slide {
+  text-align: center;
+  margin-top: 5%;
+  h1 {
+    font-size: 2.3em;
+    font-weight: 800;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #0F172A 20%, #0284C7 70%, #7C3AED 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 4px 20px rgba(2, 132, 199, 0.1);
+    margin-bottom: 0.4em;
+    border: none;
+  }
+  .subtitle {
+    font-size: 1.2em;
+    color: #475569; // Charcoal gray for contrast
+    margin-top: 0.5em;
+    margin-bottom: 1.5em;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+  .author {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #0F172A;
+    margin-bottom: 0.2em;
+  }
+  .institution {
+    color: #475569;
+    font-size: 0.8em;
+    margin-bottom: 1.5em;
+  }
+  .date {
+    color: #64748B;
+    font-size: 0.8em;
+    font-family: monospace;
+  }
+}
+
+// Enhance standard slides
+.reveal {
+  h2 {
+    font-weight: 700;
+    font-size: 1.6em;
+    color: #0F172A;
+    border-bottom: 2px solid rgba(2, 132, 199, 0.3);
+    padding-bottom: 0.2em;
+    margin-bottom: 0.8em;
+    text-transform: capitalize;
+  }
+  h3 {
+    color: #0284C7;
+    font-weight: 600;
+    font-size: 1.2em;
+    margin-top: 0.5em;
+  }
+}
+
+// Custom text colors for highlighting
+.text-cyan { color: #0284C7; }
+.text-purple { color: #7C3AED; }
+.text-coral { color: #E11D48; }
+.text-emerald { color: #059669; }
+.text-bold { font-weight: bold; }
+
+// Info boxes / Cards (light mode)
+.card-grid {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.custom-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  border-radius: 10px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+  h3 {
+    margin-top: 0;
+    color: #0284C7;
+    font-size: 1.1em;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+  }
+  .card-title {
+    font-weight: 700;
+    color: #0284C7;
+    font-size: 1.15em;
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: 0.75em;
+    color: #334155;
+    margin-bottom: 0;
+    line-height: 1.4;
+  }
+  ul {
+    font-size: 0.7em;
+    margin-bottom: 0;
+    padding-left: 1.2em;
+  }
+}
+
+.custom-card.accent {
+  border-color: rgba(124, 58, 237, 0.2);
+  h3 {
+    color: #7C3AED;
+  }
+  .card-title {
+    color: #7C3AED;
+  }
+}
+
+.custom-card.coral {
+  border-color: rgba(225, 29, 72, 0.2);
+  h3 {
+    color: #E11D48;
+  }
+  .card-title {
+    color: #E11D48;
+  }
+}
+
+.custom-card.emerald {
+  border-color: rgba(5, 150, 105, 0.2);
+  h3 {
+    color: #059669;
+  }
+  .card-title {
+    color: #059669;
+  }
+}
+
+// Column title helper to avoid level-3 headers slide-splitting
+.column-title {
+  font-weight: 700;
+  color: #0284C7;
+  font-size: 1.2em;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+.column-title.accent { color: #7C3AED; }
+.column-title.coral { color: #E11D48; }
+.column-title.emerald { color: #059669; }
+
+// Table styling (light mode)
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  font-size: 0.5em !important; // Fits table data cleanly on slides
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(2, 132, 199, 0.12);
+  
+  thead {
+    tr {
+      background: rgba(2, 132, 199, 0.06) !important;
+    }
+  }
+  
+  th {
+    color: #0F172A;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 0.6rem;
+    border-bottom: 2px solid rgba(2, 132, 199, 0.25);
+    text-align: center;
+  }
+  
+  td {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+    color: #334155;
+    text-align: center;
+  }
+  
+  tr:nth-child(even) {
+    background: rgba(15, 23, 42, 0.01);
+  }
+  
+  tr:hover {
+    background: rgba(2, 132, 199, 0.04);
+  }
+}
+
+// Side by side columns layout helper
+.columns {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  width: 100%;
+}
+.column {
+  flex: 1;
+}
+
+// Custom lists (light mode)
+.reveal ul {
+  li {
+    margin-bottom: 0.4em;
+    font-size: 0.85em;
+    color: #334155;
+    &::marker {
+      color: #0284C7;
+    }
+  }
+}
+
+.reveal ol {
+  li {
+    margin-bottom: 0.4em;
+    font-size: 0.85em;
+    color: #334155;
+  }
+}
+
+// Subtitle styling on normal slides (light mode)
+.slide-subtitle {
+  color: #475569;
+  font-size: 0.9em;
+  margin-top: -0.6em;
+  margin-bottom: 1em;
+  font-style: italic;
+}

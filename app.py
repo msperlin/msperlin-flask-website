@@ -9,6 +9,7 @@ import urllib.error
 app = Flask(__name__)
 
 BOOKS_FOLDER = os.path.join(os.getcwd(), 'books_rendered') 
+SLIDES_FOLDER = os.path.join(os.getcwd(), 'data', 'slides') 
 
 def load_data(filename):
     filepath = os.path.join('data', filename)
@@ -174,6 +175,49 @@ def consulting():
     consulting_data = load_data('consulting.json')
     return render_template('consulting.html', title='Consulting Services', content=consulting_data, description="Expert Financial Data Science Consulting by Marcelo S. Perlin. Services include R/Python programming, financial modeling, machine learning, and data visualization.")
 
+@app.route('/slides')
+def slides():
+    slides_data = load_data_from_folder('slides')
+    slides_data.sort(key=lambda x: str(x.get('date', x.get('year', ''))), reverse=True)
+    return render_template('slides.html', title='Slides', slides=slides_data, description="Presentation slides, workshops, and research materials by Marcelo S. Perlin.")
+
+@app.route('/slides/<slide_folder>/')
+@app.route('/slides/<slide_folder>/<path:path>')
+def serve_slide(slide_folder, path=None):
+    slide_dir = os.path.join(SLIDES_FOLDER, slide_folder)
+    if not os.path.exists(slide_dir) or not os.path.isdir(slide_dir):
+        return "Slide presentation not found", 404
+        
+    if not path:
+        # Check root folder first
+        html_files = [f for f in os.listdir(slide_dir) if f.endswith('.html')]
+        if 'index.html' in html_files:
+            return send_from_directory(slide_dir, 'index.html')
+        elif html_files:
+            return send_from_directory(slide_dir, sorted(html_files)[0])
+            
+        # Check 'slides' subfolder
+        slides_sub = os.path.join(slide_dir, 'slides')
+        if os.path.exists(slides_sub) and os.path.isdir(slides_sub):
+            sub_htmls = [f for f in os.listdir(slides_sub) if f.endswith('.html')]
+            if 'index.html' in sub_htmls:
+                return send_from_directory(slides_sub, 'index.html')
+            elif sub_htmls:
+                return send_from_directory(slides_sub, sorted(sub_htmls)[0])
+        return "Presentation HTML not found", 404
+            
+    # If path directly exists in slide_dir
+    full_path = os.path.join(slide_dir, path)
+    if os.path.exists(full_path):
+        return send_from_directory(slide_dir, path)
+        
+    # If path exists in slide_dir/slides
+    sub_full_path = os.path.join(slide_dir, 'slides', path)
+    if os.path.exists(sub_full_path):
+        return send_from_directory(os.path.join(slide_dir, 'slides'), path)
+        
+    return "File not found", 404
+
 @app.route('/site-log')
 def site_log():
     # Git Commits
@@ -235,6 +279,13 @@ def sitemap():
                          # Replace backslashes with forward slashes for URL consistency on Windows (though this is Linux)
                          rel_path = rel_path.replace('\\', '/')
                          pages.append(url_for('serve_book', book_name=book_name, path=rel_path, _external=True))
+
+    # slides
+    if os.path.exists(SLIDES_FOLDER):
+        for slide_name in os.listdir(SLIDES_FOLDER):
+            slide_path = os.path.join(SLIDES_FOLDER, slide_name)
+            if os.path.isdir(slide_path):
+                pages.append(url_for('serve_slide', slide_folder=slide_name, _external=True))
 
     sitemap_xml = render_template('sitemap.xml', pages=pages)
     response = make_response(sitemap_xml)

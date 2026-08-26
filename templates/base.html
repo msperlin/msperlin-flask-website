@@ -51,11 +51,12 @@
                     </li>
                     <li class="dropdown">
                         <a href="javascript:void(0)"
-                            class="dropbtn {% if request.endpoint in ['data', 'news', 'awards'] %}active{% endif %}">Research</a>
+                            class="dropbtn {% if request.endpoint in ['data', 'news', 'awards', 'slides'] %}active{% endif %}">Research</a>
                         <div class="dropdown-content">
                             <a href="{{ url_for('data') }}">Data</a>
                             <a href="{{ url_for('news') }}">Media Coverage</a>
                             <a href="{{ url_for('awards') }}">Awards</a>
+                            <a href="{{ url_for('slides') }}">Slides</a>
                         </div>
                     </li>
                     <li><a href="{{ url_for('consulting') }}"
