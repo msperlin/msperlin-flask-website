@@ -192,10 +192,15 @@ def serve_slide(slide_folder, path=None):
         # Check root folder first
         html_files = [f for f in os.listdir(slide_dir) if f.endswith('.html')]
         if 'index.html' in html_files:
+            path = 'index.html'
             return send_from_directory(slide_dir, 'index.html')
         elif html_files:
+            path = sorted(html_files)[0]
+        else:
+            return "Presentation HTML not found", 404
             return send_from_directory(slide_dir, sorted(html_files)[0])
             
+    return send_from_directory(slide_dir, path)
         # Check 'slides' subfolder
         slides_sub = os.path.join(slide_dir, 'slides')
         if os.path.exists(slides_sub) and os.path.isdir(slides_sub):
