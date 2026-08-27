@@ -1,0 +1,14 @@
+{
+    "title": "Questões do R em Concursos Públicos",
+    "subtitle": "Palestra EstaTiDados",
+    "authors": "Marcelo S. Perlin",
+    "event": "EstaTiDados",
+    "institute": "EA-UFRGS",
+    "date": "2023-05-31",
+    "year": "2023",
+    "description": "Talk presented at EstaTiDados discussing the growing adoption of R in the public sector and data science job market, introducing the book 'Questões de R em Concursos Públicos' with real civil service exam questions and detailed solutions.",
+    "link": "/slides/20230531_EstatiDados/",
+    "folder": "20230531_EstatiDados",
+    "html_file": "20230531_slides_estatisDados.html",
+    "thumbnail": "static/img/thumbnail-20230531_EstatiDados.png"
+}
