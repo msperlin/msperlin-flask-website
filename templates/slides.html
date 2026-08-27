@@ -11,9 +11,9 @@
         {% for slide in slides %}
         <li class="item-card publication-item">
             {% if slide.thumbnail or slide.image %}
-            <div class="publication-image" style="flex-shrink: 0;">
+            <div class="publication-image">
                 <a href="{{ slide.link }}" target="_blank">
-                    <img src="{% if (slide.thumbnail or slide.image).startswith('static/') %}{{ url_for('static', filename=(slide.thumbnail or slide.image).replace('static/', '')) }}{% else %}{{ slide.thumbnail or slide.image }}{% endif %}" alt="{{ slide.title }}" style="max-width: 135px; width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: block;">
+                    <img src="{% if (slide.thumbnail or slide.image).startswith('static/') %}{{ url_for('static', filename=(slide.thumbnail or slide.image).replace('static/', '')) }}{% else %}{{ slide.thumbnail or slide.image }}{% endif %}" alt="{{ slide.title }}" style="max-width: 220px; width: 100%; height: auto; border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 </a>
             </div>
             {% endif %}
@@ -27,7 +27,10 @@
                     {% if slide.event %}{{ slide.event }} | {% endif %}
                     {{ slide.date or slide.year }}
                 </p>
-                <p style="margin-top: 10px;">
+                {% if slide.description %}
+                <p class="abstract">{{ slide.description }}</p>
+                {% endif %}
+                <p style="margin-top: 12px;">
                     <a href="{{ slide.link }}" target="_blank" class="cta-button" style="padding: 6px 14px; font-size: 0.9em;">View Slides</a>
                     {% if slide.pdf_link %}
                     &nbsp;|&nbsp; <a href="{{ slide.pdf_link }}" target="_blank">Download Paper / PDF</a>

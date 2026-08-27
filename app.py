@@ -22,13 +22,21 @@ def load_data_from_folder(folder_path):
     if not os.path.exists(full_path):
         return []
         
-    for filename in sorted(os.listdir(full_path)): # Sort for consistent order
-        if filename.endswith('.json'):
-            filepath = os.path.join(full_path, filename)
-            with open(filepath, 'r', encoding='utf-8') as f:
+    for item_name in sorted(os.listdir(full_path)): # Sort for consistent order
+        item_path = os.path.join(full_path, item_name)
+        if os.path.isfile(item_path) and item_name.endswith('.json'):
+            with open(item_path, 'r', encoding='utf-8') as f:
                 item = json.load(f)
-                item['filename_stem'] = filename[:-5]
+                item['filename_stem'] = item_name[:-5]
                 data_list.append(item)
+        elif os.path.isdir(item_path):
+            for sub_filename in sorted(os.listdir(item_path)):
+                if sub_filename.endswith('.json'):
+                    sub_filepath = os.path.join(item_path, sub_filename)
+                    with open(sub_filepath, 'r', encoding='utf-8') as f:
+                        item = json.load(f)
+                        item['filename_stem'] = sub_filename[:-5]
+                        data_list.append(item)
     return data_list
 
 @app.route('/')
