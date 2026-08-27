@@ -1,0 +1,14 @@
+{
+    "title": "Code Reproducibility with R",
+    "subtitle": "Seminar on Academic Reproducibility and Tools in R",
+    "authors": "Marcelo S. Perlin",
+    "event": "EA-UFRGS",
+    "institute": "EA-UFRGS",
+    "date": "2021-09-01",
+    "year": "2021",
+    "description": "Presentation discussing scientific reproducibility in academia, common reproducibility failures, project structure best practices, and computational tools in R such as renv, checkpoint, and Docker.",
+    "link": "/slides/20210901_Reproducibilidade no R/",
+    "folder": "20210901_Reproducibilidade no R",
+    "html_file": "reproducibilidade-set2021.html",
+    "thumbnail": "static/img/thumbnail-20210901_Reproducibilidade no R.png"
+}

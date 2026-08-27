@@ -1,0 +1,218 @@
+---
+title: "Code Reproducibility with R"
+author: "Marcelo S. Perlin"
+institute: "UFRGS/EA"
+date: "2021/10/27"
+self-contained: true
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    preview-links: auto
+    highlight-style: github
+---
+
+## Introduction
+
+[What is science?](https://www.google.com/search?q=what+is+science&oq=what+is+science&aqs=chrome.0.0i512l10.2032j0j7&sourceid=chrome&ie=UTF-8)
+
+. . .
+
+> the intellectual and practical activity encompassing the systematic study of the structure and behaviour of the physical and natural world through observation and experiment. Oxford English Dictionary
+
+. . .
+
+However, academic research is usually conducted in a black-box fashion:
+
+![](figs/Sidney-Harris-cartoon-main-image.jpg){fig-align="center" width="500px"}
+
+---
+
+## Reproducibility failures in academia
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### [Reinhart-Rogoff](https://theconversation.com/the-reinhart-rogoff-error-or-how-not-to-excel-at-economics-13646) error
+
+![](figs/reinhart-rogoff.png){width="100%"}
+:::
+
+::: {.column width="50%"}
+### The recent [case](https://retractionwatch.com/2021/07/08/researchers-forfeit-10000-award-when-papers-findings-cant-be-replicated/) of *Journal of Finance*:
+
+![](figs/retraction-jf.png){width="100%"}
+:::
+
+::::
+
+---
+
+## How to solve this problem?
+
+Governance and reproducibility!
+
+. . .
+
+:::: {.columns}
+
+::: {.column width="35%"}
+![](figs/359_9_f2.jpeg){width="250px"}
+:::
+
+::: {.column width="65%"}
+- All data and code should be shared and reproducible with popular programming languages
+
+- Prevalence of academic governance and self-audit
+
+- If particular results are not reproducible, be transparent about it and retract if needed
+:::
+
+::::
+
+---
+
+## Why we lack reproducibility?
+
+- Researchers are human! An error can happen..
+
+. . .
+
+- Bad career incentives (publish or perish!) and bad behavior.
+
+. . .
+
+- Lack of incentives for sharing code and data.
+
+. . .
+
+- Bad computational policies (aka "it works on my machine").
+
+---
+
+## Tools for reproducibility in R (and others)
+
+- Well written paper! 
+
+. . .
+
+- Version control (data & code) 
+
+  - **Git** (GitHub and friends)
+  
+  - **Cloud backup and infrastructure** (Dropbox/Google Drive/OneDrive)
+
+. . .
+
+- Instructions for running the R code (perhaps in a git style Readme.md file?)
+
+. . .
+
+> Example of reproducible paper: A Garch Tutorial with R - RAC ([paper](https://rac.anpad.org.br/index.php/rac/article/view/1420)/[code](https://github.com/msperlin/GARCH-RAC)/[data](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/C4WHUJ))
+
+---
+
+## Reproducibility in R
+
+R offers a range of tools for keeping your code reproducible:
+
+- Project organization (files and folders)
+
+- Package version:
+
+  - `checkpoint`
+  
+  - `renv`
+  
+- Containerization with Docker 
+
+---
+
+## Project Organization
+
+- All R scripts numbered sequentially (import $\rightarrow$ clean $\rightarrow$ EDA $\rightarrow$ model)
+
+- Extra files and output in their own folder
+
+- Think of a research project as a R package, with its own folder structure
+
+. . .
+
+**A real life Example:**
+
+![](figs/ExampleProject.png){fig-align="center"}
+
+---
+
+## Package `renv`
+
+> Inspired in Python's *venv*, `renv` maintains records of all packages used within a project (similar to Python) and provides infrastructure for recording and restoring packages.
+
+. . .
+
+**How to use:**
+
+1. Install `renv` in R, set path to project folder (or open RStudio project file) and initialize with `renv::init()`
+
+2. Record packages with `renv::snapshot()`
+
+3. Restore (if needed) packages with `renv::restore()`
+
+---
+
+## Package `checkpoint`
+
+> Package `checkpoint` is an initiative from [Microsoft](https://mran.microsoft.com/documents/rro/reproducibility/) to keep R code reproducible. 
+
+> Unlike `renv` that finds packages from project, `checkpoint` uses time to set package versions and (**slowly**) create a private package repository.
+
+. . .
+
+**How to use:**
+
+1. Install `checkpoint`, set a date you want to reach out
+
+2. Go back in time with `checkpoint('2019-01-01')`
+
+---
+
+## Docker
+
+> Containers are modular virtual environments that freeze a particular computer setup, mostly used in cloud computing.
+
+- Containers are the *state-of-the-art* for code execution and reproducibility (guarantees a particular architecture, forever).
+
+- For R users, containers are mostly used in deploying Shiny applications.
+
+---
+
+## Dockerfile example:
+
+```dockerfile
+FROM rocker/tidyverse:4.1.0
+
+RUN R -e "install.packages('GetDFPData2')"
+
+WORKDIR /home/msperlin
+
+RUN mkdir output
+
+ADD R-code ./R-code
+
+#RUN mkdir /home/output
+RUN R -e "getwd()"
+
+RUN R -e "fs::dir_tree()"
+
+WORKDIR /home/msperlin/R-code
+
+CMD Rscript script-research.R
+```
+
+---
+
+## Thanks! 😄
+
+All code and data available at [GitHub](https://github.com/msperlin/reproducibility-with-R-talk)
+
+[Personal site](https://www.msperlin.com/)

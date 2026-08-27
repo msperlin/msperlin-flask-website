@@ -187,7 +187,21 @@ def consulting():
 def slides():
     slides_data = load_data_from_folder('slides')
     slides_data.sort(key=lambda x: str(x.get('date', x.get('year', ''))), reverse=True)
-    return render_template('slides.html', title='Slides', slides=slides_data, description="Presentation slides, workshops, and research materials by Marcelo S. Perlin.")
+
+    # Group slides by year while maintaining sorting
+    grouped_slides = {}
+    for item in slides_data:
+        date_str = item.get('date', '')
+        if date_str:
+            year = date_str.split('-')[0]
+        else:
+            year = str(item.get('year', 'Unknown'))
+        item['year'] = year
+        if year not in grouped_slides:
+            grouped_slides[year] = []
+        grouped_slides[year].append(item)
+
+    return render_template('slides.html', title='Slides', slides=grouped_slides, description="Presentation slides, workshops, and research materials by Marcelo S. Perlin.")
 
 @app.route('/slides/<slide_folder>/')
 @app.route('/slides/<slide_folder>/<path:path>')
