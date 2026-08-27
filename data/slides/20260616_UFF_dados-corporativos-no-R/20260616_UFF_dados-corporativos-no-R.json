@@ -1,0 +1,15 @@
+{
+    "title": "Dados Corporativos no R",
+    "subtitle": "Palestra UFF",
+    "authors": "Marcelo S. Perlin",
+    "event": "Palestra UFF",
+    "institute": "EA-UFRGS",
+    "date": "2026-06-16",
+    "year": "2026",
+    "description": "Presentation on accessing and analyzing Brazilian corporate financial and governance data in R using the GetDFPData2 and GetFREData packages, covering B3 and CVM data sources, financial statement analysis, and reproducible research workflows.",
+    "link": "/slides/20260616_UFF_dados-corporativos-no-R/",
+    "folder": "20260616_UFF_dados-corporativos-no-R",
+    "html_file": "20260616_UFF_slides-dados-corporativos-no-R.html",
+    "pdf_link": "/slides/20260616_UFF_dados-corporativos-no-R/2019_RBFIN_getdfpdata.pdf",
+    "paper_link": "https://periodicos.fgv.br/rbfin/article/view/78654"
+}

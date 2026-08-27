@@ -1,0 +1,72 @@
+
+# Escolha de software {background-image="figs/dog_computer.jpg" background-opacity="0.5"}
+
+- A escolha de software de trabalho é um produto do ambiente (colegas, orientador, e experiência pessoal)
+
+- Escolhas erradas se propagam no sistema!
+
+- Benefícios de usar software de código aberto e gratuito
+
+## Linha do tempo de uso de _software_
+
+::: {.timeline}
+
+::: {.event data-label="2005"}
+**Mestrado**  
+Windows + Excel/csv + Eviews (econometria) + Word
+:::
+
+::: {.event data-label="2007 - 2015"}
+**Doutorado**  
+Windows + Excel/csv + Matlab + Word
+:::
+
+::: {.event data-label="2016"}
+**Professor e Pesquisador (inicio)**
+Linux (Mint/Ubuntu) + R + Latex
+:::
+
+::: {.event data-label="2020"}
+**Professor e Pesquisador (inicio)**
+Linux (Arch Linux/Omarchy) + R + Python + Latex + Quarto
+:::
+
+:::
+
+
+
+
+
+## Cronologia {.vertical}
+
+::: {.timeline .snake}
+
+::: {.event data-label="1992"}
+Desenvolvimento do R começa como projeto de pesquisa (Auckland, NZ)
+:::
+
+::: {.event data-label="1995"}
+Distribuído como código aberto (GPL2)
+:::
+
+::: {.event data-label="1997-1999"}
+Fundação do CRAN, r-project.org criado e 1ª reunião do R Core
+:::
+
+::: {.event data-label="2000"}
+R 1.0.0 lançado e entrada de John Chambers no R Core
+:::
+
+::: {.event data-label="2004"}
+R 2.0.0 lançado e 1ª conferência useR! (Viena)
+:::
+
+::: {.event data-label="2017"}
+CRAN ultrapassa 10.000 pacotes publicados
+:::
+
+::: {.event data-label="2026"}
+R 4.6.0 lançado
+:::
+
+:::
