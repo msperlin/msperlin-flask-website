@@ -5,6 +5,7 @@ author: "Marcelo S. Perlin"
 date: 2025-11-04
 date-format: YYYY-MM-DD
 institute: EA-UFRGS
+self-contained: true
 format: 
   revealjs: 
     theme: theme-msperlin.scss
