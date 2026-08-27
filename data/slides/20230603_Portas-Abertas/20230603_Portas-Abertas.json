@@ -9,6 +9,5 @@
     "description": "Presentation at UFRGS Portas Abertas discussing careers in data analysis and data science for business administration students, the R programming language, market trends, salaries, and real-world financial data applications in R.",
     "link": "/slides/20230603_Portas-Abertas/",
     "folder": "20230603_Portas-Abertas",
-    "html_file": "20230603_slides_portas-abertas.html",
-    "thumbnail": "static/img/thumbnail-20230603_Portas-Abertas.png"
+    "html_file": "20230603_slides_portas-abertas.html"
 }

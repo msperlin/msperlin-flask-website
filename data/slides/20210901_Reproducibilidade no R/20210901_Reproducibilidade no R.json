@@ -9,6 +9,5 @@
     "description": "Presentation discussing scientific reproducibility in academia, common reproducibility failures, project structure best practices, and computational tools in R such as renv, checkpoint, and Docker.",
     "link": "/slides/20210901_Reproducibilidade no R/",
     "folder": "20210901_Reproducibilidade no R",
-    "html_file": "reproducibilidade-set2021.html",
-    "thumbnail": "static/img/thumbnail-20210901_Reproducibilidade no R.png"
+    "html_file": "reproducibilidade-set2021.html"
 }
