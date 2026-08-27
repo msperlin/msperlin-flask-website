@@ -1,0 +1,26 @@
+```{r}
+my_email <- "marceloperlin@gmail.com"
+my_website <- "https://www.msperlin.com/"
+
+data_start <- as.Date("2010-01-01")
+years_exp <- lubridate::year(lubridate::today()) - lubridate::year(data_start)
+
+```
+
+# Sobre o professor
+
+## Marcelo S. Perlin (ou prof Perlin)
+
+> Professor Associado na EA/UFRGS, orientador de mestrado e doutorado. Com mais de `r years_exp` anos de carreira em análise de dados voltada a ciência, finanças quantitativas e consultoria para empresas.
+
+::: {.incremental}
+- Apaixonado por análise de dados, programação e investimentos.
+- Programador e consultor em **R** e **Python**.
+- Autor de diversos pacotes de código aberto no R: `yfR`, `GetTDData`, `GetBCBData`, etc.
+- Autor de livros sobre análise de dados e investimentos (detalhes a seguir)
+- Contato
+  - Email: [`r my_email`](emailto: `r my_email`) 
+  - Site: [`r my_website`](`r my_website`)  
+:::
+
+

@@ -1,0 +1,35 @@
+<script>
+  window.addEventListener('load', (event) => {
+    // 1. Find the global Reveal.js layout container
+    const revealLayout = document.querySelector('.reveal');
+    
+    if (revealLayout) {
+      // 2. Create the clock element
+      const clockDiv = document.createElement('div');
+      clockDiv.id = 'global-clock';
+      revealLayout.appendChild(clockDiv);
+
+      // 3. Update the time every second
+      function updateClock() {
+        const now = new Date();
+        clockDiv.innerHTML = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+      
+      setInterval(updateClock, 1000);
+      updateClock(); // Run instantly
+    }
+  });
+</script>
+
+<style>
+  #global-clock {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    font-size: 1rem;
+    color: rgba(128, 128, 128, 0.7); /* Subtle gray */
+    font-family: monospace;
+    z-index: 999; /* Keeps it on top of slide content */
+    pointer-events: none; /* Prevents it from blocking clicks */
+  }
+</style>
