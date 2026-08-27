@@ -1,0 +1,444 @@
+---
+title: "Módulos do R para a Análise de Dados Financeiros"
+subtitle: "PPGE / UFSC"
+author: Marcelo S. Perlin
+date: last-modified
+date-format: YYYY-MM-DD
+institute: EA-UFRGS
+self-contained: true
+format:
+  revealjs: 
+    theme: default
+execute: 
+  cache: true
+  message: false
+logo: figs/ufrgs3.jpg
+bibliography: bib/mybib.bib
+footer: ''
+---
+
+
+```{r setup, include=FALSE}
+classtools::setup_quarto_slides("templates")
+
+knitr::opts_chunk$set(cache = TRUE, message = FALSE, echo = TRUE)
+
+my_pgks <- c(unique(renv::dependencies()$Package),
+             "GetFREData",
+             "GetBCBData",
+             "GetQuandlData",
+             "rbcb",
+             "Quandl")
+
+knitr::write_bib(x = my_pgks, 
+                 file = 'bib/mybib.bib')
+
+cite_pkg <- function(pkg) {
+  str_out <- stringr::str_glue(
+    "`{pkg}` [@R-{pkg}]"
+  )
+  
+  return(str_out)
+}
+
+```
+
+## Objetivos da palestra
+
+- Apresentar as plataformas R e o RStudio para a pesquisa científica;
+
+. . .
+
+- Apresentar um pequeno conjunto de pacotes voltados ao mercado financeiro local;
+
+. . .
+
+- Apresentar exemplos de importação de dados de diferentes pacotes;
+
+
+## O que é o R
+
+> O R é uma linguagem de programação voltada para a resolução de problemas estatísticos e para a visualização gráfica de dados. 
+
+. . .
+
+Autores: Ross Ihaka e Robert Gentleman (_The University of Auckland_), criada em 1993
+
+. . .
+
+Funcionalidade: R é sinônimo de programação voltada à análise de dados
+
+. . .
+
+Custo: **O R é totalmente livre** e disponível em vários sistemas operacionais.
+
+
+## Por que Escolher o R
+
+- Plataforma madura, estável, e continuamente suportada.
+
+. . .
+
+- Aprender a linguagem do R é fácil.
+
+. . .
+
+- Os pacotes do R permitem as mais diversas funcionalidades.
+
+. . .
+
+- O R tem compatibilidade com diferentes linguagens e sistemas operacionais.
+
+. . .
+
+- <span style="color:red">O R é totalmente gratuito!</span> 
+
+
+# Módulos do R
+
+- Renda Variável -- ações, FIIs e derivativos
+- Renda Fixa -- Títulos públicos, curva de juros
+- Dados Econômicos -- BCB-SGS
+
+## Renda Variável (1)
+
+- Preços de ações, FIIs e índices
+    - `r cite_pkg("yfR")` (antigo BatchGetSymbols) -- dados do Yahoo Finance (ajustados a eventos)
+    - `r cite_pkg("rb3")` -- dados da B3 (não ajustados)
+    
+. . .
+
+- Demonstrativos financeiros (ativo/passivo/dre/dfc)
+    - `r cite_pkg("GetDFPData2")`
+
+
+## Renda Variável (2)
+
+- Formulários de referência
+    -  `r cite_pkg("GetFREData")`
+
+. . .
+
+- Contratos derivativos
+    -  `r cite_pkg("rb3")`
+
+. . .        
+
+## Renda Fixa
+
+- Curva de juros Brasileira
+    - `r cite_pkg("rb3")` -- dados históricos
+    - `r cite_pkg("GetTDData")` -- curva atual
+
+. . .
+
+- Preços e yields do Tesouro Direto
+    - `r cite_pkg("GetTDData")` 
+
+
+## Dados Econômicos
+
+- SGS - BCB <https://www3.bcb.gov.br/sgspub/>
+    - `r cite_pkg("GetBCBData")` 
+    - `r cite_pkg("rbcb")`
+
+. . .
+
+- Nasdaq Datalink <https://data.nasdaq.com/>
+    - `r cite_pkg("GetQuandlData")`
+    - `r cite_pkg("Quandl")`
+
+# Exemplos de código
+
+1. `yfR`
+1. `GetTDData`
+1. `GetDFPData2`
+1. `rb3`
+
+## Módulo `yfR`
+
+> Yahoo finance oferece ampla gama de preços ajustados de ações e íncides de ações negociadas no mundo inteiro
+
+. . .
+
+:::{.callout-caution collapse="true"}
+## Cuidado com dados do Yahoo Finance
+
+- Ticker para o Brasil possuem final .SA: PETR4.SA
+- Preços são somente ajustados a splits!
+- Cuidado com uso de preços de ações em pesquisa científica
+- Preços de índices são confiáveis.
+:::
+
+---
+
+```{r}
+#| output-location: column
+library(yfR)
+
+tickers <- c('PETR3.SA', 
+             'ITSA3.SA', 
+             'GGBR4.SA')
+
+first_date <- '2018-01-01'
+last_date <- Sys.Date() # today
+
+df_yf <- yf_get(tickers, 
+                first_date,
+                last_date)
+
+dplyr::glimpse(df_yf)
+```
+
+---
+
+```{r}
+#| output-location: column
+#| fig-width: 5
+#| fig-height: 5
+library(ggplot2)
+
+p <- ggplot(
+  df_yf,
+  aes(x = ref_date,
+      y = price_adjusted,
+      color = ticker)) + 
+  geom_line()
+
+p
+```
+
+## Módulo `GetTDData`
+
+> Dados para contratos de dívida soberana do Brasil estão disponíveis no site do   [Tesouro Direto website](http://www.tesouro.gov.br/tesouro-direto-balanco-e-estatisticas) como planilhas do Excel.
+
+:::{.callout-tip}
+## Dados disponíveis
+
+- Tesouro Prefixado (LTN)
+- Tesouro Pós-Fixado (NTN-B Principal)
+- Tesouro Pós-Fixado com coupom (NTN-B)
+- Tesouro SELIC (LFT)
+:::
+
+---
+
+```{r}
+#| output-location: column
+#| fig-height: 5
+#| fig-width: 5
+#| message: false
+#| results: hide
+library(GetTDData)
+library(ggplot2)
+
+asset_code <- 'LTN'   # Name of asset
+dl_folder <- "~/.cache/GetTDData" # Folder to download data
+
+# download data
+df_TD <- td_get(asset_code, dl_folder  = dl_folder)
+
+dplyr::glimpse(df_TD)
+```
+
+---
+
+```{r, message=FALSE}
+#| output-location: column
+#| fig-height: 5
+#| fig-width: 5
+library(ggplot2)
+
+df_TD <- df_TD |>
+  dplyr::filter(ref_date > as.Date("2015-01-15"))
+
+# plot data (prices)
+p <- ggplot(data = df_TD, 
+            aes(x = ref_date, 
+                y = price_bid, 
+                color = asset_code)) + 
+  geom_line(size = 1) + 
+  scale_x_date() + 
+  labs(title = 'Preços de LTNs', 
+       x = 'Datas', y = 'Preços' ) +
+  theme_light()
+
+p
+```
+
+
+---
+
+```{r, message=FALSE}
+#| output-location: column
+#| fig-height: 5
+#| fig-width: 5
+library(ggplot2)
+
+# plot data (yields)
+p <- ggplot(data = df_TD, 
+            aes(x = ref_date, 
+                y = yield_bid, 
+                color = asset_code)) + 
+  geom_line(size = 1) + 
+  scale_x_date() + 
+  labs(title = 'Yields de LTNs', 
+       x = 'Datas', y = 'Yields' ) + 
+  theme_light()
+
+p
+```
+
+
+## Módulo `GetDFPData2`
+
+> Sistema DFP (Demonstrativo Financeiros Padronizados) da B3 oferece dados financeiros de todas empresas negociadas em bolsa
+
+:::{.callout-tip}
+## Dados disponíveis
+
+- DRE - Demonstrativo de Resultado (anual)
+- BP - Balanço Patrimonial (anual)
+- DFC - Demonstrativo de fluxo de caixa (anual)
+:::
+
+---
+
+```{r}
+#| output-location: column
+library(GetDFPData2)
+
+cache_folder <- "data/gdfpd2_cache"
+
+df_info <- get_info_companies(cache_folder)
+
+dplyr::glimpse(df_info)
+```
+
+---
+
+```{r}
+library(GetDFPData2)
+
+# set options
+id_company <- 23264 # AMBEV
+first_year <- 2015
+last_year <- 2017
+
+# download data
+df_reports <- get_dfp_data(companies_cvm_codes = id_company,
+                           first_year = 2015,
+                           last_year = last_year,
+                           cache_folder = cache_folder)
+
+names(df_reports)
+```
+
+## Módulo `rb3`
+
+> Diversos dados do mercado financeiros estão disponíveis no site da B3, porém com difícil acesso. Pacote `rb3` realiza o _webscrapping_ de diversos dados históricos do site.
+
+:::{.callout-tip}
+## Dados disponíveis
+
+- equities/stocks
+- futures
+- FII (Reits)
+- options
+- BDRs
+- historical yield curves (calculated from futures contracts)
+- B3 indexes composition
+
+:::
+
+---
+
+```{r}
+#| output-location: column
+#| fig-height: 5
+#| fig-width: 5
+library(rb3)
+
+df_yc <- yc_mget(
+  first_date = Sys.Date() - 255 * 15,
+  last_date = Sys.Date(),
+  by = 255
+) |>
+  dplyr::filter(
+    forward_date <= as.Date("2025-01-01")
+  )
+
+p <- ggplot(
+  df_yc,
+  aes(
+    x = forward_date,
+    y = r_252,
+    group = refdate,
+    color = factor(refdate)
+  )
+) +
+  geom_line(size = 1) +
+  labs(
+    title = "Yield Curves for Brazil",
+    subtitle = "Built using interest rates future contracts",
+    caption = stringr::str_glue("Data imported using rb3 at {Sys.Date()}"),
+    x = "Forward Date",
+    y = "Annual Interest Rate",
+    color = "Reference Date"
+  ) +
+  theme_light() +
+  scale_y_continuous(labels = scales::percent)
+
+print(p)
+```
+
+# Livros do R
+
+## Análise de Dados Financeiros e Econômicos com o R
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+```{r}
+#| echo: false
+knitr::include_graphics("figs/CAPAdigital-AnaliseDadosR.jpg")
+```
+
+:::
+
+::: {.column width="60%"}
+
+- Disponível como ebook e impresso na [Amazon](https://www.amazon.com.br/An%C3%A1lise-Dados-Financeiros-Econ%C3%B4micos-com-ebook/dp/B08WNC27ZY)
+- versão online em <https://www.msperlin.com/adfeR/>
+
+:::
+
+::::
+
+
+## Visualização de Dados com o R
+
+:::: {.columns}
+
+::: {.column width="40%"}
+
+```{r}
+#| echo: false
+
+knitr::include_graphics("figs/CAPA-VisualizacaoDadosR-EBOOK.jpg")
+```
+
+:::
+
+::: {.column width="60%"}
+
+- <span style="color:red">Em desenvolvimento! **Provável** publicação em 11/2022</span>
+
+- Versão online em <https://www.msperlin.com/vdr/>
+
+:::
+
+::::
+
+# Referências {-}

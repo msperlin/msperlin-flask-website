@@ -1,0 +1,13 @@
+{
+    "title": "Módulos do R para a Análise de Dados Financeiros",
+    "subtitle": "PPGE / UFSC",
+    "authors": "Marcelo S. Perlin",
+    "event": "PPGE / UFSC",
+    "institute": "EA-UFRGS",
+    "date": "2023-01-01",
+    "year": "2023",
+    "description": "Presentation and workshop materials on using R packages for importing and analyzing financial and economic datasets from Brazil, presented at PPGE/UFSC.",
+    "link": "/slides/20230101_UFSC-dados-finanças/",
+    "folder": "20230101_UFSC-dados-finanças",
+    "html_file": "R-and-financial-datasets.html"
+}
