@@ -2,10 +2,10 @@
   "books": {
     "2019-pirf": {
       "rating": 4.7,
-      "ratings_count": 531,
+      "ratings_count": 529,
       "title": "Poupando e Investindo em Renda Fixa: Uma Abordagem Baseada em Dados",
       "link_amazon": "https://www.amazon.com.br/dp/B07RR9K9PV",
-      "last_updated": "2026-08-02 04:24:59"
+      "last_updated": "2026-09-27 06:23:47"
     },
     "2022-vdr": {
       "rating": 4.8,
@@ -26,7 +26,7 @@
       "ratings_count": 1,
       "title": "Quest\u00f5es de R em Concursos P\u00fablicos: Solu\u00e7\u00f5es e coment\u00e1rios",
       "link_amazon": "https://www.amazon.com.br/dp/B0C6GZ6V8T",
-      "last_updated": "2026-07-19 04:22:23"
+      "last_updated": "2026-09-27 06:23:54"
     },
     "2024-adfer": {
       "rating": 4.7,
@@ -43,5 +43,5 @@
       "last_updated": "2026-08-02 04:25:12"
     }
   },
-  "date_retrieval": "2026-09-20"
+  "date_retrieval": "2026-09-27"
 }
