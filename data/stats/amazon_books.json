@@ -12,21 +12,21 @@
       "ratings_count": 18,
       "title": "Visualiza\u00e7\u00e3o de Dados com o R",
       "link_amazon": "https://www.amazon.com.br/dp/B0BK2V4HTB",
-      "last_updated": "2026-08-30 06:20:01"
+      "last_updated": "2026-10-11 06:54:32"
     },
     "2023-afedR-en": {
       "rating": 5.0,
       "ratings_count": 3,
       "title": "Analyzing Financial and Economic Data with R (Third Edition)",
       "link_amazon": "https://www.amazon.com/dp/B0BZ98RYFW",
-      "last_updated": "2026-09-06 05:39:25"
+      "last_updated": "2026-10-11 06:54:35"
     },
     "2023-qrcp": {
       "rating": 4.0,
       "ratings_count": 1,
       "title": "Quest\u00f5es de R em Concursos P\u00fablicos: Solu\u00e7\u00f5es e coment\u00e1rios",
       "link_amazon": "https://www.amazon.com.br/dp/B0C6GZ6V8T",
-      "last_updated": "2026-09-27 06:23:54"
+      "last_updated": "2026-10-11 06:54:39"
     },
     "2024-adfer": {
       "rating": 4.7,
@@ -43,5 +43,5 @@
       "last_updated": "2026-08-02 04:25:12"
     }
   },
-  "date_retrieval": "2026-10-04"
+  "date_retrieval": "2026-10-11"
 }
