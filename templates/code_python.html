@@ -11,7 +11,9 @@
     <ul>
         {% for pkg in code_python %}
         <li>
-            <strong><a href="{{ pkg.link }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}<br>
+            <strong><a href="{{ pkg.link }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
+            {% if pkg.github_link %}<a href="{{ pkg.github_link }}">GitHub</a>{% endif %}
+            {% if pkg.pypi_link %}<a href="{{ pkg.pypi_link }}">PyPI</a>{% endif %}<br>
         </li>
         {% endfor %}
     </ul>
