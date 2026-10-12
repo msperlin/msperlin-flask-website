@@ -1,0 +1,5 @@
+{
+    "name": "rfbpy",
+    "description": "An easy-to-use Python package to download, extract and load the open CNPJ (Brazilian company registry) data published by the Receita Federal into SQLite or parquet files.",
+    "link": "https://github.com/msperlin/rfbpy"
+}
