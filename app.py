@@ -85,25 +85,6 @@ def publications():
     # distinct years for the filter dropdown (newest first)
     years = sorted({str(p.get('year')) for p in publications_data if p.get('year')}, reverse=True)
 
-    # chart: publications per year
-    year_counts = {}
-    for pub in publications_data:
-        y = str(pub.get('year', '') or '')
-        if y:
-            year_counts[y] = year_counts.get(y, 0) + 1
-    chart_years = sorted(year_counts.keys())
-    chart_pub_year = json.dumps({
-        "type": "bar",
-        "data": {
-            "labels": chart_years,
-            "datasets": [{
-                "label": "Publications",
-                "data": [year_counts[y] for y in chart_years]
-            }]
-        },
-        "options": {"scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}}}
-    })
-
     # add gscholar stats
     gscholar_stats = load_data('stats/gscholar.json')
 
@@ -112,7 +93,6 @@ def publications():
         title='Publications', 
         publications=publications_data, 
         years=years,
-        chart_pub_year=chart_pub_year,
         total_publications=total_publications, 
         total_publications_with_if=total_publications_with_if,
         avg_if=avg_if,

@@ -26,33 +26,24 @@
         <font size="2">(last update at {{ gscholar_stats.date_retrieval }})</font>
     </h4>
 
-    <div class="stats-row reveal">
-        <div class="stats-container" data-stagger>
-            <div class="stat-card reveal" data-tooltip="Total number of unique research papers published.">
-                <h4>Published papers</h4>
-                <p>{{ total_publications }}</p>
-            </div>
-            <div class="stat-card reveal"
-                data-tooltip="Total number of citations received by my work, including papers, books, book chapters and news articles, as reported by Google Scholar.">
-                <h4>Total citations</h4>
-                <p>{{ gscholar_stats.citedby }}</p>
-            </div>
-            <div class="stat-card reveal"
-                data-tooltip="A metric that indicates both the productivity and citation impact of a researcher. An h-index of X means X papers have at least X citations each.">
-                <h4>h-index</h4>
-                <p>{{ gscholar_stats.hindex }}</p>
-            </div>
-            <div class="stat-card reveal" data-tooltip="The number of publications with at least 10 citations.">
-                <h4>i10-index</h4>
-                <p>{{ gscholar_stats.i10index }}</p>
-            </div>
+    <div class="stats-container reveal" data-stagger>
+        <div class="stat-card reveal" data-tooltip="Total number of unique research papers published.">
+            <h4>Published papers</h4>
+            <p>{{ total_publications }}</p>
         </div>
-
-        <div class="chart-card">
-            <h3>Publications per year</h3>
-            <div class="chart-wrap"><canvas id="pubYearChart" data-chart-canvas
-                    aria-label="Bar chart of publications per year" role="img"></canvas></div>
-            <script type="application/json" data-chart="pubYearChart">{{ chart_pub_year | safe }}</script>
+        <div class="stat-card reveal"
+            data-tooltip="Total number of citations received by my work, including papers, books, book chapters and news articles, as reported by Google Scholar.">
+            <h4>Total citations</h4>
+            <p>{{ gscholar_stats.citedby }}</p>
+        </div>
+        <div class="stat-card reveal"
+            data-tooltip="A metric that indicates both the productivity and citation impact of a researcher. An h-index of X means X papers have at least X citations each.">
+            <h4>h-index</h4>
+            <p>{{ gscholar_stats.hindex }}</p>
+        </div>
+        <div class="stat-card reveal" data-tooltip="The number of publications with at least 10 citations.">
+            <h4>i10-index</h4>
+            <p>{{ gscholar_stats.i10index }}</p>
         </div>
     </div>
 

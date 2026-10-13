@@ -595,27 +595,11 @@ nav a.active {
 /* ==========================================================================
    Stats cards
    ========================================================================== */
-.stats-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
-    gap: 1.5rem;
-    align-items: stretch;
-    margin-bottom: 2rem;
-}
-
-.stats-row .chart-card {
-    margin-bottom: 0;
-}
-
-.stats-row .chart-wrap {
-    height: 250px;
-}
-
 .stats-container {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 0.75rem;
-    align-content: center;
+    margin-bottom: 2rem;
 }
 
 .stat-card {
@@ -1044,14 +1028,6 @@ footer p {
 @media (max-width: 820px) {
     .nav-toggle {
         display: inline-flex;
-    }
-
-    .stats-row {
-        grid-template-columns: 1fr;
-    }
-
-    .stats-row .chart-wrap {
-        height: 280px;
     }
 
     nav {
