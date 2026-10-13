@@ -93,6 +93,18 @@
     /* --------------------------------------------------------------- Charts */
     var charts = {};
 
+    function hexA(hex, alpha) {
+        var h = hex.replace('#', '');
+        if (h.length === 3) {
+            h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+        }
+        var n = parseInt(h, 16);
+        var r = (n >> 16) & 255;
+        var g = (n >> 8) & 255;
+        var b = n & 255;
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+    }
+
     function destroyCharts() {
         Object.keys(charts).forEach(function (id) {
             try { charts[id].destroy(); } catch (err) { /* noop */ }
@@ -131,9 +143,19 @@
         (cfg.data.datasets || []).forEach(function (ds, i) {
             var isLine = (cfg.type === 'line');
             var isPie = (cfg.type === 'doughnut' || cfg.type === 'pie');
+            var isBox = (cfg.type === 'boxplot' || cfg.type === 'violin');
             var base = i === 0 ? accent : accent2;
 
-            if (isPie) {
+            if (isBox) {
+                ds.backgroundColor = hexA(base, 0.28);
+                ds.borderColor = base;
+                ds.medianColor = base;
+                ds.outlierBackgroundColor = base;
+                ds.outlierBorderColor = base;
+                ds.outlierRadius = 3;
+                ds.itemRadius = 2;
+                ds.borderWidth = ds.borderWidth || 1.5;
+            } else if (isPie) {
                 ds.backgroundColor = ['#3b82f6', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444'];
                 ds.borderColor = dark ? '#121a2b' : '#ffffff';
                 ds.borderWidth = 2;

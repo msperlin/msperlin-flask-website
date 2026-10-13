@@ -47,20 +47,18 @@
         </div>
     </div>
 
-    <div class="chart-grid">
-        <div class="chart-card reveal">
-            <h3>Publications per year</h3>
-            <div class="chart-wrap"><canvas id="pubYearChart" data-chart-canvas
-                    aria-label="Bar chart of publications per year" role="img"></canvas></div>
-            <script type="application/json" data-chart="pubYearChart">{{ chart_pub_year | safe }}</script>
-        </div>
-        <div class="chart-card reveal">
-            <h3>Journal impact factor coverage</h3>
-            <div class="chart-wrap"><canvas id="pubIfChart" data-chart-canvas
-                    aria-label="Doughnut chart of publications with and without an impact factor" role="img"></canvas>
-            </div>
-            <script type="application/json" data-chart="pubIfChart">{{ chart_pub_if | safe }}</script>
-        </div>
+    <div class="chart-card reveal">
+        <h3>Publications per year</h3>
+        <div class="chart-wrap"><canvas id="pubYearChart" data-chart-canvas
+                aria-label="Bar chart of publications per year" role="img"></canvas></div>
+        <script type="application/json" data-chart="pubYearChart">{{ chart_pub_year | safe }}</script>
+    </div>
+
+    <div class="chart-card reveal">
+        <h3>Journal impact factor distribution by year</h3>
+        <div class="chart-wrap"><canvas id="pubIfBox" data-chart-canvas
+                aria-label="Box plot of journal impact factor distribution per year" role="img"></canvas></div>
+        <script type="application/json" data-chart="pubIfBox">{{ chart_pub_if | safe }}</script>
     </div>
 
     <div class="pub-controls reveal">

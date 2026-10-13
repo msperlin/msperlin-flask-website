@@ -104,14 +104,27 @@ def publications():
         "options": {"scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}}}
     })
 
-    without_if = total_publications - total_publications_with_if
+    # chart: distribution of journal impact factors per year (boxplot)
+    if_by_year = {}
+    for pub in publications_data:
+        try:
+            value = float(pub.get('impact_factor'))
+        except (TypeError, ValueError):
+            continue
+        y = str(pub.get('year', '') or '')
+        if y:
+            if_by_year.setdefault(y, []).append(value)
+    box_years = sorted(if_by_year.keys())
     chart_pub_if = json.dumps({
-        "type": "doughnut",
+        "type": "boxplot",
         "data": {
-            "labels": ["With impact factor", "Without impact factor"],
-            "datasets": [{"data": [total_publications_with_if, without_if]}]
+            "labels": box_years,
+            "datasets": [{
+                "label": "Journal impact factor",
+                "data": [if_by_year[y] for y in box_years]
+            }]
         },
-        "options": {"plugins": {"legend": {"display": True, "position": "bottom"}}}
+        "options": {"scales": {"y": {"beginAtZero": True}}}
     })
 
     # add gscholar stats
