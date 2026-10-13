@@ -5,9 +5,9 @@
     <h2>Interviews, lectures and News</h2>
     {% for year, items in news.items() %}
         <h3>{{ year }}</h3>
-        <ul>
+        <ul class="item-list" data-stagger>
             {% for item in items %}
-            <li>
+            <li class="item-card reveal">
                <a href="{{item.link}}"> {{ item.title }} </a> published by <b>{{item.source }}</b>{% if item.pdf_url %} (<a href="{{ item.pdf_url }}" target="_blank">PDF</a>){% endif %}.
             </li>
             {% endfor %}

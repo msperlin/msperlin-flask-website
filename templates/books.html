@@ -4,9 +4,9 @@
 <section>
     <h2>Books</h2>
     <p>Number of books: {{n_books}}</p>
-    <ul class="item-list">
+    <ul class="item-list" data-stagger>
         {% for book in books %}
-        <li class="item-card publication-item">
+        <li class="item-card publication-item reveal">
             {% if book.cover_image %}
             <div class="publication-image book-image">
                 <img src="{{ book.cover_image }}" alt="Book Cover">
@@ -18,7 +18,7 @@
                 <p>
                     <a href="{{ book.link_amazon }}">Amazon</a>
                     {% if book.link_online %}
-                    | <a href="{{ book.link_online }}">Online Version</a>
+                    | <a href="{{ book.link_online }}" hx-boost="false">Online Version</a>
                     {% endif %}
                 </p>
                 {% if book.amazon_rating %}

@@ -49,6 +49,28 @@ Most of the content on this website is data-driven, meaning you don't need to ed
 *   **`scripts/`**: Maintenance scripts.
 *   **`books_rendered/`**: Contains static HTML files for the online books.
 
+### Frontend & UI
+The site is server-rendered HTML (great for SEO) with a thin layer of progressive
+enhancement on top. Everything still works if JavaScript is disabled.
+
+*   **Design tokens & dark mode**: colors, radii, and fonts are CSS variables in
+    `static/css/style.css`. The theme toggle switches `[data-theme="dark"]`;
+    the choice is stored in `localStorage` and defaults to the OS preference.
+*   **Navigation without full reloads**: [HTMX](https://htmx.org) (`hx-boost` on
+    `<body>`) swaps page content in place while keeping real URLs and titles.
+    Standalone documents (online books, slide decks) opt out with
+    `hx-boost="false"` so their own CSS/JS keeps working.
+*   **Publications search/filter**: [Alpine.js](https://alpinejs.dev) filters the
+    server-rendered list client-side (title/author/journal + year).
+*   **Charts**: [Chart.js](https://www.chartjs.org) renders publication and R
+    package download charts. Data is embedded per-page in
+    `<script type="application/json" data-chart="…">` blocks.
+*   **Site JS**: all interaction logic lives in `static/js/main.js` (theme, mobile
+    nav, scroll-reveal animations, charts, cite modal). It is written to survive
+    HTMX swaps by using event delegation.
+*   **Libraries** are loaded from public CDNs, so there is **no build step** and
+    no Node toolchain to maintain.
+
 ### Common Tasks
 
 #### 1. Adding a Publication

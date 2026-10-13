@@ -9,10 +9,10 @@
 
     {% for year, items in slides.items() %}
         <h3>{{ year }}</h3>
-        <ul>
+        <ul class="item-list" data-stagger>
             {% for slide in items %}
-            <li>
-                <a href="{{ slide.link }}" target="_blank">{{ slide.title }}</a>{% if slide.event %} presented at <b>{{ slide.event }}</b>{% endif %}{% if slide.pdf_link or slide.paper_link %} ({% if slide.pdf_link %}<a href="{{ slide.pdf_link }}" target="_blank">PDF</a>{% endif %}{% if slide.pdf_link and slide.paper_link %}, {% endif %}{% if slide.paper_link %}<a href="{{ slide.paper_link }}" target="_blank">Article</a>{% endif %}){% endif %}.
+            <li class="item-card reveal">
+                <a href="{{ slide.link }}" target="_blank" hx-boost="false">{{ slide.title }}</a>{% if slide.event %} presented at <b>{{ slide.event }}</b>{% endif %}{% if slide.pdf_link or slide.paper_link %} ({% if slide.pdf_link %}<a href="{{ slide.pdf_link }}" target="_blank">PDF</a>{% endif %}{% if slide.pdf_link and slide.paper_link %}, {% endif %}{% if slide.paper_link %}<a href="{{ slide.paper_link }}" target="_blank">Article</a>{% endif %}){% endif %}.
             </li>
             {% endfor %}
         </ul>

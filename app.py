@@ -82,6 +82,38 @@ def publications():
         if publication.get('abstract'):
             publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
 
+    # distinct years for the filter dropdown (newest first)
+    years = sorted({str(p.get('year')) for p in publications_data if p.get('year')}, reverse=True)
+
+    # chart: publications per year
+    year_counts = {}
+    for pub in publications_data:
+        y = str(pub.get('year', '') or '')
+        if y:
+            year_counts[y] = year_counts.get(y, 0) + 1
+    chart_years = sorted(year_counts.keys())
+    chart_pub_year = json.dumps({
+        "type": "bar",
+        "data": {
+            "labels": chart_years,
+            "datasets": [{
+                "label": "Publications",
+                "data": [year_counts[y] for y in chart_years]
+            }]
+        },
+        "options": {"scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}}}
+    })
+
+    without_if = total_publications - total_publications_with_if
+    chart_pub_if = json.dumps({
+        "type": "doughnut",
+        "data": {
+            "labels": ["With impact factor", "Without impact factor"],
+            "datasets": [{"data": [total_publications_with_if, without_if]}]
+        },
+        "options": {"plugins": {"legend": {"display": True, "position": "bottom"}}}
+    })
+
     # add gscholar stats
     gscholar_stats = load_data('stats/gscholar.json')
 
@@ -89,6 +121,9 @@ def publications():
         'publications.html', 
         title='Publications', 
         publications=publications_data, 
+        years=years,
+        chart_pub_year=chart_pub_year,
+        chart_pub_if=chart_pub_if,
         total_publications=total_publications, 
         total_publications_with_if=total_publications_with_if,
         avg_if=avg_if,
@@ -124,8 +159,22 @@ def code_r():
     
     # Sort R packages by number of downloads (descending)
     code_data_r.sort(key=lambda x: int(x.get('number_of_downloads', 0)), reverse=True)
-    
-    return render_template('code_r.html', title='Code (R)', code_r=code_data_r, description="Open source code and repositories in R.")
+
+    # chart: top packages by downloads (last month)
+    top_pkgs = code_data_r[:12]
+    chart_r_downloads = json.dumps({
+        "type": "bar",
+        "data": {
+            "labels": [p.get('title', '') for p in top_pkgs],
+            "datasets": [{
+                "label": "Downloads (last month)",
+                "data": [int(p.get('number_of_downloads', 0) or 0) for p in top_pkgs]
+            }]
+        },
+        "options": {"indexAxis": "y", "scales": {"x": {"beginAtZero": True}}}
+    })
+
+    return render_template('code_r.html', title='Code (R)', code_r=code_data_r, chart_r_downloads=chart_r_downloads, description="Open source code and repositories in R.")
 
 @app.route('/code/python')
 def code_python():

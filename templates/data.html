@@ -22,9 +22,9 @@
     </p>
 
     <h3>Available datasets:</h3>
-    <ul>
+    <ul class="item-list" data-stagger>
         {% for i_data in data %}
-        <li>
+        <li class="item-card reveal">
             <b>{{ i_data.name }}</b>: {{ i_data.description }} <a href="{{ i_data.link}}">Link</a>
         </li>
         {% endfor %}

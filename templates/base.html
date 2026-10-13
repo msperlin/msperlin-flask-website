@@ -4,6 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Set theme before paint to avoid a flash of the wrong theme -->
+    <script>
+        (function () {
+            document.documentElement.classList.add('js');
+            try {
+                var t = localStorage.getItem('theme');
+                if (t !== 'light' && t !== 'dark') {
+                    t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) { }
+        })();
+    </script>
+    <meta name="theme-color" content="#ffffff">
+
     {% block meta_description %}
     <meta name="description"
         content="{{ description | default('Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.') }}">
@@ -23,15 +39,39 @@
     <meta name="twitter:image" content="{{ url_for('static', filename='img/profile.png', _external=True) }}">
     {% endblock %}
     <title>{{ title }} - Marcelo S. Perlin</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+
+    <!-- Progressive enhancement: HTMX (navigation), Chart.js, Alpine.js, site JS -->
+    <script defer src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
 
-<body>
+<body hx-boost="true">
     <header>
-        <div class="container">
-            <h1 class="logo"><a href="{{ url_for('index') }}">Marcelo S. Perlin</a></h1>
-            <nav>
+        <div class="container header-inner">
+            <a class="logo" href="{{ url_for('index') }}">Marcelo S. Perlin<span class="logo-dot">.</span></a>
+
+            <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Toggle navigation">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    aria-hidden="true">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <nav aria-label="Primary">
                 <ul>
                     <li><a href="{{ url_for('index') }}"
                             class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
@@ -40,18 +80,19 @@
                     <li><a href="{{ url_for('books') }}"
                             class="{% if request.endpoint == 'books' %}active{% endif %}">Books</a></li>
 
-
                     <li class="dropdown">
-                        <a href="javascript:void(0)"
-                            class="dropbtn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}">Code</a>
+                        <a href="javascript:void(0)" hx-boost="false"
+                            class="dropbtn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
+                            aria-haspopup="true">Code ▾</a>
                         <div class="dropdown-content">
                             <a href="{{ url_for('code_r') }}">R</a>
                             <a href="{{ url_for('code_python') }}">Python</a>
                         </div>
                     </li>
                     <li class="dropdown">
-                        <a href="javascript:void(0)"
-                            class="dropbtn {% if request.endpoint in ['data', 'news', 'awards', 'slides'] %}active{% endif %}">Research</a>
+                        <a href="javascript:void(0)" hx-boost="false"
+                            class="dropbtn {% if request.endpoint in ['data', 'news', 'awards', 'slides'] %}active{% endif %}"
+                            aria-haspopup="true">Research ▾</a>
                         <div class="dropdown-content">
                             <a href="{{ url_for('data') }}">Data</a>
                             <a href="{{ url_for('news') }}">Media Coverage</a>
@@ -61,11 +102,28 @@
                     </li>
                     <li><a href="{{ url_for('consulting') }}"
                             class="{% if request.endpoint == 'consulting' %}active{% endif %}">Consulting</a></li>
-                    <li><a href="https://msperlin.github.io/site-slides/" target="_blank" rel="noopener noreferrer">Class Slides</a></li>
-                    <li style="margin-left: auto;"><a href="{{ url_for('site_log') }}"
+                    <li><a href="https://msperlin.github.io/site-slides/" target="_blank"
+                            rel="noopener noreferrer">Class Slides</a></li>
+                    <li><a href="{{ url_for('site_log') }}"
                             class="{% if request.endpoint == 'site_log' %}active{% endif %}">Site Log</a></li>
                 </ul>
             </nav>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Toggle color theme">
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path
+                            d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4">
+                        </path>
+                    </svg>
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
     </header>
 

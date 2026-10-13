@@ -8,9 +8,9 @@
     </p>
 
     <h3>Python Projects:</h3>
-    <ul>
+    <ul class="item-list" data-stagger>
         {% for pkg in code_python %}
-        <li>
+        <li class="item-card reveal">
             <strong><a href="{{ pkg.link }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
             {% if pkg.github_link %}<a href="{{ pkg.github_link }}">GitHub</a>{% endif %}
             {% if pkg.pypi_link %}<a href="{{ pkg.pypi_link }}">PyPI</a>{% endif %}<br>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section class="hero">
+<section class="hero reveal">
   <div class="profile-photo">
     <img src="{{ url_for('static', filename='img/profile.png') }}" alt="{{ about.name }}">
   </div>
@@ -12,10 +12,12 @@
     <p><strong>Email:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>
     {% endif %}
 
-    <p>
-      <a href="{{ about.lattes_link }}">Lattes CV</a> | <a href="{{ about.gscholar_link }}">Google Scholar</a> |
-      <a href="{{ about.linkedin_link }}">LinkedIn</a> | <a href="{{ about.github_link }}">Github</a>
-    </p>
+    <div class="links">
+      <a href="{{ about.lattes_link }}">Lattes CV</a>
+      <a href="{{ about.gscholar_link }}">Google Scholar</a>
+      <a href="{{ about.linkedin_link }}">LinkedIn</a>
+      <a href="{{ about.github_link }}">GitHub</a>
+    </div>
   </div>
 </section>
 

@@ -5,9 +5,9 @@
     <h2>Awards</h2>
     {% for year, items in awards.items() %}
         <h3>{{ year }}</h3>
-        <ul>
+        <ul class="item-list" data-stagger>
             {% for award in items %}
-            <li>
+            <li class="item-card reveal">
                 <b>{{ award.title }}</b> granted by <b>{{ award.organization }}</b>: {{ award.description }}
             </li>
             {% endfor %}
