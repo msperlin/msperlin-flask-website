@@ -1,0 +1,19 @@
+[project]
+name = "msperlin-flask-website"
+version = "0.1.0"
+description = "Source code for the personal academic website of Marcelo S. Perlin, built with Flask."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "Flask",
+    "gunicorn",
+    "scholarly",
+    "free-proxy",
+    "httpx<0.28",
+    "bibtexparser<2.0.0",
+]
+
+[tool.uv]
+# This is an application, not a distributable package, so uv should not
+# build/install the project itself - only its dependencies.
+package = false

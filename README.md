@@ -7,7 +7,8 @@ This is the source code for the personal academic website of msperlin, built wit
 Follow these steps to run the website on your local machine.
 
 ### Prerequisites
-*   Python 3.10+ installed.
+*   [uv](https://docs.astral.sh/uv/) — the project is managed with uv, which
+    can also install the correct Python version for you.
 
 ### 1. Clone & Setup
 ```bash
@@ -15,25 +16,26 @@ Follow these steps to run the website on your local machine.
 git clone https://github.com/msperlin/msperlin-flask-website.git
 cd msperlin-flask-website
 
-# Create a virtual environment
-python3 -m venv .venv
-
-# Activate the virtual environment
+# Install uv (if you don't have it yet)
 # On Linux/MacOS:
-source .venv/bin/activate
-# On Windows:
-# .venv\Scripts\activate
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# On Windows (PowerShell):
+# powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-# Install dependencies
-pip install -r requirements.txt
+# Create the virtual environment (.venv) and install dependencies from uv.lock
+uv sync
 ```
 
 ### 2. Run the Application
 ```bash
-python app.py
+uv run python app.py
 ```
 The website will be available at **http://127.0.0.1:5000**.
 Debug mode is enabled by default, so changes to code or templates will auto-reload the server.
+
+> **Prefer plain `pip`?** The dependencies are also listed in `requirements.txt`
+> and you can still use `python3 -m venv .venv && pip install -r requirements.txt`.
+> Note that `pyproject.toml` / `uv.lock` are the source of truth for uv.
 
 ---
 
@@ -89,11 +91,9 @@ enhancement on top. Everything still works if JavaScript is disabled.
 
 #### 4. Updating Google Scholar Stats
 The site displays your Google Scholar statistics. These are fetched using a script.
-To update them:
+To update them, run it from the repository root:
 ```bash
-# Ensure your virtual environment is active
-cd scripts
-python run_scholarly.py
+uv run python scripts/run_scholarly.py
 ```
 This will update `data/stats/gscholar.json`.
 
