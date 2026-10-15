@@ -8,12 +8,21 @@
     </p>
 
     <h3>Python Projects:</h3>
+
+    <div class="chart-card reveal">
+        <h3>Top packages by monthly downloads</h3>
+        <div class="chart-wrap"><canvas id="pythonDownloadsChart" data-chart-canvas
+                aria-label="Bar chart of Python package downloads" role="img"></canvas></div>
+        <script type="application/json" data-chart="pythonDownloadsChart">{{ chart_python_downloads | safe }}</script>
+    </div>
+
     <ul class="item-list" data-stagger>
         {% for pkg in code_python %}
         <li class="item-card reveal">
             <strong><a href="{{ pkg.link }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
             {% if pkg.github_link %}<a href="{{ pkg.github_link }}">GitHub</a>{% endif %}
             {% if pkg.pypi_link %}<a href="{{ pkg.pypi_link }}">PyPI</a>{% endif %}<br>
+            {% if pkg.number_of_downloads is not none %}<small><em>Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em></small>{% endif %}
         </li>
         {% endfor %}
     </ul>

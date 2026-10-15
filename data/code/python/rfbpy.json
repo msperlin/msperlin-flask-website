@@ -2,5 +2,9 @@
     "name": "rfbpy",
     "description": "An easy-to-use Python package to download, extract and load the open CNPJ (Brazilian company registry) data published by the Receita Federal into SQLite or parquet files.",
     "link": "https://github.com/msperlin/rfbpy",
-    "pypi_link": "https://pypi.org/project/rfbpy/"
+    "pypi_link": "https://pypi.org/project/rfbpy/",
+    "number_of_downloads": 300,
+    "downloads_last_month": 300,
+    "total_downloads": 300,
+    "updated_at": "2026-10-15 09:13:39"
 }

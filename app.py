@@ -148,7 +148,25 @@ def code_r():
 @app.route('/code/python')
 def code_python():
     code_data_python = load_data_from_folder('code/python')
-    return render_template('code_python.html', title='Code (Python)', code_python=code_data_python, description="Open source code and repositories in Python.")
+
+    # Sort Python packages by number of downloads (descending)
+    code_data_python.sort(key=lambda x: int(x.get('number_of_downloads', 0)), reverse=True)
+
+    # chart: top packages by downloads (last month)
+    top_pkgs = code_data_python[:12]
+    chart_python_downloads = json.dumps({
+        "type": "bar",
+        "data": {
+            "labels": [p.get('name', '') for p in top_pkgs],
+            "datasets": [{
+                "label": "Downloads (last month)",
+                "data": [int(p.get('number_of_downloads', 0) or 0) for p in top_pkgs]
+            }]
+        },
+        "options": {"indexAxis": "y", "scales": {"x": {"beginAtZero": True}}}
+    })
+
+    return render_template('code_python.html', title='Code (Python)', code_python=code_data_python, chart_python_downloads=chart_python_downloads, description="Open source code and repositories in Python.")
 
 @app.route('/data')
 def data():

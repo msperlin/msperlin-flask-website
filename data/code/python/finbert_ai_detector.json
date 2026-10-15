@@ -2,5 +2,9 @@
     "name": "finbert-ai-detector",
     "description": "An easy-to-use Python package for the msperlin/finbert-ai-detector model, designed to detect AI-generated text in financial documents.",
     "link": "https://pypi.org/project/finbert-ai-detector/",
-    "github_link": "https://github.com/msperlin/finbert-ai-detector"
+    "github_link": "https://github.com/msperlin/finbert-ai-detector",
+    "number_of_downloads": 21,
+    "downloads_last_month": 21,
+    "total_downloads": 2981,
+    "updated_at": "2026-10-15 09:13:38"
 }
