@@ -1,0 +1,270 @@
+- generic [active] [ref=f101e1]:
+  - generic [ref=f101e3]:
+    - banner [ref=f101e4]:
+      - link "Skip to main content" [ref=f101e5] [cursor=pointer]:
+        - /url: "#content"
+      - heading [level=1] [ref=f101e7]:
+        - link "Visualização de Dados com o R - Versão Online" [ref=f101e8] [cursor=pointer]:
+          - /url: index.html
+        - text: ": Aplicações para Finanças e Economia"
+      - generic [ref=f101e9]:
+        - search [ref=f101e10]:
+          - combobox "Search" [ref=f101e12]
+        - navigation "Navegação" [ref=f101e13]:
+          - heading "Navegação" [level=2] [ref=f101e14]
+          - list [ref=f101e15]:
+            - listitem [ref=f101e16]:
+              - link "Bem vindo!" [ref=f101e17] [cursor=pointer]:
+                - /url: index.html
+            - listitem [ref=f101e18]:
+              - link "Prefácio" [ref=f101e19] [cursor=pointer]:
+                - /url: pref%C3%A1cio.html
+            - listitem [ref=f101e20]:
+              - link "Agradecimentos" [ref=f101e21] [cursor=pointer]:
+                - /url: agradecimentos.html
+            - listitem [ref=f101e22]:
+              - link "1 Introdução" [ref=f101e23] [cursor=pointer]:
+                - /url: introducao.html
+            - listitem [ref=f101e24]:
+              - link "2 Princípios de Visualização de Dados" [ref=f101e25] [cursor=pointer]:
+                - /url: principios.html
+            - listitem [ref=f101e26]:
+              - link "3 Componentes de Gráficos" [ref=f101e27] [cursor=pointer]:
+                - /url: componentes-de-gr%C3%A1ficos.html
+            - listitem [ref=f101e28]:
+              - link "4 Visualização de Dados com o R" [ref=f101e29] [cursor=pointer]:
+                - /url: intro-ggplot.html
+            - listitem [ref=f101e30]:
+              - link "5 Gráficos Estatísticos" [ref=f101e31] [cursor=pointer]:
+                - /url: gr%C3%A1ficos-estat%C3%ADsticos.html
+            - listitem [ref=f101e32]:
+              - link "6 Mapas" [ref=f101e33] [cursor=pointer]:
+                - /url: mapas.html
+            - listitem [ref=f101e34]:
+              - link "7 Programando com o ggplot2" [ref=f101e35] [cursor=pointer]:
+                - /url: programando-com-o-ggplot2.html
+            - listitem [ref=f101e36]:
+              - link "8 Conclusão" [ref=f101e37] [cursor=pointer]:
+                - /url: conclus%C3%A3o.html
+            - listitem [ref=f101e38]:
+              - link "Referências" [ref=f101e39] [cursor=pointer]:
+                - /url: refer%C3%AAncias.html
+    - main [ref=f101e41]:
+      - generic [ref=f101e42]:
+        - heading "Bem vindo!" [level=1] [ref=f101e43]
+        - paragraph [ref=f101e44]:
+          - link "Ebook na Amazom.com.br":
+            - /url: https://www.amazon.com.br/dp/B0BK2V4HTB
+            - img "Ebook na Amazom.com.br" [ref=f101e45] [cursor=pointer]
+          - text: Seja bem vindo ao site do livro
+          - strong [ref=f101e46]: Visualização de Dados com o R
+          - text: . Aqui encontrarás o conteúdo integral do livro para os primeiros três capítulos. A obra completa está disponível como um
+          - link "ebook" [ref=f101e47] [cursor=pointer]:
+            - /url: https://www.amazon.com.br/dp/B0BK2V4HTB
+          - text: ","
+          - link "impresso capa normal" [ref=f101e48] [cursor=pointer]:
+            - /url: https://www.amazon.com/dp/B0BJYJQ92Q
+          - text: ou
+          - link "impresso capa dura" [ref=f101e49] [cursor=pointer]:
+            - /url: https://www.amazon.com/dp/B0BJYMHWLN
+          - text: . Se gostaste do livro e estás utilizando-o para o seu trabalho, considere comprar a obra em um dos seus formatos. No papel de autor, aprecio o gesto e irei considerá-los como um fator motivante para futuras obras.
+        - paragraph [ref=f101e50]:
+          - text: A versão
+          - strong [ref=f101e51]: online
+          - text: do livro também está disponível para download como
+          - link "pdf" [ref=f101e52] [cursor=pointer]:
+            - /url: ./vdr_ed01_ONLINE.pdf
+          - text: e
+          - link "ebook" [ref=f101e53] [cursor=pointer]:
+            - /url: ./vdr_ed01_ONLINE.epub
+          - superscript [ref=f101e55] [cursor=pointer]: "1"
+          - text: ", com os primeiros capítulos na forma integral. As soluções dos exercícios de final de capítulo estão disponíveis neste"
+          - link "link" [ref=f101e56] [cursor=pointer]:
+            - /url: https://www.msperlin.com/vdr/vdr-eoc-solutions.html
+          - text: .
+        - generic [ref=f101e57]:
+          - heading "Licença de uso" [level=2] [ref=f101e58]
+          - paragraph [ref=f101e59]:
+            - text: Este trabalho é licenciado pela
+            - link "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License" [ref=f101e60] [cursor=pointer]:
+              - /url: http://creativecommons.org/licenses/by-nc-sa/4.0/
+            - text: . O código contigo neste site, e no livro como um todo, é disponibilizado pela licença do
+            - link "MIT" [ref=f101e61] [cursor=pointer]:
+              - /url: https://opensource.org/licenses/MIT
+            - text: ", portanto, sinta-se livre para utilizá-lo no seu trabalho, desde de que a origem do código seja citada. Uma sugestão de citação é disponibilizada abaixo:"
+          - paragraph [ref=f101e62]: "Perlin, M. S. Visualização de Dados com o R – Aplicações para Finanças e Economia. Primeira Edição, Porto Alegre: Marcelo S. Perlin (publicação independente), 2022."
+        - generic [ref=f101e63]:
+          - heading "Sobre o autor" [level=2] [ref=f101e64]
+          - paragraph [ref=f101e65]:
+            - text: Sou professor associado ao programa de pós-graduação na escola de Administração da UFRGS (Universidade Federal do Rio Grande do Sul). Ao longo dos mais de 12 anos de minha carreira como acadêmico, a análise de dados sempre foi uma constante, tendo como saída diversas publicações científicas nacionais e internacionais nos tópicos de econometria financeira, mercado de capitais, finanças corporativas e cientometria. Além disso, sou autor e mantenedor de 11 pacotes de R distribuídos no
+            - link "CRAN" [ref=f101e66] [cursor=pointer]:
+              - /url: https://cloud.r-project.org/web/packages/available_packages_by_date.html
+            - text: e
+            - link "Github" [ref=f101e67] [cursor=pointer]:
+              - /url: https://github.com/msperlin
+            - text: . Maiores informações sobre o meu trabalho acadêmico, códigos de programação e formas de contato podem ser encontrados em minha
+            - link "página pessoal" [ref=f101e68] [cursor=pointer]:
+              - /url: https://www.msperlin.com
+            - text: .
+        - generic [ref=f101e69]:
+          - heading "Livros do Autor" [level=2] [ref=f101e70]
+          - list [ref=f101e71]:
+            - listitem [ref=f101e72]:
+              - paragraph [ref=f101e73]:
+                - link "Poupando e Investindo em Renda Fixa" [ref=f101e74] [cursor=pointer]:
+                  - /url: https://www.amazon.com.br/dp/B07RR9K9PV
+                - text: ": Este livro apresenta uma forma de investir com foco no longo prazo, resiliência e na qualidade de vida do investidor. Contrário a crença popular, investir para o longo prazo é fácil e pode ser feito por qualquer pessoa com vontade de aprender. O grande diferencial da obra é o uso frequente de dados financeiros reais para entender melhor como o mercado de renda fixa funciona, os efeitos dos tributos e custos operacionais, e quais são as melhores opções para o investidor pessoa física. Cada capítulo do livro apresenta e analisa os principais produtos disponíveis na renda fixa: produtos bancários (CDBs, LCA, entre outros), Tesouro Direto (Prefixado, IPCA+, SELIC), fundos de renda fixa e debêntures."
+            - listitem [ref=f101e75]:
+              - paragraph [ref=f101e76]:
+                - link "Análise de Dados Financeiros e Econômicos com o R" [ref=f101e77] [cursor=pointer]:
+                  - /url: https://www.amazon.com.br/dp/B08WNC27ZY
+                - text: ": Uma introdução ao uso do R e RStudio para a área específica de finanças. O livro texto contém 13 capítulos que explicam todo o processo de pesquisa com o R, desde aquisição dos dados até o reporte de resultados em planilhas e figuras. Versão online disponível em"
+                - link "https://www.msperlin.com/adfeR/" [ref=f101e78] [cursor=pointer]:
+                  - /url: https://www.msperlin.com/adfeR/
+                - text: .
+            - listitem [ref=f101e79]:
+              - paragraph [ref=f101e80]:
+                - link "Analyzing Financial and Economic Data with R" [ref=f101e81] [cursor=pointer]:
+                  - /url: https://www.amazon.com/dp/B084LSNXMN
+                - text: ": Versão internacional do livro “Análise de Dados Financeiros com o R”. Versão web disponível em"
+                - link "https://www.msperlin.com/afedR/" [ref=f101e82] [cursor=pointer]:
+                  - /url: https://www.msperlin.com/afedR/
+                - text: .
+      - iframe [ref=f101e110]:
+        - generic [ref=f103e1]:
+          - status [ref=f103e2]
+          - generic [ref=f103e7]:
+            - toolbar "What do you think? ,0, resposta(s)" [ref=f103e10]:
+              - generic [ref=f103e11]: What do you think?
+              - generic [ref=f103e12]: 0 resposta(s)
+              - generic [ref=f103e14]:
+                - button "Upvote" [ref=f103e16]:
+                  - generic [aria-hidden] [ref=f103e18]: Upvote
+                - button "Funny" [ref=f103e20]:
+                  - generic [aria-hidden] [ref=f103e22]: Funny
+                - button "Love" [ref=f103e24]:
+                  - generic [aria-hidden] [ref=f103e26]: Love
+                - button "Surprised" [ref=f103e28]:
+                  - generic [aria-hidden] [ref=f103e30]: Surprised
+                - button "Angry" [ref=f103e32]:
+                  - generic [aria-hidden] [ref=f103e34]: Angry
+                - button "Sad" [ref=f103e36]:
+                  - generic [aria-hidden] [ref=f103e38]: Sad
+            - banner [ref=f103e39]:
+              - navigation [ref=f103e41]:
+                - list:
+                  - listitem [ref=f103e42]:
+                    - generic [ref=f103e43]: 0 comentários
+                  - listitem [ref=f103e45]:
+                    - list:
+                      - listitem [ref=f103e46]:
+                        - link "1" [ref=f103e47] [cursor=pointer]:
+                          - /url: https://disqus.com/home/notifications/
+                          - generic [aria-hidden] [ref=f103e48]: 
+                      - listitem [ref=f103e50]:
+                        - button "Iniciar sessão" [ref=f103e51] [cursor=pointer]
+            - generic [ref=f103e55]:
+              - generic [ref=f103e58]:
+                - alert
+                - generic [ref=f103e59]:
+                  - generic [ref=f103e60]: G
+                  - generic [ref=f103e65]:
+                    - generic [ref=f103e66]: Iniciar debate...
+                    - textbox [ref=f103e67]
+                - generic [ref=f103e72]:
+                  - generic [ref=f103e73]:
+                    - heading "Inicie sessão com" [level=6] [ref=f103e74]
+                    - list [ref=f103e75]:
+                      - listitem [ref=f103e76]:
+                        - button "Login with Disqus" [ref=f103e77] [cursor=pointer]:
+                          - generic [ref=f103e78]: d
+                      - listitem [ref=f103e79]:
+                        - button "Login with Facebook" [ref=f103e80] [cursor=pointer]:
+                          - generic [ref=f103e81]: F
+                      - listitem [ref=f103e82]:
+                        - button "Login with X (Twitter)" [ref=f103e83] [cursor=pointer]:
+                          - generic [ref=f103e84]: 
+                      - listitem [ref=f103e85]:
+                        - button "Login with Google" [ref=f103e86] [cursor=pointer]:
+                          - generic [ref=f103e87]: G
+                      - listitem [ref=f103e88]:
+                        - button "Login with Microsoft" [ref=f103e89] [cursor=pointer]
+                      - listitem [ref=f103e90]:
+                        - button "Login with Apple" [ref=f103e91] [cursor=pointer]
+                  - generic [ref=f103e92]:
+                    - generic [ref=f103e93]:
+                      - heading "ou registe-se no Disqus" [level=6] [ref=f103e94]
+                      - button "?" [ref=f103e96] [cursor=pointer]
+                    - paragraph [ref=f103e97]:
+                      - textbox "name" [ref=f103e98]:
+                        - /placeholder: Nome
+                    - text: → →
+              - list [ref=f103e101]:
+                - listitem [ref=f103e102]:
+                  - link "Marcar debate como favorito" [ref=f103e106] [cursor=pointer]:
+                    - /url: "#"
+                    - generic [ref=f103e107]: 
+                    - text: 
+                  - link "Partilhar" [ref=f103e113] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f103e114]:
+                  - list [ref=f103e115]:
+                    - listitem [ref=f103e116]:
+                      - link "Melhores" [ref=f103e117] [cursor=pointer]:
+                        - /url: "#"
+                    - listitem [ref=f103e118]:
+                      - link "Mais recentes" [ref=f103e119] [cursor=pointer]:
+                        - /url: "#"
+                    - listitem [ref=f103e120]:
+                      - link "Mais antigos" [ref=f103e121] [cursor=pointer]:
+                        - /url: "#"
+              - generic [ref=f103e122]: Seja o primeiro a comentar!
+              - list
+            - contentinfo [ref=f103e123]:
+              - generic [ref=f103e125]:
+                - list [ref=f103e126]:
+                  - listitem [ref=f103e127]:
+                    - link "Subscrever" [ref=f103e129] [cursor=pointer]:
+                      - /url: "#"
+                  - listitem [ref=f103e133]:
+                    - link "Privacidade" [ref=f103e134] [cursor=pointer]:
+                      - /url: https://disqus.com/privacy-policy
+                  - listitem [ref=f103e138]:
+                    - link "Não vender os meus dados" [ref=f103e139] [cursor=pointer]:
+                      - /url: https://disqus.com/data-sharing-settings/
+                - link "Com tecnologia Disqus" [ref=f103e144] [cursor=pointer]:
+                  - /url: https://disqus.com
+          - generic:
+            - listbox
+      - link "Prefácio »" [ref=f101e85] [cursor=pointer]:
+        - /url: pref%C3%A1cio.html
+    - navigation "Nesta Página" [ref=f101e87]:
+      - heading "Nesta Página" [level=2] [ref=f101e88]
+      - list [ref=f101e89]:
+        - listitem [ref=f101e90]:
+          - link "Bem vindo!" [ref=f101e91] [cursor=pointer]:
+            - /url: "#bem-vindo"
+        - listitem [ref=f101e92]:
+          - link "Licença de uso" [ref=f101e93] [cursor=pointer]:
+            - /url: "#licen%C3%A7a-de-uso"
+        - listitem [ref=f101e94]:
+          - link "Sobre o autor" [ref=f101e95] [cursor=pointer]:
+            - /url: "#sobre-o-autor"
+        - listitem [ref=f101e96]:
+          - link "Livros do Autor" [ref=f101e97] [cursor=pointer]:
+            - /url: "#livros-do-autor"
+      - generic [ref=f101e98]:
+        - list
+  - contentinfo [ref=f101e99]:
+    - generic [ref=f101e101]:
+      - paragraph [ref=f101e103]:
+        - text: "\""
+        - strong [ref=f101e104]: Visualização de Dados com o R - Versão Online
+        - text: ": Aplicações para Finanças e Economia\" foi escrito por"
+        - strong [ref=f101e105]: Marcelo S. Perlin
+        - text: (marceloperlin@gmail.com).
+      - paragraph [ref=f101e107]:
+        - text: Este livro foi compilado com amor em 2022-11-23. Deixo aqui meu profundo agradecimento aos autores do fantástico pacote
+        - link "bookdown" [ref=f101e108] [cursor=pointer]:
+          - /url: https://bookdown.org
+        - text: .

@@ -1,0 +1,539 @@
+- generic [active] [ref=f57e1]:
+  - banner [ref=f57e2]:
+    - generic [ref=f57e3]:
+      - link "Marcelo S. Perlin." [ref=f57e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f57e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f57e8] [cursor=pointer]
+  - main [ref=f57e11]:
+    - generic [ref=f57e12]:
+      - heading "Publications" [level=2] [ref=f57e13]
+      - heading [level=4] [ref=f57e14]:
+        - link "Google Scholar Statistics" [ref=f57e15] [cursor=pointer]:
+          - /url: https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ
+        - text: (last update at 2026-10-11)
+      - generic [ref=f57e16]:
+        - generic [ref=f57e17]:
+          - heading "Published papers" [level=4] [ref=f57e18]
+          - paragraph [ref=f57e19]: "40"
+        - generic [ref=f57e20]:
+          - heading "Total citations" [level=4] [ref=f57e21]
+          - paragraph [ref=f57e22]: "1686"
+        - generic [ref=f57e23]:
+          - heading "h-index" [level=4] [ref=f57e24]
+          - paragraph [ref=f57e25]: "18"
+        - generic [ref=f57e26]:
+          - heading "i10-index" [level=4] [ref=f57e27]
+          - paragraph [ref=f57e28]: "25"
+      - generic [ref=f57e29]:
+        - searchbox "Search publications" [ref=f57e31]
+        - combobox "Filter by year" [ref=f57e32] [cursor=pointer]:
+          - option "All years" [selected]
+          - option "2026"
+          - option "2025"
+          - option "2024"
+          - option "2023"
+          - option "2022"
+          - option "2021"
+          - option "2020"
+          - option "2019"
+          - option "2018"
+          - option "2017"
+          - option "2016"
+          - option "2015"
+          - option "2014"
+          - option "2013"
+          - option "2011"
+          - option "2009"
+          - option "2007"
+          - option "2006"
+        - button "Clear" [ref=f57e33] [cursor=pointer]
+        - generic [ref=f57e34]: 40 of 40 shown
+      - list [ref=f57e35]:
+        - listitem [ref=f57e36]:
+          - generic [ref=f57e37]:
+            - heading [level=3] [ref=f57e38]:
+              - 'link "The use of AI in 10-K filings: An empirical analysis" [ref=f57e39] [cursor=pointer]':
+                - /url: https://doi.org/10.1016/j.frl.2026.110161
+            - paragraph [ref=f57e40]:
+              - strong [ref=f57e41]: Marcelo S. Perlin, Cristian R. Foguesatto, Aliki K. Galanos, Felipe Affonso
+            - paragraph [ref=f57e42]:
+              - text: "2026 | Finance Research Letters | ISSN: 1544-6131 | IF: 6.9"
+              - button "Cite This" [ref=f57e43] [cursor=pointer]
+            - paragraph [ref=f57e44]: With the rise on the use of AI in the corporate setting and the associated downside risk of bad disclose and overall credibility, we ask how much and which type of organizations rely on these tools when preparing their annual reports. Using a custom, publicly available, prediction model finetuned on FinBERT, we estimate the probability of AI-generated content and analyze the sentiment of three sec ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e46]
+        - listitem [ref=f57e47]:
+          - generic [ref=f57e48]:
+            - heading [level=3] [ref=f57e49]:
+              - 'link "The academia downturn: the impact of COVID-19 in the Brazilian research productivity" [ref=f57e50] [cursor=pointer]':
+                - /url: https://doi.org/10.1093/reseval/rvag019
+            - paragraph [ref=f57e51]:
+              - strong [ref=f57e52]: Marcelo S. Perlin, Denis Boreinstein, Takeyoshi Imasato, Cristian Foguesatto
+            - paragraph [ref=f57e53]:
+              - text: "2026 | Research Evaluation | ISSN: 0958-2029 | IF: 2.0"
+              - button "Cite This" [ref=f57e54] [cursor=pointer]
+            - paragraph [ref=f57e55]: This study investigates the impact of the COVID-19 pandemic on research productivity in Brazil using a scientometrics approach. We analyze data from 134,492 researchers registered on the Lattes platform, focusing on publications, supervisions, research projects, and conference participation between 2010 and 2022. As expected, our findings reveal a significant decrease in productivity in all measur ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e57]
+        - listitem [ref=f57e58]:
+          - generic [ref=f57e59]:
+            - heading [level=3] [ref=f57e60]:
+              - link "Using ChatGPT for Creating Multi-Language Finance Related Sentiment Dictionaries" [ref=f57e61] [cursor=pointer]:
+                - /url: https://link.springer.com/article/10.1007/s10614-025-11233-3
+            - paragraph [ref=f57e62]:
+              - strong [ref=f57e63]: Marcos Reichert, Marcelo S. Perlin
+            - paragraph [ref=f57e64]:
+              - text: "2025 | Computational Economics | ISSN: 1572-9974 | IF: 2.2"
+              - button "Cite This" [ref=f57e65] [cursor=pointer]
+            - paragraph [ref=f57e66]: The finance literature is abundant with applications of text sentiment based on English dictionaries. However, a large proportion of financial documents are written in languages other than English. As such, there is a gap in literature for the development of sentiment dictionaries in other languages. Using a reproducible and low cost approach based on ChatGPT’s API, and with minimal interventions, ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e68]
+        - listitem [ref=f57e69]:
+          - generic [ref=f57e70]:
+            - heading [level=3] [ref=f57e71]:
+              - link "Can AI beat a naive portfolio? An experiment with anonymized data" [ref=f57e72] [cursor=pointer]:
+                - /url: https://doi.org/10.1016/j.frl.2025.107126
+            - paragraph [ref=f57e73]:
+              - strong [ref=f57e74]: Marcelo S. Perlin, Cristian Foguesato, Fernanda Muller, Marcelo Righi
+            - paragraph [ref=f57e75]:
+              - text: "2025 | Finance Research Letters | ISSN: 1544-6131 | IF: 6.9"
+              - button "Cite This" [ref=f57e76] [cursor=pointer]
+            - paragraph [ref=f57e77]: Using anonymized data from the United States (U.S.) market, we evaluate the performance of Google’s main LLM (Large Language Model) Gemini 1.5 Flash in making investment decisions. Unlike other studies, we query the LLM for different investment horizons (1 to 36 months) and types of financial information (financial data, price data, and a combination of both). Running a total of 30,000 simulations ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e79]
+        - listitem [ref=f57e80]:
+          - generic [ref=f57e81]:
+            - heading [level=3] [ref=f57e82]:
+              - 'link "Profiling Brazil’s research elite: Insights from a cluster analysis of a large database" [ref=f57e83] [cursor=pointer]':
+                - /url: https://doi.org/10.2478/jdis-2025-0033
+            - paragraph [ref=f57e84]:
+              - strong [ref=f57e85]: Cristian Foguesato, Denis Boreinstein, Marcelo S. Perlin, Takeyoshi Imasato
+            - paragraph [ref=f57e86]:
+              - text: "2025 | Journal of Data and Information Science | ISSN: 2543-683X | IF: 1.8"
+              - button "Cite This" [ref=f57e87] [cursor=pointer]
+            - paragraph [ref=f57e88]: "Purpose: This study analyzes the profiles of elite Brazilian researchers, recognized through the prestigious CNPq productivity scholarships. By identifying distinct researcher clusters, the study sheds light on different academic strategies, levels of productivity, and academic contributions within the Brazilian higher education system. Design/methodology/approach: The research analyzes a comprehe ... (continued, check link for full abstract)"
+          - img "Journal Cover" [ref=f57e90]
+        - listitem [ref=f57e91]:
+          - generic [ref=f57e92]:
+            - heading [level=3] [ref=f57e93]:
+              - link "Understanding Financial Resilience through Innovation and Top Management" [ref=f57e94] [cursor=pointer]:
+                - /url: https://doi.org/10.7819/rbgn.v27i03.4302
+            - paragraph [ref=f57e95]:
+              - strong [ref=f57e96]: Aliki Galanos, Marcelo S. Perlin
+            - paragraph [ref=f57e97]:
+              - text: "2025 | Revista Brasileira de Gestão de Negócios | ISSN: 1983-0807 | IF: 0.8"
+              - button "Cite This" [ref=f57e98] [cursor=pointer]
+            - paragraph [ref=f57e99]: Purpose – We aim to verify if and how top management’s acquired academic characteristics help firms withstand crises by examining the effect of CEOs’ and board members’ education and scholar expertise on financial resilience through innovation. Theoretical framework – We draw upon upper echelons, agency and information asymmetry theories. Design/methodology/approach – We collect data for the Brazi ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e101]
+        - listitem [ref=f57e102]:
+          - generic [ref=f57e103]:
+            - heading [level=3] [ref=f57e104]:
+              - 'link "Risk Forecasting Comparisons in Decentralized Finance: An Approach in Constant Product Market Makers" [ref=f57e105] [cursor=pointer]':
+                - /url: https://doi.org/10.1007/s10614-024-10585-6
+            - paragraph [ref=f57e106]:
+              - strong [ref=f57e107]: Lucas Mussoi, Fernanda Maria Müller, Marcelo S. Perlin
+            - paragraph [ref=f57e108]:
+              - text: "2024 | Computational Economics | ISSN: 1572-9974 | IF: 2.2"
+              - button "Cite This" [ref=f57e109] [cursor=pointer]
+            - paragraph [ref=f57e110]: This paper investigates risk measurement within the Decentralized Finance (DeFi) ecosystem, focusing on liquidity pools that utilize Constant Product Market Makers (CPMMs). The study evaluates and compares the performance of various market risk forecasting models, specifically Value-at-Risk (VaR) and Expected Shortfall (ES), applied to decentralized liquidity pool data. ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e112]
+        - listitem [ref=f57e113]:
+          - generic [ref=f57e114]:
+            - heading [level=3] [ref=f57e115]:
+              - 'link "Pricing efficiency in cryptocurrencies: The case of centralized and decentralized markets" [ref=f57e116] [cursor=pointer]':
+                - /url: https://doi.org/10.1016/j.jeconbus.2024.106224
+            - paragraph [ref=f57e117]:
+              - strong [ref=f57e118]: Lucas Mussoi, Marcelo S. Perlin, Fernanda Maria Muller
+            - paragraph [ref=f57e119]:
+              - text: "2024 | Journal of Economics and Business | ISSN: 0148-6195 | IF: 3.4"
+              - button "Cite This" [ref=f57e120] [cursor=pointer]
+            - paragraph [ref=f57e121]: This article presents a comparative analysis of the Ethereum (ETH) weak form of market efficiency priced in Bitcoin (BTC), Dai (DAI), and Tether (USDT). The investigation encompasses data from Uniswap-V2, a decentralized app utilizing a Constant Product Market Maker (CFMM) for cryptocurrency pricing, and Binance, a centralized exchange. The study employs different rolling windows to apply the asym ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e123]
+        - listitem [ref=f57e124]:
+          - generic [ref=f57e125]:
+            - heading [level=3] [ref=f57e126]:
+              - 'link "The determinants and impact of research grants: The case of Brazilian productivity scholarships" [ref=f57e127] [cursor=pointer]':
+                - /url: https://doi.org/10.1016/j.joi.2024.101563
+            - paragraph [ref=f57e128]:
+              - strong [ref=f57e129]: Marcelo S. Perlin, Denis Boreinstein, Takeyoshi Imasato, Marcos Reichert
+            - paragraph [ref=f57e130]:
+              - text: "2024 | Journal of Informetrics | ISSN: 1875-5879 | IF: 3.5"
+              - button "Cite This" [ref=f57e131] [cursor=pointer]
+            - paragraph [ref=f57e132]: Research Productivity Grant (PQ) is a governmental research award maintained by CPNq, the Brazilian Council of Research, and designed as a funding program to support scientific studies in all fields of science. Using a compilation of data from the Lattes platform, we study the individual CVs of more than 133000 researchers between 2005 and 2022 to examine PQ's selection criteria and impact on rese ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e134]
+        - listitem [ref=f57e135]:
+          - generic [ref=f57e136]:
+            - heading [level=3] [ref=f57e137]:
+              - link "What is the sustainable withdraw rate for Brazil?" [ref=f57e138] [cursor=pointer]:
+                - /url: https://doi.org/10.12660/rbfin.v21n3.2023.89040
+            - paragraph [ref=f57e139]:
+              - strong [ref=f57e140]: Lucas Pereira, Marcelo S. Perlin
+            - paragraph [ref=f57e141]:
+              - text: "2023 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e142] [cursor=pointer]
+            - paragraph [ref=f57e143]: The consistent increase in longevity and the decrease in birth rates in the Brazilian population have exacerbated the financial solvency of social security funds, threatening the retirement of a significant portion of the population. This study proposes an adaptation of the Trinity (Cooley et al., 1998) model for the Brazilian market, based on the ALM (Asset Liability Management) methodology and s ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e145]
+        - listitem [ref=f57e146]:
+          - generic [ref=f57e147]:
+            - heading [level=3] [ref=f57e148]:
+              - 'link "The Academic Inbreeding Controversy: Analysis and Evidence from Brazil" [ref=f57e149] [cursor=pointer]':
+                - /url: https://doi.org/10.1016/j.joi.2022.101287
+            - paragraph [ref=f57e150]:
+              - strong [ref=f57e151]: Marcelo S. Perlin, Denis Boreinstein, Takeyoshi Imasato
+            - paragraph [ref=f57e152]:
+              - text: "2022 | Journal of Informetrics | ISSN: 1875-5879 | IF: 3.5"
+              - button "Cite This" [ref=f57e153] [cursor=pointer]
+            - paragraph [ref=f57e154]: This paper presents an embracing quantitative inbreeding analyses in the Brazilian higher education system (HES). Several studies were conducted about academic inbreeding in several countries with contradictory results on its effect in research productivity, indicating how controversial this issue is. This is the first comprehensive research based on data from more than 79,000 researchers from all ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e156]
+        - listitem [ref=f57e157]:
+          - generic [ref=f57e158]:
+            - heading [level=3] [ref=f57e159]:
+              - link "What drives the release of material facts for Brazilian stocks?" [ref=f57e160] [cursor=pointer]:
+                - /url: https://doi.org/10.12660/rbfin.v20n2.2022.85378
+            - paragraph [ref=f57e161]:
+              - strong [ref=f57e162]: Marcelo S. Perlin, Marcos Henrique Reichert
+            - paragraph [ref=f57e163]:
+              - text: "2022 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e164] [cursor=pointer]
+            - paragraph [ref=f57e165]: In this study we look at the determinants of material facts (Fatos Relevantes) in the Brazilian Market. Following local legislation, material facts should be released to the public right after its occurrence, and preferably, after trading time. We investigate the randomness of the release of material facts—and release strategies by executives—and test whether there is a particular time period wher ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e167]
+        - listitem [ref=f57e168]:
+          - generic [ref=f57e169]:
+            - heading [level=3] [ref=f57e170]:
+              - link "O Impacto da Titulação Acadêmica de Conselheiros e Diretores sobre a Performance de Empresas Negociadas na B3" [ref=f57e171] [cursor=pointer]:
+                - /url: https://doi.org/10.15728/bbr.2021.18.5.5
+            - paragraph [ref=f57e172]:
+              - strong [ref=f57e173]: Marcelo Perlin, Guilherme Kirch, Daniel Vancin, Mauro Mastella
+            - paragraph [ref=f57e174]:
+              - text: "2021 | Brazilian Business Review | ISSN: 1808-2386"
+              - button "Cite This" [ref=f57e175] [cursor=pointer]
+            - paragraph [ref=f57e176]: Estudos anteriores indicam que a titulação acadêmica dos conselheiros afeta a performance e o risco das empresas. No entanto, essas evidências não levam em conta detalhes sobre a formação e produção científica dos conselheiros acadêmicos. Este artigo investiga se a titulação acadêmica dos conselheiros e diretores impacta a performance de empresas negociadas em bolsa. A amostra compreendeu 133 empr ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e178]
+        - listitem [ref=f57e179]:
+          - generic [ref=f57e180]:
+            - heading [level=3] [ref=f57e181]:
+              - 'link "Board gender diversity: performance and risk of Brazilian firms" [ref=f57e182] [cursor=pointer]':
+                - /url: https://doi.org/10.1108/GM-06-2019-0088
+            - paragraph [ref=f57e183]:
+              - strong [ref=f57e184]: Mauro Mastella, Daniel Vancin, Marcelo S. Perlin, Guilherme Kirch
+            - paragraph [ref=f57e185]:
+              - text: "2021 | Gender in Management | ISSN: 1754-2421 | IF: 2.6"
+              - button "Cite This" [ref=f57e186] [cursor=pointer]
+            - paragraph [ref=f57e187]: "Purpose: This study aims to intend to check if female board representation affects performance and risk and to analyse the evolution of the demographic aspects of the presence of women on boards in Brazil. Design/methodology/approach: The authors used a sample of 150 Brazilian publicly traded companies from 2010–2018, with different measures of firm performance, firm risk and women’s presence on t ... (continued, check link for full abstract)"
+          - img "Journal Cover" [ref=f57e189]
+        - listitem [ref=f57e190]:
+          - generic [ref=f57e191]:
+            - heading [level=3] [ref=f57e192]:
+              - link "Does algorithmic trading harm liquidity? Evidence from Brazil" [ref=f57e193] [cursor=pointer]:
+                - /url: https://doi.org/10.1016/j.najef.2020.101243
+            - paragraph [ref=f57e194]:
+              - strong [ref=f57e195]: Henrique P. Ramos, Marcelo S. Perlin
+            - paragraph [ref=f57e196]:
+              - text: "2020 | North American Journal of Economics and Finance | ISSN: 1879-0860 | IF: 3.9"
+              - button "Cite This" [ref=f57e197] [cursor=pointer]
+            - paragraph [ref=f57e198]: This paper provides the first evidence of algorithmic trading (AT) reducing liquidity in the Brazilian equities market. Our results are contrary to the majority of work which finds a positive relationship between AT and liquidity. Using the adoption of a new data center for the B3 exchange as an exogenous shock, we report evidence that AT increased realized spreads in both firm fixed-effects and v ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e200]
+        - listitem [ref=f57e201]:
+          - generic [ref=f57e202]:
+            - heading [level=3] [ref=f57e203]:
+              - link "A GARCH Tutorial with R" [ref=f57e204] [cursor=pointer]:
+                - /url: https://doi.org/10.1590/1982-7849rac2021200088
+            - paragraph [ref=f57e205]:
+              - strong [ref=f57e206]: Marcelo S. Perlin, Mauro Mastella, Daniel Vancin, Henrique P. Ramos
+            - paragraph [ref=f57e207]:
+              - text: "2020 | Revista de Administração Contemporânea | ISSN: 1982-7849"
+              - button "Cite This" [ref=f57e208] [cursor=pointer]
+            - paragraph [ref=f57e209]: "In this tutorial paper we will address the topic of volatility modeling in R. We will discuss the underlying logic of GARCH models, their representation and estimation process, along with a descriptive example of a real-world application of volatility modelling: we use a GARCH model to investigate how much time it will take, after the latest crisis, for the Ibovespa index to reach its historical p ... (continued, check link for full abstract)"
+          - img "Journal Cover" [ref=f57e211]
+        - listitem [ref=f57e212]:
+          - generic [ref=f57e213]:
+            - heading [level=3] [ref=f57e214]:
+              - link "Accessing Financial Reports and Corporate Events with GetDFPData" [ref=f57e215] [cursor=pointer]:
+                - /url: https://periodicos.fgv.br/rbfin/article/view/78654
+            - paragraph [ref=f57e216]:
+              - strong [ref=f57e217]: Marcelo S. Perlin, Guilherme Kirch, Daniel Vancin
+            - paragraph [ref=f57e218]:
+              - text: "2019 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e219] [cursor=pointer]
+            - paragraph [ref=f57e220]: This paper presents and discusses the contributions and usage of GetDFPData, which is an open and free software for accessing corporate data from the Brazilian financial exchange, B3. The distribution and popularization of an open source algorithm for gathering and managing financial data can improve finance research and practice in two ways. First, by boosting the number and quality of research i ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e222]
+        - listitem [ref=f57e223]:
+          - generic [ref=f57e224]:
+            - heading [level=3] [ref=f57e225]:
+              - 'link "A consumer credit risk structural model based on affordability: balance at risk" [ref=f57e226] [cursor=pointer]':
+                - /url: https://www.risk.net/journal-of-credit-risk/6743521/a-consumer-credit-risk-structural-model-based-on-affordability-balance-at-risk
+            - paragraph [ref=f57e227]:
+              - strong [ref=f57e228]: Marcelo S. Perlin, Marcelo Brutti Righi, Tiago P. Filomena
+            - paragraph [ref=f57e229]:
+              - text: "2019 | Journal of Credit Risk | ISSN: 1755-9723 | IF: 0.3"
+              - button "Cite This" [ref=f57e230] [cursor=pointer]
+            - paragraph [ref=f57e231]: This paper introduces an approach designed for personal credit risk, with possible applications in risk assessment and optimization of debt contracts. We define a structural model related to the financial balance of an individual, allowing for cashflow seasonality and deterministic trends in the process. Based on the proposed model, we develop risk measures associated with the probability of defau ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e233]
+        - listitem [ref=f57e234]:
+          - generic [ref=f57e235]:
+            - heading [level=3] [ref=f57e236]:
+              - link "Lotka’s law for the Brazilian scientific output published in journals" [ref=f57e237] [cursor=pointer]:
+                - /url: https://doi.org/10.1177/0165551518801813
+            - paragraph [ref=f57e238]:
+              - strong [ref=f57e239]: Sergio da Silva, Marcelo S. Perlin, Raul Matsushita, Takeyoshi Imasato, Denis Boreinstein
+            - paragraph [ref=f57e240]:
+              - text: "2018 | Journal of Information Science | ISSN: 1741-6485 | IF: 1.7"
+              - button "Cite This" [ref=f57e241] [cursor=pointer]
+            - paragraph [ref=f57e242]: Lotka’s law is a power law for the frequency of scholarly publications. We show that Lotka’s law cannot be dismissed after considering a massive sample of the number of publications of Brazilian researchers in journals listed on the SCImago Journal Rank and the Journal Citation Reports. For the SCImago Journal Rank, we found a power law with the Pareto exponent of 0.4 beyond the threshold of 50 pa ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e244]
+        - listitem [ref=f57e245]:
+          - generic [ref=f57e246]:
+            - heading [level=3] [ref=f57e247]:
+              - link "Is predatory publishing a real threat? Evidence from a large database study" [ref=f57e248] [cursor=pointer]:
+                - /url: https://doi.org/10.1007/s11192-018-2750-6
+            - paragraph [ref=f57e249]:
+              - strong [ref=f57e250]: Marcelo S. Perlin, Takeyoshi Imasato, Denis Boreinstein
+            - paragraph [ref=f57e251]:
+              - text: "2018 | Scientometrics | ISSN: 1588-2861 | IF: 3.5"
+              - button "Cite This" [ref=f57e252] [cursor=pointer]
+            - paragraph [ref=f57e253]: Using a database of potential, possible, or probable predatory scholarly open-access journals, the objective of this research is to study the penetration of predatory publications in the Brazilian academic system and the profile of authors in a cross-section empirical study. Based on a massive amount of publications from Brazilian researchers of all disciplines during the 2000 to 2015 period, we w ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e255]
+        - listitem [ref=f57e256]:
+          - generic [ref=f57e257]:
+            - heading [level=3] [ref=f57e258]:
+              - 'link "Portfolio management using realized covariances: Evidence from Brazil" [ref=f57e259] [cursor=pointer]':
+                - /url: https://doi.org/10.1016/j.econ.2017.05.001
+            - paragraph [ref=f57e260]:
+              - strong [ref=f57e261]: João F. Caldeira, Guilherme V. Moura, Marcelo S. Perlin, André A. P. Santos
+            - paragraph [ref=f57e262]:
+              - text: "2017 | EconomiA | ISSN: 2358-2820 | IF: 1.7"
+              - button "Cite This" [ref=f57e263] [cursor=pointer]
+            - paragraph [ref=f57e264]: It is often argued that intraday returns can be used to construct covariance estimates that are more accurate than those based on daily returns. However, it is still unclear whether high frequency data provide more precise covariance estimates in markets more contaminated from microstructure noise such as higher bid-ask spreads and lower liquidity. We address this question by investigating the ben ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e266]
+        - listitem [ref=f57e267]:
+          - generic [ref=f57e268]:
+            - heading [level=3] [ref=f57e269]:
+              - link "Can we predict the financial markets based on Google's search queries?" [ref=f57e270] [cursor=pointer]:
+                - /url: https://doi.org/10.1002/for.2446
+            - paragraph [ref=f57e271]:
+              - strong [ref=f57e272]: Marcelo S. Perlin, João F. Caldeira, André A. P. Santos, Martin Pontuschka
+            - paragraph [ref=f57e273]:
+              - text: "2017 | Journal of Forecasting | ISSN: 0277-6693 | IF: 2.7"
+              - button "Cite This" [ref=f57e274] [cursor=pointer]
+            - paragraph [ref=f57e275]: We study the case of mispricing in the odd lots equity market in Brazil. Contrary to expectation, odd lot investors are paying higher prices than round lot investors. The pricing difference between markets is affected by market returns, volatility and spreads. Our main hypothesis is that; once the assets traded in the odd lot market are more illiquid than their counterparts, the mispricing is driv ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e277]
+        - listitem [ref=f57e278]:
+          - generic [ref=f57e279]:
+            - heading [level=3] [ref=f57e280]:
+              - 'link "The Brazilian scientific output published in journals: A study based on a large CV database" [ref=f57e281] [cursor=pointer]':
+                - /url: https://doi.org/10.1016/j.joi.2016.11.002
+            - paragraph [ref=f57e282]:
+              - strong [ref=f57e283]: Marcelo S. Perlin, André A. P. Santos, Takeyoshi Imasato, Denis Borenstein, Sergio da Silva
+            - paragraph [ref=f57e284]:
+              - text: "2017 | Journal of Informetrics | ISSN: 1875-5879 | IF: 3.5"
+              - button "Cite This" [ref=f57e285] [cursor=pointer]
+            - paragraph [ref=f57e286]: "We assemble a massive sample of 180,000 CVs of Brazilian academic researchers of all disciplines from the Lattes platform. From the CVs we gather information on key variables that possibly explain the quantity and impact of their output published in journals: gender, PhD origin (domestic or foreign), time taken for finishing a PhD program, and number of years involved in research since PhD complet ... (continued, check link for full abstract)"
+          - img "Journal Cover" [ref=f57e288]
+        - listitem [ref=f57e289]:
+          - generic [ref=f57e290]:
+            - heading [level=3] [ref=f57e291]:
+              - link "Mispricing in the odd lots market in Brazil" [ref=f57e292] [cursor=pointer]:
+                - /url: https://doi.org/10.1016/j.najef.2017.08.006
+            - paragraph [ref=f57e293]:
+              - strong [ref=f57e294]: Henrique P. Ramos, Marcelo S. Perlin, Marcelo B. Righi
+            - paragraph [ref=f57e295]:
+              - text: "2017 | North American Journal of Economics and Finance | ISSN: 1879-0860 | IF: 3.9"
+              - button "Cite This" [ref=f57e296] [cursor=pointer]
+            - paragraph [ref=f57e297]: We study the case of mispricing in the odd lots equity market in Brazil. Contrary to expectation, odd lot investors are paying higher prices than round lot investors. The pricing difference between markets is affected by market returns, volatility and spreads. Our main hypothesis is that; once the assets traded in the odd lot market are more illiquid than their counterparts, the mispricing is driv ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e299]
+        - listitem [ref=f57e300]:
+          - generic [ref=f57e301]:
+            - heading [level=3] [ref=f57e302]:
+              - link "Análise do Perfil dos Acadêmicos e de suas Publicações Científicas em Administração" [ref=f57e303] [cursor=pointer]:
+                - /url: https://doi.org/10.1590/1982-7849rac2017150329
+            - paragraph [ref=f57e304]:
+              - strong [ref=f57e305]: Takeyoshi Imasato, Marcelo S. Perlin, Denis Borenstein
+            - paragraph [ref=f57e306]:
+              - text: "2017 | RAC. Revista de Administração Contemporânea (Impresso) | ISSN: 1982-7849"
+              - button "Cite This" [ref=f57e307] [cursor=pointer]
+            - paragraph [ref=f57e308]: A produção da ciência tem sido foco de diversas discussões, particularmente ao que se refere à produtividade científica. Este artigo tem como objetivo analisar o perfil de acadêmicos doutores que atuam na área de Administração no Brasil e as suas respectivas publicações científicas, de modo a identificar fatores que expliquem esse aspecto da produtividade científica. Utilizando estatística descrit ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e310]
+        - listitem [ref=f57e311]:
+          - generic [ref=f57e312]:
+            - heading [level=3] [ref=f57e313]:
+              - link "O poder preditivo de pesquisas na internet sobre o mercado financeiro brasileiro" [ref=f57e314] [cursor=pointer]:
+                - /url: https://doi.org/10.1590/1678-69712017/administracao.v18n2p184-210
+            - paragraph [ref=f57e315]:
+              - strong [ref=f57e316]: Henrique Pinto Ramos, Kadja Katherine Mendes Ribeiro, Marcelo S. Perlin
+            - paragraph [ref=f57e317]:
+              - text: "2017 | RAM. Revista de Administração Mackenzie (Impresso) | ISSN: 1678-6971"
+              - button "Cite This" [ref=f57e318] [cursor=pointer]
+            - paragraph [ref=f57e319]: Entender a capacidade preditiva de pesquisas no Google sobre o mercado financeiro brasileiro. Apesar de uma crescente literatura estrangeira utilizando dados sobre pesquisas oriundas no Google, no Brasil não se tem conhecimento de trabalhos desta natureza. A aplicação no mercado financeiro evidencia novas fontes de informação acerca do movimento dos mercados e pode contribuir para pesquisadores e ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e321]
+        - listitem [ref=f57e322]:
+          - generic [ref=f57e323]:
+            - heading [level=3] [ref=f57e324]:
+              - 'link "Análise de Integração Financeira entre o Mercado Acionário Brasileiro e o Argentino: Uma Abordagem Dinâmica" [ref=f57e325] [cursor=pointer]':
+                - /url: https://periodicos.fgv.br/rbfin/article/view/57891
+            - paragraph [ref=f57e326]:
+              - strong [ref=f57e327]: Martin Pontuschka, Marcelo S. Perlin
+            - paragraph [ref=f57e328]:
+              - text: "2017 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e329] [cursor=pointer]
+            - paragraph [ref=f57e330]: Neste artigo buscamos verificar a dinâmica da integração financeira entre as séries temporais do índice acionário brasileiro e argentino. Para isto, estimamos um modelo de estado de espaço através do filtro de Kalman, que permite a observação da dinâmica da integração financeira ao longo do tempo. Seguimos a proposta de Haldane e Hall (1991), que sugerem um modelo de espaço de estado para observar ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e332]
+        - listitem [ref=f57e333]:
+          - generic [ref=f57e334]:
+            - heading [level=3] [ref=f57e335]:
+              - link "A Multistage Stochastic Programming Asset-Liability Management Model - An Application to the Brazilian Pension Fund Industry" [ref=f57e336] [cursor=pointer]:
+                - /url: https://link.springer.com/article/10.1007/s11081-016-9316-3?wt_mc=internal.event.1.SEM.ArticleAuthorOnlineFirst
+            - paragraph [ref=f57e337]:
+              - strong [ref=f57e338]: Alan Delgado de Oliveira, Tiago Pascoal Filomena, Marcelo Scherer Perlin, Miguel Lejeune, Guilherme Ribeiro de Macedo
+            - paragraph [ref=f57e339]:
+              - text: "2016 | Optimization and Engineering | ISSN: 1573-2924 | IF: 1.7"
+              - button "Cite This" [ref=f57e340] [cursor=pointer]
+            - paragraph [ref=f57e341]: This paper proposes a multistage stochastic programming approach for the asset-liability management of Brazilian pension funds. We generate asset price scenarios with stochastic differential equations—Geometric Brownian Motion model for stocks and Cox–Ingersoll–Ross model for fixed income securities. Intertemporal solvency regulatory rules for Brazilian pension funds are considered endogenously in ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e343]
+        - listitem [ref=f57e344]:
+          - generic [ref=f57e345]:
+            - heading [level=3] [ref=f57e346]:
+              - 'link "A Microestrutura do Tesouro Direto: Sazonalidade do Fluxo de Ordens e a Formação de Spreads" [ref=f57e347] [cursor=pointer]':
+                - /url: https://doi.org/10.11606/1413-8050/ea140191
+            - paragraph [ref=f57e348]:
+              - strong [ref=f57e349]: Marcelo S. Perlin
+            - paragraph [ref=f57e350]:
+              - text: "2016 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e351] [cursor=pointer]
+            - paragraph [ref=f57e352]: "O objetivo deste artigo é analisar a microestrutura do Tesouro Direto em dois pontos: a dinâmica do fluxo de ordens e a formação dos spreads. Primeiro observa-se um padrão temporal da demanda por esses títulos na forma de uma sazonalidade em duas dimensões, dia do mês e mês do ano. No artigo descreve-se um modelo estatístico para a previsão da demanda com base nesta sazonalidade e analisa-se sua c ... (continued, check link for full abstract)"
+          - img "Journal Cover" [ref=f57e354]
+        - listitem [ref=f57e355]:
+          - generic [ref=f57e356]:
+            - heading [level=3] [ref=f57e357]:
+              - 'link "GetHFData: A R package for downloading and aggregating high frequency trading data from Bovespa" [ref=f57e358] [cursor=pointer]':
+                - /url: https://periodicos.fgv.br/rbfin/article/view/64587
+            - paragraph [ref=f57e359]:
+              - strong [ref=f57e360]: Marcelo S. Perlin, Henrique P. Ramos
+            - paragraph [ref=f57e361]:
+              - text: "2016 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e362] [cursor=pointer]
+            - paragraph [ref=f57e363]: This paper introduces GetHFData, a R package for downloading, importing and aggregating high frequency trading data from the Brazilian financial market. Based on a set of user choices, the package GetHFData will download the required files directly from Bovespa’s ftp site and aggregate the financial data. The main objective of the publication of this software is to facilitate the computational eff ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e365]
+        - listitem [ref=f57e366]:
+          - generic [ref=f57e367]:
+            - heading [level=3] [ref=f57e368]:
+              - 'link "A Estratégia de pares no Mercado Acionário Brasileiro: O Impacto da Frequência de Dados" [ref=f57e369] [cursor=pointer]':
+                - /url: https://doi.org/10.1590/1678-69712015/administracao.v16n2p188-213
+            - paragraph [ref=f57e370]:
+              - strong [ref=f57e371]: Martin Pontuschka, Marcelo S. Perlin
+            - paragraph [ref=f57e372]:
+              - text: "2015 | RAM. Revista de Administração Mackenzie (Impresso) | ISSN: 1678-6971"
+              - button "Cite This" [ref=f57e373] [cursor=pointer]
+            - paragraph [ref=f57e374]: A estratégia de pares é um popular método de negociação de ativos financeiros. Um dos motivos para isto se deve ao fato de que o resultado deste tipo de operação procede somente da relação entre os preços de dois ativos e não da direção do mercado. Somente a possibilidade de capturar ineficiências na precificação dos ativos é o que permite a obtenção de lucros sistemáticos através de um método de ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e376]
+        - listitem [ref=f57e377]:
+          - generic [ref=f57e378]:
+            - heading [level=3] [ref=f57e379]:
+              - 'link "Os pesquisadores, as publicações e os periódicos da área de Finanças no Brasil: Uma análise com base em currículos da plataforma Lattes." [ref=f57e380] [cursor=pointer]':
+                - /url: https://periodicos.fgv.br/rbfin/article/view/47157
+            - paragraph [ref=f57e381]:
+              - strong [ref=f57e382]: Marcelo S. Perlin, André Portela Santos
+            - paragraph [ref=f57e383]:
+              - text: "2015 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e384] [cursor=pointer]
+            - paragraph [ref=f57e385]: Este artigo analisa a produção científica da área de Finanças no Brasil. Utilizando um software proprietário para obter informações diretamente da plataforma de currículos Lattes foi possível verificar o perfil e as tendências da pesquisa em Finanças no território nacional. Os principais resultados da pesquisa mostram que a maioria dos pesquisadores de Finanças são relativamente jovens em termos d ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e387]
+        - listitem [ref=f57e388]:
+          - generic [ref=f57e389]:
+            - heading [level=3] [ref=f57e390]:
+              - link "On the Performance of the Tick Test" [ref=f57e391] [cursor=pointer]:
+                - /url: https://doi.org/10.1016/j.qref.2013.07.001
+            - paragraph [ref=f57e392]:
+              - strong [ref=f57e393]: Marcelo S. Perlin, Chris Brooks, Alfonso Dufour
+            - paragraph [ref=f57e394]:
+              - text: "2014 | Quarterly Review of Economics and Finance | ISSN: 1878-4259 | IF: 3.1"
+              - button "Cite This" [ref=f57e395] [cursor=pointer]
+            - paragraph [ref=f57e396]: In financial research, the sign of a trade (or identity of trade aggressor) is not always available in the transaction dataset and it can be estimated using a simple set of rules called the tick test. In this paper we investigate the accuracy of the tick test from an analytical perspective by providing a closed formula for the performance of the prediction algorithm. By analyzing the derived equat ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e398]
+        - listitem [ref=f57e399]:
+          - generic [ref=f57e400]:
+            - heading [level=3] [ref=f57e401]:
+              - 'link "The determinants of a cross market arbitrage opportunity: theory and evidence for the European bond market" [ref=f57e402] [cursor=pointer]':
+                - /url: https://doi.org/10.1007/s10436-013-0242-5
+            - paragraph [ref=f57e403]:
+              - strong [ref=f57e404]: Marcelo S. Perlin, Alfonso Dufour, Chris Brooks
+            - paragraph [ref=f57e405]:
+              - text: "2013 | Annals of Finance | ISSN: 1614-2446 | IF: 0.8"
+              - button "Cite This" [ref=f57e406] [cursor=pointer]
+            - paragraph [ref=f57e407]: This paper investigates the factors that drive the occurrence of arbitrage opportunities across different trading platforms in fixed income markets. We develop a structural model that decomposes the likelihood of a cross-market arbitrage opportunity into fixed costs of trading, price update delays, and order flow impact, and test it empirically using European bond market data. ... (continued, check link for full abstract)
+        - listitem [ref=f57e408]:
+          - generic [ref=f57e409]:
+            - heading [level=3] [ref=f57e410]:
+              - link "Comunalidades na Liquidez – Evidências e Comportamento Intradiário para o Mercado Brasileiro" [ref=f57e411] [cursor=pointer]:
+                - /url: https://periodicos.fgv.br/rbfin/article/view/7434
+            - paragraph [ref=f57e412]:
+              - strong [ref=f57e413]: Fernanda Gomes Victor, Marcelo S. Perlin, Mauro Mastella
+            - paragraph [ref=f57e414]:
+              - text: "2013 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e415] [cursor=pointer]
+            - paragraph [ref=f57e416]: O objetivo deste artigo é estudar a dinâmica da liquidez intradiária na Bolsa de Valores Brasileira, sob a ótica de co-movimentos (ou comunalidades). No trabalho argumenta-se que este fator comum na liquidez das ações é afetado pelos efeitos intradiários particulares da microestrutura do mercado. Utilizando uma base de dados de alta frequência e o volume negociado como proxy para liquidez, tal hip ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e418]
+        - listitem [ref=f57e419]:
+          - generic [ref=f57e420]:
+            - heading [level=3] [ref=f57e421]:
+              - link "Os Efeitos da Introdução de Agentes de Liquidez no Mercado Acionário Brasileiro" [ref=f57e422] [cursor=pointer]:
+                - /url: https://periodicos.fgv.br/rbfin/article/view/4088
+            - paragraph [ref=f57e423]:
+              - strong [ref=f57e424]: Marcelo S. Perlin
+            - paragraph [ref=f57e425]:
+              - text: "2013 | Revista Brasileira de Finanças | ISSN: 1984-5146"
+              - button "Cite This" [ref=f57e426] [cursor=pointer]
+            - paragraph [ref=f57e427]: O objetivo principal deste artigo é analisar empiricamente o efeito da introdução de formadores de mercado no processo de compra e venda de ações no mercado acionário brasileiro. Agregando informações sobre as datas de início de contrato de formadores de mercado a uma privilegiada base de dados de alta frequência, foi possível efetivar um estudo de evento para verificar os efeitos da introdução do ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e429]
+        - listitem [ref=f57e430]:
+          - generic [ref=f57e431]:
+            - heading [level=3] [ref=f57e432]:
+              - 'link "System-Wide liquidity risk in the UK’s large-value payment system: an empirical analysis" [ref=f57e433] [cursor=pointer]':
+                - /url: https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2011/system-wide-liquidity-risk-in-the-uks-large-value-payment-system-an-empirical-analysis.pdf
+            - paragraph [ref=f57e434]:
+              - strong [ref=f57e435]: Marcelo S. Perlin, Jochen Schanz
+            - paragraph [ref=f57e436]:
+              - text: "2011 | Bank of England Working Paper Series | ISSN: 1368-5562"
+              - button "Cite This" [ref=f57e437] [cursor=pointer]
+            - paragraph [ref=f57e438]: When settling their own liabilities and those of their clients, settlement banks rely on incoming payments to fund a part of their outgoing payments. We investigate their behaviour in CHAPS, the United Kingdom’s large-value payment system. Our estimates suggest that in normal times, banks increase their payment outflows when their liquidity is above target and immediately following the receipt of ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f57e440]
+        - listitem [ref=f57e441]:
+          - generic [ref=f57e442]:
+            - heading [level=3] [ref=f57e443]:
+              - link "Evaluation of pairs-trading strategy at the Brazilian financial market" [ref=f57e444] [cursor=pointer]:
+                - /url: https://link.springer.com/article/10.1057/jdhf.2009.4
+            - paragraph [ref=f57e445]:
+              - strong [ref=f57e446]: Marcelo S. Perlin
+            - paragraph [ref=f57e447]:
+              - text: "2009 | Journal of Derivatives and Hedge Funds | ISSN: 1753-965X"
+              - button "Cite This" [ref=f57e448] [cursor=pointer]
+            - paragraph [ref=f57e449]: "Pairs-trading is a popular trading strategy that tries to take advantage of market inefficiencies in order to obtain profit. The idea is simple: find two stocks that move together and take long/short positions when they diverge abnormally, hoping that the prices will converge in the future. From the academic point of view of weak market efficiency theory, pairs-trading strategy should not present ... (continued, check link for full abstract)"
+          - img "Journal Cover" [ref=f57e451]
+        - listitem [ref=f57e452]:
+          - generic [ref=f57e453]:
+            - heading [level=3] [ref=f57e454]:
+              - 'link "Non-Linear Modelling in the Brazilian Market: Evaluating the Forecasting Performance of NN Univariate Nearest Neighbor and SNN Simultaneous Nearest Neighbour Forecasting Algorithm" [ref=f57e455] [cursor=pointer]':
+                - /url: http://read.adm.ufrgs.br/
+            - paragraph [ref=f57e456]:
+              - strong [ref=f57e457]: Marcelo S. Perlin, Paulo S. Ceretta
+            - paragraph [ref=f57e458]:
+              - text: "2007 | REAd. Revista Eletrônica de Administração (Porto Alegre. Online) | ISSN: 1413-2311"
+              - button "Cite This" [ref=f57e459] [cursor=pointer]
+            - paragraph [ref=f57e460]: This paper presents an empirical evaluation of non-linear forecasting models applied to the Brazilian financial market. The study compares the predictive performance of Univariate Nearest Neighbor (NN) and Simultaneous Nearest Neighbour (SNN) forecasting algorithms in financial time series. ... (continued, check link for full abstract)
+        - listitem [ref=f57e461]:
+          - generic [ref=f57e462]:
+            - heading [level=3] [ref=f57e463]:
+              - link "Teoria do Caos aplicada aos Contratos de Café no Mercado de Derivativos" [ref=f57e464] [cursor=pointer]:
+                - /url: http://read.adm.ufrgs.br/
+            - paragraph [ref=f57e465]:
+              - strong [ref=f57e466]: Marcelo S. Perlin, Paulo S. Ceretta
+            - paragraph [ref=f57e467]:
+              - text: "2006 | READ - Revista Eletrônica da Administração (UFRGS) | ISSN: 1413-2311"
+              - button "Cite This" [ref=f57e468] [cursor=pointer]
+            - paragraph [ref=f57e469]: Este artigo investiga a presença de comportamento caótico e dinâmicas não lineares em contratos futuros de café negociados no mercado de derivativos brasileiro. Através da aplicação de testes quantitativos e qualitativos para sistemas não lineares, os resultados encontram evidências favoráveis à existência de comportamento caótico, com implicações diretas sobre a limitação da previsibilidade dos p ... (continued, check link for full abstract)
+  - contentinfo [ref=f57e470]:
+    - paragraph [ref=f57e472]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f57e473] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f57e474] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

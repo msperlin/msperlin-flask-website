@@ -1,0 +1,64 @@
+- generic [active] [ref=f85e1]:
+  - banner [ref=f85e2]:
+    - generic [ref=f85e3]:
+      - link "Marcelo S. Perlin." [ref=f85e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f85e5]:
+        - list [ref=f85e6]:
+          - listitem [ref=f85e7]:
+            - link "Home" [ref=f85e8] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f85e9]:
+            - link "Publications" [ref=f85e10] [cursor=pointer]:
+              - /url: /publications
+          - listitem [ref=f85e11]:
+            - link "Books" [ref=f85e12] [cursor=pointer]:
+              - /url: /books
+          - listitem [ref=f85e13]:
+            - link "Code ▾" [ref=f85e14] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f85e15]:
+            - link "Research ▾" [ref=f85e16] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f85e17]:
+            - link "Consulting" [ref=f85e18] [cursor=pointer]:
+              - /url: /consulting
+          - listitem [ref=f85e19]:
+            - link "Class Slides" [ref=f85e20] [cursor=pointer]:
+              - /url: https://msperlin.github.io/site-slides/
+          - listitem [ref=f85e21]:
+            - link "Site Log" [ref=f85e22] [cursor=pointer]:
+              - /url: /site-log
+      - button "Toggle color theme" [ref=f85e24] [cursor=pointer]
+  - main [ref=f85e27]:
+    - generic [ref=f85e28]:
+      - heading "Awards" [level=2] [ref=f85e29]
+      - heading "2026" [level=3] [ref=f85e30]
+      - list [ref=f85e31]:
+        - listitem [ref=f85e32]: "Best reviewer for the area of Financial Markets granted by RCF - Revista de Contabilidade e Finanças: Awarded as one of the best reviewers for the area of Financial Markets."
+      - heading "2018" [level=3] [ref=f85e33]
+      - list [ref=f85e34]:
+        - listitem [ref=f85e35]: "Top 10% of Authors by New Downloads (Last 12 Months) granted by SSRN: Ranked in the top 10% of authors on SSRN by total new downloads within the last 12 months."
+        - listitem [ref=f85e36]: "Top 10% of Authors by All-Time Downloads granted by SSRN: Ranked in the top 10% of authors on SSRN by all-time downloads."
+        - listitem [ref=f85e37]: "Top 5% of Research Outputs granted by Altmetric: Awarded for the article 'Is predatory publishing a real threat? Evidence from a large database study'."
+      - heading "2016" [level=3] [ref=f85e38]
+      - list [ref=f85e39]:
+        - listitem [ref=f85e40]: "RBFIN Best Paper of 2015 (Honorary Mention) granted by Brazilian Finance Society: Awarded for the paper 'The researchers, the publications and the journals of Finance in Brazil: An analysis based on resumes from the Lattes platform'."
+      - heading "2014" [level=3] [ref=f85e41]
+      - list [ref=f85e42]:
+        - listitem [ref=f85e43]: "APIMEC Award for Research Paper in Capital Markets (3rd Place) granted by Brazilian Association of Financial Analysts (APIMEC): Awarded for the paper 'Estimating the Intensity of News based on Trade Data'."
+        - listitem [ref=f85e44]: "RBFIN Best Paper of 2013 (1st Place) granted by Brazilian Finance Society: Awarded for the paper 'The effects of the introduction of market makers in the Brazilian equity market'."
+      - heading "2011" [level=3] [ref=f85e45]
+      - list [ref=f85e46]:
+        - listitem [ref=f85e47]: "ANBIMA Award (1st Place) granted by ANBIMA (Brazilian Association of Capital Markets): Awarded for the best paper in the area of fixed income markets: 'The Determinants of a Cross Market Arbitrage Opportunity: Theory and Evidence for the European Bond Market'."
+        - listitem [ref=f85e48]: "File Exchange Pick of the Week granted by Matlab Community: Awarded for the Matlab package 'MS_Regress - A Package for Markov Regime Switching Models in Matlab'."
+        - listitem [ref=f85e49]: "IBEF SP/KPMG Award (Honorary Mention) granted by Institute of Finance Executives: Awarded for the paper 'On the Performance of the Tick Test'."
+  - contentinfo [ref=f85e50]:
+    - paragraph [ref=f85e52]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f85e53] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f85e54] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

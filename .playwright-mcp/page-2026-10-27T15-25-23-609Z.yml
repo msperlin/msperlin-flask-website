@@ -1,0 +1,106 @@
+- generic [active] [ref=f73e1]:
+  - banner [ref=f73e2]:
+    - generic [ref=f73e3]:
+      - link "Marcelo S. Perlin." [ref=f73e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f73e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f73e8] [cursor=pointer]
+  - main [ref=f73e11]:
+    - generic [ref=f73e12]:
+      - heading "Interviews, lectures and News" [level=2] [ref=f73e13]
+      - heading "2026" [level=3] [ref=f73e14]
+      - list [ref=f73e15]:
+        - listitem [ref=f73e16]:
+          - link "O que preciso fazer para não depender do INSS quando me aposentar?" [ref=f73e17] [cursor=pointer]:
+            - /url: https://gauchazh.clicrbs.com.br/comportamento/60-mais/noticia/2026/09/o-que-preciso-fazer-para-nao-depender-apenas-do-inss-quando-me-aposentar-cmtnclg5201z7011j8dw30hjm.html
+          - text: published by Zero Hora - ClickRBS (
+          - link "PDF" [ref=f73e18] [cursor=pointer]:
+            - /url: /news/pdfs/2026-ZH-retirement.pdf
+          - text: ).
+        - listitem [ref=f73e19]:
+          - link "Vale a pena investir nas caixinhas dos bancos digitais?" [ref=f73e20] [cursor=pointer]:
+            - /url: https://gauchazh.clicrbs.com.br/economia/dicas-de-economia/noticia/2026/08/vale-a-pena-investir-nas-caixinhas-dos-bancos-digitais-cmsdonxml00a4013ltd9g1vmy.html
+          - text: published by Zero Hora - ClickRBS (
+          - link "PDF" [ref=f73e21] [cursor=pointer]:
+            - /url: /news/pdfs/ZH-caixinhas.pdf
+          - text: ).
+        - listitem [ref=f73e22]:
+          - link "Posso começar a investir com apenas R$ 50 ao mês no mercado financeiro?" [ref=f73e23] [cursor=pointer]:
+            - /url: https://gauchazh.clicrbs.com.br/economia/dicas-de-economia/noticia/2026/07/posso-comecar-a-investir-com-apenas-r-50-ao-mes-no-mercado-financeiro-cmrttogqp00b40163445c67c7.html
+          - text: published by Zero Hora - ClickRBS (
+          - link "PDF" [ref=f73e24] [cursor=pointer]:
+            - /url: /news/pdfs/ZH-investir-pouco-recurso.pdf
+          - text: ).
+        - listitem [ref=f73e25]:
+          - link "Dados Corporativos com o R" [ref=f73e26] [cursor=pointer]:
+            - /url: https://www.youtube.com/live/Kp9T6OfMwjg
+          - text: published by UFF - B3DataLab.
+        - listitem [ref=f73e27]:
+          - link "Pesquisadores experientes são parcela expressiva dos autores em revistas predatórias" [ref=f73e28] [cursor=pointer]:
+            - /url: https://www.sciencearena.org/noticias/pesquisadores-experientes-sao-parcela-expressiva-dos-autores-em-revistas-predatorias/
+          - text: published by ScienceArena (
+          - link "PDF" [ref=f73e29] [cursor=pointer]:
+            - /url: /news/pdfs/SA-predatory.pdf
+          - text: ).
+      - heading "2025" [level=3] [ref=f73e30]
+      - list [ref=f73e31]:
+        - listitem [ref=f73e32]:
+          - link "Pretos e pardos ainda são minoria entre bolsistas de produtividade do CNPq no Brasil" [ref=f73e33] [cursor=pointer]:
+            - /url: https://www1.folha.uol.com.br/ciencia/2025/02/pretos-e-pardos-ainda-sao-minoria-entre-bolsistas-de-produtividade-do-cnpq-no-brasil.shtml
+          - text: published by Folha de São Paulo.
+        - listitem [ref=f73e34]:
+          - link "Dos caminhos para começar a investir ao primeiro R$ 1 milhão" [ref=f73e35] [cursor=pointer]:
+            - /url: https://gauchazh.clicrbs.com.br/geral/noticia/2025/08/dos-caminhos-para-comecar-a-investir-ao-primeiro-r-1-milhao-giane-guerra-e-convidados-respondem-duvidas-em-live-veja-como-participar-cme34zjga00y0012x5npd9cnd.html
+          - text: published by Zero Hora (
+          - link "PDF" [ref=f73e36] [cursor=pointer]:
+            - /url: /news/pdfs/2025-zh.pdf
+          - text: ).
+      - heading "2024" [level=3] [ref=f73e37]
+      - list [ref=f73e38]:
+        - listitem [ref=f73e39]:
+          - link "Revista Pesquisa Fapesp - Especialistas analisam riscos e vantagens de usar inteligência artificial para medir o desempenho de pesquisadores" [ref=f73e40] [cursor=pointer]:
+            - /url: https://revistapesquisa.fapesp.br/especialistas-analisam-riscos-e-vantagens-de-usar-inteligencia-artificial-para-medir-o-desempenho-de-pesquisadores/
+          - text: published by Revista Pesquisa Fapesp (
+          - link "PDF" [ref=f73e41] [cursor=pointer]:
+            - /url: /news/pdfs/2024-fapesp.pdf
+          - text: ).
+      - heading "2018" [level=3] [ref=f73e42]
+      - list [ref=f73e43]:
+        - listitem [ref=f73e44]:
+          - link "Predatory publishers threaten to consume public research funds and undermine national academic systems – the case of Brazil" [ref=f73e45] [cursor=pointer]:
+            - /url: https://blogs.lse.ac.uk/impactofsocialsciences/2018/09/06/predatory-publishers-threaten-to-consume-public-research-funds-and-undermine-national-academic-systems-the-case-of-brazil/
+          - text: published by LSE Impact Blog (
+          - link "PDF" [ref=f73e46] [cursor=pointer]:
+            - /url: /news/pdfs/2018-LSE-predatory.pdf
+          - text: ).
+        - listitem [ref=f73e47]:
+          - link "Revistas predatórias ameaçam sistema acadêmico brasileiro, alertam pesquisadores" [ref=f73e48] [cursor=pointer]:
+            - /url: https://www.ufpr.br/portalufpr/noticias/revistas-predatorias-ameacam-sistema-academico-brasileiro-alertam-pesquisadores/
+          - text: published by Superintendência de Comunicação Social (UFPR) (
+          - link "PDF" [ref=f73e49] [cursor=pointer]:
+            - /url: /news/pdfs/2018-UFPR-predatory.pdf
+          - text: ).
+        - listitem [ref=f73e50]:
+          - link "A sombra das revistas predatórias no Brasil" [ref=f73e51] [cursor=pointer]:
+            - /url: https://www.revistapesquisa.fapesp.br/2018/08/09/a-sombra-das-revistas-predatorias-no-brasil/
+          - text: published by Revista Pesquisa Fapesp (
+          - link "PDF" [ref=f73e52] [cursor=pointer]:
+            - /url: /news/pdfs/2018-fapesp-predatory.pdf
+          - text: ).
+        - listitem [ref=f73e53]:
+          - link "The alarming rise of predatory journals" [ref=f73e54] [cursor=pointer]:
+            - /url: https://www.universityworldnews.com/article.php?story=20180918144241202
+          - text: published by University World News (
+          - link "PDF" [ref=f73e55] [cursor=pointer]:
+            - /url: /news/pdfs/2018-university-news.pdf
+          - text: ).
+  - contentinfo [ref=f73e56]:
+    - paragraph [ref=f73e58]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f73e59] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f73e60] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

@@ -1,0 +1,89 @@
+- generic [active] [ref=f25e1]:
+  - banner [ref=f25e2]:
+    - generic [ref=f25e3]:
+      - link "Marcelo S. Perlin." [ref=f25e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f25e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f25e8] [cursor=pointer]
+  - main [ref=f25e11]:
+    - generic [ref=f25e12]:
+      - heading "Code (R)" [level=2] [ref=f25e13]
+      - paragraph [ref=f25e14]: I fell that unrestricted access to organized datasets is one of the pillars of reproducible research, which is why I've taken so much interest in it over the years. As a result, I'm the author of many R packages distributed in CRAN. Most packages are related to importing and organizing financial and economic datasets from public sources.
+      - paragraph [ref=f25e15]:
+        - text: If you used one of the packages in research, please use the proper citation format with R code
+        - code [ref=f25e16]: citation('pkgname')
+        - text: .
+      - heading "R Packages:" [level=3] [ref=f25e17]
+      - paragraph [ref=f25e18]:
+        - text: All packages are available at
+        - link "msperlin.r-universe.dev/builds" [ref=f25e19] [cursor=pointer]:
+          - /url: https://msperlin.r-universe.dev/builds
+        - text: . Package statistics updated at 2026-10-25 04:25:56.
+      - generic [ref=f25e20]:
+        - heading "Top packages by monthly downloads" [level=3] [ref=f25e21]
+        - img "Bar chart of R package downloads" [ref=f25e23]
+      - list [ref=f25e24]:
+        - listitem [ref=f25e25]:
+          - strong [ref=f25e26]:
+            - link "yfR" [ref=f25e27] [cursor=pointer]:
+              - /url: https://ropensci.r-universe.dev/yfR
+          - text: ": Downloads and Organizes Financial Data from Yahoo Finance"
+          - emphasis [ref=f25e29]: "Submitted to CRAN on: 2022-06-30 | Downloads last month: 1213 | Total downloads: 57581"
+        - listitem [ref=f25e30]:
+          - strong [ref=f25e31]:
+            - link "GetBCBData" [ref=f25e32] [cursor=pointer]:
+              - /url: https://msperlin.r-universe.dev/GetBCBData
+          - text: ": Imports Datasets from BCB (Central Bank of Brazil) using Its Official API"
+          - emphasis [ref=f25e34]: "Submitted to CRAN on: 2019-04-23 | Downloads last month: 833 | Total downloads: 62591"
+        - listitem [ref=f25e35]:
+          - strong [ref=f25e36]:
+            - link "BatchGetSymbols" [ref=f25e37] [cursor=pointer]:
+              - /url: https://msperlin.r-universe.dev/BatchGetSymbols
+          - text: ": Downloads and Organizes Financial Data for Multiple Tickers"
+          - emphasis [ref=f25e39]: "Submitted to CRAN on: 2016-11-06 | Downloads last month: 709 | Total downloads: 190455"
+        - listitem [ref=f25e40]:
+          - strong [ref=f25e41]:
+            - link "GetTDData" [ref=f25e42] [cursor=pointer]:
+              - /url: https://msperlin.r-universe.dev/GetTDData
+          - text: ": Get Data for Brazilian Bonds (Tesouro Direto)"
+          - emphasis [ref=f25e44]: "Submitted to CRAN on: 2016-02-10 | Downloads last month: 673 | Total downloads: 84195"
+        - listitem [ref=f25e45]:
+          - strong [ref=f25e46]:
+            - link "GetDFPData2" [ref=f25e47] [cursor=pointer]:
+              - /url: https://msperlin.r-universe.dev/GetDFPData2
+          - text: ": Reading Annual and Quarterly Financial Reports from B3"
+          - emphasis [ref=f25e49]: "Submitted to CRAN on: 2021-03-24 | Downloads last month: 589 | Total downloads: 41490"
+        - listitem [ref=f25e50]:
+          - strong [ref=f25e51]:
+            - link "GetLattesData" [ref=f25e52] [cursor=pointer]:
+              - /url: https://msperlin.r-universe.dev/GetLattesData
+          - text: ": Reading Bibliometric Data from Lattes Platform"
+          - emphasis [ref=f25e54]: "Submitted to CRAN on: 2017-09-05 | Downloads last month: 573 | Total downloads: 48517"
+        - listitem [ref=f25e55]:
+          - strong [ref=f25e56]:
+            - link "eodhdR2" [ref=f25e57] [cursor=pointer]:
+              - /url: https://eodhistoricaldata.r-universe.dev/eodhdR2
+          - text: ": Official R API for Fetching Data from 'EODHD'"
+          - emphasis [ref=f25e59]: "Submitted to CRAN on: 2024-09-03 | Downloads last month: 380 | Total downloads: 7438"
+        - listitem [ref=f25e60]:
+          - strong [ref=f25e61]:
+            - link "GetFREData" [ref=f25e62] [cursor=pointer]:
+              - /url: https://msperlin.r-universe.dev/GetFREData
+          - text: ": Reading FRE Corporate Data of Public Traded Companies from B3"
+          - emphasis [ref=f25e64]: "Submitted to CRAN on: 2021-04-06 | Downloads last month: 301 | Total downloads: 17387"
+        - listitem [ref=f25e65]:
+          - strong [ref=f25e66]:
+            - link "GetQuandlData" [ref=f25e67] [cursor=pointer]:
+              - /url: https://msperlin.r-universe.dev/GetQuandlData
+          - text: ": Fast and Cached Import of Data from 'Quandl' Using the 'json API'"
+          - emphasis [ref=f25e69]: "Submitted to CRAN on: 2019-10-20 | Downloads last month: 245 | Total downloads: 26636"
+  - contentinfo [ref=f25e70]:
+    - paragraph [ref=f25e72]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f25e73] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f25e74] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

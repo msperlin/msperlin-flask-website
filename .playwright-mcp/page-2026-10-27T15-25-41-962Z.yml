@@ -1,0 +1,70 @@
+- generic [active] [ref=f86e1]:
+  - banner [ref=f86e2]:
+    - generic [ref=f86e3]:
+      - link "Marcelo S. Perlin." [ref=f86e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f86e5]:
+        - list [ref=f86e6]:
+          - listitem [ref=f86e7]:
+            - link "Home" [ref=f86e8] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f86e9]:
+            - link "Publications" [ref=f86e10] [cursor=pointer]:
+              - /url: /publications
+          - listitem [ref=f86e11]:
+            - link "Books" [ref=f86e12] [cursor=pointer]:
+              - /url: /books
+          - listitem [ref=f86e13]:
+            - link "Code ▾" [ref=f86e14] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f86e15]:
+            - link "Research ▾" [ref=f86e16] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f86e17]:
+            - link "Consulting" [ref=f86e18] [cursor=pointer]:
+              - /url: /consulting
+          - listitem [ref=f86e19]:
+            - link "Class Slides" [ref=f86e20] [cursor=pointer]:
+              - /url: https://msperlin.github.io/site-slides/
+          - listitem [ref=f86e21]:
+            - link "Site Log" [ref=f86e22] [cursor=pointer]:
+              - /url: /site-log
+      - button "Toggle color theme" [ref=f86e24] [cursor=pointer]
+  - main [ref=f86e27]:
+    - generic [ref=f86e28]:
+      - heading "Consulting Services" [level=2] [ref=f86e29]
+      - paragraph [ref=f86e30]: "I offer consulting services in the areas of data science, financial analysis, and programming in R and Python. I have the flexibility to work on small (couple of weeks) or large projects (over a year). I have experience in:"
+      - list [ref=f86e31]:
+        - listitem [ref=f86e32]: the full cycle of a data based research, from data importation to analysis and reporting;
+        - listitem [ref=f86e33]: using R and Python to write data pipelines, import and analyze larger-than-RAM and unstructured datasets;
+        - listitem [ref=f86e34]: using machine learning models in R (tidymodels) and Python (scikit-learn) in prediction problems, with real world business applications such as fraud detection;
+        - listitem [ref=f86e35]: using LLM (large language models) such as ChatGPT and Gemini for solving research problems in large scale;
+        - listitem [ref=f86e36]: writing open source R and Python packages, and publishing in CRAN and pypi.org;
+        - listitem [ref=f86e37]: using cloud tools such as servers/computing, storage and APIs from the usual suspects (AWS, Google Cloud, Azure).
+      - separator [ref=f86e38]
+      - heading "Services Offered" [level=3] [ref=f86e39]
+      - generic [ref=f86e40]:
+        - generic [ref=f86e41]:
+          - heading "Data Analysis & Visualization" [level=4] [ref=f86e42]
+          - paragraph [ref=f86e43]: Transforming raw, unstructured data into clean, organized formats ready for analysis and modeling. This includes data cleaning, exploratory analysis and compelling data visualizations.
+        - generic [ref=f86e44]:
+          - heading "Modelling & Simulation" [level=4] [ref=f86e45]
+          - paragraph [ref=f86e46]: Transforming data into actionable business insights. This includes supervised and unsupervised machine learning models, financial econometrics and the use of LLMs (large language models) for data analysis.
+        - generic [ref=f86e47]:
+          - heading "Custom Programming Solutions" [level=4] [ref=f86e48]
+          - paragraph [ref=f86e49]: Developing custom scripts and applications in R and Python for automating data-related tasks and research. This includes webscrapping scripts and general automation of data tasks. If you got an idea and want to test it over large quantities of real data, get in touch.
+      - separator [ref=f86e50]
+      - paragraph [ref=f86e51]:
+        - text: If you have an interesting and challenging data problem, please reach out via email (
+        - link "marceloperlin@gmail.com" [ref=f86e52] [cursor=pointer]:
+          - /url: mailto:marceloperlin@gmail.com
+        - text: ).
+  - contentinfo [ref=f86e53]:
+    - paragraph [ref=f86e55]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f86e56] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f86e57] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

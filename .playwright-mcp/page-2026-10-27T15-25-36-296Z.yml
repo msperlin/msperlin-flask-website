@@ -1,0 +1,66 @@
+- generic [active] [ref=f82e1]:
+  - banner [ref=f82e2]:
+    - generic [ref=f82e3]:
+      - link "Marcelo S. Perlin." [ref=f82e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f82e5]:
+        - list [ref=f82e6]:
+          - listitem [ref=f82e7]:
+            - link "Home" [ref=f82e8] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f82e9]:
+            - link "Publications" [ref=f82e10] [cursor=pointer]:
+              - /url: /publications
+          - listitem [ref=f82e11]:
+            - link "Books" [ref=f82e12] [cursor=pointer]:
+              - /url: /books
+          - listitem [ref=f82e13]:
+            - link "Code ▾" [ref=f82e14] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f82e15]:
+            - link "Research ▾" [ref=f82e16] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f82e17]:
+            - link "Consulting" [ref=f82e18] [cursor=pointer]:
+              - /url: /consulting
+          - listitem [ref=f82e19]:
+            - link "Class Slides" [ref=f82e20] [cursor=pointer]:
+              - /url: https://msperlin.github.io/site-slides/
+          - listitem [ref=f82e21]:
+            - link "Site Log" [ref=f82e22] [cursor=pointer]:
+              - /url: /site-log
+      - button "Toggle color theme" [ref=f82e24] [cursor=pointer]
+  - main [ref=f82e27]:
+    - generic [ref=f82e28]:
+      - heading "Code (Python)" [level=2] [ref=f82e29]
+      - paragraph [ref=f82e30]: Here are Python projects I've developed, mostly related to data science and analysis.
+      - heading "Python Projects:" [level=3] [ref=f82e31]
+      - generic [ref=f82e32]:
+        - heading "Top packages by monthly downloads" [level=3] [ref=f82e33]
+        - img "Bar chart of Python package downloads" [ref=f82e35]
+      - list [ref=f82e36]:
+        - listitem [ref=f82e37]:
+          - strong [ref=f82e38]:
+            - link "rfbpy" [ref=f82e39] [cursor=pointer]:
+              - /url: https://github.com/msperlin/rfbpy
+          - text: ": An easy-to-use Python package to download, extract and load the open CNPJ (Brazilian company registry) data published by the Receita Federal into SQLite or parquet files."
+          - link "PyPI" [ref=f82e40] [cursor=pointer]:
+            - /url: https://pypi.org/project/rfbpy/
+          - emphasis [ref=f82e42]: "Downloads last month: 366 | Total downloads: 366"
+        - listitem [ref=f82e43]:
+          - strong [ref=f82e44]:
+            - link "finbert-ai-detector" [ref=f82e45] [cursor=pointer]:
+              - /url: https://pypi.org/project/finbert-ai-detector/
+          - text: ": An easy-to-use Python package for the msperlin/finbert-ai-detector model, designed to detect AI-generated text in financial documents."
+          - link "GitHub" [ref=f82e46] [cursor=pointer]:
+            - /url: https://github.com/msperlin/finbert-ai-detector
+          - emphasis [ref=f82e48]: "Downloads last month: 35 | Total downloads: 2998"
+  - contentinfo [ref=f82e49]:
+    - paragraph [ref=f82e51]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f82e52] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f82e53] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

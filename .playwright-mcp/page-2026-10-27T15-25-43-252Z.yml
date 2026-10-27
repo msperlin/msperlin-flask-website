@@ -1,0 +1,117 @@
+- generic [active] [ref=f87e1]:
+  - banner [ref=f87e2]:
+    - generic [ref=f87e3]:
+      - link "Marcelo S. Perlin." [ref=f87e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f87e5]:
+        - list [ref=f87e6]:
+          - listitem [ref=f87e7]:
+            - link "Home" [ref=f87e8] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f87e9]:
+            - link "Publications" [ref=f87e10] [cursor=pointer]:
+              - /url: /publications
+          - listitem [ref=f87e11]:
+            - link "Books" [ref=f87e12] [cursor=pointer]:
+              - /url: /books
+          - listitem [ref=f87e13]:
+            - link "Code ▾" [ref=f87e14] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f87e15]:
+            - link "Research ▾" [ref=f87e16] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f87e17]:
+            - link "Consulting" [ref=f87e18] [cursor=pointer]:
+              - /url: /consulting
+          - listitem [ref=f87e19]:
+            - link "Class Slides" [ref=f87e20] [cursor=pointer]:
+              - /url: https://msperlin.github.io/site-slides/
+          - listitem [ref=f87e21]:
+            - link "Site Log" [ref=f87e22] [cursor=pointer]:
+              - /url: /site-log
+      - button "Toggle color theme" [ref=f87e24] [cursor=pointer]
+  - main [ref=f87e27]:
+    - generic [ref=f87e28]:
+      - heading "Slides" [level=2] [ref=f87e29]
+      - paragraph [ref=f87e30]: Here you will find presentation slides, seminars, and workshop materials related to finance and data science.
+      - heading "2026" [level=3] [ref=f87e31]
+      - list [ref=f87e32]:
+        - listitem [ref=f87e33]:
+          - link "The Use of AI in 10-K Filings" [ref=f87e34] [cursor=pointer]:
+            - /url: /slides/20260826_cafe-com-pesquisa/
+          - text: presented at Café com Pesquisa (
+          - link "PDF" [ref=f87e35] [cursor=pointer]:
+            - /url: /slides/20260826_cafe-com-pesquisa/frl.pdf
+          - text: ","
+          - link "Article" [ref=f87e36] [cursor=pointer]:
+            - /url: https://doi.org/10.1016/j.frl.2026.110161
+          - text: ).
+        - listitem [ref=f87e37]:
+          - link "Dados Corporativos no R" [ref=f87e38] [cursor=pointer]:
+            - /url: /slides/20260616_UFF_dados-corporativos-no-R/
+          - text: presented at Palestra UFF (
+          - link "PDF" [ref=f87e39] [cursor=pointer]:
+            - /url: /slides/20260616_UFF_dados-corporativos-no-R/2019_RBFIN_getdfpdata.pdf
+          - text: ","
+          - link "Article" [ref=f87e40] [cursor=pointer]:
+            - /url: https://periodicos.fgv.br/rbfin/article/view/78654
+          - text: ).
+      - heading "2025" [level=3] [ref=f87e41]
+      - list [ref=f87e42]:
+        - listitem [ref=f87e43]:
+          - link "Can AI beat a naive portfolio? An experiment with anonymized data" [ref=f87e44] [cursor=pointer]:
+            - /url: /slides/20251104_EstatUFRGS_AI-investor/
+          - text: presented at Research Seminar @ Department of Statistics (UFRGS) (
+          - link "PDF" [ref=f87e45] [cursor=pointer]:
+            - /url: /slides/20251104_EstatUFRGS_AI-investor/2025_FRL_AI-investor.pdf
+          - text: ","
+          - link "Article" [ref=f87e46] [cursor=pointer]:
+            - /url: https://doi.org/10.1016/j.frl.2025.107126
+          - text: ).
+      - heading "2024" [level=3] [ref=f87e47]
+      - list [ref=f87e48]:
+        - listitem [ref=f87e49]:
+          - link "Dados Corporativos no R" [ref=f87e50] [cursor=pointer]:
+            - /url: /slides/20240525_UFSM_GetDFPData2-GetFREData/
+          - text: presented at Workshop UFSM (
+          - link "PDF" [ref=f87e51] [cursor=pointer]:
+            - /url: /slides/20240525_UFSM_GetDFPData2-GetFREData/2019_RBFIN_getdfpdata.pdf
+          - text: ","
+          - link "Article" [ref=f87e52] [cursor=pointer]:
+            - /url: https://periodicos.fgv.br/rbfin/article/view/78654
+          - text: ).
+      - heading "2023" [level=3] [ref=f87e53]
+      - list [ref=f87e54]:
+        - listitem [ref=f87e55]:
+          - link "Análise de Dados e Administração de Empresas" [ref=f87e56] [cursor=pointer]:
+            - /url: /slides/20230603_Portas-Abertas/
+          - text: presented at UFRGS Portas Abertas.
+        - listitem [ref=f87e57]:
+          - link "Questões do R em Concursos Públicos" [ref=f87e58] [cursor=pointer]:
+            - /url: /slides/20230531_EstatiDados/
+          - text: presented at EstaTiDados.
+        - listitem [ref=f87e59]:
+          - link "Módulos do R para a Análise de Dados Financeiros" [ref=f87e60] [cursor=pointer]:
+            - /url: /slides/20230101_UFSC-dados-finanças/
+          - text: presented at PPGE / UFSC.
+      - heading "2022" [level=3] [ref=f87e61]
+      - list [ref=f87e62]:
+        - listitem [ref=f87e63]:
+          - link "Módulos do R para a Análise de Dados Financeiros" [ref=f87e64] [cursor=pointer]:
+            - /url: /slides/20221001_Palestra PPGE-UFSC/
+          - text: presented at Palestra PPGE-UFSC.
+      - heading "2021" [level=3] [ref=f87e65]
+      - list [ref=f87e66]:
+        - listitem [ref=f87e67]:
+          - link "Code Reproducibility with R" [ref=f87e68] [cursor=pointer]:
+            - /url: /slides/20210901_Reproducibilidade no R/
+          - text: presented at EA-UFRGS.
+  - contentinfo [ref=f87e69]:
+    - paragraph [ref=f87e71]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f87e72] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f87e73] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

@@ -1,0 +1,68 @@
+- generic [active] [ref=f15e1]:
+  - banner [ref=f15e2]:
+    - generic [ref=f15e3]:
+      - link "Marcelo S. Perlin." [ref=f15e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f15e5]:
+        - list [ref=f15e6]:
+          - listitem [ref=f15e7]:
+            - link "Home" [ref=f15e8] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f15e9]:
+            - link "Publications" [ref=f15e10] [cursor=pointer]:
+              - /url: /publications
+          - listitem [ref=f15e11]:
+            - link "Books" [ref=f15e12] [cursor=pointer]:
+              - /url: /books
+          - listitem [ref=f15e13]:
+            - link "Code ▾" [ref=f15e14] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f15e15]:
+            - link "Research ▾" [ref=f15e16] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f15e17]:
+            - link "Consulting" [ref=f15e18] [cursor=pointer]:
+              - /url: /consulting
+          - listitem [ref=f15e19]:
+            - link "Class Slides" [ref=f15e20] [cursor=pointer]:
+              - /url: https://msperlin.github.io/site-slides/
+          - listitem [ref=f15e21]:
+            - link "Site Log" [ref=f15e22] [cursor=pointer]:
+              - /url: /site-log
+      - button "Toggle color theme" [ref=f15e24] [cursor=pointer]
+  - main [ref=f15e27]:
+    - generic [ref=f15e28]:
+      - heading "Data" [level=2] [ref=f15e29]
+      - paragraph [ref=f15e30]: A major part of my work as an academic researcher is finding ways to access and organize financial and economic datasets using code. In this section I'll provide a download link for the full datasets I use for research or class material. All files represent the _whole_ database, iterating by available time periods and cases. These files are raw and come with **no warranty**. Be aware that you'll probably need to clean it up before any good use. As such, please make sure to cite the original source for reproducibility (see citation format from dataverse).
+      - paragraph [ref=f15e31]:
+        - text: All data is distributed using the
+        - link "Harvard Dataverse Project" [ref=f15e32] [cursor=pointer]:
+          - /url: https://dataverse.harvard.edu/dataverse/msperlin
+        - text: . The Dataverse platform is stable, provides data persistency, versioning and the automatic generation of citation text. You can even use the
+        - link "dataverse" [ref=f15e33] [cursor=pointer]:
+          - /url: https://github.com/IQSS/dataverse-client-r
+        - text: package for reading the files from an R session.
+      - paragraph [ref=f15e34]: All hosted data will be updated at least once a year.
+      - heading "Available datasets:" [level=3] [ref=f15e35]
+      - list [ref=f15e36]:
+        - listitem [ref=f15e37]:
+          - text: "GetDFPData2: Annual Financial Reports from the DFP system."
+          - link "Link" [ref=f15e38] [cursor=pointer]:
+            - /url: https://doi.org/10.7910/DVN/7VVX4J
+        - listitem [ref=f15e39]:
+          - text: "GetFREData: Corporate dataset from FRE system."
+          - link "Link" [ref=f15e40] [cursor=pointer]:
+            - /url: https://doi.org/10.7910/DVN/QIMUNZ
+        - listitem [ref=f15e41]:
+          - text: "GetTDData: Prices and yields of brazilian sovereign bonds."
+          - link "Link" [ref=f15e42] [cursor=pointer]:
+            - /url: https://doi.org/10.7910/DVN/SCSQUF
+  - contentinfo [ref=f15e43]:
+    - paragraph [ref=f15e45]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f15e46] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f15e47] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

@@ -1,0 +1,40 @@
+- generic [active] [ref=f52e1]:
+  - banner [ref=f52e2]:
+    - generic [ref=f52e3]:
+      - link "Marcelo S. Perlin." [ref=f52e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f52e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f52e8] [cursor=pointer]
+  - main [ref=f52e11]:
+    - generic [ref=f52e12]:
+      - heading "Awards" [level=2] [ref=f52e13]
+      - heading "2026" [level=3] [ref=f52e14]
+      - list [ref=f52e15]:
+        - listitem [ref=f52e16]: "Best reviewer for the area of Financial Markets granted by RCF - Revista de Contabilidade e Finanças: Awarded as one of the best reviewers for the area of Financial Markets."
+      - heading "2018" [level=3] [ref=f52e17]
+      - list [ref=f52e18]:
+        - listitem [ref=f52e19]: "Top 10% of Authors by New Downloads (Last 12 Months) granted by SSRN: Ranked in the top 10% of authors on SSRN by total new downloads within the last 12 months."
+        - listitem [ref=f52e20]: "Top 10% of Authors by All-Time Downloads granted by SSRN: Ranked in the top 10% of authors on SSRN by all-time downloads."
+        - listitem [ref=f52e21]: "Top 5% of Research Outputs granted by Altmetric: Awarded for the article 'Is predatory publishing a real threat? Evidence from a large database study'."
+      - heading "2016" [level=3] [ref=f52e22]
+      - list [ref=f52e23]:
+        - listitem [ref=f52e24]: "RBFIN Best Paper of 2015 (Honorary Mention) granted by Brazilian Finance Society: Awarded for the paper 'The researchers, the publications and the journals of Finance in Brazil: An analysis based on resumes from the Lattes platform'."
+      - heading "2014" [level=3] [ref=f52e25]
+      - list [ref=f52e26]:
+        - listitem [ref=f52e27]: "APIMEC Award for Research Paper in Capital Markets (3rd Place) granted by Brazilian Association of Financial Analysts (APIMEC): Awarded for the paper 'Estimating the Intensity of News based on Trade Data'."
+        - listitem [ref=f52e28]: "RBFIN Best Paper of 2013 (1st Place) granted by Brazilian Finance Society: Awarded for the paper 'The effects of the introduction of market makers in the Brazilian equity market'."
+      - heading "2011" [level=3] [ref=f52e29]
+      - list [ref=f52e30]:
+        - listitem [ref=f52e31]: "ANBIMA Award (1st Place) granted by ANBIMA (Brazilian Association of Capital Markets): Awarded for the best paper in the area of fixed income markets: 'The Determinants of a Cross Market Arbitrage Opportunity: Theory and Evidence for the European Bond Market'."
+        - listitem [ref=f52e32]: "File Exchange Pick of the Week granted by Matlab Community: Awarded for the Matlab package 'MS_Regress - A Package for Markov Regime Switching Models in Matlab'."
+        - listitem [ref=f52e33]: "IBEF SP/KPMG Award (Honorary Mention) granted by Institute of Finance Executives: Awarded for the paper 'On the Performance of the Tick Test'."
+  - contentinfo [ref=f52e34]:
+    - paragraph [ref=f52e36]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f52e37] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f52e38] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

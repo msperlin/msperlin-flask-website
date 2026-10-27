@@ -1,0 +1,42 @@
+- generic [active] [ref=f60e1]:
+  - banner [ref=f60e2]:
+    - generic [ref=f60e3]:
+      - link "Marcelo S. Perlin." [ref=f60e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f60e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f60e8] [cursor=pointer]
+  - main [ref=f60e11]:
+    - generic [ref=f60e12]:
+      - heading "Code (Python)" [level=2] [ref=f60e13]
+      - paragraph [ref=f60e14]: Here are Python projects I've developed, mostly related to data science and analysis.
+      - heading "Python Projects:" [level=3] [ref=f60e15]
+      - generic [ref=f60e16]:
+        - heading "Top packages by monthly downloads" [level=3] [ref=f60e17]
+        - img "Bar chart of Python package downloads" [ref=f60e19]
+      - list [ref=f60e20]:
+        - listitem [ref=f60e21]:
+          - strong [ref=f60e22]:
+            - link "rfbpy" [ref=f60e23] [cursor=pointer]:
+              - /url: https://github.com/msperlin/rfbpy
+          - text: ": An easy-to-use Python package to download, extract and load the open CNPJ (Brazilian company registry) data published by the Receita Federal into SQLite or parquet files."
+          - link "PyPI" [ref=f60e24] [cursor=pointer]:
+            - /url: https://pypi.org/project/rfbpy/
+          - emphasis [ref=f60e26]: "Downloads last month: 366 | Total downloads: 366"
+        - listitem [ref=f60e27]:
+          - strong [ref=f60e28]:
+            - link "finbert-ai-detector" [ref=f60e29] [cursor=pointer]:
+              - /url: https://pypi.org/project/finbert-ai-detector/
+          - text: ": An easy-to-use Python package for the msperlin/finbert-ai-detector model, designed to detect AI-generated text in financial documents."
+          - link "GitHub" [ref=f60e30] [cursor=pointer]:
+            - /url: https://github.com/msperlin/finbert-ai-detector
+          - emphasis [ref=f60e32]: "Downloads last month: 35 | Total downloads: 2998"
+  - contentinfo [ref=f60e33]:
+    - paragraph [ref=f60e35]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f60e36] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f60e37] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

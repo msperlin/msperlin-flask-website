@@ -1,0 +1,98 @@
+- generic [ref=f89e1]:
+  - banner [ref=f89e2]:
+    - generic [ref=f89e3]:
+      - link "Marcelo S. Perlin." [ref=f89e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f89e5]:
+        - list [ref=f89e6]:
+          - listitem [ref=f89e7]:
+            - link "Home" [ref=f89e8] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f89e9]:
+            - link "Publications" [ref=f89e10] [cursor=pointer]:
+              - /url: /publications
+          - listitem [ref=f89e11]:
+            - link "Books" [ref=f89e12] [cursor=pointer]:
+              - /url: /books
+          - listitem [ref=f89e13]:
+            - link "Code ▾" [ref=f89e14] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f89e15]:
+            - link "Research ▾" [ref=f89e16] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f89e17]:
+            - link "Consulting" [ref=f89e18] [cursor=pointer]:
+              - /url: /consulting
+          - listitem [ref=f89e19]:
+            - link "Class Slides" [ref=f89e20] [cursor=pointer]:
+              - /url: https://msperlin.github.io/site-slides/
+          - listitem [ref=f89e21]:
+            - link "Site Log" [ref=f89e22] [cursor=pointer]:
+              - /url: /site-log
+      - button "Toggle color theme" [ref=f89e24] [cursor=pointer]
+  - main [ref=f89e27]:
+    - generic [ref=f89e28]:
+      - heading "Publications" [level=2] [ref=f89e29]
+      - heading [level=4] [ref=f89e30]:
+        - link "Google Scholar Statistics" [ref=f89e31] [cursor=pointer]:
+          - /url: https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ
+        - text: (last update at 2026-10-11)
+      - generic [ref=f89e32]:
+        - generic [ref=f89e33]:
+          - heading "Published papers" [level=4] [ref=f89e34]
+          - paragraph [ref=f89e35]: "40"
+        - generic [ref=f89e36]:
+          - heading "Total citations" [level=4] [ref=f89e37]
+          - paragraph [ref=f89e38]: "1686"
+        - generic [ref=f89e39]:
+          - heading "h-index" [level=4] [ref=f89e40]
+          - paragraph [ref=f89e41]: "18"
+        - generic [ref=f89e42]:
+          - heading "i10-index" [level=4] [ref=f89e43]
+          - paragraph [ref=f89e44]: "25"
+      - generic [ref=f89e45]:
+        - searchbox "Search publications" [active] [ref=f89e47]: chatgpt
+        - combobox "Filter by year" [ref=f89e48] [cursor=pointer]:
+          - option "All years"
+          - option "2026"
+          - option "2025" [selected]
+          - option "2024"
+          - option "2023"
+          - option "2022"
+          - option "2021"
+          - option "2020"
+          - option "2019"
+          - option "2018"
+          - option "2017"
+          - option "2016"
+          - option "2015"
+          - option "2014"
+          - option "2013"
+          - option "2011"
+          - option "2009"
+          - option "2007"
+          - option "2006"
+        - button "Clear" [ref=f89e49] [cursor=pointer]
+        - generic [ref=f89e50]: 1 of 40 shown
+      - list [ref=f89e51]:
+        - listitem [ref=f89e74]:
+          - generic [ref=f89e75]:
+            - heading [level=3] [ref=f89e76]:
+              - link "Using ChatGPT for Creating Multi-Language Finance Related Sentiment Dictionaries" [ref=f89e77] [cursor=pointer]:
+                - /url: https://link.springer.com/article/10.1007/s10614-025-11233-3
+            - paragraph [ref=f89e78]:
+              - strong [ref=f89e79]: Marcos Reichert, Marcelo S. Perlin
+            - paragraph [ref=f89e80]:
+              - text: "2025 | Computational Economics | ISSN: 1572-9974 | IF: 2.2"
+              - button "Cite This" [ref=f89e81] [cursor=pointer]
+            - paragraph [ref=f89e82]: The finance literature is abundant with applications of text sentiment based on English dictionaries. However, a large proportion of financial documents are written in languages other than English. As such, there is a gap in literature for the development of sentiment dictionaries in other languages. Using a reproducible and low cost approach based on ChatGPT’s API, and with minimal interventions, ... (continued, check link for full abstract)
+          - img "Journal Cover" [ref=f89e84]
+  - contentinfo [ref=f89e486]:
+    - paragraph [ref=f89e488]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f89e489] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f89e490] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

@@ -1,0 +1,136 @@
+- generic [active] [ref=f69e1]:
+  - banner [ref=f69e2]:
+    - generic [ref=f69e3]:
+      - link "Marcelo S. Perlin." [ref=f69e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f69e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f69e8] [cursor=pointer]
+  - main [ref=f69e11]:
+    - generic [ref=f69e12]:
+      - heading "Books" [level=2] [ref=f69e13]
+      - paragraph [ref=f69e14]: "Number of books: 6"
+      - list [ref=f69e15]:
+        - listitem [ref=f69e16]:
+          - img "Book Cover" [ref=f69e18]
+          - generic [ref=f69e19]:
+            - heading [level=3] [ref=f69e20]:
+              - 'link "Poupando e Investindo em Renda Fixa: Uma Abordagem Baseada em Dados" [ref=f69e21] [cursor=pointer]':
+                - /url: https://www.amazon.com.br/dp/B07RR9K9PV
+            - paragraph [ref=f69e22]:
+              - link "Amazon" [ref=f69e23] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B07RR9K9PV
+              - text: "|"
+              - link "Online Version" [ref=f69e24] [cursor=pointer]:
+                - /url: /books/pirf/
+            - generic "4.7 out of 5 stars" [ref=f69e25]:
+              - generic [ref=f69e26]:
+                - text: ★★★★★
+                - generic [ref=f69e27]: ★★★★★
+              - generic [ref=f69e28]: 4,7
+              - generic [ref=f69e29]: (529 avaliações na Amazon)
+            - paragraph [ref=f69e30]: Uma população que não poupa e não sabe investir está fadada a continuar presa no ciclo vicioso da dependência financeira - mais gastos, mais trabalho e menos tempo. A falta de intimidade da população com a organização de um orçamento doméstico e com a aplicação do dinheiro de forma eficiente é certamente um dos problemas estruturais da economia brasileira. Este livro apresenta uma forma de investir com foco no longo prazo, resiliência e na qualidade de vida do investidor. Contrário a crença popular, investir para o longo prazo é fácil e pode ser feito por qualquer pessoa com vontade de aprender. O grande diferencial da obra é o uso frequente de dados financeiros reais para entender melhor como o mercado de renda fixa funciona, os efeitos dos tributos e custos operacionais, e quais são as melhores opções para o investidor pessoa física.
+        - listitem [ref=f69e31]:
+          - img "Book Cover" [ref=f69e33]
+          - generic [ref=f69e34]:
+            - heading [level=3] [ref=f69e35]:
+              - link "Análise de Dados Financeiros e Econômicos com o R (Terceira Edição)" [ref=f69e36] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B08WNC27ZY
+            - paragraph [ref=f69e37]:
+              - link "Amazon" [ref=f69e38] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B08WNC27ZY
+              - text: "|"
+              - link "Online Version" [ref=f69e39] [cursor=pointer]:
+                - /url: /books/adfeR/
+            - generic "4.7 out of 5 stars" [ref=f69e40]:
+              - generic [ref=f69e41]:
+                - text: ★★★★★
+                - generic [ref=f69e42]: ★★★★★
+              - generic [ref=f69e43]: 4,7
+              - generic [ref=f69e44]: (240 avaliações na Amazon)
+            - paragraph [ref=f69e45]: Este livro introduz o leitor ao uso do R e RStudio como plataforma de análise de dados financeiros e econômicos. O livro apresenta toda a base de conhecimento necessária para utilizar o R, desde a sua instalação até a criação de códigos de pesquisa. O livro está organizado com exemplos práticos de uso do código que contextualizam e facilitam o aprendizado em cada etapa do processo. Este livro é recomendado a profissionais e alunos de pós-graduação que tenham interesse em aprender a utilizar o R. Não é necessário nenhum conhecimento prévio de programação para aproveitar o material. Após a leitura, é esperado que o leitor tenha o conhecimento suficiente para desenvolver suas própria pesquisa de forma autônoma, seja essa a confecção de documentos acadêmicos ou então o trabalho de pesquisa em empresas públicas e privadas.
+        - listitem [ref=f69e46]:
+          - img "Book Cover" [ref=f69e48]
+          - generic [ref=f69e49]:
+            - heading [level=3] [ref=f69e50]:
+              - link "Visualização de Dados com o R" [ref=f69e51] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B0BK2V4HTB
+            - paragraph [ref=f69e52]:
+              - link "Amazon" [ref=f69e53] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B0BK2V4HTB
+              - text: "|"
+              - link "Online Version" [ref=f69e54] [cursor=pointer]:
+                - /url: /books/vdr/
+            - generic "4.8 out of 5 stars" [ref=f69e55]:
+              - generic [ref=f69e56]:
+                - text: ★★★★★
+                - generic [ref=f69e57]: ★★★★★
+              - generic [ref=f69e58]: 4,8
+              - generic [ref=f69e59]: (18 avaliações na Amazon)
+            - paragraph [ref=f69e60]: Visualização de dados é a arte de transformar medidas em padrões visuais. O objetivo é incrivelmente simples, apresentar evidências de um evento ou causalidade do mundo real. E, como qualquer arte, é fácil de descrever e difícil de executar. Na prática, construir figuras baseadas em dados exige expertise da área de conhecimento, uma noção de design e conhecimento das ferramentas corretas de programação. O retorno para o autor, porém, é imenso. Em um mundo digitalizado, gráficos baseados em dados são compartilhados com o mundo inteiro em questões de segundos, ao clique de um botão. Todo o material do livro, incluindo gráficos e código, é aberto ao público e reproduzível. Para facilitar a importação dos dados, construí um módulo do R chamado vdr, o qual pode ser instalado de forma prática e fácil. Este pacote contém todos os dados e funções usados no livro. Com ele será possível importar dados para a sua sessão do R e rodar todos os exemplos no seu próprio computador.
+        - listitem [ref=f69e61]:
+          - img "Book Cover" [ref=f69e63]
+          - generic [ref=f69e64]:
+            - heading [level=3] [ref=f69e65]:
+              - link "Introdução ao R - Um guia prático para iniciantes" [ref=f69e66] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B0CYN25PD6
+            - paragraph [ref=f69e67]:
+              - link "Amazon" [ref=f69e68] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B0CYN25PD6
+              - text: "|"
+              - link "Online Version" [ref=f69e69] [cursor=pointer]:
+                - /url: /books/introR/
+            - generic "4.9 out of 5 stars" [ref=f69e70]:
+              - generic [ref=f69e71]:
+                - text: ★★★★★
+                - generic [ref=f69e72]: ★★★★★
+              - generic [ref=f69e73]: 4,9
+              - generic [ref=f69e74]: (15 avaliações na Amazon)
+            - paragraph [ref=f69e75]: Guia prático e acessível voltado para iniciantes aprenderem a linguagem R e o RStudio para análise de dados, mesmo sem conhecimento prévio de programação. Cobre fundamentos, manipulação de dados com dataframes e conceitos fundamentais de programação estruturados com exemplos práticos reais do mercado financeiro e econômico.
+        - listitem [ref=f69e76]:
+          - img "Book Cover" [ref=f69e78]
+          - generic [ref=f69e79]:
+            - heading [level=3] [ref=f69e80]:
+              - link "Analyzing Financial and Economic Data with R (Third Edition)" [ref=f69e81] [cursor=pointer]:
+                - /url: https://www.amazon.com/dp/B0BZ98RYFW
+            - paragraph [ref=f69e82]:
+              - link "Amazon" [ref=f69e83] [cursor=pointer]:
+                - /url: https://www.amazon.com/dp/B0BZ98RYFW
+              - text: "|"
+              - link "Online Version" [ref=f69e84] [cursor=pointer]:
+                - /url: /books/afedr/
+            - generic "5.0 out of 5 stars" [ref=f69e85]:
+              - generic [ref=f69e86]:
+                - text: ★★★★★
+                - generic [ref=f69e87]: ★★★★★
+              - generic [ref=f69e88]: "5.0"
+              - generic [ref=f69e89]: (3 ratings on Amazon)
+            - paragraph [ref=f69e90]: A comprehensive, practical guide designed to teach students, researchers, and data analysts how to use R and RStudio for professional data analysis in finance and economics. Follows a structured approach from basic setup to data acquisition, manipulation, visualization with ggplot2, and econometric modeling.
+        - listitem [ref=f69e91]:
+          - img "Book Cover" [ref=f69e93]
+          - generic [ref=f69e94]:
+            - heading [level=3] [ref=f69e95]:
+              - 'link "Questões de R em Concursos Públicos: Soluções e comentários" [ref=f69e96] [cursor=pointer]':
+                - /url: https://www.amazon.com.br/dp/B0C6GZ6V8T
+            - paragraph [ref=f69e97]:
+              - link "Amazon" [ref=f69e98] [cursor=pointer]:
+                - /url: https://www.amazon.com.br/dp/B0C6GZ6V8T
+              - text: "|"
+              - link "Online Version" [ref=f69e99] [cursor=pointer]:
+                - /url: /books/qrcp/
+            - generic "4.0 out of 5 stars" [ref=f69e100]:
+              - generic [ref=f69e101]:
+                - text: ★★★★★
+                - generic [ref=f69e102]: ★★★★★
+              - generic [ref=f69e103]: 4,0
+              - generic [ref=f69e104]: (1 avaliações na Amazon)
+            - paragraph [ref=f69e105]: Voltado para candidatos que precisam dominar a linguagem R para provas de concursos que exigem análise de dados. Apresenta uma curadoria de questões reais exigindo conhecimento de sintaxe e manipulação de dados, oferecendo soluções detalhadas e comentários explicativos sobre o raciocínio por trás de cada questão.
+  - contentinfo [ref=f69e106]:
+    - paragraph [ref=f69e108]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f69e109] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f69e110] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

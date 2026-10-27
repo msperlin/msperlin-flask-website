@@ -1,0 +1,46 @@
+- generic [active] [ref=f75e1]:
+  - banner [ref=f75e2]:
+    - generic [ref=f75e3]:
+      - link "Marcelo S. Perlin." [ref=f75e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f75e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f75e8] [cursor=pointer]
+  - main [ref=f75e11]:
+    - generic [ref=f75e12]:
+      - heading "Consulting Services" [level=2] [ref=f75e13]
+      - paragraph [ref=f75e14]: "I offer consulting services in the areas of data science, financial analysis, and programming in R and Python. I have the flexibility to work on small (couple of weeks) or large projects (over a year). I have experience in:"
+      - list [ref=f75e15]:
+        - listitem [ref=f75e16]: the full cycle of a data based research, from data importation to analysis and reporting;
+        - listitem [ref=f75e17]: using R and Python to write data pipelines, import and analyze larger-than-RAM and unstructured datasets;
+        - listitem [ref=f75e18]: using machine learning models in R (tidymodels) and Python (scikit-learn) in prediction problems, with real world business applications such as fraud detection;
+        - listitem [ref=f75e19]: using LLM (large language models) such as ChatGPT and Gemini for solving research problems in large scale;
+        - listitem [ref=f75e20]: writing open source R and Python packages, and publishing in CRAN and pypi.org;
+        - listitem [ref=f75e21]: using cloud tools such as servers/computing, storage and APIs from the usual suspects (AWS, Google Cloud, Azure).
+      - separator [ref=f75e22]
+      - heading "Services Offered" [level=3] [ref=f75e23]
+      - generic [ref=f75e24]:
+        - generic [ref=f75e25]:
+          - heading "Data Analysis & Visualization" [level=4] [ref=f75e26]
+          - paragraph [ref=f75e27]: Transforming raw, unstructured data into clean, organized formats ready for analysis and modeling. This includes data cleaning, exploratory analysis and compelling data visualizations.
+        - generic [ref=f75e28]:
+          - heading "Modelling & Simulation" [level=4] [ref=f75e29]
+          - paragraph [ref=f75e30]: Transforming data into actionable business insights. This includes supervised and unsupervised machine learning models, financial econometrics and the use of LLMs (large language models) for data analysis.
+        - generic [ref=f75e31]:
+          - heading "Custom Programming Solutions" [level=4] [ref=f75e32]
+          - paragraph [ref=f75e33]: Developing custom scripts and applications in R and Python for automating data-related tasks and research. This includes webscrapping scripts and general automation of data tasks. If you got an idea and want to test it over large quantities of real data, get in touch.
+      - separator [ref=f75e34]
+      - paragraph [ref=f75e35]:
+        - text: If you have an interesting and challenging data problem, please reach out via email (
+        - link "marceloperlin@gmail.com" [ref=f75e36] [cursor=pointer]:
+          - /url: mailto:marceloperlin@gmail.com
+        - text: ).
+  - contentinfo [ref=f75e37]:
+    - paragraph [ref=f75e39]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f75e40] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f75e41] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

@@ -1,0 +1,264 @@
+- generic [active] [ref=f77e1]:
+  - banner [ref=f77e2]:
+    - generic [ref=f77e3]:
+      - link "Marcelo S. Perlin." [ref=f77e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f77e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f77e8] [cursor=pointer]
+  - main [ref=f77e11]:
+    - generic [ref=f77e12]:
+      - heading "Site Log" [level=2] [ref=f77e13]
+      - heading "GitHub Actions (Recent Runs)" [level=3] [ref=f77e14]
+      - list [ref=f77e15]:
+        - listitem [ref=f77e16]:
+          - strong [ref=f77e17]: Update Python Package Downloads (PyPI)
+          - text: ": Success -"
+          - link "View Run" [ref=f77e18] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/40171802714
+          - text: (2026-10-25)
+        - listitem [ref=f77e19]:
+          - strong [ref=f77e20]: Update Amazon Book Ratings
+          - text: ": Success -"
+          - link "View Run" [ref=f77e21] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/40166832875
+          - text: (2026-10-25)
+        - listitem [ref=f77e22]:
+          - strong [ref=f77e23]: Update R Package Downloads (CRAN)
+          - text: ": Success -"
+          - link "View Run" [ref=f77e24] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/40161839586
+          - text: (2026-10-25)
+        - listitem [ref=f77e25]:
+          - strong [ref=f77e26]: Update Google Scholar Stats
+          - text: ": Failed -"
+          - link "View Run" [ref=f77e27] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/40155998053
+          - text: (2026-10-25)
+        - listitem [ref=f77e28]:
+          - strong [ref=f77e29]: Verify SEO and Metadata
+          - text: ": Failed -"
+          - link "View Run" [ref=f77e30] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/40003353171
+          - text: (2026-10-23)
+        - listitem [ref=f77e31]:
+          - strong [ref=f77e32]: Verify SEO and Metadata
+          - text: ": Failed -"
+          - link "View Run" [ref=f77e33] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/40002797609
+          - text: (2026-10-23)
+        - listitem [ref=f77e34]:
+          - strong [ref=f77e35]: Update Python Package Downloads (PyPI)
+          - text: ": Success -"
+          - link "View Run" [ref=f77e36] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/39105571495
+          - text: (2026-10-18)
+        - listitem [ref=f77e37]:
+          - strong [ref=f77e38]: Update Amazon Book Ratings
+          - text: ": Success -"
+          - link "View Run" [ref=f77e39] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/39100839754
+          - text: (2026-10-18)
+        - listitem [ref=f77e40]:
+          - strong [ref=f77e41]: Update R Package Downloads (CRAN)
+          - text: ": Success -"
+          - link "View Run" [ref=f77e42] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/39096468976
+          - text: (2026-10-18)
+        - listitem [ref=f77e43]:
+          - strong [ref=f77e44]: Update Google Scholar Stats
+          - text: ": Failed -"
+          - link "View Run" [ref=f77e45] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/39090950633
+          - text: (2026-10-18)
+        - listitem [ref=f77e46]:
+          - strong [ref=f77e47]: Update Python Package Downloads (PyPI)
+          - text: ": Success -"
+          - link "View Run" [ref=f77e48] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/38891337998
+          - text: (2026-10-16)
+        - listitem [ref=f77e49]:
+          - strong [ref=f77e50]: Verify SEO and Metadata
+          - text: ": Failed -"
+          - link "View Run" [ref=f77e51] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/38733896569
+          - text: (2026-10-15)
+        - listitem [ref=f77e52]:
+          - strong [ref=f77e53]: Verify SEO and Metadata
+          - text: ": Success -"
+          - link "View Run" [ref=f77e54] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/38409891127
+          - text: (2026-10-13)
+        - listitem [ref=f77e55]:
+          - strong [ref=f77e56]: Verify SEO and Metadata
+          - text: ": Success -"
+          - link "View Run" [ref=f77e57] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/38288294794
+          - text: (2026-10-12)
+        - listitem [ref=f77e58]:
+          - strong [ref=f77e59]: Verify SEO and Metadata
+          - text: ": Success -"
+          - link "View Run" [ref=f77e60] [cursor=pointer]:
+            - /url: https://github.com/msperlin/msperlin-flask-website/actions/runs/38288193294
+          - text: (2026-10-12)
+      - heading "Git Commits" [level=3] [ref=f77e61]
+      - list [ref=f77e62]:
+        - listitem [ref=f77e63]:
+          - strong [ref=f77e64]: e2a088a
+          - text: "(2 days ago): Update PyPI downloads for Python packages"
+        - listitem [ref=f77e65]:
+          - strong [ref=f77e66]: 23f0aed
+          - text: "(2 days ago): Update Amazon book ratings"
+        - listitem [ref=f77e67]:
+          - strong [ref=f77e68]: ee18115
+          - text: "(2 days ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e69]:
+          - strong [ref=f77e70]: "4652194"
+          - text: "(4 days ago): Update link to financial data site in Produtos Bancários chapter"
+        - listitem [ref=f77e71]:
+          - strong [ref=f77e72]: 4b9f8c9
+          - text: "(4 days ago): Update link to financial data site in Produtos Bancários chapter"
+        - listitem [ref=f77e73]:
+          - strong [ref=f77e74]: b6e9f88
+          - text: "(9 days ago): Update PyPI downloads for Python packages"
+        - listitem [ref=f77e75]:
+          - strong [ref=f77e76]: da3e653
+          - text: "(9 days ago): Update Amazon book ratings"
+        - listitem [ref=f77e77]:
+          - strong [ref=f77e78]: 2ffe6cb
+          - text: "(9 days ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e79]:
+          - strong [ref=f77e80]: 5e5a42c
+          - text: "(11 days ago): Update PyPI downloads for Python packages"
+        - listitem [ref=f77e81]:
+          - strong [ref=f77e82]: 543576c
+          - text: "(12 days ago): Add uv support (lockfile, Docker, CI, docs)"
+        - listitem [ref=f77e83]:
+          - strong [ref=f77e84]: bb4459e
+          - text: "(12 days ago): Add monthly downloads chart to Python packages page"
+        - listitem [ref=f77e85]:
+          - strong [ref=f77e86]: c9a0206
+          - text: "(2 weeks ago): Remove publications-per-year chart"
+        - listitem [ref=f77e87]:
+          - strong [ref=f77e88]: c547059
+          - text: "(2 weeks ago): Publications: place stats beside the per-year chart in one compact row"
+        - listitem [ref=f77e89]:
+          - strong [ref=f77e90]: f18d323
+          - text: "(2 weeks ago): Remove journal impact factor boxplot"
+        - listitem [ref=f77e91]:
+          - strong [ref=f77e92]: db8158c
+          - text: "(2 weeks ago): Replace IF-coverage doughnut with impact factor boxplot per year"
+        - listitem [ref=f77e93]:
+          - strong [ref=f77e94]: f0e7f7b
+          - text: "(2 weeks ago): Modern UI overhaul: design tokens, dark mode, HTMX nav, filters, charts"
+        - listitem [ref=f77e95]:
+          - strong [ref=f77e96]: fe663cb
+          - text: "(2 weeks ago): Add GitHub link for finbert-ai-detector"
+        - listitem [ref=f77e97]:
+          - strong [ref=f77e98]: af14081
+          - text: "(2 weeks ago): Add PyPI link for rfbpy on Python packages page"
+        - listitem [ref=f77e99]:
+          - strong [ref=f77e100]: 6b1a9b2
+          - text: "(2 weeks ago): Add rfbpy to Python packages"
+        - listitem [ref=f77e101]:
+          - strong [ref=f77e102]: e3b34c6
+          - text: "(2 weeks ago): Update Amazon book ratings"
+        - listitem [ref=f77e103]:
+          - strong [ref=f77e104]: 270f8e9
+          - text: "(2 weeks ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e105]:
+          - strong [ref=f77e106]: 4f8e268
+          - text: "(2 weeks ago): Update stats and R package downloads"
+        - listitem [ref=f77e107]:
+          - strong [ref=f77e108]: 581e5e8
+          - text: "(3 weeks ago): Pin bibtexparser<2.0.0 for scholarly compatibility"
+        - listitem [ref=f77e109]:
+          - strong [ref=f77e110]: b1e9434
+          - text: "(3 weeks ago): Update Amazon book ratings"
+        - listitem [ref=f77e111]:
+          - strong [ref=f77e112]: 775ce47
+          - text: "(3 weeks ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e113]:
+          - strong [ref=f77e114]: 9dfba65
+          - text: "(4 weeks ago): Update Amazon book ratings"
+        - listitem [ref=f77e115]:
+          - strong [ref=f77e116]: 420846a
+          - text: "(4 weeks ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e117]:
+          - strong [ref=f77e118]: 504a920
+          - text: "(5 weeks ago): removed unused files"
+        - listitem [ref=f77e119]:
+          - strong [ref=f77e120]: 2e4099e
+          - text: "(5 weeks ago): Update Amazon book ratings"
+        - listitem [ref=f77e121]:
+          - strong [ref=f77e122]: b275764
+          - text: "(5 weeks ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e123]:
+          - strong [ref=f77e124]: ae34455
+          - text: "(6 weeks ago): Update Amazon book ratings"
+        - listitem [ref=f77e125]:
+          - strong [ref=f77e126]: 5db31e2
+          - text: "(6 weeks ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e127]:
+          - strong [ref=f77e128]: 48bbbc5
+          - text: "(7 weeks ago): Add news article and PDF on retirement planning"
+        - listitem [ref=f77e129]:
+          - strong [ref=f77e130]: 38e628b
+          - text: "(7 weeks ago): Update Amazon book ratings"
+        - listitem [ref=f77e131]:
+          - strong [ref=f77e132]: a97e661
+          - text: "(7 weeks ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e133]:
+          - strong [ref=f77e134]: ed59874
+          - text: "(7 weeks ago): Update stats and R package downloads"
+        - listitem [ref=f77e135]:
+          - strong [ref=f77e136]: f9cbf62
+          - text: "(8 weeks ago): Add image link for publication on risk forecasting in DeFi"
+        - listitem [ref=f77e137]:
+          - strong [ref=f77e138]: 277dc1c
+          - text: "(8 weeks ago): Update Amazon book ratings"
+        - listitem [ref=f77e139]:
+          - strong [ref=f77e140]: ed668a4
+          - text: "(8 weeks ago): Update CRAN downloads for R packages"
+        - listitem [ref=f77e141]:
+          - strong [ref=f77e142]: 220cb70
+          - text: "(8 weeks ago): Update stats and R package downloads"
+        - listitem [ref=f77e143]:
+          - strong [ref=f77e144]: 897a7d8
+          - text: "(9 weeks ago): Commit on 2026-08-27 13:03:29"
+        - listitem [ref=f77e145]:
+          - strong [ref=f77e146]: 804858f
+          - text: "(9 weeks ago): Commit on 2026-08-27 12:24:53"
+        - listitem [ref=f77e147]:
+          - strong [ref=f77e148]: 54625d3
+          - text: "(9 weeks ago): Commit on 2026-08-27 12:08:27"
+        - listitem [ref=f77e149]:
+          - strong [ref=f77e150]: fe449aa
+          - text: "(9 weeks ago): Commit on 2026-08-27 12:03:51"
+        - listitem [ref=f77e151]:
+          - strong [ref=f77e152]: b802e73
+          - text: "(9 weeks ago): new slides 2"
+        - listitem [ref=f77e153]:
+          - strong [ref=f77e154]: 6cb38d1
+          - text: "(9 weeks ago): new slides"
+        - listitem [ref=f77e155]:
+          - strong [ref=f77e156]: 40b9986
+          - text: "(9 weeks ago): change json location"
+        - listitem [ref=f77e157]:
+          - strong [ref=f77e158]: 4836ebc
+          - text: "(9 weeks ago): Add JSON files for upcoming presentations on AI in finance and 10-K filings"
+        - listitem [ref=f77e159]:
+          - strong [ref=f77e160]: fb839b6
+          - text: "(9 weeks ago): Add custom SCSS theme for presentation slides with styling and font integration"
+        - listitem [ref=f77e161]:
+          - strong [ref=f77e162]: c80474a
+          - text: "(9 weeks ago): Remove unused plugins and associated styles from reveal.js presentation"
+  - contentinfo [ref=f77e163]:
+    - paragraph [ref=f77e165]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f77e166] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f77e167] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

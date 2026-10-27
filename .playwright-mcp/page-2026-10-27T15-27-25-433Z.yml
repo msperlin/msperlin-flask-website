@@ -1,0 +1,60 @@
+- generic [active] [ref=f95e1]:
+  - banner [ref=f95e2]:
+    - generic [ref=f95e3]:
+      - link "Marcelo S. Perlin." [ref=f95e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f95e5]:
+        - list [ref=f95e6]:
+          - listitem [ref=f95e7]:
+            - link "Home" [ref=f95e8] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f95e9]:
+            - link "Publications" [ref=f95e10] [cursor=pointer]:
+              - /url: /publications
+          - listitem [ref=f95e11]:
+            - link "Books" [ref=f95e12] [cursor=pointer]:
+              - /url: /books
+          - listitem [ref=f95e13]:
+            - link "Code ▾" [ref=f95e14] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f95e15]:
+            - link "Research ▾" [ref=f95e16] [cursor=pointer]:
+              - /url: javascript:void(0)
+          - listitem [ref=f95e17]:
+            - link "Consulting" [ref=f95e18] [cursor=pointer]:
+              - /url: /consulting
+          - listitem [ref=f95e19]:
+            - link "Class Slides" [ref=f95e20] [cursor=pointer]:
+              - /url: https://msperlin.github.io/site-slides/
+          - listitem [ref=f95e21]:
+            - link "Site Log" [ref=f95e22] [cursor=pointer]:
+              - /url: /site-log
+      - button "Toggle color theme" [ref=f95e24] [cursor=pointer]
+  - main [ref=f95e27]:
+    - generic [ref=f95e28]:
+      - img "Marcelo S. Perlin" [ref=f95e30]
+      - generic [ref=f95e31]:
+        - heading "Welcome" [level=2] [ref=f95e32]
+        - paragraph [ref=f95e33]: Associate Professor of Finance at the Federal University of Rio Grande do Sul (UFRGS), Porto Alegre (Brazil), with a passion for quantitative finance and data science. My work focuses on developing and applying computational tools to solve real-world financial problems. I am the author of several books and research papers on data analysis, financial markets, and programming in R. I also develop and maintain open-source software in R and Python. For more details on my research and teaching, please see the Publications and Code sections.
+        - paragraph [ref=f95e34]:
+          - strong [ref=f95e35]: "Email:"
+          - link "marceloperlin@gmail.com" [ref=f95e36] [cursor=pointer]:
+            - /url: mailto:marceloperlin@gmail.com
+        - generic [ref=f95e37]:
+          - link "Lattes CV" [ref=f95e38] [cursor=pointer]:
+            - /url: https://lattes.cnpq.br/3262699324398819
+          - link "Google Scholar" [ref=f95e39] [cursor=pointer]:
+            - /url: https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ
+          - link "LinkedIn" [ref=f95e40] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/marcelo-s-perlin-11b333201/
+          - link "GitHub" [ref=f95e41] [cursor=pointer]:
+            - /url: https://github.com/msperlin
+  - contentinfo [ref=f95e42]:
+    - paragraph [ref=f95e44]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f95e45] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f95e46] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

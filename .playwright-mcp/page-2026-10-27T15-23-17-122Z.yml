@@ -1,0 +1,36 @@
+- generic [active] [ref=f32e1]:
+  - banner [ref=f32e2]:
+    - generic [ref=f32e3]:
+      - link "Marcelo S. Perlin." [ref=f32e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f32e47] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f32e24] [cursor=pointer]
+  - main [ref=f32e27]:
+    - generic [ref=f32e28]:
+      - img "Marcelo S. Perlin" [ref=f32e30]
+      - generic [ref=f32e31]:
+        - heading "Welcome" [level=2] [ref=f32e32]
+        - paragraph [ref=f32e33]: Associate Professor of Finance at the Federal University of Rio Grande do Sul (UFRGS), Porto Alegre (Brazil), with a passion for quantitative finance and data science. My work focuses on developing and applying computational tools to solve real-world financial problems. I am the author of several books and research papers on data analysis, financial markets, and programming in R. I also develop and maintain open-source software in R and Python. For more details on my research and teaching, please see the Publications and Code sections.
+        - paragraph [ref=f32e34]:
+          - strong [ref=f32e35]: "Email:"
+          - link "marceloperlin@gmail.com" [ref=f32e36] [cursor=pointer]:
+            - /url: mailto:marceloperlin@gmail.com
+        - generic [ref=f32e37]:
+          - link "Lattes CV" [ref=f32e38] [cursor=pointer]:
+            - /url: https://lattes.cnpq.br/3262699324398819
+          - link "Google Scholar" [ref=f32e39] [cursor=pointer]:
+            - /url: https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ
+          - link "LinkedIn" [ref=f32e40] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/marcelo-s-perlin-11b333201/
+          - link "GitHub" [ref=f32e41] [cursor=pointer]:
+            - /url: https://github.com/msperlin
+  - contentinfo [ref=f32e42]:
+    - paragraph [ref=f32e44]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f32e45] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f32e46] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .

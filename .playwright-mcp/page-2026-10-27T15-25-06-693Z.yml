@@ -1,0 +1,44 @@
+- generic [active] [ref=f61e1]:
+  - banner [ref=f61e2]:
+    - generic [ref=f61e3]:
+      - link "Marcelo S. Perlin." [ref=f61e4] [cursor=pointer]:
+        - /url: /
+      - button "Toggle navigation" [ref=f61e5] [cursor=pointer]
+      - navigation "Primary"
+      - button "Toggle color theme" [ref=f61e8] [cursor=pointer]
+  - main [ref=f61e11]:
+    - generic [ref=f61e12]:
+      - heading "Data" [level=2] [ref=f61e13]
+      - paragraph [ref=f61e14]: A major part of my work as an academic researcher is finding ways to access and organize financial and economic datasets using code. In this section I'll provide a download link for the full datasets I use for research or class material. All files represent the _whole_ database, iterating by available time periods and cases. These files are raw and come with **no warranty**. Be aware that you'll probably need to clean it up before any good use. As such, please make sure to cite the original source for reproducibility (see citation format from dataverse).
+      - paragraph [ref=f61e15]:
+        - text: All data is distributed using the
+        - link "Harvard Dataverse Project" [ref=f61e16] [cursor=pointer]:
+          - /url: https://dataverse.harvard.edu/dataverse/msperlin
+        - text: . The Dataverse platform is stable, provides data persistency, versioning and the automatic generation of citation text. You can even use the
+        - link "dataverse" [ref=f61e17] [cursor=pointer]:
+          - /url: https://github.com/IQSS/dataverse-client-r
+        - text: package for reading the files from an R session.
+      - paragraph [ref=f61e18]: All hosted data will be updated at least once a year.
+      - heading "Available datasets:" [level=3] [ref=f61e19]
+      - list [ref=f61e20]:
+        - listitem [ref=f61e21]:
+          - text: "GetDFPData2: Annual Financial Reports from the DFP system."
+          - link "Link" [ref=f61e22] [cursor=pointer]:
+            - /url: https://doi.org/10.7910/DVN/7VVX4J
+        - listitem [ref=f61e23]:
+          - text: "GetFREData: Corporate dataset from FRE system."
+          - link "Link" [ref=f61e24] [cursor=pointer]:
+            - /url: https://doi.org/10.7910/DVN/QIMUNZ
+        - listitem [ref=f61e25]:
+          - text: "GetTDData: Prices and yields of brazilian sovereign bonds."
+          - link "Link" [ref=f61e26] [cursor=pointer]:
+            - /url: https://doi.org/10.7910/DVN/SCSQUF
+  - contentinfo [ref=f61e27]:
+    - paragraph [ref=f61e29]:
+      - text: © 2026 Marcelo S. Perlin. All rights reserved. Page made with
+      - link "Flask" [ref=f61e30] [cursor=pointer]:
+        - /url: https://flask.palletsprojects.com/
+      - text: . Source code available on
+      - link "GitHub" [ref=f61e31] [cursor=pointer]:
+        - /url: https://github.com/msperlin/msperlin-flask-website
+      - text: .
