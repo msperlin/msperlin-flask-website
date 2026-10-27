@@ -2,23 +2,25 @@
 
 {% block content %}
 <section>
-    <h2>Books</h2>
+    <h1>Books</h1>
     <p>Number of books: {{n_books}}</p>
     <ul class="item-list" data-stagger>
         {% for book in books %}
+        {% set cover = img_dims(book.cover_image) %}
         <li class="item-card publication-item reveal">
             {% if book.cover_image %}
             <div class="publication-image book-image">
-                <img src="{{ book.cover_image }}" alt="Book Cover">
+                <img src="{{ book.cover_image | opt_url }}" {% if cover.w %}width="{{ cover.w }}" height="{{ cover.h }}"{% endif %}
+                    alt="" loading="lazy" decoding="async">
             </div>
             {% endif %}
             <div class="publication-content">
-                <h3><a href="{{ book.link_amazon }}">{{ book.title }}</a></h3>
+                <h2><a href="{{ book.link_amazon }}">{{ book.title }}</a></h2>
                 
                 <p>
                     <a href="{{ book.link_amazon }}">Amazon</a>
                     {% if book.link_online %}
-                    | <a href="{{ book.link_online }}" hx-boost="false">Online Version</a>
+                    | <a href="{{ book.link_online }}">Online Version</a>
                     {% endif %}
                 </p>
                 {% if book.amazon_rating %}

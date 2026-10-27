@@ -58,18 +58,22 @@ enhancement on top. Everything still works if JavaScript is disabled.
 *   **Design tokens & dark mode**: colors, radii, and fonts are CSS variables in
     `static/css/style.css`. The theme toggle switches `[data-theme="dark"]`;
     the choice is stored in `localStorage` and defaults to the OS preference.
-*   **Navigation without full reloads**: [HTMX](https://htmx.org) (`hx-boost` on
-    `<body>`) swaps page content in place while keeping real URLs and titles.
-    Standalone documents (online books, slide decks) opt out with
-    `hx-boost="false"` so their own CSS/JS keeps working.
+*   **Navigation**: plain server-rendered links (no client-side routing), so
+    browser history, focus and screen-reader behaviour stay native.
 *   **Publications search/filter**: [Alpine.js](https://alpinejs.dev) filters the
-    server-rendered list client-side (title/author/journal + year).
-*   **Charts**: [Chart.js](https://www.chartjs.org) renders publication and R
-    package download charts. Data is embedded per-page in
-    `<script type="application/json" data-chart="…">` blocks.
-*   **Site JS**: all interaction logic lives in `static/js/main.js` (theme, mobile
-    nav, scroll-reveal animations, charts, cite modal). It is written to survive
-    HTMX swaps by using event delegation.
+    server-rendered list client-side (title/author/journal + year). It is loaded
+    only on the publications page.
+*   **Charts**: [Chart.js](https://www.chartjs.org) renders package download
+    charts. Data is embedded per-page in
+    `<script type="application/json" data-chart="…">` blocks, and Chart.js is
+    loaded only by the two code pages.
+*   **Site JS**: all interaction logic lives in `static/js/main.js` (theme,
+    mobile nav, scroll-reveal animations, charts, cite modal) and uses event
+    delegation. Content is never hidden behind a failed script.
+*   **Images**: originals live in `static/img/`; the site serves resized WebP
+    derivatives from `static/img/opt/` (with the original as fallback). Run
+    `python scripts/optimize_images.py` after adding or replacing a cover or
+    portrait image.
 *   **Libraries** are loaded from public CDNs, so there is **no build step** and
     no Node toolchain to maintain.
 
@@ -96,6 +100,19 @@ To update them, run it from the repository root:
 uv run python scripts/run_scholarly.py
 ```
 This will update `data/stats/gscholar.json`.
+
+#### 5. Adding or Replacing Images
+1.  Put the original image in `static/img/` and reference it from the JSON file
+    (e.g. `static/img/2027_cover_Journal.jpg`).
+2.  Regenerate the optimized WebP derivatives and size manifest:
+    ```bash
+    uv run python scripts/optimize_images.py
+    ```
+    This requires [ImageMagick](https://imagemagick.org) (`magick` on the PATH).
+
+The templates use the `opt_url` filter and `img_dims()` helper (see `app.py`),
+so new images automatically get the resized file, lazy loading and intrinsic
+dimensions.
 
 ---
 

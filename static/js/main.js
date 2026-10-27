@@ -1,11 +1,15 @@
 /* ==========================================================================
-   Site interactions: theme, mobile nav, scroll reveal, charts, HTMX hooks.
+   Site interactions: theme, navigation, scroll reveal, charts, cite modal.
    Loaded with `defer`, so the DOM is parsed before this runs.
    ========================================================================== */
 (function () {
     'use strict';
 
     var root = document.documentElement;
+
+    // Mark the document as scripted so reveal animations can start from hidden.
+    // Done here (not inline) so a failed script never hides the page content.
+    root.classList.add('js');
 
     /* ---------------------------------------------------------------- Theme */
     function currentTheme() {
@@ -16,19 +20,42 @@
         return currentTheme() === 'dark';
     }
 
-    function applyTheme(theme) {
-        root.setAttribute('data-theme', theme);
+    function syncThemeChrome(theme) {
         var meta = document.querySelector('meta[name="theme-color"]');
         if (meta) {
             meta.setAttribute('content', theme === 'dark' ? '#0a0f1c' : '#ffffff');
         }
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+            btn.setAttribute('aria-label',
+                theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+        });
+    }
+
+    function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        syncThemeChrome(theme);
         // Charts follow the theme.
         destroyCharts();
         renderCharts();
     }
 
-    /* ------------------------------------------------------------- Elements */
-    // Event delegation so listeners survive HTMX body swaps.
+    /* ------------------------------------------------------- Navigation */
+    function closeNav() {
+        document.body.classList.remove('nav-open');
+        var toggle = document.querySelector('[data-nav-toggle]');
+        if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+    }
+
+    function closeDropdowns(except) {
+        document.querySelectorAll('.dropdown.is-open').forEach(function (dd) {
+            if (dd === except) { return; }
+            dd.classList.remove('is-open');
+            var btn = dd.querySelector('[data-dropdown-toggle]');
+            if (btn) { btn.setAttribute('aria-expanded', 'false'); }
+        });
+    }
+
+    // Event delegation keeps listeners valid for the whole document lifetime.
     document.addEventListener('click', function (e) {
         var themeBtn = e.target.closest('[data-theme-toggle]');
         if (themeBtn) {
@@ -40,6 +67,20 @@
             return;
         }
 
+        var dropdownBtn = e.target.closest('[data-dropdown-toggle]');
+        if (dropdownBtn) {
+            var dropdown = dropdownBtn.closest('.dropdown');
+            var willOpen = !dropdown.classList.contains('is-open');
+            closeDropdowns(dropdown);
+            dropdown.classList.toggle('is-open', willOpen);
+            dropdownBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+            return;
+        }
+
+        if (!e.target.closest('.dropdown')) {
+            closeDropdowns();
+        }
+
         var navBtn = e.target.closest('[data-nav-toggle]');
         if (navBtn) {
             var open = document.body.classList.toggle('nav-open');
@@ -47,10 +88,29 @@
             return;
         }
 
-        if (e.target.closest('nav a') && window.matchMedia('(max-width: 820px)').matches) {
-            document.body.classList.remove('nav-open');
-            var toggle = document.querySelector('[data-nav-toggle]');
-            if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+        if (e.target.closest('nav a') && window.matchMedia('(max-width: 1100px)').matches) {
+            closeNav();
+        }
+    });
+
+    // Close an open dropdown once keyboard focus leaves it.
+    document.addEventListener('focusin', function (e) {
+        if (!e.target.closest('.dropdown')) {
+            closeDropdowns();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            if (closeCiteModal()) { return; }
+            var openDropdown = document.querySelector('.dropdown.is-open');
+            if (openDropdown) {
+                closeDropdowns();
+                var trigger = openDropdown.querySelector('[data-dropdown-toggle]');
+                if (trigger) { trigger.focus(); }
+                return;
+            }
+            closeNav();
         }
     });
 
@@ -175,6 +235,8 @@
     }
 
     /* ------------------------------------------------------------ Cite modal */
+    var citeTrigger = null;
+
     function formatApaAuthors(authorsStr) {
         var authors = authorsStr.split(',').map(function (a) { return a.trim(); }).filter(Boolean);
         var formatted = authors.map(function (author) {
@@ -207,13 +269,72 @@
         }
     }
 
+    function setPageInert(inert) {
+        ['header', 'main', 'footer'].forEach(function (selector) {
+            var el = document.querySelector(selector);
+            if (!el) { return; }
+            if (inert) {
+                el.setAttribute('inert', '');
+            } else {
+                el.removeAttribute('inert');
+            }
+        });
+    }
+
+    function openCiteModal(trigger) {
+        var modal = document.getElementById('citeModal');
+        if (!modal) { return; }
+        citeTrigger = trigger;
+        modal.classList.add('is-open');
+        document.body.classList.add('modal-open');
+        setPageInert(true);
+        var closeBtn = modal.querySelector('[data-cite-close]');
+        if (closeBtn) { closeBtn.focus(); }
+    }
+
+    function closeCiteModal() {
+        var modal = document.getElementById('citeModal');
+        if (!modal || !modal.classList.contains('is-open')) { return false; }
+
+        modal.classList.remove('is-open');
+        document.body.classList.remove('modal-open');
+        setPageInert(false);
+        if (citeTrigger && typeof citeTrigger.focus === 'function') {
+            citeTrigger.focus();
+        }
+        citeTrigger = null;
+        return true;
+    }
+
+    // Keep keyboard focus inside the dialog while it is open.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') { return; }
+        var modal = document.getElementById('citeModal');
+        if (!modal || !modal.classList.contains('is-open')) { return; }
+
+        var focusable = Array.prototype.filter.call(
+            modal.querySelectorAll('button, textarea, input, select, a[href], [tabindex]:not([tabindex="-1"])'),
+            function (el) { return el.offsetParent !== null; }
+        );
+        if (!focusable.length) { return; }
+
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    });
+
     document.addEventListener('click', function (e) {
         var citeBtn = e.target.closest('.cite-btn');
         if (citeBtn) {
-            var modal = document.getElementById('citeModal');
             var bibtexOutput = document.getElementById('bibtexOutput');
             var apaOutput = document.getElementById('apaOutput');
-            if (!modal || !bibtexOutput || !apaOutput) { return; }
+            if (!bibtexOutput || !apaOutput) { return; }
 
             var title = citeBtn.getAttribute('data-title') || '';
             var authors = citeBtn.getAttribute('data-authors') || '';
@@ -227,19 +348,18 @@
                 '},\n  journal = {' + journal + '},\n  year = {' + year + '}\n}';
             apaOutput.value = formatApaAuthors(authors) + ' (' + year + '). ' + title + '. ' + journal + '.';
 
-            modal.classList.add('is-open');
+            openCiteModal(citeBtn);
             return;
         }
 
         if (e.target.closest('[data-cite-close]')) {
-            var openModal = document.getElementById('citeModal');
-            if (openModal) { openModal.classList.remove('is-open'); }
+            closeCiteModal();
             return;
         }
 
         // Click on the modal backdrop closes it.
         if (e.target.classList && e.target.classList.contains('modal')) {
-            e.target.classList.remove('is-open');
+            closeCiteModal();
             return;
         }
 
@@ -253,47 +373,17 @@
         }
     });
 
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            var modal = document.getElementById('citeModal');
-            if (modal) { modal.classList.remove('is-open'); }
-        }
-    });
-
     /* ----------------------------------------------------------- Bootstrap */
     function init() {
+        syncThemeChrome(currentTheme());
         stagger();
         observeReveals();
         renderCharts();
     }
 
-    document.addEventListener('DOMContentLoaded', init);
-
-    // HTMX: tear down charts before the body is replaced to avoid leaks.
-    document.addEventListener('htmx:beforeSwap', function () {
-        destroyCharts();
-    });
-
-    // HTMX: re-run enhancements after swapped content settles.
-    document.addEventListener('htmx:afterSwap', function (event) {
-        // Keep the document title in sync with the boosted page.
-        try {
-            var html = event.detail.xhr.responseText;
-            var match = html && html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-            if (match) { document.title = match[1].trim(); }
-        } catch (err) { /* noop */ }
-
-        stagger();
-        observeReveals();
-        renderCharts();
-    });
-
-    document.addEventListener('htmx:afterSettle', function () {
-        window.scrollTo({ top: 0, behavior: 'auto' });
-    });
-
-    // If the document is already parsed (e.g. script loaded late), run now.
     if (document.readyState !== 'loading') {
         init();
+    } else {
+        document.addEventListener('DOMContentLoaded', init);
     }
 })();

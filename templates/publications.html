@@ -19,31 +19,34 @@
             ).length;
         }
     }">
-    <h2>Publications</h2>
+    <h1>Publications</h1>
 
-    <h4><a href="https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ">Google Scholar Statistics</a>
-        <br>
-        <font size="2">(last update at {{ gscholar_stats.date_retrieval }})</font>
-    </h4>
+    <p class="gs-stats">
+        <a href="https://scholar.google.com/citations?hl=en&user=n3LTk-UAAAAJ">Google Scholar Statistics</a><br>
+        <small>(last update at {{ gscholar_stats.date_retrieval }})</small>
+    </p>
 
     <div class="stats-container reveal" data-stagger>
-        <div class="stat-card reveal" data-tooltip="Total number of unique research papers published.">
-            <h4>Published papers</h4>
-            <p>{{ total_publications }}</p>
+        <div class="stat-card reveal">
+            <p class="stat-label">Published papers</p>
+            <p class="stat-value">{{ total_publications }}</p>
+            <p class="stat-help">Total number of unique research papers published.</p>
         </div>
-        <div class="stat-card reveal"
-            data-tooltip="Total number of citations received by my work, including papers, books, book chapters and news articles, as reported by Google Scholar.">
-            <h4>Total citations</h4>
-            <p>{{ gscholar_stats.citedby }}</p>
+        <div class="stat-card reveal">
+            <p class="stat-label">Total citations</p>
+            <p class="stat-value">{{ gscholar_stats.citedby }}</p>
+            <p class="stat-help">Citations received by my work (papers, books, chapters and news articles), as reported by
+                Google Scholar.</p>
         </div>
-        <div class="stat-card reveal"
-            data-tooltip="A metric that indicates both the productivity and citation impact of a researcher. An h-index of X means X papers have at least X citations each.">
-            <h4>h-index</h4>
-            <p>{{ gscholar_stats.hindex }}</p>
+        <div class="stat-card reveal">
+            <p class="stat-label">h-index</p>
+            <p class="stat-value">{{ gscholar_stats.hindex }}</p>
+            <p class="stat-help">An h-index of X means X papers have at least X citations each.</p>
         </div>
-        <div class="stat-card reveal" data-tooltip="The number of publications with at least 10 citations.">
-            <h4>i10-index</h4>
-            <p>{{ gscholar_stats.i10index }}</p>
+        <div class="stat-card reveal">
+            <p class="stat-label">i10-index</p>
+            <p class="stat-value">{{ gscholar_stats.i10index }}</p>
+            <p class="stat-help">The number of publications with at least 10 citations.</p>
         </div>
     </div>
 
@@ -64,7 +67,8 @@
             {% endfor %}
         </select>
         <button class="pub-clear" type="button" @click="q = ''; year = 'all';">Clear</button>
-        <span class="result-count" x-text="count() + ' of {{ total_publications }} shown'"></span>
+        <span class="result-count" aria-live="polite" aria-atomic="true"
+            x-text="count() + ' of {{ total_publications }} shown'"></span>
     </div>
 
     <ul class="item-list" id="pubList" data-stagger>
@@ -73,7 +77,7 @@
             data-search="{{ (pub.title ~ ' ' ~ (pub.authors or '') ~ ' ' ~ (pub.journal or '')) | lower }}"
             x-show="matches($el)">
             <div class="publication-content">
-                <h3><a href="{{ pub.link }}">{{ pub.title }}</a></h3>
+                <h2><a href="{{ pub.link }}">{{ pub.title }}</a></h2>
                 {% if pub.authors %}
                 <p class="meta"><strong>{{ pub.authors }}</strong></p>
                 {% endif %}
@@ -90,8 +94,10 @@
                 {% endif %}
             </div>
             {% if pub.image %}
+            {% set cover = img_dims(pub.image) %}
             <div class="publication-image">
-                <img src="{{ url_for('static', filename=pub.image.replace('static/', '')) }}" alt="Journal Cover">
+                <img src="{{ pub.image | opt_url }}" {% if cover.w %}width="{{ cover.w }}" height="{{ cover.h }}"{% endif %}
+                    alt="" loading="lazy" decoding="async">
             </div>
             {% endif %}
         </li>
@@ -100,7 +106,9 @@
 
     <p class="empty-state" x-show="count() === 0" x-cloak>No publications match your search.</p>
 </section>
+{% endblock %}
 
+{% block modals %}
 <!-- Cite Modal -->
 <div id="citeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="citeModalTitle">
     <div class="modal-content">
@@ -115,4 +123,8 @@
         <button id="copyApaBtn" class="copy-btn">Copy APA</button>
     </div>
 </div>
+{% endblock %}
+
+{% block vendor_scripts %}
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 {% endblock %}

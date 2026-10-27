@@ -2,13 +2,13 @@
 
 {% block content %}
 <section>
-    <h2>Awards</h2>
+    <h1>Awards</h1>
     {% for year, items in awards.items() %}
-        <h3>{{ year }}</h3>
+        <h2 class="year-heading">{{ year }}</h2>
         <ul class="item-list" data-stagger>
             {% for award in items %}
             <li class="item-card reveal">
-                <b>{{ award.title }}</b> granted by <b>{{ award.organization }}</b>: {{ award.description }}
+                <strong>{{ award.title }}</strong> granted by <strong>{{ award.organization }}</strong>: {{ award.description }}
             </li>
             {% endfor %}
         </ul>

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h1>Page not found</h1>
+    <p class="lead">The page you are looking for does not exist or has moved.</p>
+    <p><a href="{{ url_for('index') }}">Back to the home page</a></p>
+</section>
+{% endblock %}

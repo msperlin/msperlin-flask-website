@@ -5,20 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="theme-color" content="#ffffff">
+
     <!-- Set theme before paint to avoid a flash of the wrong theme -->
     <script>
         (function () {
-            document.documentElement.classList.add('js');
             try {
                 var t = localStorage.getItem('theme');
                 if (t !== 'light' && t !== 'dark') {
                     t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                 }
                 document.documentElement.setAttribute('data-theme', t);
+                var meta = document.querySelector('meta[name="theme-color"]');
+                if (meta) {
+                    meta.setAttribute('content', t === 'dark' ? '#0a0f1c' : '#ffffff');
+                }
             } catch (e) { }
         })();
     </script>
-    <meta name="theme-color" content="#ffffff">
 
     {% block meta_description %}
     <meta name="description"
@@ -50,19 +54,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
 
-    <!-- Progressive enhancement: HTMX (navigation), Chart.js, Alpine.js, site JS -->
-    <script defer src="https://unpkg.com/htmx.org@2.0.4"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    <!-- Page-specific vendor scripts (charts, filtering) -->
+    {% block vendor_scripts %}{% endblock %}
     <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
 
-<body hx-boost="true">
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
     <header>
         <div class="container header-inner">
             <a class="logo" href="{{ url_for('index') }}">Marcelo S. Perlin<span class="logo-dot">.</span></a>
 
-            <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Toggle navigation">
+            <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="primary-nav"
+                aria-label="Toggle navigation">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     aria-hidden="true">
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -72,7 +77,7 @@
             </button>
 
             <nav aria-label="Primary">
-                <ul>
+                <ul id="primary-nav">
                     <li><a href="{{ url_for('index') }}"
                             class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
                     <li><a href="{{ url_for('publications') }}"
@@ -81,19 +86,19 @@
                             class="{% if request.endpoint == 'books' %}active{% endif %}">Books</a></li>
 
                     <li class="dropdown">
-                        <a href="javascript:void(0)" hx-boost="false"
-                            class="dropbtn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
-                            aria-haspopup="true">Code ▾</a>
-                        <div class="dropdown-content">
+                        <button type="button" class="dropbtn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
+                            aria-haspopup="true" aria-expanded="false" aria-controls="menu-code"
+                            data-dropdown-toggle>Code <span aria-hidden="true">▾</span></button>
+                        <div class="dropdown-content" id="menu-code">
                             <a href="{{ url_for('code_r') }}">R</a>
                             <a href="{{ url_for('code_python') }}">Python</a>
                         </div>
                     </li>
                     <li class="dropdown">
-                        <a href="javascript:void(0)" hx-boost="false"
-                            class="dropbtn {% if request.endpoint in ['data', 'news', 'awards', 'slides'] %}active{% endif %}"
-                            aria-haspopup="true">Research ▾</a>
-                        <div class="dropdown-content">
+                        <button type="button" class="dropbtn {% if request.endpoint in ['data', 'news', 'awards', 'slides'] %}active{% endif %}"
+                            aria-haspopup="true" aria-expanded="false" aria-controls="menu-research"
+                            data-dropdown-toggle>Research <span aria-hidden="true">▾</span></button>
+                        <div class="dropdown-content" id="menu-research">
                             <a href="{{ url_for('data') }}">Data</a>
                             <a href="{{ url_for('news') }}">Media Coverage</a>
                             <a href="{{ url_for('awards') }}">Awards</a>
@@ -103,7 +108,8 @@
                     <li><a href="{{ url_for('consulting') }}"
                             class="{% if request.endpoint == 'consulting' %}active{% endif %}">Consulting</a></li>
                     <li><a href="https://msperlin.github.io/site-slides/" target="_blank"
-                            rel="noopener noreferrer">Class Slides</a></li>
+                            rel="noopener noreferrer">Class Slides<span class="visually-hidden"> (opens in a new
+                                tab)</span></a></li>
                     <li><a href="{{ url_for('site_log') }}"
                             class="{% if request.endpoint == 'site_log' %}active{% endif %}">Site Log</a></li>
                 </ul>
@@ -127,7 +133,7 @@
         </div>
     </header>
 
-    <main class="container">
+    <main class="container" id="main" tabindex="-1">
         {% block content %}{% endblock %}
     </main>
 
@@ -138,6 +144,8 @@
                     href="https://github.com/msperlin/msperlin-flask-website">GitHub</a>.</p>
         </div>
     </footer>
+
+    {% block modals %}{% endblock %}
 </body>
 
 </html>

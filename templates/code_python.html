@@ -2,12 +2,12 @@
 
 {% block content %}
 <section>
-    <h2>Code (Python)</h2>
+    <h1>Code (Python)</h1>
     <p>
         Here are Python projects I've developed, mostly related to data science and analysis.
     </p>
 
-    <h3>Python Projects:</h3>
+    <h2>Python Projects:</h2>
 
     <div class="chart-card reveal">
         <h3>Top packages by monthly downloads</h3>
@@ -28,4 +28,7 @@
     </ul>
 
 </section>
+{% endblock %}
+{% block vendor_scripts %}
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 {% endblock %}

@@ -2,16 +2,16 @@
 
 {% block content %}
 <section>
-    <h2>Code (R)</h2>
+    <h1>Code (R)</h1>
     <p>
-        I fell that unrestricted access to organized datasets is one of the pillars of reproducible research, which is why I've taken so much interest in it over the years. As a result, I'm the author of many R packages distributed in CRAN. Most packages are related to importing and organizing financial and economic datasets from public sources. 
+        I feel that unrestricted access to organized datasets is one of the pillars of reproducible research, which is why I've taken so much interest in it over the years. As a result, I'm the author of many R packages distributed in CRAN. Most packages are related to importing and organizing financial and economic datasets from public sources.
     </p>
     <p>
         If you used one of the packages in research, please use the proper citation format with R code <code>citation('pkgname')</code>.
     </p>
 
-    <h3>R Packages:</h3>
-    <p>All packages are available at <a href="https://msperlin.r-universe.dev/builds">msperlin.r-universe.dev/builds</a>. 
+    <h2>R Packages:</h2>
+    <p>All packages are available at <a href="https://msperlin.r-universe.dev/builds">msperlin.r-universe.dev/builds</a>.
     {% if code_r and code_r[0].get('updated_at') %}
     Package statistics updated at {{ code_r[0].get('updated_at') }}.
     {% endif %}
@@ -34,4 +34,7 @@
     </ul>
 
 </section>
+{% endblock %}
+{% block vendor_scripts %}
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 {% endblock %}

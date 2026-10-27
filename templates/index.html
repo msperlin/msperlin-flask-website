@@ -3,10 +3,11 @@
 {% block content %}
 <section class="hero reveal">
   <div class="profile-photo">
-    <img src="{{ url_for('static', filename='img/profile.png') }}" alt="{{ about.name }}">
+    <img src="{{ url_for('static', filename='img/profile.png') | opt_url }}" width="400" height="400"
+      alt="Portrait of Marcelo S. Perlin" fetchpriority="high" decoding="async">
   </div>
   <div class="bio">
-    <h2>Welcome</h2>
+    <h1>Welcome</h1>
     <p>{{ about.bio }}</p>
     {% if about.email %}
     <p><strong>Email:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>

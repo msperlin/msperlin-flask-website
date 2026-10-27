@@ -2,14 +2,14 @@
 
 {% block content %}
 <section>
-    <h2>Data</h2>
+    <h1>Data</h1>
     <p>
         A major part of my work as an academic researcher is finding ways to access and organize financial and economic
         datasets using code. In this section I'll provide a download link for the full datasets I use for research or
-        class material. All files represent the _whole_ database, iterating by available time periods and cases. These
-        files are raw and come with **no warranty**. Be aware that you'll probably need to clean it up before any good
-        use. As such, please make sure to cite the original source for reproducibility (see citation format from
-        dataverse).
+        class material. All files represent the <em>whole</em> database, iterating by available time periods and cases.
+        These files are raw and come with <strong>no warranty</strong>. Be aware that you'll probably need to clean it
+        up before any good use. As such, please make sure to cite the original source for reproducibility (see citation
+        format from dataverse).
     </p>
     <p>
         All data is distributed using the <a href="https://dataverse.harvard.edu/dataverse/msperlin">Harvard Dataverse
@@ -21,11 +21,12 @@
         All hosted data will be updated at least once a year.
     </p>
 
-    <h3>Available datasets:</h3>
+    <h2>Available datasets:</h2>
     <ul class="item-list" data-stagger>
         {% for i_data in data %}
         <li class="item-card reveal">
-            <b>{{ i_data.name }}</b>: {{ i_data.description }} <a href="{{ i_data.link}}">Link</a>
+            <b>{{ i_data.name }}</b>: {{ i_data.description }} <a href="{{ i_data.link }}"
+                aria-label="Download {{ i_data.name }} dataset">Download</a>
         </li>
         {% endfor %}
     </ul>
