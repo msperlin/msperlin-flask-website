@@ -1,0 +1,18 @@
+version: 2
+
+updates:
+  # Keeps GitHub Actions pins in .github/workflows/ up to date.
+  # Needed because astral-sh/setup-uv no longer publishes floating major tags
+  # (e.g. @v10 does not exist), so pins are fully versioned and must be bumped.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: ci
+    groups:
+      github-actions:
+        patterns:
+          - "*"
