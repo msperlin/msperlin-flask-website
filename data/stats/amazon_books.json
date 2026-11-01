@@ -19,7 +19,7 @@
       "ratings_count": 3,
       "title": "Analyzing Financial and Economic Data with R (Third Edition)",
       "link_amazon": "https://www.amazon.com/dp/B0BZ98RYFW",
-      "last_updated": "2026-10-25 05:48:23"
+      "last_updated": "2026-11-01 07:13:26"
     },
     "2023-qrcp": {
       "rating": 4.0,
@@ -29,11 +29,11 @@
       "last_updated": "2026-10-11 06:54:39"
     },
     "2024-adfer": {
-      "rating": 4.7,
-      "ratings_count": 240,
+      "rating": 4.6,
+      "ratings_count": 226,
       "title": "An\u00e1lise de Dados Financeiros e Econ\u00f4micos com o R (Terceira Edi\u00e7\u00e3o)",
       "link_amazon": "https://www.amazon.com.br/dp/B08WNC27ZY",
-      "last_updated": "2026-08-02 04:25:10"
+      "last_updated": "2026-11-01 07:13:31"
     },
     "2024-intror": {
       "rating": 4.9,
@@ -43,5 +43,5 @@
       "last_updated": "2026-08-02 04:25:12"
     }
   },
-  "date_retrieval": "2026-10-25"
+  "date_retrieval": "2026-11-01"
 }
