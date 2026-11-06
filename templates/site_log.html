@@ -31,7 +31,9 @@
         <ul class="commit-list">
         {% for commit in commits %}
             <li>
-                <strong>{{ commit.hash }}</strong> ({{ commit.date }}): {{ commit.message }}
+                <a href="{{ commit.url }}" target="_blank" rel="noopener noreferrer"
+                    aria-label="View commit {{ commit.hash }} on GitHub (opens in a new tab)"><strong>{{ commit.hash }}</strong></a>
+                <span class="commit-meta"><time datetime="{{ commit.iso_date }}">{{ commit.date }}</time></span>: {{ commit.message }}
             </li>
         {% endfor %}
         </ul>

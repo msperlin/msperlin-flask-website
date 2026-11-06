@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, send_from_directory, make_response, url_for
 import datetime 
 import subprocess
+import time
 import urllib.request
 import urllib.error
 
@@ -321,37 +322,157 @@ def serve_slide(slide_folder, path=None):
         
     return "File not found", 404
 
-@app.route('/site-log')
-def site_log():
-    # Git Commits
+
+# --- Site log: recent commits ---------------------------------------------
+# Cloud Run builds exclude .git (see .dockerignore) and python:3.13-slim has no
+# git binary, so production must read commits from the GitHub API. The local
+# git fallback keeps `flask run` working offline.
+COMMITS_REPO = 'msperlin/msperlin-flask-website'
+_COMMITS_CACHE = {'commits': None, 'expires': 0.0}
+_ACTIONS_CACHE = {'actions': None, 'expires': 0.0}
+
+
+def _github_headers():
+    """Headers for the GitHub API, using GITHUB_TOKEN when available."""
+    headers = {'User-Agent': 'Mozilla/5.0', 'Accept': 'application/vnd.github+json'}
+    token = os.environ.get('GITHUB_TOKEN')
+    if token:
+        headers['Authorization'] = f'Bearer {token}'
+    return headers
+
+
+def _relative_time(iso_date):
+    """Turn an ISO 8601 timestamp into a short human-readable 'x ago' string."""
     try:
-        git_log_output = subprocess.check_output(['git', 'log', '-n', '50', '--pretty=format:%h|%ar|%s']).decode('utf-8')
-        commits = []
-        for line in git_log_output.strip().split('\n'):
-            if line:
-                parts = line.split('|', 2)
-                if len(parts) == 3:
-                    commits.append({'hash': parts[0], 'date': parts[1], 'message': parts[2]})
-    except Exception as e:
-        commits = []
-        
-    # GitHub Actions
+        when = datetime.datetime.fromisoformat(iso_date.replace('Z', '+00:00'))
+    except (AttributeError, TypeError, ValueError):
+        return ''
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=datetime.timezone.utc)
+    seconds = max(int((datetime.datetime.now(datetime.timezone.utc) - when).total_seconds()), 0)
+
+    if seconds < 60:
+        return 'just now'
+
+    minutes = seconds // 60
+    if minutes < 60:
+        return _plural(minutes, 'minute')
+
+    hours = minutes // 60
+    if hours < 24:
+        return _plural(hours, 'hour')
+
+    days = hours // 24
+    if days < 30:
+        return _plural(days, 'day')
+
+    months = days // 30
+    if months < 12:
+        return _plural(months, 'month')
+
+    return _plural(days // 365, 'year')
+
+
+def _plural(value, unit):
+    return f"{value} {unit}{'s' if value != 1 else ''} ago"
+
+
+def _commits_from_github(limit):
+    """Fetch the latest commits from the public GitHub API."""
+    url = f'https://api.github.com/repos/{COMMITS_REPO}/commits?per_page={limit}'
+    req = urllib.request.Request(url, headers=_github_headers())
+    with urllib.request.urlopen(req, timeout=5) as response:
+        data = json.loads(response.read().decode())
+
+    commits = []
+    for item in data[:limit]:
+        details = item.get('commit', {})
+        message = (details.get('message') or '').strip().splitlines()
+        date = (details.get('author') or {}).get('date') or (details.get('committer') or {}).get('date', '')
+        commits.append({
+            'hash': (item.get('sha') or '')[:7],
+            'message': message[0] if message else '(no message)',
+            'date': _relative_time(date),
+            'iso_date': date,
+            'url': item.get('html_url') or f'https://github.com/{COMMITS_REPO}/commit/{item.get("sha", "")}',
+        })
+    return commits
+
+
+def _commits_from_git(limit):
+    """Local fallback for development, where .git is available."""
+    output = subprocess.check_output(
+        ['git', 'log', '-n', str(limit), '--pretty=format:%h|%aI|%s'],
+        stderr=subprocess.DEVNULL,
+    ).decode('utf-8')
+
+    commits = []
+    for line in output.strip().splitlines():
+        parts = line.split('|', 2)
+        if len(parts) == 3:
+            commits.append({
+                'hash': parts[0],
+                'message': parts[2],
+                'date': _relative_time(parts[1]),
+                'iso_date': parts[1],
+                'url': f'https://github.com/{COMMITS_REPO}/commit/{parts[0]}',
+            })
+    return commits
+
+
+def get_recent_commits(limit=3):
+    """Return the latest commits, cached to stay well under API rate limits."""
+    now = time.time()
+    if _COMMITS_CACHE['commits'] is not None and now < _COMMITS_CACHE['expires']:
+        return _COMMITS_CACHE['commits'][:limit]
+
+    commits = []
+    for fetch in (_commits_from_github, _commits_from_git):
+        try:
+            commits = fetch(limit)
+        except Exception:
+            commits = []
+        if commits:
+            break
+
+    _COMMITS_CACHE['commits'] = commits
+    # Retry quickly after a failure, but don't hammer the API on success.
+    _COMMITS_CACHE['expires'] = now + (600 if commits else 60)
+    return commits
+
+
+def get_recent_actions(limit=15):
+    """Return recent GitHub Actions runs, cached to spare the API quota."""
+    now = time.time()
+    if _ACTIONS_CACHE['actions'] is not None and now < _ACTIONS_CACHE['expires']:
+        return _ACTIONS_CACHE['actions'][:limit]
+
     actions = []
     try:
-        url = "https://api.github.com/repos/msperlin/msperlin-flask-website/actions/runs?per_page=15"
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req) as response:
+        url = f'https://api.github.com/repos/{COMMITS_REPO}/actions/runs?per_page={limit}'
+        req = urllib.request.Request(url, headers=_github_headers())
+        with urllib.request.urlopen(req, timeout=5) as response:
             data = json.loads(response.read().decode())
-            for run in data.get('workflow_runs', []):
-                actions.append({
-                    'name': run.get('name'),
-                    'status': run.get('status'),
-                    'conclusion': run.get('conclusion'),
-                    'created_at': run.get('created_at', '')[:10],
-                    'html_url': run.get('html_url')
-                })
-    except Exception as e:
-        pass
+        for run in data.get('workflow_runs', []):
+            actions.append({
+                'name': run.get('name'),
+                'status': run.get('status'),
+                'conclusion': run.get('conclusion'),
+                'created_at': run.get('created_at', '')[:10],
+                'html_url': run.get('html_url'),
+            })
+    except Exception:
+        actions = []
+
+    _ACTIONS_CACHE['actions'] = actions
+    _ACTIONS_CACHE['expires'] = now + (600 if actions else 60)
+    return actions
+
+
+@app.route('/site-log')
+def site_log():
+    commits = get_recent_commits(limit=3)
+    actions = get_recent_actions(limit=15)
 
     return render_template('site_log.html', title='Site Log', commits=commits, actions=actions, description="Website action logs and commit history.")
 

@@ -962,6 +962,35 @@ nav a.active {
 /* ==========================================================================
    Status colors (site log)
    ========================================================================== */
+.action-list,
+.commit-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+}
+
+.action-list li,
+.commit-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.action-list li:last-child,
+.commit-list li:last-child {
+    border-bottom: 0;
+}
+
+.commit-list strong {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.commit-meta {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
 .status-ok {
     color: #15803d;
     font-weight: 600;
