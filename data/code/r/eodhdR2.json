@@ -2,9 +2,16 @@
     "title": "eodhdR2",
     "description": "Official R API for Fetching Data from 'EODHD'",
     "date_of_submission": "2024-09-03",
-    "number_of_downloads": 394,
+    "number_of_downloads": 395,
     "link": "https://eodhistoricaldata.r-universe.dev/eodhdR2",
-    "downloads_last_month": 394,
-    "total_downloads": 7689,
-    "updated_at": "2026-11-08 05:47:46"
+    "downloads_last_month": 395,
+    "total_downloads": 7739,
+    "updated_at": "2026-11-10 15:01:19",
+    "history": [
+        {
+            "date": "2026-11",
+            "downloads_last_month": 395,
+            "total_downloads": 7739
+        }
+    ]
 }

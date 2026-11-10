@@ -2,9 +2,20 @@
     "title": "GetDFPData2",
     "description": "Reading Annual and Quarterly Financial Reports from B3",
     "date_of_submission": "2021-03-24",
-    "number_of_downloads": 570,
+    "number_of_downloads": 585,
     "link": "https://msperlin.r-universe.dev/GetDFPData2",
-    "downloads_last_month": 570,
-    "total_downloads": 42274,
-    "updated_at": "2026-11-08 05:47:47"
+    "downloads_last_month": 585,
+    "total_downloads": 42357,
+    "updated_at": "2026-11-10 15:01:14",
+    "history": [
+        {
+            "date": "2026-11",
+            "downloads_last_month": 585,
+            "total_downloads": 42357
+        }
+    ],
+    "github_repo": "msperlin/GetDFPData2",
+    "github_stars": 46,
+    "github_forks": 8,
+    "github_last_push": "2026-06-04"
 }

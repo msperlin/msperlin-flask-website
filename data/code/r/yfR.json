@@ -2,9 +2,20 @@
     "title": "yfR",
     "description": "Downloads and Organizes Financial Data from Yahoo Finance",
     "date_of_submission": "2022-06-30",
-    "number_of_downloads": 1098,
+    "number_of_downloads": 1132,
     "link": "https://ropensci.r-universe.dev/yfR",
-    "downloads_last_month": 1098,
-    "total_downloads": 58995,
-    "updated_at": "2026-11-08 05:47:45"
+    "downloads_last_month": 1132,
+    "total_downloads": 59088,
+    "updated_at": "2026-11-10 15:01:20",
+    "history": [
+        {
+            "date": "2026-11",
+            "downloads_last_month": 1132,
+            "total_downloads": 59088
+        }
+    ],
+    "github_repo": "ropensci/yfR",
+    "github_stars": 51,
+    "github_forks": 7,
+    "github_last_push": "2026-03-06"
 }

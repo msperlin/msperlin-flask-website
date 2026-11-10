@@ -7,5 +7,16 @@
     "number_of_downloads": 38,
     "downloads_last_month": 38,
     "total_downloads": 3017,
-    "updated_at": "2026-11-10 14:36:56"
+    "updated_at": "2026-11-10 15:01:11",
+    "history": [
+        {
+            "date": "2026-11",
+            "downloads_last_month": 38,
+            "total_downloads": 3017
+        }
+    ],
+    "github_repo": "msperlin/finbert-ai-detector-python",
+    "github_stars": 0,
+    "github_forks": 0,
+    "github_last_push": "2026-06-01"
 }

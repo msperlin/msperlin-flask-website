@@ -2,9 +2,20 @@
     "title": "GetBCBData",
     "description": "Imports Datasets from BCB (Central Bank of Brazil) using Its\nOfficial API",
     "date_of_submission": "2019-04-23",
-    "number_of_downloads": 809,
+    "number_of_downloads": 799,
     "link": "https://msperlin.r-universe.dev/GetBCBData",
-    "downloads_last_month": 809,
-    "total_downloads": 63582,
-    "updated_at": "2026-11-08 05:47:44"
+    "downloads_last_month": 799,
+    "total_downloads": 63686,
+    "updated_at": "2026-11-10 15:01:13",
+    "history": [
+        {
+            "date": "2026-11",
+            "downloads_last_month": 799,
+            "total_downloads": 63686
+        }
+    ],
+    "github_repo": "msperlin/GetBCBData",
+    "github_stars": 17,
+    "github_forks": 1,
+    "github_last_push": "2026-10-05"
 }
