@@ -1,0 +1,10 @@
+{
+    "name": "cvm-mcp",
+    "description": "An MCP server for the CVM open-data repository (dados.cvm.gov.br), giving MCP clients one interface to Brazilian financial statements, corporate filings, fund data, insider trading and more.",
+    "link": "https://github.com/msperlin/cvm-mcp",
+    "pypi_link": "https://pypi.org/project/cvm-mcp/",
+    "number_of_downloads": 228,
+    "downloads_last_month": 228,
+    "total_downloads": 228,
+    "updated_at": "2026-11-10 00:00:00"
+}
