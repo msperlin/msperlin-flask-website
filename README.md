@@ -114,6 +114,28 @@ The templates use the `opt_url` filter and `img_dims()` helper (see `app.py`),
 so new images automatically get the resized file, lazy loading and intrinsic
 dimensions.
 
+#### 6. Adding a Python Project
+1.  Navigate to `data/code/python/`.
+2.  Create a JSON file with the same fields as the existing ones:
+    ```json
+    {
+        "name": "package-name",
+        "description": "What the project does.",
+        "link": "https://github.com/msperlin/package-name",
+        "github_link": "https://github.com/msperlin/package-name",
+        "pypi_link": "https://pypi.org/project/package-name/",
+        "number_of_downloads": null,
+        "downloads_last_month": null,
+        "total_downloads": null,
+        "updated_at": null
+    }
+    ```
+3.  `link` is where the project name points to (normally the GitHub repo);
+    `github_link` and `pypi_link` feed the standard `GitHub | PyPI` line.
+    Use `null` when the project is not published on PyPI yet.
+4.  Download stats are filled in by `uv run python scripts/update_pypi_downloads.py`,
+    which skips projects with `"pypi_link": null`.
+
 ---
 
 ## ☁️ Hosting on Google Cloud

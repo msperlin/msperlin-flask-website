@@ -8,6 +8,8 @@
     </p>
 
     <h2>Python Projects:</h2>
+    <p>All projects are available on <a href="https://github.com/msperlin?tab=repositories">GitHub</a>; the ones published as
+        packages are also on <a href="https://pypi.org/user/msperlin/">PyPI</a>.</p>
 
     <div class="chart-card reveal">
         <h3>Top packages by monthly downloads</h3>
@@ -18,11 +20,15 @@
 
     <ul class="item-list" data-stagger>
         {% for pkg in code_python %}
+        {% set links = ([{'url': pkg.github_link, 'label': 'GitHub'}] if pkg.github_link else []) +
+                       ([{'url': pkg.pypi_link, 'label': 'PyPI'}] if pkg.pypi_link else []) %}
         <li class="item-card reveal">
-            <strong><a href="{{ pkg.link }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
-            {% if pkg.github_link %}<a href="{{ pkg.github_link }}">GitHub</a>{% endif %}
-            {% if pkg.pypi_link %}<a href="{{ pkg.pypi_link }}">PyPI</a>{% endif %}<br>
-            {% if pkg.number_of_downloads is not none %}<small><em>Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em></small>{% endif %}
+            <strong><a href="{{ pkg.link or (links[0].url if links else '#') }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}<br>
+            <small>
+                {%- for link in links %}<a href="{{ link.url }}">{{ link.label }}</a>{% if not loop.last %} | {% endif %}{% endfor -%}
+                {%- if links and pkg.get('number_of_downloads') is not none %} | {% endif -%}
+                {%- if pkg.get('number_of_downloads') is not none %}<em>Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em>{% endif -%}
+            </small>
         </li>
         {% endfor %}
     </ul>

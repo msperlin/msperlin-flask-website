@@ -195,11 +195,12 @@ def code_r():
 def code_python():
     code_data_python = load_data_from_folder('code/python')
 
-    # Sort Python packages by number of downloads (descending)
-    code_data_python.sort(key=lambda x: int(x.get('number_of_downloads', 0)), reverse=True)
+    # Sort Python packages by number of downloads (descending); entries without
+    # download stats (e.g. MCP servers not yet tracked by pypistats) go last.
+    code_data_python.sort(key=lambda x: int(x.get('number_of_downloads') or 0), reverse=True)
 
     # chart: top packages by downloads (last month)
-    top_pkgs = code_data_python[:12]
+    top_pkgs = [p for p in code_data_python if p.get('number_of_downloads') is not None][:12]
     chart_python_downloads = json.dumps({
         "type": "bar",
         "data": {

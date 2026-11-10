@@ -1,0 +1,11 @@
+{
+    "name": "bcb-mcp",
+    "description": "An MCP server for the time series of the Central Bank of Brazil (BCB-SGS), with a curated series dictionary, a local parquet cache and DuckDB SQL for LLM agents. It is the Python counterpart of the R package GetBCBData.",
+    "link": "https://github.com/msperlin/bcb-mcp",
+    "github_link": "https://github.com/msperlin/bcb-mcp",
+    "pypi_link": "https://pypi.org/project/bcb-mcp/",
+    "number_of_downloads": null,
+    "downloads_last_month": null,
+    "total_downloads": null,
+    "updated_at": null
+}

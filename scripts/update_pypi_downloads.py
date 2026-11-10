@@ -53,7 +53,7 @@ def main():
             pkg_data = json.load(f)
 
         pkg_name = pkg_data.get("name", "")
-        if not pkg_name:
+        if not pkg_name or not pkg_data.get("pypi_link"):
             continue
 
         result = fetch_pypi_downloads(pkg_name)

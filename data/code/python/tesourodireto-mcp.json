@@ -1,0 +1,11 @@
+{
+    "name": "tesourodireto-mcp",
+    "description": "An MCP server for Brazilian government bonds (Tesouro Direto): historical prices and yields, current rates, per-maturity statistics and the ANBIMA yield curve. It is the Python counterpart of the R package GetTDData.",
+    "link": "https://github.com/msperlin/tesourodireto-mcp",
+    "github_link": "https://github.com/msperlin/tesourodireto-mcp",
+    "pypi_link": null,
+    "number_of_downloads": null,
+    "downloads_last_month": null,
+    "total_downloads": null,
+    "updated_at": null
+}
