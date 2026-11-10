@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<article class="cv-detail" id="cv">
+    <div class="cv-header">
+        <div>
+            <h1>{{ about.name }}</h1>
+            <p class="cv-contact">
+                {{ about.title | default('Associate Professor of Finance') }},
+                {{ about.institution | default('Federal University of Rio Grande do Sul (UFRGS)') }}
+                {% if about.location %}· {{ about.location }}{% endif %}<br>
+                <a href="mailto:{{ about.email }}">{{ about.email }}</a> ·
+                <a href="{{ about.lattes_link }}">Lattes CV</a> ·
+                <a href="{{ about.gscholar_link }}">Google Scholar</a> ·
+                <a href="{{ about.github_link }}">GitHub</a> ·
+                <a href="{{ about.linkedin_link }}">LinkedIn</a>
+            </p>
+        </div>
+        <button class="cv-print-btn" type="button" data-print>Print / Save as PDF</button>
+    </div>
+
+    <section class="cv-section">
+        <h2>Profile</h2>
+        <p>{{ about.bio }}</p>
+        <p class="cv-contact">
+            Google Scholar: {{ gscholar_stats.citedby }} citations · h-index {{ gscholar_stats.hindex }} · i10-index
+            {{ gscholar_stats.i10index }} (last update {{ gscholar_stats.date_retrieval }}).
+        </p>
+    </section>
+
+    <section class="cv-section">
+        <h2>Publications</h2>
+        {% for pub in publications %}
+        <div class="cv-entry">
+            <h3><span class="cv-year">{{ pub.year }}</span>{{ pub.title }}</h3>
+            <p>{{ pub.authors }}{% if pub.journal %} · <em>{{ pub.journal }}</em>{% endif %}{% if pub.doi %} · <a
+                    href="https://doi.org/{{ pub.doi }}">doi:{{ pub.doi }}</a>{% endif %}</p>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section class="cv-section">
+        <h2>Books</h2>
+        {% for book in books %}
+        <div class="cv-entry">
+            <h3><span class="cv-year">{{ book.year }}</span>{{ book.title }}</h3>
+            <p>{% if book.publisher %}{{ book.publisher }}{% endif %}{% if book.link_amazon %} · <a
+                    href="{{ book.link_amazon }}">Amazon</a>{% endif %}</p>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section class="cv-section">
+        <h2>Awards and Honors</h2>
+        {% for award in awards %}
+        <div class="cv-entry">
+            <h3><span class="cv-year">{{ award.year }}</span>{{ award.title }}</h3>
+            <p>{{ award.organization }}{% if award.description %} — {{ award.description }}{% endif %}</p>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section class="cv-section">
+        <h2>Open-Source Software</h2>
+        {% for pkg in code %}
+        <div class="cv-entry">
+            <h3>{{ pkg.title or pkg.name }}</h3>
+            <p>{{ pkg.description }}{% if pkg.link %} · <a href="{{ pkg.link }}">{{ pkg.link }}</a>{% endif %}</p>
+        </div>
+        {% endfor %}
+    </section>
+</article>
+{% endblock %}

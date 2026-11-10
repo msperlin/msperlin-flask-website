@@ -1,6 +1,11 @@
 import json
 import os
-from flask import Flask, render_template, send_from_directory, make_response, url_for
+import re
+import secrets
+import unicodedata
+from flask import (Flask, render_template, send_from_directory, make_response, url_for,
+                   request, abort, g)
+from flask_compress import Compress
 import datetime 
 import subprocess
 import time
@@ -8,6 +13,13 @@ import urllib.request
 import urllib.error
 
 app = Flask(__name__)
+
+# Compress HTML/JSON/CSS/JS on the fly (Cloud Run does not do it for us).
+Compress(app)
+
+# Static assets are immutable in practice: every URL carries a ?v=<mtime>
+# query string (see static_url), so they can be cached for a year.
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
 
 BOOKS_FOLDER = os.path.join(os.getcwd(), 'books_rendered') 
 SLIDES_FOLDER = os.path.join(os.getcwd(), 'data', 'slides') 
@@ -27,6 +39,67 @@ def load_image_manifest():
 IMAGE_DIMS = load_image_manifest()
 
 
+def _static_version(filename):
+    """Short, stable cache-busting token for a static file."""
+    try:
+        mtime = os.path.getmtime(os.path.join(app.static_folder, filename))
+    except OSError:
+        return None
+    return str(int(mtime))
+
+
+@app.template_global('static_url')
+def static_url(filename):
+    """url_for('static') plus a file-mtime cache-busting query string."""
+    version = _static_version(filename)
+    if version:
+        return url_for('static', filename=filename, v=version)
+    return url_for('static', filename=filename)
+
+
+@app.context_processor
+def inject_csp_nonce():
+    return {'csp_nonce': getattr(g, 'csp_nonce', '')}
+
+
+@app.before_request
+def make_csp_nonce():
+    g.csp_nonce = secrets.token_urlsafe(16)
+
+
+@app.after_request
+def add_security_headers(response):
+    response.headers.setdefault('X-Content-Type-Options', 'nosniff')
+    response.headers.setdefault('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.setdefault('X-Frame-Options', 'DENY')
+    response.headers.setdefault('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+    response.headers.setdefault('Cross-Origin-Opener-Policy', 'same-origin')
+
+    if request.is_secure:
+        response.headers.setdefault(
+            'Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+
+    if response.mimetype == 'text/html':
+        response.headers.setdefault('Cache-Control', 'no-cache')
+        nonce = getattr(g, 'csp_nonce', '')
+        response.headers.setdefault('Content-Security-Policy', (
+            "default-src 'self'; "
+            f"script-src 'self' 'nonce-{nonce}'; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; "
+            "font-src 'self'; "
+            "connect-src 'self'; "
+            "object-src 'none'; "
+            "base-uri 'self'; "
+            "form-action 'self'; "
+            "frame-ancestors 'none'"
+        ))
+    elif response.mimetype in ('application/xml', 'application/rss+xml'):
+        response.headers.setdefault('Cache-Control', 'public, max-age=600')
+
+    return response
+
+
 def _image_key(image_field):
     """Basename of a static image field, or None for external/missing paths."""
     if not image_field or image_field.startswith(('http://', 'https://')):
@@ -41,7 +114,7 @@ def opt_url(image_field):
     if key:
         stem = os.path.splitext(key)[0]
         if os.path.exists(os.path.join(OPT_IMG_DIR, stem + '.webp')):
-            return url_for('static', filename=f'img/opt/{stem}.webp')
+            return static_url(f'img/opt/{stem}.webp')
     return image_field
 
 
@@ -85,6 +158,211 @@ def page_not_found(error):
                            description='The requested page could not be found.'), 404
 
 
+# --- Publications: stable slugs, citation formats and detail pages ----------
+
+_PUBLICATION_CACHE = {'items': None, 'by_slug': None}
+
+
+def slugify(text):
+    """ASCII slug: accents removed, non-alphanumerics collapsed to dashes."""
+    normalized = unicodedata.normalize('NFKD', text or '')
+    ascii_text = normalized.encode('ascii', 'ignore').decode('ascii')
+    return re.sub(r'[^a-z0-9]+', '-', ascii_text.lower()).strip('-')
+
+
+def publication_slug(publication):
+    return slugify(publication.get('filename_stem') or publication.get('title', ''))
+
+
+def get_publications():
+    """All publications, loaded once and enriched with their slug."""
+    global _PUBLICATION_CACHE
+    if _PUBLICATION_CACHE['items'] is None:
+        items = load_data_from_folder('publications')
+        for item in items:
+            item['slug'] = publication_slug(item)
+            item['doi'] = _doi_from_link(item.get('link', ''))
+        _PUBLICATION_CACHE['items'] = items
+        _PUBLICATION_CACHE['by_slug'] = {item['slug']: item for item in items}
+    return _PUBLICATION_CACHE['items']
+
+
+def get_publication(slug):
+    get_publications()
+    return _PUBLICATION_CACHE['by_slug'].get(slug)
+
+
+def _doi_from_link(link):
+    """Extract a bare DOI from a publisher/DOI URL, or return ''."""
+    if not link:
+        return ''
+    match = re.search(r'10\.\d{4,9}/[^\s\'"<>]+', link)
+    return match.group(0).rstrip('.').rstrip(')') if match else ''
+
+
+def _bib_escape(value):
+    """Keep generated BibTeX syntactically valid."""
+    return (value or '').replace('{', '(').replace('}', ')').strip()
+
+
+def bibtex_for(publication):
+    """BibTeX entry for one publication, shared by the modal and .bib route."""
+    authors = publication.get('authors', '')
+    first_author = (authors.split(',')[0] or '').strip().split(' ')
+    key = (slugify(first_author[-1]) if first_author else 'perlin')
+    key += str(publication.get('year', ''))
+
+    fields = [
+        ('title', _bib_escape(publication.get('title'))),
+        ('author', _bib_escape(authors)),
+        ('journal', _bib_escape(publication.get('journal') or publication.get('publication'))),
+        ('year', _bib_escape(publication.get('year'))),
+    ]
+    if publication.get('doi'):
+        fields.append(('doi', _bib_escape(publication['doi'])))
+    if publication.get('issn'):
+        fields.append(('issn', _bib_escape(publication['issn'])))
+    if publication.get('link'):
+        fields.append(('url', _bib_escape(publication['link'])))
+
+    body = ',\n'.join(f'  {name} = {{{value}}}' for name, value in fields if value)
+    return f'@article{{{key},\n{body}\n}}\n'
+
+
+# --- Site search -------------------------------------------------------------
+
+_SEARCH_CACHE = {'items': None}
+
+
+def _index_text(*parts):
+    """Flatten heterogeneous fields (str, int, None) into searchable text."""
+    return ' '.join(str(part) for part in parts if part)
+
+
+def get_search_index():
+    """One flat, text-searchable record per piece of content on the site."""
+    if _SEARCH_CACHE['items'] is not None:
+        return _SEARCH_CACHE['items']
+
+    items = []
+
+    for pub in get_publications():
+        items.append({
+            'type': 'Publication',
+            'title': pub.get('title', ''),
+            'url': url_for('publication_detail', slug=pub['slug']),
+            'date': str(pub.get('year', '')),
+            'text': _index_text(pub.get('title'), pub.get('authors'), pub.get('journal'),
+                                pub.get('abstract'), pub.get('year')),
+        })
+
+    for book in load_data_from_folder('books'):
+        items.append({
+            'type': 'Book',
+            'title': book.get('title', ''),
+            'url': url_for('books') + '#' + slugify(book.get('title', '')),
+            'date': str(book.get('year', '')),
+            'text': _index_text(book.get('title'), book.get('summary'), book.get('year')),
+        })
+
+    for entry in load_data_from_folder('news'):
+        items.append({
+            'type': 'News',
+            'title': entry.get('title', ''),
+            'url': entry.get('link') or url_for('news'),
+            'date': entry.get('date', ''),
+            'text': _index_text(entry.get('title'), entry.get('source'), entry.get('date')),
+        })
+
+    for entry in load_data_from_folder('slides'):
+        items.append({
+            'type': 'Slide',
+            'title': entry.get('title', ''),
+            'url': entry.get('link') or url_for('slides'),
+            'date': str(entry.get('date') or entry.get('year') or ''),
+            'text': _index_text(entry.get('title'), entry.get('event')),
+        })
+
+    for entry in load_data_from_folder('awards'):
+        items.append({
+            'type': 'Award',
+            'title': entry.get('title', ''),
+            'url': url_for('awards'),
+            'date': str(entry.get('year', '')),
+            'text': _index_text(entry.get('title'), entry.get('organization'),
+                                entry.get('description')),
+        })
+
+    for entry in load_data_from_folder('datasets'):
+        items.append({
+            'type': 'Dataset',
+            'title': entry.get('name', ''),
+            'url': url_for('data'),
+            'date': '',
+            'text': _index_text(entry.get('name'), entry.get('description')),
+        })
+
+    for folder, label, field in (('code/r', 'R package', 'title'),
+                                 ('code/python', 'Python package', 'name')):
+        for entry in load_data_from_folder(folder):
+            items.append({
+                'type': label,
+                'title': entry.get(field, ''),
+                'url': entry.get('link') or entry.get('github_link') or '',
+                'date': '',
+                'text': _index_text(entry.get(field), entry.get('description')),
+            })
+
+    _SEARCH_CACHE['items'] = items
+    return items
+
+
+TYPE_ORDER = {
+    'Publication': 0, 'Book': 1, 'News': 2, 'Slide': 3,
+    'Award': 4, 'Dataset': 5, 'R package': 6, 'Python package': 7,
+}
+
+
+def _recency(item):
+    """Numeric date used to sort results newest-first within a content type."""
+    digits = re.sub(r'\D', '', item.get('date') or '')[:8]
+    return int(digits) if digits else 0
+
+
+def search_matches(query, limit=200):
+    """Simple AND search over the index, with a short highlighted snippet."""
+    terms = [t for t in re.split(r'\s+', (query or '').strip().lower()) if t]
+    if not terms:
+        return []
+
+    results = []
+    for item in get_search_index():
+        haystack = item['text'].lower()
+        if not all(term in haystack for term in terms):
+            continue
+
+        # Skip the title when choosing the snippet: repeating it right below the
+        # heading adds no information.
+        title_length = len(item['title'])
+        position = haystack.find(terms[0])
+        if 0 <= position < title_length:
+            later = haystack.find(terms[0], title_length)
+            if later >= 0:
+                position = later
+
+        snippet = ''
+        if position >= 0:
+            start = max(position - 60, 0)
+            end = min(start + 240, len(item['text']))
+            snippet = ('…' if start else '') + item['text'][start:end].strip() + ('…' if end < len(item['text']) else '')
+
+        results.append(dict(item, snippet=snippet))
+
+    results.sort(key=lambda result: (TYPE_ORDER.get(result['type'], 99), -_recency(result)))
+    return results[:limit]
+
+
+
 @app.route('/')
 def index():
     about_data = load_data('about.json')
@@ -102,12 +380,12 @@ def serve_book(book_name, path='index.html'):
     if not os.path.exists(full_book_path) or not os.path.isdir(full_book_path):
         return "Book not found", 404
     
-    return send_from_directory(full_book_path, path)
+    return send_from_directory(full_book_path, path, max_age=3600)
 
 
 @app.route('/publications')
 def publications():
-    publications_data = load_data_from_folder('publications')
+    publications_data = get_publications()
     publications_data.sort(key=lambda x: int(x.get('year', 0)), reverse=True)
 
     total_publications = len(publications_data)
@@ -123,10 +401,13 @@ def publications():
     
     avg_if = round(total_if / total_publications_with_if, 2) if total_publications_with_if > 0 else 0
     
-    # restrict size of abstract to 400 characters
+    # short abstract for the listing; the full text lives on the detail page
     for publication in publications_data:
-        if publication.get('abstract'):
-            publication['abstract'] = publication['abstract'][:400] + " ... (continued, check link for full abstract)"
+        abstract = publication.get('abstract') or ''
+        if len(abstract) > 400:
+            publication['abstract_short'] = abstract[:400].rsplit(' ', 1)[0] + ' …'
+        else:
+            publication['abstract_short'] = abstract
 
     # distinct years for the filter dropdown (newest first)
     years = sorted({str(p.get('year')) for p in publications_data if p.get('year')}, reverse=True)
@@ -145,6 +426,39 @@ def publications():
         gscholar_stats = gscholar_stats,
         description="Academic publications by Marcelo S. Perlin in finance and data science.")
 
+
+@app.route('/publications/<slug>')
+def publication_detail(slug):
+    publication = get_publication(slug)
+    if publication is None:
+        abort(404)
+
+    gscholar_stats = load_data('stats/gscholar.json')
+    return render_template(
+        'publication.html',
+        title=publication.get('title', 'Publication'),
+        publication=publication,
+        bibtex=bibtex_for(publication),
+        citation_authors=[a.strip() for a in (publication.get('authors') or '').split(',') if a.strip()],
+        gscholar_stats=gscholar_stats,
+        canonical=url_for('publication_detail', slug=slug, _external=True),
+        og_type='article',
+        description=(publication.get('abstract') or '')[:300],
+    )
+
+
+@app.route('/publications/<slug>.bib')
+def publication_bibtex(slug):
+    publication = get_publication(slug)
+    if publication is None:
+        abort(404)
+
+    response = make_response(bibtex_for(publication))
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    response.headers['Content-Disposition'] = f'attachment; filename="{slug}.bib"'
+    return response
+
+
 @app.route('/books')
 def books():
     books_data = load_data_from_folder('books')
@@ -158,6 +472,7 @@ def books():
         
     for book in books_data:
         stem = book.get('filename_stem')
+        book['anchor'] = slugify(book.get('title', stem or ''))
         if stem and stem in books_stats:
             book['amazon_rating'] = books_stats[stem].get('rating')
             book['amazon_ratings_count'] = books_stats[stem].get('ratings_count')
@@ -167,6 +482,52 @@ def books():
     n_books = len(books_data)
 
     return render_template('books.html', title='Books', books=books_data, n_books=n_books, description="Books authored by Marcelo S. Perlin on financial data analysis, R, and Python.")
+
+
+CHART_COLORS = ['#1d4ed8', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444']
+
+
+def download_trend_chart(items, name_field):
+    """Line chart of monthly downloads per package, from the recorded history.
+
+    Returns None until the update scripts have collected at least two months,
+    so the template can simply omit the card.
+    """
+    with_history = [item for item in items if item.get('history')]
+    months = sorted({entry.get('date') for item in with_history
+                     for entry in item['history'] if entry.get('date')})
+    if len(months) < 2:
+        return None
+
+    top = sorted(with_history, key=lambda x: int(x.get('number_of_downloads') or 0),
+                 reverse=True)[:6]
+
+    def month_label(stamp):
+        try:
+            return datetime.date.fromisoformat(stamp + '-01').strftime('%b %Y')
+        except ValueError:
+            return stamp
+
+    datasets = []
+    for index, item in enumerate(top):
+        by_month = {entry['date']: entry.get('downloads_last_month', 0)
+                    for entry in item['history']}
+        datasets.append({
+            'label': item.get(name_field, ''),
+            'data': [by_month.get(month) for month in months],
+            'borderColor': CHART_COLORS[index % len(CHART_COLORS)],
+            'backgroundColor': CHART_COLORS[index % len(CHART_COLORS)],
+        })
+
+    return json.dumps({
+        'type': 'line',
+        'data': {'labels': [month_label(m) for m in months], 'datasets': datasets},
+        'options': {
+            'scales': {'y': {'beginAtZero': True}},
+            'plugins': {'legend': {'display': True}},
+        },
+    })
+
 
 @app.route('/code/r')
 def code_r():
@@ -189,7 +550,10 @@ def code_r():
         "options": {"indexAxis": "y", "scales": {"x": {"beginAtZero": True}}}
     })
 
-    return render_template('code_r.html', title='Code (R)', code_r=code_data_r, chart_r_downloads=chart_r_downloads, description="Open source code and repositories in R.")
+    return render_template('code_r.html', title='Code (R)', code_r=code_data_r, chart_r_downloads=chart_r_downloads,
+                           chart_r_trend=download_trend_chart(code_data_r, 'title'),
+                           description="Open source code and repositories in R.")
+
 
 @app.route('/code/python')
 def code_python():
@@ -213,7 +577,10 @@ def code_python():
         "options": {"indexAxis": "y", "scales": {"x": {"beginAtZero": True}}}
     })
 
-    return render_template('code_python.html', title='Code (Python)', code_python=code_data_python, chart_python_downloads=chart_python_downloads, description="Open source code and repositories in Python.")
+    return render_template('code_python.html', title='Code (Python)', code_python=code_data_python,
+                           chart_python_downloads=chart_python_downloads,
+                           chart_python_trend=download_trend_chart(code_data_python, 'name'),
+                           description="Open source code and repositories in Python.")
 
 @app.route('/data')
 def data():
@@ -297,29 +664,29 @@ def serve_slide(slide_folder, path=None):
         # Check root folder first
         html_files = [f for f in os.listdir(slide_dir) if f.endswith('.html')]
         if 'index.html' in html_files:
-            return send_from_directory(slide_dir, 'index.html')
+            return send_from_directory(slide_dir, 'index.html', max_age=3600)
         elif html_files:
-            return send_from_directory(slide_dir, sorted(html_files)[0])
+            return send_from_directory(slide_dir, sorted(html_files)[0], max_age=3600)
             
         # Check 'slides' subfolder
         slides_sub = os.path.join(slide_dir, 'slides')
         if os.path.exists(slides_sub) and os.path.isdir(slides_sub):
             sub_htmls = [f for f in os.listdir(slides_sub) if f.endswith('.html')]
             if 'index.html' in sub_htmls:
-                return send_from_directory(slides_sub, 'index.html')
+                return send_from_directory(slides_sub, 'index.html', max_age=3600)
             elif sub_htmls:
-                return send_from_directory(slides_sub, sorted(sub_htmls)[0])
+                return send_from_directory(slides_sub, sorted(sub_htmls)[0], max_age=3600)
         return "Presentation HTML not found", 404
             
     # If path directly exists in slide_dir
     full_path = os.path.join(slide_dir, path)
     if os.path.exists(full_path):
-        return send_from_directory(slide_dir, path)
+        return send_from_directory(slide_dir, path, max_age=3600)
         
     # If path exists in slide_dir/slides
     sub_full_path = os.path.join(slide_dir, 'slides', path)
     if os.path.exists(sub_full_path):
-        return send_from_directory(os.path.join(slide_dir, 'slides'), path)
+        return send_from_directory(os.path.join(slide_dir, 'slides'), path, max_age=3600)
         
     return "File not found", 404
 
@@ -477,59 +844,181 @@ def site_log():
 
     return render_template('site_log.html', title='Site Log', commits=commits, actions=actions, description="Website action logs and commit history.")
 
+@app.route('/search')
+def search():
+    query = (request.args.get('q') or '').strip()
+    results = search_matches(query) if query else []
+    return render_template('search.html', title='Search', query=query, results=results,
+                           canonical=url_for('search', _external=True),
+                           description="Search publications, books, news, slides, awards, datasets and code.")
+
+
+@app.route('/cv')
+def cv():
+    publications_data = sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True)
+    books_data = sorted(load_data_from_folder('books'),
+                        key=lambda x: int(x.get('year', 0)), reverse=True)
+    awards_data = sorted(load_data_from_folder('awards'),
+                         key=lambda x: int(x.get('year', 0)), reverse=True)
+    code_data = (load_data_from_folder('code/r') + load_data_from_folder('code/python'))
+    code_data.sort(key=lambda x: int(x.get('number_of_downloads') or 0), reverse=True)
+
+    return render_template('cv.html', title='CV', about=load_data('about.json'),
+                           publications=publications_data, books=books_data,
+                           awards=awards_data, code=code_data[:10],
+                           gscholar_stats=load_data('stats/gscholar.json'),
+                           description="Curriculum vitae of Marcelo S. Perlin: education, publications, books, awards and software.")
+
+
+def _rfc822(date_str):
+    """Turn an ISO-ish date into an RSS pubDate, or '' when unparseable."""
+    for fmt in ('%Y-%m-%d', '%Y-%m', '%Y'):
+        try:
+            when = datetime.datetime.strptime(str(date_str or ''), fmt)
+        except ValueError:
+            continue
+        return when.strftime('%a, %d %b %Y 00:00:00 +0000')
+    return ''
+
+
+@app.route('/feed.xml')
+def news_feed():
+    """RSS feed for media coverage / news items."""
+    items = load_data_from_folder('news')
+    items.sort(key=lambda x: x.get('date', ''), reverse=True)
+    items = items[:30]
+    for item in items:
+        item['pub_date'] = _rfc822(item.get('date'))
+
+    response = make_response(render_template('feed.xml', items=items,
+                                             feed_title='Marcelo S. Perlin — News',
+                                             feed_url=url_for('news_feed', _external=True),
+                                             site_url=url_for('news', _external=True),
+                                             feed_description='Interviews, lectures and media coverage.',
+                                             build_date=_rfc822(datetime.date.today().isoformat())))
+    response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
+    return response
+
+
+@app.route('/publications/feed.xml')
+def publications_feed():
+    """RSS feed for new publications."""
+    items = sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True)
+    for item in items:
+        item['pub_date'] = _rfc822(item.get('year'))
+        item['feed_link'] = url_for('publication_detail', slug=item['slug'], _external=True)
+
+    response = make_response(render_template('feed.xml', items=items,
+                                             feed_title='Marcelo S. Perlin — Publications',
+                                             feed_url=url_for('publications_feed', _external=True),
+                                             site_url=url_for('publications', _external=True),
+                                             feed_description='Academic publications in finance and data science.',
+                                             build_date=_rfc822(datetime.date.today().isoformat())))
+    response.headers['Content-Type'] = 'application/rss+xml; charset=utf-8'
+    return response
+
+
 @app.route('/sitemap.xml')
 def sitemap():
-    """Generate sitemap.xml. Makes a list of urls and renders them."""
-    pages = []
-    ten_days_ago = (datetime.datetime.now() - datetime.timedelta(days=10)).date().isoformat()
+    """Generate sitemap.xml with per-section last-modified dates."""
+    def mtime(path):
+        try:
+            return datetime.date.fromtimestamp(os.path.getmtime(path)).isoformat()
+        except OSError:
+            return None
 
-    # static pages
+    def newest(*paths):
+        dates = [mtime(p) for p in paths]
+        return max([d for d in dates if d], default=None)
+
+    site_lastmod = newest('.', 'app.py', 'templates', 'data')
+    entries = []
+
+    priorities = {
+        'index': ('1.0', 'weekly'),
+        'publications': ('0.9', 'monthly'),
+        'books': ('0.8', 'monthly'),
+        'code_r': ('0.7', 'monthly'),
+        'code_python': ('0.7', 'monthly'),
+        'cv': ('0.8', 'monthly'),
+        'search': ('0.3', 'yearly'),
+        'site_log': ('0.2', 'weekly'),
+    }
+    skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed', 'publications_feed'}
+
     for rule in app.url_map.iter_rules():
-        if "GET" in rule.methods and len(rule.arguments) == 0:
-            pages.append(url_for(rule.endpoint, _external=True))
+        if 'GET' not in rule.methods or rule.arguments or rule.endpoint in skip:
+            continue
+        priority, changefreq = priorities.get(rule.endpoint, ('0.6', 'monthly'))
+        entries.append({
+            'loc': url_for(rule.endpoint, _external=True),
+            'lastmod': site_lastmod,
+            'priority': priority,
+            'changefreq': changefreq,
+        })
+
+    # every publication gets its own, permanent URL
+    for publication in get_publications():
+        entries.append({
+            'loc': url_for('publication_detail', slug=publication['slug'], _external=True),
+            'lastmod': mtime(os.path.join('data', 'publications',
+                                          publication.get('filename_stem', '') + '.json')),
+            'priority': '0.7',
+            'changefreq': 'yearly',
+        })
 
     # books
     for book_name in os.listdir(BOOKS_FOLDER):
         book_path = os.path.join(BOOKS_FOLDER, book_name)
-        if os.path.isdir(book_path):
-             # add main book page
-             pages.append(url_for('serve_book', book_name=book_name, _external=True))
-             
-             # add subpages
-             for root, dirs, files in os.walk(book_path):
-                 for file in files:
-                     if file.endswith('.html') and file != 'index.html': # index.html is already covered by serve_book
-                         # Calculate relative path from book root
-                         rel_path = os.path.relpath(os.path.join(root, file), book_path)
-                         # Replace backslashes with forward slashes for URL consistency on Windows (though this is Linux)
-                         rel_path = rel_path.replace('\\', '/')
-                         pages.append(url_for('serve_book', book_name=book_name, path=rel_path, _external=True))
+        if not os.path.isdir(book_path):
+            continue
+        entries.append({
+            'loc': url_for('serve_book', book_name=book_name, _external=True),
+            'lastmod': mtime(book_path),
+            'priority': '0.6',
+            'changefreq': 'yearly',
+        })
+        for root, dirs, files in os.walk(book_path):
+            for file in files:
+                if file.endswith('.html') and file != 'index.html':
+                    rel_path = os.path.relpath(os.path.join(root, file), book_path).replace('\\', '/')
+                    entries.append({
+                        'loc': url_for('serve_book', book_name=book_name, path=rel_path, _external=True),
+                        'lastmod': mtime(os.path.join(root, file)),
+                        'priority': '0.5',
+                        'changefreq': 'yearly',
+                    })
 
     # slides
     if os.path.exists(SLIDES_FOLDER):
         for slide_name in os.listdir(SLIDES_FOLDER):
             slide_path = os.path.join(SLIDES_FOLDER, slide_name)
             if os.path.isdir(slide_path):
-                pages.append(url_for('serve_slide', slide_folder=slide_name, _external=True))
+                entries.append({
+                    'loc': url_for('serve_slide', slide_folder=slide_name, _external=True),
+                    'lastmod': mtime(slide_path),
+                    'priority': '0.5',
+                    'changefreq': 'yearly',
+                })
 
-    sitemap_xml = render_template('sitemap.xml', pages=pages)
+    sitemap_xml = render_template('sitemap.xml', entries=entries)
     response = make_response(sitemap_xml)
     response.headers["Content-Type"] = "application/xml"
-    
     return response
+
 
 @app.route('/news/pdfs/<path:filename>')
 def serve_news_pdf(filename):
     pdf_folder = os.path.join(os.getcwd(), 'data', 'news', 'pdfs')
-    return send_from_directory(pdf_folder, filename)
+    return send_from_directory(pdf_folder, filename, max_age=3600)
 
 @app.route('/robots.txt')
 def robots():
-    return send_from_directory(app.static_folder, 'robots.txt')
+    return send_from_directory(app.static_folder, 'robots.txt', max_age=3600)
 
 @app.route('/f6d89283e4a24c25bcf682e06180dfd3.txt')
 def indexnow_key():
-    return send_from_directory(app.static_folder, 'f6d89283e4a24c25bcf682e06180dfd3.txt')
+    return send_from_directory(app.static_folder, 'f6d89283e4a24c25bcf682e06180dfd3.txt', max_age=3600)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

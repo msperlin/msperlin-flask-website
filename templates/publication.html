@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block head_extra %}
+<!-- Highwire Press tags: let Google Scholar index this paper from this page -->
+<meta name="citation_title" content="{{ publication.title }}">
+{% for author in citation_authors %}
+<meta name="citation_author" content="{{ author }}">
+{% endfor %}
+<meta name="citation_publication_date" content="{{ publication.year }}">
+<meta name="citation_journal_title" content="{{ publication.journal or publication.publication or '' }}">
+{% if publication.issn %}
+<meta name="citation_issn" content="{{ publication.issn }}">
+{% endif %}
+{% if publication.doi %}
+<meta name="citation_doi" content="{{ publication.doi }}">
+{% elif publication.link %}
+<meta name="citation_public_url" content="{{ publication.link }}">
+{% endif %}
+<meta name="citation_abstract_html_url" content="{{ canonical }}">
+<meta name="citation_language" content="en">
+
+<script nonce="{{ csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": {{ publication.title | tojson }},
+  "headline": {{ publication.title | tojson }},
+  "author": [
+    {% for author in citation_authors %}
+    {"@type": "Person", "name": {{ author | tojson }}}{{ "," if not loop.last }}
+    {% endfor %}
+  ],
+  "datePublished": {{ (publication.year | string) | tojson }},
+  {% if publication.journal or publication.publication %}"isPartOf": {"@type": "Periodical", "name": {{ (publication.journal or publication.publication) | tojson }}},{% endif %}
+  {% if publication.doi %}"identifier": {{ ("https://doi.org/" ~ publication.doi) | tojson }},{% endif %}
+  "url": {{ canonical | tojson }},
+  "abstract": {{ (publication.abstract or '') | tojson }}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<article class="pub-detail">
+    <a class="back-link" href="{{ url_for('publications') }}">← All publications</a>
+
+    {% if publication.image %}
+    {% set cover = img_dims(publication.image) %}
+    <div class="pub-detail-figure">
+        <img src="{{ publication.image | opt_url }}" {% if cover.w %}width="{{ cover.w }}" height="{{ cover.h }}"{% endif %}
+            alt="Cover of {{ publication.journal or publication.publication }}">
+    </div>
+    {% endif %}
+
+    <h1>{{ publication.title }}</h1>
+
+    {% if publication.authors %}
+    <p class="pub-authors">{{ publication.authors }}</p>
+    {% endif %}
+
+    <p class="pub-meta">
+        {{ publication.year }}
+        {% if publication.journal or publication.publication %} · {{ publication.journal or publication.publication }}{% endif %}
+        {% if publication.issn %} · ISSN {{ publication.issn }}{% endif %}
+        {% if publication.impact_factor %} · Impact factor {{ publication.impact_factor }}{% endif %}
+    </p>
+
+    <div class="pub-links">
+        {% if publication.link %}
+        <a href="{{ publication.link }}" target="_blank" rel="noopener noreferrer">Publisher / DOI<span
+                class="visually-hidden"> (opens in a new tab)</span></a>
+        {% endif %}
+        <a href="{{ url_for('publication_bibtex', slug=publication.slug) }}">Download .bib</a>
+        <button class="cite-btn" type="button" data-title="{{ publication.title }}"
+            data-authors="{{ publication.authors }}" data-year="{{ publication.year }}"
+            data-journal="{{ publication.journal }}">Cite this</button>
+    </div>
+
+    {% if publication.abstract %}
+    <h2>Abstract</h2>
+    <p class="pub-abstract">{{ publication.abstract }}</p>
+    {% endif %}
+
+    <h2>Reference</h2>
+    <pre class="pub-bibtex">{{ bibtex }}</pre>
+</article>
+{% endblock %}
+
+{% block modals %}
+{% include '_cite_modal.html' %}
+{% endblock %}

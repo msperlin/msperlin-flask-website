@@ -11,9 +11,15 @@ dependencies = [
     "free-proxy",
     "httpx<0.28",
     "bibtexparser<2.0.0",
+    "flask-compress>=1.26",
 ]
 
 [tool.uv]
 # This is an application, not a distributable package, so uv should not
 # build/install the project itself - only its dependencies.
 package = false
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]

@@ -150,8 +150,61 @@
         });
     }
 
+    /* -------------------------------------------------------- Pub filtering */
+    // Progressive enhancement for /publications: the full list is rendered by
+    // the server and stays visible if this script never runs.
+    function initPubFilter() {
+        var section = document.querySelector('[data-pub-filter]');
+        if (!section) { return; }
+
+        var list = section.querySelector('#pubList');
+        var input = section.querySelector('[data-pub-search]');
+        var select = section.querySelector('[data-pub-year]');
+        var clear = section.querySelector('[data-pub-clear]');
+        var counter = section.querySelector('[data-pub-count]');
+        var empty = section.querySelector('[data-pub-empty]');
+        if (!list || !input || !select) { return; }
+
+        var items = Array.prototype.slice.call(list.querySelectorAll('.publication-item'));
+        var total = items.length;
+
+        function apply() {
+            var query = input.value.trim().toLowerCase();
+            var year = select.value;
+            var shown = 0;
+
+            items.forEach(function (item) {
+                var matchesYear = (year === 'all' || item.dataset.year === year);
+                var matchesQuery = !query || (item.dataset.search || '').indexOf(query) !== -1;
+                var visible = matchesYear && matchesQuery;
+                item.hidden = !visible;
+                if (visible) { shown += 1; }
+            });
+
+            if (counter) {
+                counter.textContent = shown + ' of ' + total + ' shown';
+            }
+            if (empty) {
+                empty.hidden = shown !== 0;
+            }
+        }
+
+        input.addEventListener('input', apply);
+        select.addEventListener('change', apply);
+        if (clear) {
+            clear.addEventListener('click', function () {
+                input.value = '';
+                select.value = 'all';
+                apply();
+                input.focus();
+            });
+        }
+        apply();
+    }
+
     /* --------------------------------------------------------------- Charts */
     var charts = {};
+    var palette = ['#1d4ed8', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444'];
 
     function destroyCharts() {
         Object.keys(charts).forEach(function (id) {
@@ -191,15 +244,17 @@
         (cfg.data.datasets || []).forEach(function (ds, i) {
             var isLine = (cfg.type === 'line');
             var isPie = (cfg.type === 'doughnut' || cfg.type === 'pie');
-            var base = i === 0 ? accent : accent2;
+            var base = i === 0 ? accent : (i === 1 ? accent2 : palette[i % palette.length]);
 
             if (isPie) {
                 ds.backgroundColor = ['#3b82f6', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444'];
                 ds.borderColor = dark ? '#121a2b' : '#ffffff';
                 ds.borderWidth = 2;
             } else if (isLine) {
-                ds.borderColor = base;
-                ds.backgroundColor = base;
+                ds.borderColor = ds.borderColor || base;
+                ds.backgroundColor = ds.backgroundColor || base;
+                ds.borderWidth = ds.borderWidth || 2;
+                ds.pointRadius = ds.pointRadius === undefined ? 2 : ds.pointRadius;
                 ds.tension = ds.tension === undefined ? 0.35 : ds.tension;
                 ds.fill = ds.fill === undefined ? false : ds.fill;
             } else {
@@ -373,11 +428,19 @@
         }
     });
 
+    /* --------------------------------------------------------------- Print */
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('[data-print]')) {
+            window.print();
+        }
+    });
+
     /* ----------------------------------------------------------- Bootstrap */
     function init() {
         syncThemeChrome(currentTheme());
         stagger();
         observeReveals();
+        initPubFilter();
         renderCharts();
     }
 

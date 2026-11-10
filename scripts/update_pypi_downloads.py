@@ -5,6 +5,23 @@ import os
 import glob
 import datetime
 
+MAX_HISTORY = 24
+
+
+def update_history(pkg_data, downloads_last_month, total_downloads):
+    """Append/replace this month's snapshot so the site can chart a trend."""
+    stamp = datetime.date.today().strftime("%Y-%m")
+    history = [entry for entry in (pkg_data.get("history") or [])
+               if entry.get("date") != stamp]
+    history.append({
+        "date": stamp,
+        "downloads_last_month": int(downloads_last_month or 0),
+        "total_downloads": int(total_downloads or 0),
+    })
+    history.sort(key=lambda entry: entry["date"])
+    pkg_data["history"] = history[-MAX_HISTORY:]
+
+
 def fetch_pypi_downloads(package_name):
     """Return (downloads_last_month, total_downloads) for a PyPI package.
 
@@ -68,6 +85,7 @@ def main():
         pkg_data["downloads_last_month"] = downloads_last_month
         pkg_data["total_downloads"] = total_downloads
         pkg_data["updated_at"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        update_history(pkg_data, downloads_last_month, total_downloads)
 
         with open(filepath, "w") as f:
             json.dump(pkg_data, f, indent=4)

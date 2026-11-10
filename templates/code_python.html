@@ -9,14 +9,29 @@
 
     <h2>Python Projects:</h2>
     <p>All projects are available on <a href="https://github.com/msperlin?tab=repositories">GitHub</a>; the ones published as
-        packages are also on <a href="https://pypi.org/user/msperlin/">PyPI</a>.</p>
+        packages are also on <a href="https://pypi.org/user/msperlin/">PyPI</a>.
+    {% for pkg in code_python %}{% if pkg.updated_at %}{% set last_update = pkg.updated_at %}{% endif %}{% endfor %}
+    {% if last_update %}
+    Download statistics updated at {{ last_update }}.
+    {% endif %}
+    </p>
 
     <div class="chart-card reveal">
         <h3>Top packages by monthly downloads</h3>
         <div class="chart-wrap"><canvas id="pythonDownloadsChart" data-chart-canvas
                 aria-label="Bar chart of Python package downloads" role="img"></canvas></div>
-        <script type="application/json" data-chart="pythonDownloadsChart">{{ chart_python_downloads | safe }}</script>
+        <script nonce="{{ csp_nonce }}" type="application/json" data-chart="pythonDownloadsChart">{{ chart_python_downloads | safe }}</script>
     </div>
+
+    {% if chart_python_trend %}
+    <div class="chart-card reveal">
+        <h3>Downloads over time</h3>
+        <p class="chart-help">Monthly downloads of the most popular packages, as recorded by the update scripts.</p>
+        <div class="chart-wrap"><canvas id="pythonTrendChart" data-chart-canvas
+                aria-label="Line chart of monthly Python package downloads over time" role="img"></canvas></div>
+        <script nonce="{{ csp_nonce }}" type="application/json" data-chart="pythonTrendChart">{{ chart_python_trend | safe }}</script>
+    </div>
+    {% endif %}
 
     <ul class="item-list" data-stagger>
         {% for pkg in code_python %}
@@ -26,6 +41,7 @@
             <strong><a href="{{ pkg.link or (links[0].url if links else '#') }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}<br>
             <small>
                 {%- for link in links %}<a href="{{ link.url }}">{{ link.label }}</a>{% if not loop.last %} | {% endif %}{% endfor -%}
+                {%- if pkg.github_stars %} <span class="gh-stat" title="GitHub stars">★ {{ "{:,}".format(pkg.github_stars) }}</span>{% endif -%}
                 {%- if links and pkg.get('number_of_downloads') is not none %} | {% endif -%}
                 {%- if pkg.get('number_of_downloads') is not none %}<em>Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em>{% endif -%}
             </small>
@@ -36,5 +52,5 @@
 </section>
 {% endblock %}
 {% block vendor_scripts %}
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script defer src="{{ static_url('js/vendor/chart.umd.min.js') }}"></script>
 {% endblock %}

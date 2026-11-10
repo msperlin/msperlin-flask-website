@@ -1,4 +1,43 @@
 /* ==========================================================================
+   Fonts — self-hosted (Inter and Source Serif 4, SIL Open Font License 1.1)
+   ========================================================================== */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../fonts/inter-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../fonts/inter-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Source Serif 4';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../fonts/source-serif-4-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Source Serif 4';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../fonts/source-serif-4-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ==========================================================================
    Design system — tokens
    ========================================================================== */
 :root {
@@ -117,10 +156,6 @@ img {
     width: min(92%, var(--container));
     margin-inline: auto;
     padding: 0 4px;
-}
-
-[x-cloak] {
-    display: none !important;
 }
 
 main {
@@ -857,6 +892,25 @@ nav a.active {
     font-size: 1.1rem;
 }
 
+.chart-help {
+    margin: -0.35rem 0 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.pub-bibtex {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
 .chart-wrap {
     position: relative;
     height: 320px;
@@ -1222,6 +1276,10 @@ footer p {
         align-items: stretch;
     }
 
+    .publication-item .publication-image {
+        align-self: center;
+    }
+
     .publication-image img,
     .book-image img {
         width: 130px;
@@ -1249,6 +1307,305 @@ footer p {
     }
 }
 
+/* Links inside body copy need a non-colour cue (WCAG 1.4.1). */
+main p a,
+main li p a,
+footer p a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+[hidden] {
+    display: none !important;
+}
+
+/* Filtering needs JavaScript; without it the full list stays visible. */
+.pub-controls {
+    display: none;
+}
+
+.js .pub-controls {
+    display: flex;
+}
+
+/* Header search shortcut */
+.search-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    color: var(--text-muted);
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.search-link:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.search-link svg {
+    width: 19px;
+    height: 19px;
+}
+
+/* ==========================================================================
+   Publication detail page
+   ========================================================================== */
+.pub-detail {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.pub-detail h1 {
+    font-size: clamp(1.55rem, 1.2rem + 1.4vw, 2.15rem);
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+}
+
+.pub-meta {
+    color: var(--text-muted);
+    margin: 0.35rem 0;
+}
+
+.pub-authors {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.pub-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 1.4rem 0 1.8rem;
+}
+
+.pub-links .cta-button,
+.pub-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.pub-links a:hover {
+    background: var(--accent);
+    color: var(--accent-contrast);
+    text-decoration: none;
+}
+
+.pub-abstract {
+    font-size: 1.02rem;
+    line-height: 1.75;
+}
+
+.pub-detail-figure {
+    float: right;
+    max-width: 180px;
+    margin: 0 0 1rem 1.5rem;
+}
+
+.pub-detail-figure img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+/* ==========================================================================
+   Search page
+   ========================================================================== */
+.search-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 1.5rem 0 2rem;
+}
+
+.search-form input {
+    flex: 1 1 320px;
+    font: inherit;
+    font-size: 1.05rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-form input:focus {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    outline: none;
+}
+
+.search-form button {
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent-contrast);
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background: var(--accent-2);
+}
+
+.search-summary {
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.search-result {
+    display: block;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.search-result:hover {
+    border-color: var(--accent-2);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.search-result h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.35rem;
+    padding: 0;
+    border: none;
+    font-family: var(--font-sans);
+    color: var(--text);
+}
+
+.search-type {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 999px;
+    padding: 2px 9px;
+    margin-bottom: 0.45rem;
+}
+
+.search-snippet {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+/* ==========================================================================
+   CV page
+   ========================================================================== */
+.cv-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.cv-contact {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.cv-contact a {
+    color: var(--accent);
+}
+
+.cv-section {
+    margin: 2.25rem 0;
+}
+
+.cv-section > h2 {
+    font-size: 1.15rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+}
+
+.cv-entry {
+    margin: 0 0 1rem;
+    break-inside: avoid;
+}
+
+.cv-entry h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    border: none;
+    padding: 0;
+}
+
+.cv-entry p {
+    margin: 0.15rem 0 0;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+}
+
+.cv-year {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--accent);
+    margin-right: 0.5rem;
+}
+
+.cv-print-btn {
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: none;
+    border-radius: 9px;
+    padding: 9px 16px;
+    cursor: pointer;
+}
+
+.cv-print-btn:hover {
+    background: var(--accent);
+    color: var(--accent-contrast);
+}
+
+.gh-stat {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
 /* ==========================================================================
    Print
    ========================================================================== */
@@ -1264,8 +1621,31 @@ footer p {
     .skip-link,
     .pub-controls,
     .cite-btn,
-    .empty-state {
+    .empty-state,
+    .search-form,
+    .cv-print-btn,
+    .pub-links,
+    .back-link {
         display: none !important;
+    }
+
+    .pub-detail,
+    .cv-detail {
+        max-width: none;
+    }
+
+    .cv-section {
+        margin: 1.2rem 0;
+    }
+
+    .cv-section > h2 {
+        color: #000;
+        border-color: #bbb;
+    }
+
+    .cv-entry p,
+    .cv-contact {
+        color: #333;
     }
 
     main {

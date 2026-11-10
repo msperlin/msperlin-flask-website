@@ -7,11 +7,11 @@
     <ul class="item-list" data-stagger>
         {% for book in books %}
         {% set cover = img_dims(book.cover_image) %}
-        <li class="item-card publication-item reveal">
+        <li class="item-card publication-item reveal" id="{{ book.anchor }}">
             {% if book.cover_image %}
             <div class="publication-image book-image">
                 <img src="{{ book.cover_image | opt_url }}" {% if cover.w %}width="{{ cover.w }}" height="{{ cover.h }}"{% endif %}
-                    alt="" loading="lazy" decoding="async">
+                    alt="Cover of {{ book.title }}" loading="lazy" decoding="async">
             </div>
             {% endif %}
             <div class="publication-content">
@@ -45,7 +45,7 @@
         {% endfor %}
     </ul>
 
-    <script type="application/ld+json">
+    <script nonce="{{ csp_nonce }}" type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -56,18 +56,18 @@
           "position": {{ loop.index }},
           "item": {
             "@type": "Book",
-            "name": "{{ book.title }}",
+            "name": {{ book.title | tojson }},
             "author": {
               "@type": "Person",
               "name": "Marcelo S. Perlin"
             },
-            "datePublished": "{{ book.year }}",
-            "publisher": "{{ book.publisher }}",
-            "image": "{{ request.url_root.rstrip('/') }}{{ book.cover_image }}",
-            "url": "{% if book.link_online.startswith('http') %}{{ book.link_online }}{% else %}{{ request.url_root.rstrip('/') }}{{ book.link_online }}{% endif %}",
+            "datePublished": {{ (book.year | string) | tojson }},
+            "publisher": {{ (book.publisher or '') | tojson }},
+            "image": {{ (request.url_root.rstrip('/') ~ book.cover_image) | tojson }},
+            "url": {{ ((book.link_online if (book.link_online or '').startswith('http') else request.url_root.rstrip('/') ~ (book.link_online or ''))) | tojson }},
              "offers": {
                 "@type": "Offer",
-                "url": "{{ book.link_amazon }}",
+                "url": {{ (book.link_amazon or '') | tojson }},
                 "availability": "https://schema.org/InStock"
             }
           }

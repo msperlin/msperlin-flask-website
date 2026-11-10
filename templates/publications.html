@@ -1,24 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section x-data="{
-        q: '',
-        year: 'all',
-        matches(el) {
-            if (this.year !== 'all' && el.dataset.year !== this.year) { return false; }
-            const q = this.q.trim().toLowerCase();
-            if (!q) { return true; }
-            return (el.dataset.search || '').includes(q);
-        },
-        count() {
-            const list = document.getElementById('pubList');
-            if (!list) { return 0; }
-            return Array.prototype.filter.call(
-                list.querySelectorAll('.publication-item'),
-                el => this.matches(el)
-            ).length;
-        }
-    }">
+<section data-pub-filter>
     <h1>Publications</h1>
 
     <p class="gs-stats">
@@ -50,48 +33,53 @@
         </div>
     </div>
 
-    <div class="pub-controls reveal">
+    <div class="pub-controls">
         <label class="field">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 aria-hidden="true">
                 <circle cx="11" cy="11" r="7"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="search" x-model="q" placeholder="Search title, author, or journal…"
+            <input type="search" data-pub-search placeholder="Search title, author, or journal…"
                 aria-label="Search publications">
         </label>
-        <select x-model="year" aria-label="Filter by year">
+        <select data-pub-year aria-label="Filter by year">
             <option value="all">All years</option>
             {% for y in years %}
             <option value="{{ y }}">{{ y }}</option>
             {% endfor %}
         </select>
-        <button class="pub-clear" type="button" @click="q = ''; year = 'all';">Clear</button>
+        <button class="pub-clear" type="button" data-pub-clear>Clear</button>
         <span class="result-count" aria-live="polite" aria-atomic="true"
-            x-text="count() + ' of {{ total_publications }} shown'"></span>
+            data-pub-count>{{ total_publications }} of {{ total_publications }} shown</span>
     </div>
 
     <ul class="item-list" id="pubList" data-stagger>
         {% for pub in publications %}
         <li class="item-card publication-item reveal" data-year="{{ pub.year }}"
-            data-search="{{ (pub.title ~ ' ' ~ (pub.authors or '') ~ ' ' ~ (pub.journal or '')) | lower }}"
-            x-show="matches($el)">
+            data-search="{{ (pub.title ~ ' ' ~ (pub.authors or '') ~ ' ' ~ (pub.journal or '')) | lower }}">
             <div class="publication-content">
-                <h2><a href="{{ pub.link }}">{{ pub.title }}</a></h2>
+                <h2><a href="{{ url_for('publication_detail', slug=pub.slug) }}">{{ pub.title }}</a></h2>
                 {% if pub.authors %}
                 <p class="meta"><strong>{{ pub.authors }}</strong></p>
                 {% endif %}
                 <p class="meta">{{ pub.year }} | {{ pub.journal }} {% if pub.issn %}| ISSN: {{ pub.issn }} {% endif %}{%
                     if pub.impact_factor %} | IF: {{ pub.impact_factor
                     }}{% endif %}
+                    {% if pub.link %}| <a href="{{ pub.link }}" target="_blank"
+                        rel="noopener noreferrer">Publisher<span class="visually-hidden"> (opens in a new
+                            tab)</span></a>{% endif %}
                     <button class="cite-btn" data-title="{{ pub.title }}" data-authors="{{ pub.authors }}"
                         data-year="{{ pub.year }}" data-journal="{{ pub.journal }}">
                         Cite This
                     </button>
                 </p>
-                {% if pub.abstract %}
-                <p class="abstract">{{ pub.abstract }}</p>
+                {% if pub.abstract_short %}
+                <p class="abstract">{{ pub.abstract_short }}</p>
                 {% endif %}
+                <p class="meta"><a class="read-more"
+                        href="{{ url_for('publication_detail', slug=pub.slug) }}">Abstract, citation and .bib
+                        file&nbsp;→</a></p>
             </div>
             {% if pub.image %}
             {% set cover = img_dims(pub.image) %}
@@ -104,27 +92,10 @@
         {% endfor %}
     </ul>
 
-    <p class="empty-state" x-show="count() === 0" x-cloak>No publications match your search.</p>
+    <p class="empty-state" data-pub-empty hidden>No publications match your search.</p>
 </section>
 {% endblock %}
 
 {% block modals %}
-<!-- Cite Modal -->
-<div id="citeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="citeModalTitle">
-    <div class="modal-content">
-        <button class="close-btn" data-cite-close aria-label="Close">&times;</button>
-        <h3 id="citeModalTitle">Cite this publication</h3>
-        <p>BibTeX format:</p>
-        <textarea id="bibtexOutput" class="modal-textarea" readonly></textarea>
-        <button id="copyBtn" class="copy-btn">Copy BibTeX</button>
-
-        <p>APA format:</p>
-        <textarea id="apaOutput" class="modal-textarea" readonly></textarea>
-        <button id="copyApaBtn" class="copy-btn">Copy APA</button>
-    </div>
-</div>
-{% endblock %}
-
-{% block vendor_scripts %}
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+{% include '_cite_modal.html' %}
 {% endblock %}

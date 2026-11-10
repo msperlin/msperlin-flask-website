@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#ffffff">
 
     <!-- Set theme before paint to avoid a flash of the wrong theme -->
-    <script>
+    <script nonce="{{ csp_nonce }}">
         (function () {
             try {
                 var t = localStorage.getItem('theme');
@@ -24,39 +24,40 @@
         })();
     </script>
 
-    {% block meta_description %}
-    <meta name="description"
-        content="{{ description | default('Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.') }}">
+    {% set page_description = description | default('Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.') %}
+    {% set page_image = og_image | default(url_for('static', filename='img/profile.png', _external=True)) %}
+    {% set page_canonical = canonical | default(request.url) %}
+
+    <meta name="description" content="{{ page_description }}">
+    <link rel="canonical" href="{{ page_canonical }}">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="{{ title }} - Marcelo S. Perlin">
-    <meta property="og:description" content="{{ description | default('Academic website of Marcelo S. Perlin...' ) }}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.url }}">
-    <meta property="og:image" content="{{ url_for('static', filename='img/profile.png', _external=True) }}">
+    <meta property="og:description" content="{{ page_description }}">
+    <meta property="og:type" content="{{ og_type | default('website') }}">
+    <meta property="og:url" content="{{ page_canonical }}">
+    <meta property="og:image" content="{{ page_image }}">
     <meta property="og:site_name" content="Marcelo S. Perlin - Academic Website">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ title }} - Marcelo S. Perlin">
-    <meta name="twitter:description" content="{{ description | default('Academic website of Marcelo S. Perlin...') }}">
-    <meta name="twitter:image" content="{{ url_for('static', filename='img/profile.png', _external=True) }}">
-    {% endblock %}
+    <meta name="twitter:description" content="{{ page_description }}">
+    <meta name="twitter:image" content="{{ page_image }}">
+
+    <link rel="alternate" type="application/rss+xml" title="Marcelo S. Perlin — News" href="{{ url_for('news_feed') }}">
+    <link rel="alternate" type="application/rss+xml" title="Marcelo S. Perlin — Publications" href="{{ url_for('publications_feed') }}">
+    {% block head_extra %}{% endblock %}
     <title>{{ title }} - Marcelo S. Perlin</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <!-- Self-hosted fonts: no third-party requests, and no render-blocking CSS -->
+    <link rel="preload" href="{{ static_url('fonts/inter-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ static_url('css/style.css') }}">
+    <link rel="icon" type="image/png" href="{{ static_url('img/favicon.png') }}">
 
     <!-- Page-specific vendor scripts (charts, filtering) -->
     {% block vendor_scripts %}{% endblock %}
-    <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script defer src="{{ static_url('js/main.js') }}"></script>
 </head>
 
 <body>
@@ -78,20 +79,22 @@
 
             <nav aria-label="Primary">
                 <ul id="primary-nav">
-                    <li><a href="{{ url_for('index') }}"
-                            class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
-                    <li><a href="{{ url_for('publications') }}"
-                            class="{% if request.endpoint == 'publications' %}active{% endif %}">Publications</a></li>
-                    <li><a href="{{ url_for('books') }}"
-                            class="{% if request.endpoint == 'books' %}active{% endif %}">Books</a></li>
+                    <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"
+                            aria-current="page" {% endif %}>Home</a></li>
+                    <li><a href="{{ url_for('publications') }}" {% if request.endpoint in ['publications',
+                            'publication_detail'] %}class="active" aria-current="page" {% endif %}>Publications</a></li>
+                    <li><a href="{{ url_for('books') }}" {% if request.endpoint == 'books' %}class="active"
+                            aria-current="page" {% endif %}>Books</a></li>
 
                     <li class="dropdown">
                         <button type="button" class="dropbtn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
                             aria-haspopup="true" aria-expanded="false" aria-controls="menu-code"
                             data-dropdown-toggle>Code <span aria-hidden="true">▾</span></button>
                         <div class="dropdown-content" id="menu-code">
-                            <a href="{{ url_for('code_r') }}">R</a>
-                            <a href="{{ url_for('code_python') }}">Python</a>
+                            <a href="{{ url_for('code_r') }}" {% if request.endpoint == 'code_r' %}aria-current="page"
+                                {% endif %}>R</a>
+                            <a href="{{ url_for('code_python') }}" {% if request.endpoint == 'code_python'
+                                %}aria-current="page" {% endif %}>Python</a>
                         </div>
                     </li>
                     <li class="dropdown">
@@ -99,23 +102,36 @@
                             aria-haspopup="true" aria-expanded="false" aria-controls="menu-research"
                             data-dropdown-toggle>Research <span aria-hidden="true">▾</span></button>
                         <div class="dropdown-content" id="menu-research">
-                            <a href="{{ url_for('data') }}">Data</a>
-                            <a href="{{ url_for('news') }}">Media Coverage</a>
-                            <a href="{{ url_for('awards') }}">Awards</a>
-                            <a href="{{ url_for('slides') }}">Slides</a>
+                            <a href="{{ url_for('data') }}" {% if request.endpoint == 'data' %}aria-current="page"
+                                {% endif %}>Data</a>
+                            <a href="{{ url_for('news') }}" {% if request.endpoint == 'news' %}aria-current="page"
+                                {% endif %}>Media Coverage</a>
+                            <a href="{{ url_for('awards') }}" {% if request.endpoint == 'awards' %}aria-current="page"
+                                {% endif %}>Awards</a>
+                            <a href="{{ url_for('slides') }}" {% if request.endpoint == 'slides' %}aria-current="page"
+                                {% endif %}>Slides</a>
                         </div>
                     </li>
-                    <li><a href="{{ url_for('consulting') }}"
-                            class="{% if request.endpoint == 'consulting' %}active{% endif %}">Consulting</a></li>
+                    <li><a href="{{ url_for('consulting') }}" {% if request.endpoint == 'consulting' %}class="active"
+                            aria-current="page" {% endif %}>Consulting</a></li>
                     <li><a href="https://msperlin.github.io/site-slides/" target="_blank"
                             rel="noopener noreferrer">Class Slides<span class="visually-hidden"> (opens in a new
                                 tab)</span></a></li>
-                    <li><a href="{{ url_for('site_log') }}"
-                            class="{% if request.endpoint == 'site_log' %}active{% endif %}">Site Log</a></li>
+                    <li><a href="{{ url_for('cv') }}" {% if request.endpoint == 'cv' %}class="active"
+                            aria-current="page" {% endif %}>CV</a></li>
+                    <li><a href="{{ url_for('site_log') }}" {% if request.endpoint == 'site_log' %}class="active"
+                            aria-current="page" {% endif %}>Site Log</a></li>
                 </ul>
             </nav>
 
             <div class="nav-actions">
+                <a class="search-link" href="{{ url_for('search') }}" aria-label="Search this site">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </a>
                 <button class="theme-toggle" data-theme-toggle aria-label="Toggle color theme">
                     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" aria-hidden="true">
@@ -141,7 +157,9 @@
         <div class="container">
             <p>&copy; {{ year }} Marcelo S. Perlin. All rights reserved. <br> Page made with <a
                     href="https://flask.palletsprojects.com/">Flask</a>. Source code available on <a
-                    href="https://github.com/msperlin/msperlin-flask-website">GitHub</a>.</p>
+                    href="https://github.com/msperlin/msperlin-flask-website">GitHub</a>. <a
+                    href="{{ url_for('cv') }}">CV</a> · <a href="{{ url_for('search') }}">Search</a> · <a
+                    href="{{ url_for('news_feed') }}">RSS</a>.</p>
         </div>
     </footer>
 

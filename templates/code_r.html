@@ -21,14 +21,26 @@
         <h3>Top packages by monthly downloads</h3>
         <div class="chart-wrap"><canvas id="rDownloadsChart" data-chart-canvas
                 aria-label="Bar chart of R package downloads" role="img"></canvas></div>
-        <script type="application/json" data-chart="rDownloadsChart">{{ chart_r_downloads | safe }}</script>
+        <script nonce="{{ csp_nonce }}" type="application/json" data-chart="rDownloadsChart">{{ chart_r_downloads | safe }}</script>
     </div>
+
+    {% if chart_r_trend %}
+    <div class="chart-card reveal">
+        <h3>Downloads over time</h3>
+        <p class="chart-help">Monthly downloads of the most popular packages, as recorded by the update scripts.</p>
+        <div class="chart-wrap"><canvas id="rTrendChart" data-chart-canvas
+                aria-label="Line chart of monthly R package downloads over time" role="img"></canvas></div>
+        <script nonce="{{ csp_nonce }}" type="application/json" data-chart="rTrendChart">{{ chart_r_trend | safe }}</script>
+    </div>
+    {% endif %}
 
     <ul class="item-list" data-stagger>
         {% for pkg in code_r %}
         <li class="item-card reveal">
             <strong><a href="{{ pkg.link }}">{{ pkg.title }}</a></strong>: {{ pkg.description }}<br>
-            <small><em>Submitted to CRAN on: {{ pkg.date_of_submission }} | Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em></small>
+            <small><em>Submitted to CRAN on: {{ pkg.date_of_submission }} | Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em>
+            {% if pkg.github_stars %}<span class="gh-stat" title="GitHub stars">★ {{ "{:,}".format(pkg.github_stars) }}</span>{% endif %}
+            </small>
         </li>
         {% endfor %}
     </ul>
@@ -36,5 +48,5 @@
 </section>
 {% endblock %}
 {% block vendor_scripts %}
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script defer src="{{ static_url('js/vendor/chart.umd.min.js') }}"></script>
 {% endblock %}

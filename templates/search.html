@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h1>Search</h1>
+    <p>Search across publications, books, media coverage, slides, awards, datasets and code.</p>
+
+    <form class="search-form" action="{{ url_for('search') }}" method="get" role="search">
+        <label class="visually-hidden" for="site-search">Search this site</label>
+        <input id="site-search" type="search" name="q" value="{{ query }}" placeholder="e.g. liquidity, R package, Tesla…"
+            autofocus>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+    <p class="search-summary" aria-live="polite">
+        {{ results | length }} result{{ '' if results | length == 1 else 's' }} for “{{ query }}”
+    </p>
+
+    {% if results %}
+    <div class="search-results">
+        {% for result in results %}
+        <a class="search-result" href="{{ result.url }}">
+            <span class="search-type">{{ result.type }}</span>
+            <h2>{{ result.title }}</h2>
+            {% if result.snippet %}
+            <p class="search-snippet">{{ result.snippet }}</p>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">Nothing matched “{{ query }}”. Try a broader term, or browse the <a
+            href="{{ url_for('publications') }}">publications</a>.</p>
+    {% endif %}
+    {% else %}
+    <p class="empty-state">Type a term above to get started. Searching is case-insensitive and matches all words you
+        enter.</p>
+    {% endif %}
+</section>
+{% endblock %}

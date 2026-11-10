@@ -31,7 +31,7 @@
 </section>
 -->
 
-<script type="application/ld+json">
+<script nonce="{{ csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
@@ -41,7 +41,7 @@
       "name": "Marcelo S. Perlin",
       "url": "{{ request.url_root }}",
       "image": "{{ url_for('static', filename='img/profile.png', _external=True) }}",
-      "description": "{{ about.bio }}",
+      "description": {{ about.bio | tojson }},
       "sameAs": [
         "{{ about.lattes_link }}",
         "{{ about.gscholar_link }}",

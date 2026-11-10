@@ -1,0 +1,41 @@
+name: Update GitHub Stars
+
+on:
+  schedule:
+    - cron: '0 2 * * 0' # Run every Sunday at 2:00 AM, after the other stats jobs
+  workflow_dispatch:      # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-github-stats:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v7
+
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.13'
+
+    - name: Run GitHub stats script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: python scripts/update_github_stats.py
+
+    - name: Check for changes
+      id: git-check
+      run: |
+        git add data/code/r data/code/python
+        git diff --staged --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+
+    - name: Commit and push changes
+      if: steps.git-check.outputs.changes == 'true'
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git commit -m "Update GitHub stars for code packages"
+        git push

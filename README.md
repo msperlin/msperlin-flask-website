@@ -47,9 +47,23 @@ Most of the content on this website is data-driven, meaning you don't need to ed
 *   **`app.py`**: The main Flask application logic and routing.
 *   **`data/`**: JSON files containing the site's content.
 *   **`templates/`**: HTML templates (using Jinja2).
-*   **`static/`**: CSS, JavaScript, images, and other static assets.
+*   **`static/`**: CSS, JavaScript, fonts, images, and other static assets.
 *   **`scripts/`**: Maintenance scripts.
+*   **`tests/`**: Pytest smoke tests (`uv run pytest`).
 *   **`books_rendered/`**: Contains static HTML files for the online books.
+
+### Pages and feeds
+Besides the browsable sections, the app exposes stable and machine-readable URLs:
+
+| URL | What it is |
+| --- | --- |
+| `/publications/<slug>` | One permanent page per paper, with the full abstract, Highwire `citation_*` tags (Google Scholar), `ScholarlyArticle` JSON-LD and a canonical URL. |
+| `/publications/<slug>.bib` | The paper as a downloadable BibTeX file. |
+| `/feed.xml` | RSS feed for news/media coverage. |
+| `/publications/feed.xml` | RSS feed for new publications. |
+| `/search` | Site-wide search over publications, books, news, slides, awards, datasets and code (server-side, works without JS). |
+| `/cv` | A print-friendly CV generated from the JSON files. |
+| `/sitemap.xml` | Sitemap with per-page `lastmod` dates. |
 
 ### Frontend & UI
 The site is server-rendered HTML (great for SEO) with a thin layer of progressive
@@ -60,22 +74,29 @@ enhancement on top. Everything still works if JavaScript is disabled.
     the choice is stored in `localStorage` and defaults to the OS preference.
 *   **Navigation**: plain server-rendered links (no client-side routing), so
     browser history, focus and screen-reader behaviour stay native.
-*   **Publications search/filter**: [Alpine.js](https://alpinejs.dev) filters the
-    server-rendered list client-side (title/author/journal + year). It is loaded
-    only on the publications page.
+*   **Publications search/filter**: `static/js/main.js` filters the
+    server-rendered list client-side (title/author/journal + year). The controls
+    are hidden without JavaScript, and the full list always remains visible.
 *   **Charts**: [Chart.js](https://www.chartjs.org) renders package download
-    charts. Data is embedded per-page in
-    `<script type="application/json" data-chart="…">` blocks, and Chart.js is
-    loaded only by the two code pages.
+    charts. It is self-hosted in `static/js/vendor/`, loaded only by the two code
+    pages, and reads its data from
+    `<script type="application/json" data-chart="…">` blocks. The update scripts
+    also record a monthly `history`, which feeds a downloads-over-time chart once
+    two months are available.
+*   **Fonts**: Inter and Source Serif 4 are self-hosted from `static/fonts/`
+    (SIL Open Font License), so there are no third-party font requests.
 *   **Site JS**: all interaction logic lives in `static/js/main.js` (theme,
-    mobile nav, scroll-reveal animations, charts, cite modal) and uses event
-    delegation. Content is never hidden behind a failed script.
+    mobile nav, scroll-reveal animations, charts, citation modal, print button)
+    and uses event delegation. Content is never hidden behind a failed script.
 *   **Images**: originals live in `static/img/`; the site serves resized WebP
     derivatives from `static/img/opt/` (with the original as fallback). Run
     `python scripts/optimize_images.py` after adding or replacing a cover or
     portrait image.
-*   **Libraries** are loaded from public CDNs, so there is **no build step** and
-    no Node toolchain to maintain.
+*   **No build step and no third-party CDNs**: all CSS, JS and fonts are served
+    from this origin, which lets the Content-Security-Policy stay strict.
+*   **Delivery**: responses are gzip-compressed (`flask-compress`), static files
+    are cached for a year behind `?v=<mtime>` URLs (`static_url`), and HTML gets
+    security headers plus a per-request CSP nonce (`add_security_headers`).
 
 ### Common Tasks
 
@@ -101,7 +122,27 @@ uv run python scripts/run_scholarly.py
 ```
 This will update `data/stats/gscholar.json`.
 
-#### 5. Adding or Replacing Images
+#### 5. Updating Download and GitHub Stats
+Three scripts keep the code pages current (all run weekly by GitHub Actions):
+```bash
+uv run python scripts/update_cran_downloads.py   # CRAN downloads + monthly history
+uv run python scripts/update_pypi_downloads.py   # PyPI downloads + monthly history
+uv run python scripts/update_github_stats.py     # stars, forks, last push
+```
+They fill `history` with one entry per month (capped at 24), which powers the
+“Downloads over time” chart once there are at least two months. Set
+`GITHUB_TOKEN` when running the GitHub script locally to avoid the 60 req/hour
+anonymous limit.
+
+#### 6. Running the Tests
+```bash
+uv run pytest
+```
+The suite renders every public route, checks the per-publication pages and
+`.bib` downloads, validates both RSS feeds and the sitemap, and asserts the
+security/caching headers. It runs in CI on every push and pull request.
+
+#### 7. Adding or Replacing Images
 1.  Put the original image in `static/img/` and reference it from the JSON file
     (e.g. `static/img/2027_cover_Journal.jpg`).
 2.  Regenerate the optimized WebP derivatives and size manifest:
@@ -114,7 +155,7 @@ The templates use the `opt_url` filter and `img_dims()` helper (see `app.py`),
 so new images automatically get the resized file, lazy loading and intrinsic
 dimensions.
 
-#### 6. Adding a Python Project
+#### 8. Adding a Python Project
 1.  Navigate to `data/code/python/`.
 2.  Create a JSON file with the same fields as the existing ones:
     ```json
@@ -134,7 +175,8 @@ dimensions.
     `github_link` and `pypi_link` feed the standard `GitHub | PyPI` line.
     Use `null` when the project is not published on PyPI yet.
 4.  Download stats are filled in by `uv run python scripts/update_pypi_downloads.py`,
-    which skips projects with `"pypi_link": null`.
+    which skips projects with `"pypi_link": null`. Stars and forks are added by
+    `scripts/update_github_stats.py`.
 
 ---
 
