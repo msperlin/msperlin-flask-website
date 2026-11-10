@@ -1142,33 +1142,37 @@ name = "msperlin-flask-website"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "bibtexparser" },
     { name = "flask" },
     { name = "flask-compress" },
-    { name = "free-proxy" },
     { name = "gunicorn" },
-    { name = "httpx" },
-    { name = "scholarly" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "pytest" },
 ]
+stats = [
+    { name = "bibtexparser" },
+    { name = "free-proxy" },
+    { name = "httpx" },
+    { name = "scholarly" },
+]
 
 [package.metadata]
 requires-dist = [
-    { name = "bibtexparser", specifier = "<2.0.0" },
     { name = "flask" },
     { name = "flask-compress", specifier = ">=1.26" },
-    { name = "free-proxy" },
     { name = "gunicorn" },
-    { name = "httpx", specifier = "<0.28" },
-    { name = "scholarly" },
 ]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9.2.0" }]
+stats = [
+    { name = "bibtexparser", specifier = "<2.0.0" },
+    { name = "free-proxy" },
+    { name = "httpx", specifier = "<0.28" },
+    { name = "scholarly" },
+]
 
 [[package]]
 name = "outcome"

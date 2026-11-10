@@ -231,6 +231,40 @@ def test_trend_chart_card_renders_with_history(client, monkeypatch):
     assert 'Jan 2026' in page
 
 
+@pytest.mark.parametrize('path', [
+    '/books/../app.py',
+    '/books/../requirements.txt',
+    '/books/../.git/config',
+    '/books/../data/about.json',
+    '/slides/../about.json',
+    '/slides/../stats/gscholar.json',
+])
+def test_directory_traversal_is_blocked(client, path):
+    assert client.get(path).status_code == 404
+
+
+def test_code_pages_show_when_stats_were_updated(client):
+    assert 'Package statistics updated at' in html(client.get('/code/r'))
+    assert 'Download statistics updated at' in html(client.get('/code/python'))
+
+
+def test_https_proxy_headers_are_honoured(client):
+    headers = {'X-Forwarded-Proto': 'https'}
+    sitemap = html(client.get('/sitemap.xml', headers=headers))
+    assert '<loc>http://' not in sitemap
+    assert '<loc>https://' in sitemap
+
+    home = client.get('/', headers=headers)
+    assert home.headers.get('Strict-Transport-Security')
+    assert 'href="https://' in html(home)
+
+
+def test_news_feed_uses_rss_categories(client):
+    body = client.get('/feed.xml').data.decode('utf-8')
+    assert '<category>' in body
+    assert '<source>' not in body
+
+
 def test_publications_have_unique_abstracts():
     """Guards against copy-paste mistakes between JSON files."""
     seen = {}

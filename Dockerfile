@@ -7,12 +7,15 @@ FROM python:3.13-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Allow statements and log messages to immediately appear in the Knative logs
-ENV PYTHONUNBUFFERED True
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
+ENV PYTHONUNBUFFERED=1
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+# Do not keep uv's download cache inside the final image (~140 MB).
+ENV UV_NO_CACHE=1
 
 # Copy local code to the container image.
-ENV APP_HOME /app
+ENV APP_HOME=/app
 WORKDIR $APP_HOME
 COPY . ./
 
@@ -27,4 +30,4 @@ ENV PATH="$APP_HOME/.venv/bin:$PATH"
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+CMD ["sh", "-c", "exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app"]

@@ -16,7 +16,7 @@
             <pubDate>{{ item.pub_date }}</pubDate>
             {% endif %}
             {% if item.source %}
-            <source>{{ item.source }}</source>
+            <category>{{ item.source }}</category>
             {% endif %}
             <description>{{ (item.abstract or '')[:400] if item.abstract is defined and item.abstract else item.title }}</description>
         </item>

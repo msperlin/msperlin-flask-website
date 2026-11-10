@@ -22,10 +22,10 @@ jobs:
         enable-cache: true
 
     - name: Install dependencies
-      run: uv sync --frozen
+      run: uv sync --frozen --group stats
 
     - name: Run scholarly script
-      run: uv run python scripts/run_scholarly.py
+      run: uv run --group stats python scripts/run_scholarly.py
   
     - name: Check for changes
       id: git-check

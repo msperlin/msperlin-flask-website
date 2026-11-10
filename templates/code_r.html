@@ -12,8 +12,8 @@
 
     <h2>R Packages:</h2>
     <p>All packages are available at <a href="https://msperlin.r-universe.dev/builds">msperlin.r-universe.dev/builds</a>.
-    {% if code_r and code_r[0].get('updated_at') %}
-    Package statistics updated at {{ code_r[0].get('updated_at') }}.
+    {% if code_r_updated_at %}
+    Package statistics updated at {{ code_r_updated_at }}.
     {% endif %}
     </p>
 

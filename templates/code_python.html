@@ -10,9 +10,8 @@
     <h2>Python Projects:</h2>
     <p>All projects are available on <a href="https://github.com/msperlin?tab=repositories">GitHub</a>; the ones published as
         packages are also on <a href="https://pypi.org/user/msperlin/">PyPI</a>.
-    {% for pkg in code_python %}{% if pkg.updated_at %}{% set last_update = pkg.updated_at %}{% endif %}{% endfor %}
-    {% if last_update %}
-    Download statistics updated at {{ last_update }}.
+    {% if code_python_updated_at %}
+    Download statistics updated at {{ code_python_updated_at }}.
     {% endif %}
     </p>
 

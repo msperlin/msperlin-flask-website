@@ -118,9 +118,10 @@ enhancement on top. Everything still works if JavaScript is disabled.
 The site displays your Google Scholar statistics. These are fetched using a script.
 To update them, run it from the repository root:
 ```bash
-uv run python scripts/run_scholarly.py
+uv run --group stats python scripts/run_scholarly.py
 ```
-This will update `data/stats/gscholar.json`.
+This will update `data/stats/gscholar.json`. The `stats` dependency group is
+only needed for this script, so the production image does not install it.
 
 #### 5. Updating Download and GitHub Stats
 Three scripts keep the code pages current (all run weekly by GitHub Actions):

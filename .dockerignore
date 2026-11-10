@@ -10,3 +10,7 @@ __pycache__
 venv
 .venv
 .env
+.github
+.playwright-mcp
+gdfpd2_cache
+tests

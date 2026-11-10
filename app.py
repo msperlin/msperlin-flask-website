@@ -6,6 +6,7 @@ import unicodedata
 from flask import (Flask, render_template, send_from_directory, make_response, url_for,
                    request, abort, g)
 from flask_compress import Compress
+from werkzeug.middleware.proxy_fix import ProxyFix
 import datetime 
 import subprocess
 import time
@@ -13,6 +14,11 @@ import urllib.request
 import urllib.error
 
 app = Flask(__name__)
+
+# Cloud Run terminates TLS and forwards the original scheme in
+# X-Forwarded-Proto. Without this, canonical URLs, the sitemap, the feeds and
+# request.is_secure (HSTS) would all think the site runs on plain HTTP.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 
 # Compress HTML/JSON/CSS/JS on the fly (Cloud Run does not do it for us).
 Compress(app)
@@ -151,6 +157,15 @@ def load_data_from_folder(folder_path):
                         item['filename_stem'] = sub_filename[:-5]
                         data_list.append(item)
     return data_list
+
+def _safe_subdirectory(root, name):
+    """Resolve root/name, returning None if it escapes root (path traversal)."""
+    root = os.path.realpath(root)
+    candidate = os.path.realpath(os.path.join(root, name))
+    if candidate == root or not candidate.startswith(root + os.sep):
+        return None
+    return candidate
+
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -375,9 +390,9 @@ def inject_now():
 @app.route('/books/<book_name>/')
 @app.route('/books/<book_name>/<path:path>')
 def serve_book(book_name, path='index.html'):
-    # Check if book exists
-    full_book_path = os.path.join(BOOKS_FOLDER, book_name)
-    if not os.path.exists(full_book_path) or not os.path.isdir(full_book_path):
+    # Never let `book_name` escape books_rendered (e.g. `/books/../app.py`).
+    full_book_path = _safe_subdirectory(BOOKS_FOLDER, book_name)
+    if not full_book_path or not os.path.isdir(full_book_path):
         return "Book not found", 404
     
     return send_from_directory(full_book_path, path, max_age=3600)
@@ -477,7 +492,7 @@ def books():
             book['amazon_rating'] = books_stats[stem].get('rating')
             book['amazon_ratings_count'] = books_stats[stem].get('ratings_count')
             
-    books_data.sort(key=lambda x: (int(x.get('amazon_ratings_count', 0)), int(x.get('year', 0))), reverse=True)
+    books_data.sort(key=lambda x: (int(x.get('amazon_ratings_count') or 0), int(x.get('year') or 0)), reverse=True)
 
     n_books = len(books_data)
 
@@ -534,7 +549,7 @@ def code_r():
     code_data_r = load_data_from_folder('code/r')
     
     # Sort R packages by number of downloads (descending)
-    code_data_r.sort(key=lambda x: int(x.get('number_of_downloads', 0)), reverse=True)
+    code_data_r.sort(key=lambda x: int(x.get('number_of_downloads') or 0), reverse=True)
 
     # chart: top packages by downloads (last month)
     top_pkgs = code_data_r[:12]
@@ -552,6 +567,8 @@ def code_r():
 
     return render_template('code_r.html', title='Code (R)', code_r=code_data_r, chart_r_downloads=chart_r_downloads,
                            chart_r_trend=download_trend_chart(code_data_r, 'title'),
+                           code_r_updated_at=max((p.get('updated_at') for p in code_data_r
+                                                  if p.get('updated_at')), default=None),
                            description="Open source code and repositories in R.")
 
 
@@ -580,6 +597,8 @@ def code_python():
     return render_template('code_python.html', title='Code (Python)', code_python=code_data_python,
                            chart_python_downloads=chart_python_downloads,
                            chart_python_trend=download_trend_chart(code_data_python, 'name'),
+                           code_python_updated_at=max((p.get('updated_at') for p in code_data_python
+                                                       if p.get('updated_at')), default=None),
                            description="Open source code and repositories in Python.")
 
 @app.route('/data')
@@ -656,8 +675,9 @@ def slides():
 @app.route('/slides/<slide_folder>/')
 @app.route('/slides/<slide_folder>/<path:path>')
 def serve_slide(slide_folder, path=None):
-    slide_dir = os.path.join(SLIDES_FOLDER, slide_folder)
-    if not os.path.exists(slide_dir) or not os.path.isdir(slide_dir):
+    # Never let `slide_folder` escape data/slides (e.g. `/slides/../data`).
+    slide_dir = _safe_subdirectory(SLIDES_FOLDER, slide_folder)
+    if not slide_dir or not os.path.isdir(slide_dir):
         return "Slide presentation not found", 404
         
     if not path:
