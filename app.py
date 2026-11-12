@@ -381,7 +381,35 @@ def search_matches(query, limit=200):
 @app.route('/')
 def index():
     about_data = load_data('about.json')
-    return render_template('index.html', title='Home', about=about_data, description="Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.")
+    gscholar_stats = load_data('stats/gscholar.json')
+    pubs = sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True)
+    books_data = load_data_from_folder('books')
+    code_r_data = load_data_from_folder('code/r')
+    code_py_data = load_data_from_folder('code/python')
+    slides_data = sorted(
+        load_data_from_folder('slides'),
+        key=lambda x: str(x.get('date', x.get('year', ''))),
+        reverse=True,
+    )
+
+    total_pkg_downloads = sum(
+        int(p.get('total_downloads') or 0) for p in (code_r_data + code_py_data)
+    )
+
+    return render_template(
+        'index.html',
+        title='Home',
+        about=about_data,
+        gscholar_stats=gscholar_stats,
+        interests=gscholar_stats.get('interests') or [],
+        total_publications=len(pubs),
+        total_books=len(books_data),
+        total_packages=len(code_r_data) + len(code_py_data),
+        total_pkg_downloads=total_pkg_downloads,
+        recent_pubs=pubs[:3],
+        recent_slides=slides_data[:3],
+        description="Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.",
+    )
 
 @app.context_processor
 def inject_now():
@@ -396,6 +424,99 @@ def serve_book(book_name, path='index.html'):
         return "Book not found", 404
     
     return send_from_directory(full_book_path, path, max_age=3600)
+
+
+def _publications_by_year_chart(publications_data):
+    """Bar chart of publications per year in chronological order."""
+    counts = {}
+    for pub in publications_data:
+        yr = str(pub.get('year') or '').strip()
+        if yr:
+            counts[yr] = counts.get(yr, 0) + 1
+    years_asc = sorted(counts.keys())
+    return json.dumps({
+        "type": "bar",
+        "data": {
+            "labels": years_asc,
+            "datasets": [{
+                "label": "Publications",
+                "data": [counts[y] for y in years_asc],
+            }],
+        },
+        "options": {
+            "scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}},
+        },
+    })
+
+
+_PACKAGE_TOPIC_HINTS = {
+    'GetDFPData2': ('getdfpdata', 'financial reports', 'corporate events', 'b3', 'cvm'),
+    'GetFREData': ('getdfpdata', 'getfredata', 'financial reports', 'corporate events', 'board'),
+    'GetTDData': ('gettddata', 'tesouro direto', 'sovereign bonds'),
+    'GetLattesData': ('getlattesdata', 'lattes', 'cnpq'),
+    'cvm-mcp': ('getdfpdata', 'financial reports', 'corporate events'),
+    'tesourodireto-mcp': ('tesouro direto', 'gettddata'),
+}
+
+
+def _related_packages_for_publication(publication):
+    """Find R and Python packages related to a publication's title or abstract."""
+    haystack = f"{publication.get('title', '')} {publication.get('abstract', '')}".lower()
+    related = []
+    for folder, ecosystem, field in (('code/r', 'R (CRAN)', 'title'),
+                                     ('code/python', 'Python (PyPI)', 'name')):
+        for pkg in load_data_from_folder(folder):
+            name = (pkg.get(field) or '').strip()
+            if len(name) < 3:
+                continue
+            base_name = name.rstrip('0123456789').lower()
+            hints = _PACKAGE_TOPIC_HINTS.get(name, ())
+            matched = (
+                bool(re.search(rf'\b{re.escape(name.lower())}\b', haystack))
+                or (len(base_name) >= 5 and bool(re.search(rf'\b{re.escape(base_name)}\b', haystack)))
+                or any(hint in haystack for hint in hints)
+            )
+            if matched:
+                related.append({
+                    'name': name,
+                    'ecosystem': ecosystem,
+                    'description': pkg.get('description', ''),
+                    'url': pkg.get('link') or pkg.get('github_link') or (
+                        url_for('code_r') if folder == 'code/r' else url_for('code_python')
+                    ),
+                })
+    return related
+
+
+_STOPWORDS = {
+    'the', 'and', 'for', 'with', 'from', 'that', 'this', 'using', 'based',
+    'analysis', 'study', 'paper', 'market', 'markets', 'data', 'evidence',
+    'brazilian', 'brazil', 'uma', 'para', 'com', 'dos', 'das', 'nos', 'nas',
+    'mercado', 'brasil', 'brasileiro', 'dados', 'sobre', 'entre', 'como',
+}
+
+
+def _keywords(text):
+    words = re.findall(r'[a-z]{4,}', (text or '').lower())
+    return {w for w in words if w not in _STOPWORDS}
+
+
+def _related_publications(target, limit=3):
+    """Return up to `limit` related publications ranked by topic & journal overlap."""
+    target_kw = _keywords(f"{target.get('title', '')} {target.get('abstract', '')}")
+    target_journal = (target.get('journal') or target.get('publication') or '').strip().lower()
+    scored = []
+    for candidate in get_publications():
+        if candidate.get('slug') == target.get('slug'):
+            continue
+        cand_kw = _keywords(f"{candidate.get('title', '')} {candidate.get('abstract', '')}")
+        overlap = len(target_kw & cand_kw)
+        same_journal = 2 if (target_journal and (candidate.get('journal') or '').strip().lower() == target_journal) else 0
+        score = overlap + same_journal
+        if score > 0:
+            scored.append((score, int(candidate.get('year') or 0), candidate))
+    scored.sort(key=lambda item: (item[0], item[1]), reverse=True)
+    return [item[2] for item in scored[:limit]]
 
 
 @app.route('/publications')
@@ -438,6 +559,7 @@ def publications():
         total_publications=total_publications, 
         total_publications_with_if=total_publications_with_if,
         avg_if=avg_if,
+        chart_pubs_by_year=_publications_by_year_chart(publications_data),
         gscholar_stats = gscholar_stats,
         description="Academic publications by Marcelo S. Perlin in finance and data science.")
 
@@ -455,6 +577,8 @@ def publication_detail(slug):
         publication=publication,
         bibtex=bibtex_for(publication),
         citation_authors=[a.strip() for a in (publication.get('authors') or '').split(',') if a.strip()],
+        related_packages=_related_packages_for_publication(publication),
+        related_publications=_related_publications(publication),
         gscholar_stats=gscholar_stats,
         canonical=url_for('publication_detail', slug=slug, _external=True),
         og_type='article',
@@ -464,6 +588,14 @@ def publication_detail(slug):
 
 @app.route('/publications/<slug>.bib')
 def publication_bibtex(slug):
+    if slug == 'all':
+        pubs = sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True)
+        body = '\n'.join(bibtex_for(p).strip() for p in pubs) + '\n'
+        response = make_response(body)
+        response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+        response.headers['Content-Disposition'] = 'attachment; filename="msperlin-publications.bib"'
+        return response
+
     publication = get_publication(slug)
     if publication is None:
         abort(404)
@@ -472,6 +604,28 @@ def publication_bibtex(slug):
     response.headers['Content-Type'] = 'text/plain; charset=utf-8'
     response.headers['Content-Disposition'] = f'attachment; filename="{slug}.bib"'
     return response
+
+
+def _discover_book_companions(book):
+    """Inspect BOOKS_FOLDER/<folder> for PDF, EPUB, and EOC solutions files."""
+    link_online = book.get('link_online') or ''
+    if not link_online.startswith('/books/'):
+        return
+    parts = [p for p in link_online.strip('/').split('/') if p]
+    if len(parts) < 2:
+        return
+    folder_name = parts[1]
+    book_dir = _safe_subdirectory(BOOKS_FOLDER, folder_name)
+    if not book_dir or not os.path.isdir(book_dir):
+        return
+    for fname in sorted(os.listdir(book_dir)):
+        lower = fname.lower()
+        if lower.endswith('.pdf') and not book.get('pdf_url'):
+            book['pdf_url'] = url_for('serve_book', book_name=folder_name, path=fname)
+        elif lower.endswith('.epub') and not book.get('epub_url'):
+            book['epub_url'] = url_for('serve_book', book_name=folder_name, path=fname)
+        elif 'solutions' in lower and lower.endswith('.html') and not book.get('solutions_url'):
+            book['solutions_url'] = url_for('serve_book', book_name=folder_name, path=fname)
 
 
 @app.route('/books')
@@ -488,6 +642,8 @@ def books():
     for book in books_data:
         stem = book.get('filename_stem')
         book['anchor'] = slugify(book.get('title', stem or ''))
+        book['language'] = 'PT-BR' if 'com.br' in (book.get('link_amazon') or '') else 'EN'
+        _discover_book_companions(book)
         if stem and stem in books_stats:
             book['amazon_rating'] = books_stats[stem].get('rating')
             book['amazon_ratings_count'] = books_stats[stem].get('ratings_count')
@@ -551,6 +707,10 @@ def code_r():
     # Sort R packages by number of downloads (descending)
     code_data_r.sort(key=lambda x: int(x.get('number_of_downloads') or 0), reverse=True)
 
+    total_monthly_downloads = sum(int(p.get('number_of_downloads') or 0) for p in code_data_r)
+    total_all_time_downloads = sum(int(p.get('total_downloads') or 0) for p in code_data_r)
+    total_stars = sum(int(p.get('github_stars') or 0) for p in code_data_r)
+
     # chart: top packages by downloads (last month)
     top_pkgs = code_data_r[:12]
     chart_r_downloads = json.dumps({
@@ -567,6 +727,9 @@ def code_r():
 
     return render_template('code_r.html', title='Code (R)', code_r=code_data_r, chart_r_downloads=chart_r_downloads,
                            chart_r_trend=download_trend_chart(code_data_r, 'title'),
+                           total_monthly_downloads=total_monthly_downloads,
+                           total_all_time_downloads=total_all_time_downloads,
+                           total_stars=total_stars,
                            code_r_updated_at=max((p.get('updated_at') for p in code_data_r
                                                   if p.get('updated_at')), default=None),
                            description="Open source code and repositories in R.")
@@ -579,6 +742,10 @@ def code_python():
     # Sort Python packages by number of downloads (descending); entries without
     # download stats (e.g. MCP servers not yet tracked by pypistats) go last.
     code_data_python.sort(key=lambda x: int(x.get('number_of_downloads') or 0), reverse=True)
+
+    total_monthly_downloads = sum(int(p.get('number_of_downloads') or 0) for p in code_data_python)
+    total_all_time_downloads = sum(int(p.get('total_downloads') or 0) for p in code_data_python)
+    total_stars = sum(int(p.get('github_stars') or 0) for p in code_data_python)
 
     # chart: top packages by downloads (last month)
     top_pkgs = [p for p in code_data_python if p.get('number_of_downloads') is not None][:12]
@@ -597,6 +764,9 @@ def code_python():
     return render_template('code_python.html', title='Code (Python)', code_python=code_data_python,
                            chart_python_downloads=chart_python_downloads,
                            chart_python_trend=download_trend_chart(code_data_python, 'name'),
+                           total_monthly_downloads=total_monthly_downloads,
+                           total_all_time_downloads=total_all_time_downloads,
+                           total_stars=total_stars,
                            code_python_updated_at=max((p.get('updated_at') for p in code_data_python
                                                        if p.get('updated_at')), default=None),
                            description="Open source code and repositories in Python.")
@@ -868,7 +1038,16 @@ def site_log():
 def search():
     query = (request.args.get('q') or '').strip()
     results = search_matches(query) if query else []
+    counts_by_type = {}
+    for item in results:
+        t = item.get('type', 'Other')
+        counts_by_type[t] = counts_by_type.get(t, 0) + 1
+    type_counts = sorted(
+        counts_by_type.items(),
+        key=lambda kv: TYPE_ORDER.get(kv[0], 99),
+    )
     return render_template('search.html', title='Search', query=query, results=results,
+                           type_counts=type_counts,
                            canonical=url_for('search', _external=True),
                            description="Search publications, books, news, slides, awards, datasets and code.")
 

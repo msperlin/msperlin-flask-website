@@ -16,13 +16,25 @@
             {% endif %}
             <div class="publication-content">
                 <h2><a href="{{ book.link_amazon }}">{{ book.title }}</a></h2>
-                
-                <p>
+                <p class="book-badges">
+                    {% if book.year %}<span class="tag-pill">{{ book.year }}</span>{% endif %}
+                    {% if book.language %}<span class="tag-pill">{{ book.language }}</span>{% endif %}
+                </p>
+                <div class="action-links">
                     <a href="{{ book.link_amazon }}">Amazon</a>
                     {% if book.link_online %}
-                    | <a href="{{ book.link_online }}">Online Version</a>
+                    <a href="{{ book.link_online }}">Read Online</a>
                     {% endif %}
-                </p>
+                    {% if book.pdf_url %}
+                    <a href="{{ book.pdf_url }}">Online PDF</a>
+                    {% endif %}
+                    {% if book.epub_url %}
+                    <a href="{{ book.epub_url }}">EPUB</a>
+                    {% endif %}
+                    {% if book.solutions_url %}
+                    <a href="{{ book.solutions_url }}">Solutions</a>
+                    {% endif %}
+                </div>
                 {% if book.amazon_rating %}
                 <div class="rating-container" title="{{ book.amazon_rating }} out of 5 stars">
                     <div class="stars-outer">

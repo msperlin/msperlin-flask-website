@@ -33,6 +33,15 @@
         </div>
     </div>
 
+    {% if chart_pubs_by_year %}
+    <div class="chart-card reveal">
+        <h3>Publications by year</h3>
+        <div class="chart-wrap chart-wrap-compact"><canvas id="pubYearChart" data-chart-canvas
+                aria-label="Bar chart of publications per year" role="img"></canvas></div>
+        <script nonce="{{ csp_nonce }}" type="application/json" data-chart="pubYearChart">{{ chart_pubs_by_year | safe }}</script>
+    </div>
+    {% endif %}
+
     <div class="pub-controls">
         <label class="field">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -50,6 +59,7 @@
             {% endfor %}
         </select>
         <button class="pub-clear" type="button" data-pub-clear>Clear</button>
+        <a class="pub-clear" href="{{ url_for('publication_bibtex', slug='all') }}">Download all (.bib)</a>
         <span class="result-count" aria-live="polite" aria-atomic="true"
             data-pub-count>{{ total_publications }} of {{ total_publications }} shown</span>
     </div>
@@ -98,4 +108,8 @@
 
 {% block modals %}
 {% include '_cite_modal.html' %}
+{% endblock %}
+
+{% block vendor_scripts %}
+<script defer src="{{ static_url('js/vendor/chart.umd.min.js') }}"></script>
 {% endblock %}

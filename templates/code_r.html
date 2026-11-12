@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section>
+<section data-pkg-filter>
     <h1>Code (R)</h1>
     <p>
         I feel that unrestricted access to organized datasets is one of the pillars of reproducible research, which is why I've taken so much interest in it over the years. As a result, I'm the author of many R packages distributed in CRAN. Most packages are related to importing and organizing financial and economic datasets from public sources.
@@ -9,6 +9,29 @@
     <p>
         If you used one of the packages in research, please use the proper citation format with R code <code>citation('pkgname')</code>.
     </p>
+
+    <div class="stats-container reveal" data-stagger>
+        <div class="stat-card reveal">
+            <p class="stat-label">R packages</p>
+            <p class="stat-value">{{ code_r | length }}</p>
+            <p class="stat-help">Open-source R packages published on CRAN / R-universe.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">Monthly downloads</p>
+            <p class="stat-value">{{ "{:,}".format(total_monthly_downloads) }}</p>
+            <p class="stat-help">Combined CRAN downloads over the last month.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">All-time downloads</p>
+            <p class="stat-value">{{ "{:,}".format(total_all_time_downloads) }}</p>
+            <p class="stat-help">Cumulative CRAN downloads across all packages.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">GitHub stars</p>
+            <p class="stat-value">★ {{ "{:,}".format(total_stars) }}</p>
+            <p class="stat-help">Total stars across public R package repositories.</p>
+        </div>
+    </div>
 
     <h2>R Packages:</h2>
     <p>All packages are available at <a href="https://msperlin.r-universe.dev/builds">msperlin.r-universe.dev/builds</a>.
@@ -34,10 +57,35 @@
     </div>
     {% endif %}
 
-    <ul class="item-list" data-stagger>
+    <div class="pub-controls">
+        <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="search" data-pkg-search placeholder="Filter R packages by name or description…"
+                aria-label="Filter R packages">
+        </label>
+        <button class="pub-clear" type="button" data-pkg-clear>Clear</button>
+        <span class="result-count" aria-live="polite" aria-atomic="true"
+            data-pkg-count>{{ code_r | length }} of {{ code_r | length }} shown</span>
+    </div>
+
+    <ul class="item-list" data-pkg-list data-stagger>
         {% for pkg in code_r %}
-        <li class="item-card reveal">
-            <strong><a href="{{ pkg.link }}">{{ pkg.title }}</a></strong>: {{ pkg.description }}<br>
+        <li class="item-card pkg-item reveal"
+            data-search="{{ (pkg.title ~ ' ' ~ (pkg.description or '')) | lower }}">
+            <div class="pkg-card-head">
+                <div>
+                    <strong><a href="{{ pkg.link }}">{{ pkg.title }}</a></strong>: {{ pkg.description }}
+                </div>
+                <button class="install-btn" type="button"
+                    data-copy-text="install.packages('{{ pkg.title }}')"
+                    aria-label="Copy R install command for {{ pkg.title }}">
+                    <code>install.packages('{{ pkg.title }}')</code>
+                </button>
+            </div>
             <small><em>Submitted to CRAN on: {{ pkg.date_of_submission }} | Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em>
             {% if pkg.github_stars %}<span class="gh-stat" title="GitHub stars">★ {{ "{:,}".format(pkg.github_stars) }}</span>{% endif %}
             </small>
@@ -45,6 +93,7 @@
         {% endfor %}
     </ul>
 
+    <p class="empty-state" data-pkg-empty hidden>No packages match your search.</p>
 </section>
 {% endblock %}
 {% block vendor_scripts %}

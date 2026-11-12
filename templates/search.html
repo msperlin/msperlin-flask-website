@@ -13,14 +13,26 @@
     </form>
 
     {% if query %}
-    <p class="search-summary" aria-live="polite">
+    <p class="search-summary" aria-live="polite" data-search-summary>
         {{ results | length }} result{{ '' if results | length == 1 else 's' }} for “{{ query }}”
     </p>
 
     {% if results %}
-    <div class="search-results">
+    {% if type_counts and type_counts | length > 1 %}
+    <div class="search-type-filters" role="toolbar" aria-label="Filter results by content type" data-search-type-filters>
+        <button type="button" class="type-filter-btn is-active" data-filter-type="all" aria-pressed="true">
+            All ({{ results | length }})
+        </button>
+        {% for rtype, rcount in type_counts %}
+        <button type="button" class="type-filter-btn" data-filter-type="{{ rtype }}" aria-pressed="false">
+            {{ rtype }} ({{ rcount }})
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="search-results" data-search-results>
         {% for result in results %}
-        <a class="search-result" href="{{ result.url }}">
+        <a class="search-result" href="{{ result.url }}" data-result-type="{{ result.type }}">
             <span class="search-type">{{ result.type }}</span>
             <h2>{{ result.title }}</h2>
             {% if result.snippet %}

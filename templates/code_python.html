@@ -1,11 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section>
+<section data-pkg-filter>
     <h1>Code (Python)</h1>
     <p>
-        Here are Python projects I've developed, mostly related to data science and analysis.
+        Here are Python projects I've developed, mostly related to financial data science, Brazilian public datasets, and Model Context Protocol (MCP) servers for AI agents.
     </p>
+
+    <div class="stats-container reveal" data-stagger>
+        <div class="stat-card reveal">
+            <p class="stat-label">Python packages</p>
+            <p class="stat-value">{{ code_python | length }}</p>
+            <p class="stat-help">Open-source Python libraries and AI MCP servers.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">Monthly downloads</p>
+            <p class="stat-value">{{ "{:,}".format(total_monthly_downloads) }}</p>
+            <p class="stat-help">Combined PyPI downloads over the last month.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">All-time downloads</p>
+            <p class="stat-value">{{ "{:,}".format(total_all_time_downloads) }}</p>
+            <p class="stat-help">Cumulative PyPI downloads across tracked packages.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">GitHub stars</p>
+            <p class="stat-value">★ {{ "{:,}".format(total_stars) }}</p>
+            <p class="stat-help">Total stars across public Python repositories.</p>
+        </div>
+    </div>
 
     <h2>Python Projects:</h2>
     <p>All projects are available on <a href="https://github.com/msperlin?tab=repositories">GitHub</a>; the ones published as
@@ -32,12 +55,41 @@
     </div>
     {% endif %}
 
-    <ul class="item-list" data-stagger>
+    <div class="pub-controls">
+        <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="search" data-pkg-search placeholder="Filter Python projects by name or description…"
+                aria-label="Filter Python projects">
+        </label>
+        <button class="pub-clear" type="button" data-pkg-clear>Clear</button>
+        <span class="result-count" aria-live="polite" aria-atomic="true"
+            data-pkg-count>{{ code_python | length }} of {{ code_python | length }} shown</span>
+    </div>
+
+    <ul class="item-list" data-pkg-list data-stagger>
         {% for pkg in code_python %}
         {% set links = ([{'url': pkg.github_link, 'label': 'GitHub'}] if pkg.github_link else []) +
                        ([{'url': pkg.pypi_link, 'label': 'PyPI'}] if pkg.pypi_link else []) %}
-        <li class="item-card reveal">
-            <strong><a href="{{ pkg.link or (links[0].url if links else '#') }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}<br>
+        {% set is_mcp = 'mcp' in (pkg.name or '')|lower %}
+        <li class="item-card pkg-item reveal"
+            data-search="{{ (pkg.name ~ ' ' ~ (pkg.description or '')) | lower }}">
+            <div class="pkg-card-head">
+                <div>
+                    {% if is_mcp %}<span class="tag-pill">MCP Server</span> {% endif %}
+                    <strong><a href="{{ pkg.link or (links[0].url if links else '#') }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
+                </div>
+                {% if pkg.pypi_link %}
+                <button class="install-btn" type="button"
+                    data-copy-text="pip install {{ pkg.name }}"
+                    aria-label="Copy pip install command for {{ pkg.name }}">
+                    <code>pip install {{ pkg.name }}</code>
+                </button>
+                {% endif %}
+            </div>
             <small>
                 {%- for link in links %}<a href="{{ link.url }}">{{ link.label }}</a>{% if not loop.last %} | {% endif %}{% endfor -%}
                 {%- if pkg.github_stars %} <span class="gh-stat" title="GitHub stars">★ {{ "{:,}".format(pkg.github_stars) }}</span>{% endif -%}
@@ -48,6 +100,7 @@
         {% endfor %}
     </ul>
 
+    <p class="empty-state" data-pkg-empty hidden>No packages match your search.</p>
 </section>
 {% endblock %}
 {% block vendor_scripts %}

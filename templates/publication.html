@@ -80,8 +80,32 @@
     <p class="pub-abstract">{{ publication.abstract }}</p>
     {% endif %}
 
+    {% if related_packages %}
+    <h2>Related Open-Source Software</h2>
+    <ul class="item-list">
+        {% for pkg in related_packages %}
+        <li class="item-card">
+            <span class="tag-pill">{{ pkg.ecosystem }}</span>
+            <strong><a href="{{ pkg.url }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     <h2>Reference</h2>
     <pre class="pub-bibtex">{{ bibtex }}</pre>
+
+    {% if related_publications %}
+    <h2>Related Publications</h2>
+    <ul class="item-list">
+        {% for rel in related_publications %}
+        <li class="item-card">
+            <h3><a href="{{ url_for('publication_detail', slug=rel.slug) }}">{{ rel.title }}</a></h3>
+            <p class="meta">{{ rel.year }} · {{ rel.journal or rel.publication }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 </article>
 {% endblock %}
 

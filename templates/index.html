@@ -9,6 +9,14 @@
   <div class="bio">
     <h1>Welcome</h1>
     <p>{{ about.bio }}</p>
+    {% if interests %}
+    <div class="interest-pills" aria-label="Research interests">
+      <span class="interest-label">Research areas:</span>
+      {% for interest in interests %}
+      <a class="tag-pill" href="{{ url_for('search', q=interest) }}">{{ interest }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
     {% if about.email %}
     <p><strong>Email:</strong> <a href="mailto:{{ about.email }}">{{ about.email }}</a></p>
     {% endif %}
@@ -22,14 +30,61 @@
   </div>
 </section>
 
-<!-- 
-<section class="cta-section">
-  <h2>Need Help with Financial Data or Analytics?</h2>
-  <p>I offer specialized consulting services in financial data science, R/Python programming, and predictive modeling.
-  </p>
-  <a href="{{ url_for('consulting') }}" class="cta-button">View Consulting Services</a>
+<section class="home-section reveal">
+  <h2>Academic Impact at a Glance</h2>
+  <div class="stats-container" data-stagger>
+    <div class="stat-card reveal">
+      <p class="stat-label">Total citations</p>
+      <p class="stat-value">{{ "{:,}".format(gscholar_stats.citedby) }}</p>
+      <p class="stat-help">Google Scholar citations (h-index {{ gscholar_stats.hindex }}, i10-index {{ gscholar_stats.i10index }}).</p>
+    </div>
+    <div class="stat-card reveal">
+      <p class="stat-label">Published papers</p>
+      <p class="stat-value">{{ total_publications }}</p>
+      <p class="stat-help"><a href="{{ url_for('publications') }}">Browse peer-reviewed articles&nbsp;→</a></p>
+    </div>
+    <div class="stat-card reveal">
+      <p class="stat-label">Authored books</p>
+      <p class="stat-value">{{ total_books }}</p>
+      <p class="stat-help"><a href="{{ url_for('books') }}">Read online or on Amazon&nbsp;→</a></p>
+    </div>
+    <div class="stat-card reveal">
+      <p class="stat-label">Package downloads</p>
+      <p class="stat-value">{{ "{:,}".format(total_pkg_downloads) }}+</p>
+      <p class="stat-help">Across {{ total_packages }} open-source <a href="{{ url_for('code_r') }}">R</a> &amp; <a href="{{ url_for('code_python') }}">Python</a> packages.</p>
+    </div>
+  </div>
 </section>
--->
+
+<section class="home-section reveal">
+  <div class="home-grid">
+    <div class="home-column">
+      <h2>Recent Publications</h2>
+      <ul class="item-list" data-stagger>
+        {% for pub in recent_pubs %}
+        <li class="item-card reveal">
+          <h3><a href="{{ url_for('publication_detail', slug=pub.slug) }}">{{ pub.title }}</a></h3>
+          <p class="meta">{{ pub.year }} · {{ pub.journal or pub.publication }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      <p><a class="read-more" href="{{ url_for('publications') }}">View all {{ total_publications }} publications&nbsp;→</a></p>
+    </div>
+
+    <div class="home-column">
+      <h2>Recent Talks &amp; Slides</h2>
+      <ul class="item-list" data-stagger>
+        {% for slide in recent_slides %}
+        <li class="item-card reveal">
+          <h3><a href="{{ slide.link }}" target="_blank" rel="noopener noreferrer">{{ slide.title }}</a></h3>
+          <p class="meta">{{ slide.date or slide.year }}{% if slide.event %} · {{ slide.event }}{% endif %}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      <p><a class="read-more" href="{{ url_for('slides') }}">View all presentation slides&nbsp;→</a></p>
+    </div>
+  </div>
+</section>
 
 <script nonce="{{ csp_nonce }}" type="application/ld+json">
 {

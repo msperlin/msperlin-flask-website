@@ -288,6 +288,65 @@ def test_download_history_is_well_formed():
             history = package.get('history') or []
             dates = [entry.get('date') for entry in history]
             assert dates == sorted(dates), name
-            assert len(dates) == len(set(dates)), name
+            assert dates == list(dict.fromkeys(dates)), name
             for entry in history:
                 datetime.date.fromisoformat(entry['date'] + '-01')
+
+
+def test_home_page_shows_impact_and_recent_work(client):
+    page = html(client.get('/'))
+    assert 'Academic Impact at a Glance' in page
+    assert 'Recent Publications' in page
+    assert 'Recent Talks &amp; Slides' in page
+    assert 'market microstructure' in page
+
+
+def test_all_publications_bibtex_export(client):
+    response = client.get('/publications/all.bib')
+    assert response.status_code == 200
+    assert response.headers['Content-Type'].startswith('text/plain')
+    assert 'msperlin-publications.bib' in response.headers['Content-Disposition']
+    body = response.data.decode('utf-8')
+    assert body.count('@article{') == len(site.get_publications())
+
+    pubs_page = html(client.get('/publications'))
+    assert 'pubYearChart' in pubs_page
+    assert '/publications/all.bib' in pubs_page
+
+
+def test_books_show_companion_links_and_language_badges(client):
+    page = html(client.get('/books'))
+    assert 'Online PDF' in page
+    assert 'EPUB' in page
+    assert 'Solutions' in page
+    assert 'PT-BR' in page
+    assert '>EN<' in page
+
+
+def test_ecosystem_table_and_code_install_snippets(client):
+    data_page = html(client.get('/data'))
+    assert 'Brazilian Financial &amp; Public Data Ecosystem' in data_page
+    assert 'cvm-mcp' in data_page
+    assert 'bcb-mcp' in data_page
+
+    r_page = html(client.get('/code/r'))
+    assert "install.packages(&#39;BatchGetSymbols&#39;)" in r_page or "install.packages('BatchGetSymbols')" in r_page
+    assert 'All-time downloads' in r_page
+
+    py_page = html(client.get('/code/python'))
+    assert 'MCP Server' in py_page
+    assert 'pip install cvm-mcp' in py_page
+
+
+def test_publication_detail_cross_links_software_and_related_papers(client):
+    page = html(client.get('/publications/2019-rbfin-accessing-financial-repor'))
+    assert 'Related Open-Source Software' in page
+    assert 'GetDFPData2' in page
+    assert 'Related Publications' in page
+
+
+def test_search_renders_type_filter_buttons(client):
+    page = html(client.get('/search', query_string={'q': 'R'}))
+    assert 'data-search-type-filters' in page
+    assert 'data-filter-type="all"' in page
+    assert 'data-result-type=' in page
