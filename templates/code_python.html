@@ -93,6 +93,8 @@
             <small>
                 {%- for link in links %}<a href="{{ link.url }}">{{ link.label }}</a>{% if not loop.last %} | {% endif %}{% endfor -%}
                 {%- if pkg.github_stars %} <span class="gh-stat" title="GitHub stars">★ {{ "{:,}".format(pkg.github_stars) }}</span>{% endif -%}
+                {%- if pkg.github_forks %} <span class="gh-stat" title="GitHub forks">⑂ {{ "{:,}".format(pkg.github_forks) }}</span>{% endif -%}
+                {%- if pkg.github_last_push %} <span class="gh-stat" title="Last GitHub push">Last push: {{ pkg.github_last_push }}</span>{% endif -%}
                 {%- if links and pkg.get('number_of_downloads') is not none %} | {% endif -%}
                 {%- if pkg.get('number_of_downloads') is not none %}<em>Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em>{% endif -%}
             </small>
@@ -101,6 +103,34 @@
     </ul>
 
     <p class="empty-state" data-pkg-empty hidden>No packages match your search.</p>
+
+    <details class="mcp-config-card reveal">
+        <summary>Quickstart: Use Brazilian Financial Data MCP Servers with Claude Desktop / Cursor</summary>
+        <div class="mcp-config-body">
+            <p>Add the following configuration to your <code>claude_desktop_config.json</code> or <code>.cursor/mcp.json</code> to give AI agents direct access to BCB-SGS macroeconomic series, CVM/B3 corporate filings, and Tesouro Direto sovereign bond data:</p>
+            <pre class="pub-bibtex"><code>{
+  "mcpServers": {
+    "bcb": {
+      "command": "uvx",
+      "args": ["bcb-mcp"]
+    },
+    "cvm": {
+      "command": "uvx",
+      "args": ["cvm-mcp"]
+    },
+    "tesourodireto": {
+      "command": "uvx",
+      "args": ["tesourodireto-mcp"]
+    }
+  }
+}</code></pre>
+            <button class="install-btn" type="button"
+                data-copy-text='{"mcpServers":{"bcb":{"command":"uvx","args":["bcb-mcp"]},"cvm":{"command":"uvx","args":["cvm-mcp"]},"tesourodireto":{"command":"uvx","args":["tesourodireto-mcp"]}}}'
+                aria-label="Copy MCP JSON configuration">
+                Copy MCP JSON Config
+            </button>
+        </div>
+    </details>
 </section>
 {% endblock %}
 {% block vendor_scripts %}

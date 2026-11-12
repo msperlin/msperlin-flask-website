@@ -299,6 +299,9 @@ def test_home_page_shows_impact_and_recent_work(client):
     assert 'Recent Publications' in page
     assert 'Recent Talks &amp; Slides' in page
     assert 'market microstructure' in page
+    assert 'href="/cv">CV (html)</a>' in page
+    nav_section = page.split('<ul id="primary-nav">', 1)[1].split('</ul>', 1)[0]
+    assert 'href="/cv"' not in nav_section
 
 
 def test_all_publications_bibtex_export(client):
@@ -350,3 +353,97 @@ def test_search_renders_type_filter_buttons(client):
     assert 'data-search-type-filters' in page
     assert 'data-filter-type="all"' in page
     assert 'data-result-type=' in page
+
+
+def test_slides_show_rich_metadata_and_paper_links(client):
+    page = html(client.get('/slides'))
+    assert 'An Empirical Analysis on Russell 1000 Constituent Companies' in page
+    assert 'FinBERT' in page
+    assert 'Paper Details' in page
+    assert '/publications/2026-frl-ai-10ks' in page
+    assert 'data-pkg-search' in page
+
+
+def test_publication_detail_cross_links_slides_and_awards(client):
+    ai_page = html(client.get('/publications/2026-frl-ai-10ks'))
+    assert 'Related Talks &amp; Slides' in ai_page
+    assert 'The Use of AI in 10-K Filings' in ai_page
+    assert 'publications?q=Cristian' in ai_page
+
+    pred_page = html(client.get('/publications/2018-scientometrics-is-predatory-publishing-a'))
+    assert 'Awards &amp; Recognition' in pred_page
+    assert 'Top 5% of Research Outputs' in pred_page
+
+    rbfin_page = html(client.get('/publications/2013-rbfin-os-efeitos-da-introducao'))
+    assert 'RBFIN Best Paper of 2013' in rbfin_page
+
+    awards_page = html(client.get('/awards'))
+    assert 'View Awarded Paper' in awards_page
+    assert '/publications/2018-scientometrics-is-predatory-publishing-a' in awards_page
+
+
+def test_publication_ris_export_and_sort_controls(client):
+    pub = site.get_publications()[0]
+    single = client.get(f"/publications/{pub['slug']}.ris")
+    assert single.status_code == 200
+    assert 'application/x-research-info-systems' in single.headers['Content-Type']
+    body = single.data.decode('utf-8')
+    assert body.startswith('TY  - JOUR\n')
+    assert f"TI  - {pub['title']}" in body
+    assert 'ER  - ' in body
+
+    all_ris = client.get('/publications/all.ris')
+    assert all_ris.status_code == 200
+    assert all_ris.data.decode('utf-8').count('TY  - JOUR') == len(site.get_publications())
+    assert client.get('/publications/does-not-exist.ris').status_code == 404
+
+    pubs_page = html(client.get('/publications'))
+    assert 'data-pub-sort' in pubs_page
+    assert 'data-impact-factor=' in pubs_page
+
+
+def test_search_matches_slide_descriptions(client):
+    # Clear search cache in case previous tests populated it before reload
+    site._SEARCH_CACHE['items'] = None
+    response = client.get('/search', query_string={'q': 'Russell 1000'})
+    page = html(response)
+    assert 'The Use of AI in 10-K Filings' in page
+    assert 'Slide' in page
+
+
+def test_mcp_quickstart_and_expanded_cv(client):
+    py_page = html(client.get('/code/python'))
+    assert 'mcpServers' in py_page
+    assert 'uvx' in py_page
+    assert 'Last push:' in py_page
+
+    r_page = html(client.get('/code/r'))
+    assert 'Last push:' in r_page
+
+    cv_page = html(client.get('/cv'))
+    assert 'Invited Talks &amp; Seminars' in cv_page
+    assert 'Selected Media Coverage' in cv_page
+
+
+def test_publications_dropdown_navigation(client):
+    pubs_page = html(client.get('/publications'))
+    assert 'id="menu-publications"' in pubs_page
+    assert 'aria-controls="menu-publications"' in pubs_page
+    assert '>Research Articles<' in pubs_page
+    assert '>Books<' in pubs_page
+    assert 'href="/publications" aria-current="page" >Research Articles</a>' in pubs_page
+
+    books_page = html(client.get('/books'))
+    assert 'href="/books" aria-current="page"' in books_page
+
+
+def test_research_nested_code_submenu(client):
+    r_page = html(client.get('/code/r'))
+    research_menu_idx = r_page.index('id="menu-research"')
+    code_menu_idx = r_page.index('id="menu-code"')
+    assert code_menu_idx > research_menu_idx
+    assert 'class="submenu-btn active"' in r_page
+    assert 'href="/code/r" aria-current="page"' in r_page
+
+
+

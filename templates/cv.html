@@ -69,5 +69,29 @@
         </div>
         {% endfor %}
     </section>
+
+    {% if slides %}
+    <section class="cv-section">
+        <h2>Invited Talks &amp; Seminars</h2>
+        {% for slide in slides %}
+        <div class="cv-entry">
+            <h3><span class="cv-year">{{ (slide.date or slide.year or '')[:4] }}</span>{{ slide.title }}</h3>
+            <p>{% if slide.event %}{{ slide.event }}{% endif %}{% if slide.institute and slide.institute != slide.event %} ({{ slide.institute }}){% endif %}{% if slide.link %} · <a href="{{ slide.link }}">Slides</a>{% endif %}</p>
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if news %}
+    <section class="cv-section">
+        <h2>Selected Media Coverage</h2>
+        {% for item in news %}
+        <div class="cv-entry">
+            <h3><span class="cv-year">{{ (item.date or '')[:4] }}</span>{{ item.title }}</h3>
+            <p>{{ item.source }}{% if item.date %} ({{ item.date }}){% endif %}{% if item.link %} · <a href="{{ item.link }}">Article</a>{% endif %}</p>
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
 </article>
 {% endblock %}

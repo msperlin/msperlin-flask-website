@@ -81,27 +81,34 @@
                 <ul id="primary-nav">
                     <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"
                             aria-current="page" {% endif %}>Home</a></li>
-                    <li><a href="{{ url_for('publications') }}" {% if request.endpoint in ['publications',
-                            'publication_detail'] %}class="active" aria-current="page" {% endif %}>Publications</a></li>
-                    <li><a href="{{ url_for('books') }}" {% if request.endpoint == 'books' %}class="active"
-                            aria-current="page" {% endif %}>Books</a></li>
-
                     <li class="dropdown">
-                        <button type="button" class="dropbtn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
-                            aria-haspopup="true" aria-expanded="false" aria-controls="menu-code"
-                            data-dropdown-toggle>Code <span aria-hidden="true">▾</span></button>
-                        <div class="dropdown-content" id="menu-code">
-                            <a href="{{ url_for('code_r') }}" {% if request.endpoint == 'code_r' %}aria-current="page"
-                                {% endif %}>R</a>
-                            <a href="{{ url_for('code_python') }}" {% if request.endpoint == 'code_python'
-                                %}aria-current="page" {% endif %}>Python</a>
+                        <button type="button" class="dropbtn {% if request.endpoint in ['publications', 'publication_detail', 'books'] %}active{% endif %}"
+                            aria-haspopup="true" aria-expanded="false" aria-controls="menu-publications"
+                            data-dropdown-toggle>Publications <span aria-hidden="true">▾</span></button>
+                        <div class="dropdown-content" id="menu-publications">
+                            <a href="{{ url_for('publications') }}" {% if request.endpoint in ['publications',
+                                'publication_detail'] %}aria-current="page" {% endif %}>Research Articles</a>
+                            <a href="{{ url_for('books') }}" {% if request.endpoint == 'books' %}aria-current="page"
+                                {% endif %}>Books</a>
                         </div>
                     </li>
+
                     <li class="dropdown">
-                        <button type="button" class="dropbtn {% if request.endpoint in ['data', 'news', 'awards', 'slides'] %}active{% endif %}"
+                        <button type="button" class="dropbtn {% if request.endpoint in ['code_r', 'code_python', 'data', 'news', 'awards', 'slides'] %}active{% endif %}"
                             aria-haspopup="true" aria-expanded="false" aria-controls="menu-research"
                             data-dropdown-toggle>Research <span aria-hidden="true">▾</span></button>
                         <div class="dropdown-content" id="menu-research">
+                            <div class="dropdown-submenu">
+                                <button type="button" class="submenu-btn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
+                                    aria-haspopup="true" aria-expanded="false" aria-controls="menu-code"
+                                    data-dropdown-toggle>Code <span class="submenu-caret" aria-hidden="true">▸</span></button>
+                                <div class="dropdown-content dropdown-subcontent" id="menu-code">
+                                    <a href="{{ url_for('code_r') }}" {% if request.endpoint == 'code_r' %}aria-current="page"
+                                        {% endif %}>R</a>
+                                    <a href="{{ url_for('code_python') }}" {% if request.endpoint == 'code_python'
+                                        %}aria-current="page" {% endif %}>Python</a>
+                                </div>
+                            </div>
                             <a href="{{ url_for('data') }}" {% if request.endpoint == 'data' %}aria-current="page"
                                 {% endif %}>Data</a>
                             <a href="{{ url_for('news') }}" {% if request.endpoint == 'news' %}aria-current="page"
@@ -117,8 +124,6 @@
                     <li><a href="https://msperlin.github.io/site-slides/" target="_blank"
                             rel="noopener noreferrer">Class Slides<span class="visually-hidden"> (opens in a new
                                 tab)</span></a></li>
-                    <li><a href="{{ url_for('cv') }}" {% if request.endpoint == 'cv' %}class="active"
-                            aria-current="page" {% endif %}>CV</a></li>
                     <li><a href="{{ url_for('site_log') }}" {% if request.endpoint == 'site_log' %}class="active"
                             aria-current="page" {% endif %}>Site Log</a></li>
                 </ul>

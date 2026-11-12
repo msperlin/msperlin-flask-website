@@ -1,22 +1,72 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section>
+<section data-pkg-filter>
     <h1>Slides</h1>
     <p>
         Here you will find presentation slides, seminars, and workshop materials related to finance and data science.
     </p>
 
+    <div class="pub-controls">
+        <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="search" data-pkg-search placeholder="Filter talks by title, topic, event, or co-author…"
+                aria-label="Filter slides">
+        </label>
+        <button class="pub-clear" type="button" data-pkg-clear>Clear</button>
+        <span class="result-count" aria-live="polite" aria-atomic="true"
+            data-pkg-count>{{ total_slides }} of {{ total_slides }} shown</span>
+    </div>
+
+    <div data-pkg-list>
     {% for year, items in slides.items() %}
-        <h2 class="year-heading">{{ year }}</h2>
-        <ul class="item-list" data-stagger>
-            {% for slide in items %}
-            <li class="item-card reveal">
-                <a href="{{ slide.link }}" target="_blank" rel="noopener noreferrer"
-                    aria-label="{{ slide.title }} (opens in a new tab)">{{ slide.title }}</a>{% if slide.event %} presented at <strong>{{ slide.event }}</strong>{% endif %}{% if slide.pdf_link or slide.paper_link %} ({% if slide.pdf_link %}<a href="{{ slide.pdf_link }}" target="_blank" rel="noopener noreferrer" aria-label="PDF of {{ slide.title }} (opens in a new tab)">PDF</a>{% endif %}{% if slide.pdf_link and slide.paper_link %}, {% endif %}{% if slide.paper_link %}<a href="{{ slide.paper_link }}" target="_blank" rel="noopener noreferrer" aria-label="Article about {{ slide.title }} (opens in a new tab)">Article</a>{% endif %}){% endif %}.
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="year-group" data-year-group>
+            <h2 class="year-heading">{{ year }}</h2>
+            <ul class="item-list" data-stagger>
+                {% for slide in items %}
+                <li class="item-card pkg-item slide-card reveal"
+                    data-search="{{ (slide.title ~ ' ' ~ (slide.subtitle or '') ~ ' ' ~ (slide.event or '') ~ ' ' ~ (slide.institute or '') ~ ' ' ~ (slide.authors or '') ~ ' ' ~ (slide.description or '')) | lower }}">
+                    <h3>
+                        <a href="{{ slide.link }}" target="_blank" rel="noopener noreferrer"
+                            aria-label="{{ slide.title }} (opens in a new tab)">{{ slide.title }}</a>
+                    </h3>
+                    {% if slide.subtitle %}
+                    <p class="slide-subtitle">{{ slide.subtitle }}</p>
+                    {% endif %}
+                    <p class="meta">
+                        <span>{{ slide.date or slide.year }}</span>
+                        {% if slide.event %} · <strong>{{ slide.event }}</strong>{% endif %}
+                        {% if slide.institute and slide.institute != slide.event %} ({{ slide.institute }}){% endif %}
+                        {% if slide.authors %} · {{ slide.authors }}{% endif %}
+                    </p>
+                    {% if slide.description %}
+                    <p class="abstract">{{ slide.description }}</p>
+                    {% endif %}
+                    <div class="action-links">
+                        <a href="{{ slide.link }}" target="_blank" rel="noopener noreferrer">View Slides</a>
+                        {% if slide.pdf_link %}
+                        <a href="{{ slide.pdf_link }}" target="_blank" rel="noopener noreferrer"
+                            aria-label="PDF of {{ slide.title }} (opens in a new tab)">PDF</a>
+                        {% endif %}
+                        {% if slide.publication_slug %}
+                        <a href="{{ url_for('publication_detail', slug=slide.publication_slug) }}">Paper Details</a>
+                        {% endif %}
+                        {% if slide.paper_link %}
+                        <a href="{{ slide.paper_link }}" target="_blank" rel="noopener noreferrer"
+                            aria-label="Article about {{ slide.title }} (opens in a new tab)">Article / DOI</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endfor %}
+    </div>
+
+    <p class="empty-state" data-pkg-empty hidden>No presentations match your search.</p>
 </section>
 {% endblock %}

@@ -9,6 +9,9 @@
             {% for award in items %}
             <li class="item-card reveal">
                 <strong>{{ award.title }}</strong> granted by <strong>{{ award.organization }}</strong>: {{ award.description }}
+                {% if award.publication_slug %}
+                <span class="meta"> · <a href="{{ url_for('publication_detail', slug=award.publication_slug) }}">View Awarded Paper&nbsp;→</a></span>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>

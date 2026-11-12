@@ -53,7 +53,14 @@
 
     <h1>{{ publication.title }}</h1>
 
-    {% if publication.authors %}
+    {% if citation_authors %}
+    <p class="pub-authors">
+        {% for author in citation_authors %}
+        <a class="author-link" href="{{ url_for('publications', q=author) }}"
+            title="Filter publications by {{ author }}">{{ author }}</a>{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    {% elif publication.authors %}
     <p class="pub-authors">{{ publication.authors }}</p>
     {% endif %}
 
@@ -70,6 +77,7 @@
                 class="visually-hidden"> (opens in a new tab)</span></a>
         {% endif %}
         <a href="{{ url_for('publication_bibtex', slug=publication.slug) }}">Download .bib</a>
+        <a href="{{ url_for('publication_ris', slug=publication.slug) }}">Download .ris</a>
         <button class="cite-btn" type="button" data-title="{{ publication.title }}"
             data-authors="{{ publication.authors }}" data-year="{{ publication.year }}"
             data-journal="{{ publication.journal }}">Cite this</button>
@@ -78,6 +86,32 @@
     {% if publication.abstract %}
     <h2>Abstract</h2>
     <p class="pub-abstract">{{ publication.abstract }}</p>
+    {% endif %}
+
+    {% if related_awards %}
+    <h2>Awards &amp; Recognition</h2>
+    <ul class="item-list">
+        {% for award in related_awards %}
+        <li class="item-card">
+            <span class="tag-pill">{{ award.year }}</span>
+            <strong>{{ award.title }}</strong> ({{ award.organization }}) — {{ award.description }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if related_slides %}
+    <h2>Related Talks &amp; Slides</h2>
+    <ul class="item-list">
+        {% for slide in related_slides %}
+        <li class="item-card">
+            <span class="tag-pill">{{ slide.date or slide.year }}</span>
+            <strong><a href="{{ slide.link }}" target="_blank" rel="noopener noreferrer">{{ slide.title }}</a></strong>
+            {% if slide.event %} · {{ slide.event }}{% endif %}
+            {% if slide.pdf_link %} · <a href="{{ slide.pdf_link }}" target="_blank" rel="noopener noreferrer">PDF</a>{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
     {% endif %}
 
     {% if related_packages %}

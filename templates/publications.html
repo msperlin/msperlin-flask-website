@@ -58,8 +58,14 @@
             <option value="{{ y }}">{{ y }}</option>
             {% endfor %}
         </select>
+        <select data-pub-sort aria-label="Sort publications">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="if">Impact Factor (high to low)</option>
+        </select>
         <button class="pub-clear" type="button" data-pub-clear>Clear</button>
         <a class="pub-clear" href="{{ url_for('publication_bibtex', slug='all') }}">Download all (.bib)</a>
+        <a class="pub-clear" href="{{ url_for('publication_ris', slug='all') }}">Download all (.ris)</a>
         <span class="result-count" aria-live="polite" aria-atomic="true"
             data-pub-count>{{ total_publications }} of {{ total_publications }} shown</span>
     </div>
@@ -67,6 +73,7 @@
     <ul class="item-list" id="pubList" data-stagger>
         {% for pub in publications %}
         <li class="item-card publication-item reveal" data-year="{{ pub.year }}"
+            data-impact-factor="{{ pub.impact_factor or 0 }}"
             data-search="{{ (pub.title ~ ' ' ~ (pub.authors or '') ~ ' ' ~ (pub.journal or '')) | lower }}">
             <div class="publication-content">
                 <h2><a href="{{ url_for('publication_detail', slug=pub.slug) }}">{{ pub.title }}</a></h2>

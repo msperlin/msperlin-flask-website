@@ -399,17 +399,67 @@ nav a.active {
     text-align: left;
 }
 
-.dropdown-content a:hover {
+.dropdown-content a:hover,
+.dropdown-content a[aria-current="page"],
+.submenu-btn:hover,
+.submenu-btn[aria-expanded="true"],
+.submenu-btn.active {
     background: var(--accent-soft);
     color: var(--accent);
     text-decoration: none;
 }
 
-.dropdown:hover .dropdown-content,
-.dropdown.is-open .dropdown-content {
+.dropdown:hover > .dropdown-content,
+.dropdown.is-open > .dropdown-content {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.submenu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font: inherit;
+    font-size: 0.94rem;
+    font-weight: 500;
+    line-height: inherit;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.dropdown-subcontent {
+    top: -6px;
+    left: calc(100% + 6px);
+    min-width: 160px;
+    transform: translateX(-8px);
+}
+
+.dropdown-subcontent::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -10px;
+    width: 10px;
+}
+
+.dropdown-submenu:hover > .dropdown-subcontent,
+.dropdown-submenu.is-open > .dropdown-subcontent {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
 }
 
 /* Theme toggle */
@@ -1258,8 +1308,22 @@ footer p {
         min-width: 0;
     }
 
-    .dropdown.is-open .dropdown-content {
+    .dropdown.is-open > .dropdown-content,
+    .dropdown-submenu.is-open > .dropdown-subcontent {
         display: block;
+    }
+
+    .dropdown-subcontent::before {
+        display: none;
+    }
+
+    .dropdown-submenu.is-open > .submenu-btn .submenu-caret {
+        transform: rotate(90deg);
+    }
+
+    .submenu-caret {
+        display: inline-block;
+        transition: transform 0.2s var(--ease);
     }
 
     .hero {
@@ -1870,6 +1934,48 @@ a.tag-pill:hover {
     background: var(--accent);
     color: var(--accent-contrast);
     border-color: var(--accent);
+}
+
+.slide-card h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.15rem;
+}
+
+.slide-subtitle {
+    margin: 0 0 0.45rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.94rem;
+}
+
+.author-link {
+    color: inherit;
+    border-bottom: 1px dashed var(--border);
+}
+
+.author-link:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    text-decoration: none;
+}
+
+.mcp-config-card {
+    margin-top: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.mcp-config-card summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.mcp-config-body {
+    margin-top: 0.85rem;
 }
 
 /* ==========================================================================

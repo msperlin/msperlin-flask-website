@@ -1,17 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section>
+<section data-pkg-filter>
     <h1>Interviews, lectures and News</h1>
+
+    <div class="pub-controls">
+        <label class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="search" data-pkg-search placeholder="Filter media coverage by title or outlet…"
+                aria-label="Filter media coverage">
+        </label>
+        <button class="pub-clear" type="button" data-pkg-clear>Clear</button>
+        <span class="result-count" aria-live="polite" aria-atomic="true"
+            data-pkg-count>{{ total_news }} of {{ total_news }} shown</span>
+    </div>
+
+    <div data-pkg-list>
     {% for year, items in news.items() %}
-        <h2 class="year-heading">{{ year }}</h2>
-        <ul class="item-list" data-stagger>
-            {% for item in items %}
-            <li class="item-card reveal">
-               <a href="{{item.link}}"> {{ item.title }} </a> published by <b>{{item.source }}</b>{% if item.pdf_url %} (<a href="{{ item.pdf_url }}" target="_blank" rel="noopener noreferrer" aria-label="PDF of {{ item.title }} (opens in a new tab)">PDF</a>){% endif %}.
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="year-group" data-year-group>
+            <h2 class="year-heading">{{ year }}</h2>
+            <ul class="item-list" data-stagger>
+                {% for item in items %}
+                <li class="item-card pkg-item reveal"
+                    data-search="{{ (item.title ~ ' ' ~ (item.source or '') ~ ' ' ~ (item.date or '')) | lower }}">
+                   <a href="{{item.link}}">{{ item.title }}</a> published by <b>{{ item.source }}</b>{% if item.date %} <span class="meta">({{ item.date }})</span>{% endif %}{% if item.pdf_url %} (<a href="{{ item.pdf_url }}" target="_blank" rel="noopener noreferrer" aria-label="PDF of {{ item.title }} (opens in a new tab)">PDF</a>){% endif %}.
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endfor %}
+    </div>
+
+    <p class="empty-state" data-pkg-empty hidden>No media coverage matches your search.</p>
 </section>
 {% endblock %}

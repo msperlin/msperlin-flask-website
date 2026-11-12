@@ -244,6 +244,36 @@ def bibtex_for(publication):
     return f'@article{{{key},\n{body}\n}}\n'
 
 
+def ris_for(publication):
+    """RIS (EndNote / Zotero / Mendeley) entry for one publication."""
+    lines = ['TY  - JOUR']
+    title = (publication.get('title') or '').strip()
+    if title:
+        lines.append(f'TI  - {title}')
+    for author in (publication.get('authors') or '').split(','):
+        author = author.strip()
+        if author:
+            lines.append(f'AU  - {author}')
+    journal = (publication.get('journal') or publication.get('publication') or '').strip()
+    if journal:
+        lines.append(f'JO  - {journal}')
+    year = str(publication.get('year') or '').strip()
+    if year:
+        lines.append(f'PY  - {year}')
+    if publication.get('issn'):
+        lines.append(f"SN  - {publication['issn'].strip()}")
+    if publication.get('doi'):
+        lines.append(f"DO  - {publication['doi'].strip()}")
+    if publication.get('link'):
+        lines.append(f"UR  - {publication['link'].strip()}")
+    abstract = (publication.get('abstract') or '').strip()
+    if abstract:
+        lines.append(f'AB  - {abstract}')
+    lines.append('ER  - ')
+    return '\n'.join(lines) + '\n'
+
+
+
 # --- Site search -------------------------------------------------------------
 
 _SEARCH_CACHE = {'items': None}
@@ -295,7 +325,8 @@ def get_search_index():
             'title': entry.get('title', ''),
             'url': entry.get('link') or url_for('slides'),
             'date': str(entry.get('date') or entry.get('year') or ''),
-            'text': _index_text(entry.get('title'), entry.get('event')),
+            'text': _index_text(entry.get('title'), entry.get('subtitle'), entry.get('event'),
+                                entry.get('institute'), entry.get('authors'), entry.get('description')),
         })
 
     for entry in load_data_from_folder('awards'):
@@ -519,6 +550,66 @@ def _related_publications(target, limit=3):
     return [item[2] for item in scored[:limit]]
 
 
+def _match_publication_by_link(link):
+    """Find a local publication whose DOI or URL matches `link`."""
+    if not link:
+        return None
+    target_doi = _doi_from_link(link).lower()
+    target_url = link.strip().rstrip('/').lower()
+    for pub in get_publications():
+        pub_doi = (pub.get('doi') or '').lower()
+        pub_url = (pub.get('link') or '').strip().rstrip('/').lower()
+        if (target_doi and pub_doi and target_doi == pub_doi) or (target_url and pub_url == target_url):
+            return pub
+    return None
+
+
+_AWARD_PAPER_HINTS = {
+    'the effects of the introduction of market makers in the brazilian equity market':
+        '2013-rbfin-os-efeitos-da-introducao',
+    'the researchers, the publications and the journals of finance in brazil':
+        '2015-rbfin-os-pesquisadores-as-publ',
+}
+
+
+def _match_publication_for_award(award):
+    """Find the publication recognized by an award, if any."""
+    desc = (award.get('description') or '').lower()
+    if not desc:
+        return None
+    for hint, slug in _AWARD_PAPER_HINTS.items():
+        if hint in desc:
+            return get_publication(slug)
+    for pub in get_publications():
+        title = (pub.get('title') or '').strip().lower()
+        if len(title) >= 12 and title in desc:
+            return pub
+    return None
+
+
+def _related_slides_for_publication(publication):
+    """Find presentation slides linked to `publication`."""
+    related = []
+    for slide in load_data_from_folder('slides'):
+        matched = _match_publication_by_link(slide.get('paper_link'))
+        if matched and matched.get('slug') == publication.get('slug'):
+            related.append(slide)
+    related.sort(key=lambda s: str(s.get('date') or s.get('year') or ''), reverse=True)
+    return related
+
+
+def _related_awards_for_publication(publication):
+    """Find awards granted to `publication`."""
+    related = []
+    for award in load_data_from_folder('awards'):
+        matched = _match_publication_for_award(award)
+        if matched and matched.get('slug') == publication.get('slug'):
+            related.append(award)
+    related.sort(key=lambda a: int(a.get('year') or 0), reverse=True)
+    return related
+
+
+
 @app.route('/publications')
 def publications():
     publications_data = get_publications()
@@ -578,6 +669,8 @@ def publication_detail(slug):
         bibtex=bibtex_for(publication),
         citation_authors=[a.strip() for a in (publication.get('authors') or '').split(',') if a.strip()],
         related_packages=_related_packages_for_publication(publication),
+        related_slides=_related_slides_for_publication(publication),
+        related_awards=_related_awards_for_publication(publication),
         related_publications=_related_publications(publication),
         gscholar_stats=gscholar_stats,
         canonical=url_for('publication_detail', slug=slug, _external=True),
@@ -603,6 +696,26 @@ def publication_bibtex(slug):
     response = make_response(bibtex_for(publication))
     response.headers['Content-Type'] = 'text/plain; charset=utf-8'
     response.headers['Content-Disposition'] = f'attachment; filename="{slug}.bib"'
+    return response
+
+
+@app.route('/publications/<slug>.ris')
+def publication_ris(slug):
+    if slug == 'all':
+        pubs = sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True)
+        body = '\n'.join(ris_for(p).strip() for p in pubs) + '\n'
+        response = make_response(body)
+        response.headers['Content-Type'] = 'application/x-research-info-systems; charset=utf-8'
+        response.headers['Content-Disposition'] = 'attachment; filename="msperlin-publications.ris"'
+        return response
+
+    publication = get_publication(slug)
+    if publication is None:
+        abort(404)
+
+    response = make_response(ris_for(publication))
+    response.headers['Content-Type'] = 'application/x-research-info-systems; charset=utf-8'
+    response.headers['Content-Disposition'] = f'attachment; filename="{slug}.ris"'
     return response
 
 
@@ -797,7 +910,8 @@ def news():
             grouped_news[year] = []
         grouped_news[year].append(item)
             
-    return render_template('news.html', title='News', news=grouped_news, description="News coverage, interviews, and media appearances.")
+    return render_template('news.html', title='News', news=grouped_news, total_news=len(news_data),
+                           description="News coverage, interviews, and media appearances.")
 
 @app.route('/awards')
 def awards():
@@ -810,11 +924,16 @@ def awards():
     grouped_awards = {}
     for award in awards_data:
         year = str(award.get('year', 'Unknown'))
+        matched_pub = _match_publication_for_award(award)
+        if matched_pub:
+            award['publication_slug'] = matched_pub['slug']
+            award['publication_title'] = matched_pub.get('title', '')
         if year not in grouped_awards:
             grouped_awards[year] = []
         grouped_awards[year].append(award)
 
-    return render_template('awards.html', title='Awards', awards=grouped_awards, description="Academic awards and honors received by Marcelo S. Perlin.")
+    return render_template('awards.html', title='Awards', awards=grouped_awards, total_awards=len(awards_data),
+                           description="Academic awards and honors received by Marcelo S. Perlin.")
 
 
 @app.route('/consulting')
@@ -836,11 +955,16 @@ def slides():
         else:
             year = str(item.get('year', 'Unknown'))
         item['year'] = year
+        matched_pub = _match_publication_by_link(item.get('paper_link'))
+        if matched_pub:
+            item['publication_slug'] = matched_pub['slug']
+            item['publication_title'] = matched_pub.get('title', '')
         if year not in grouped_slides:
             grouped_slides[year] = []
         grouped_slides[year].append(item)
 
-    return render_template('slides.html', title='Slides', slides=grouped_slides, description="Presentation slides, workshops, and research materials by Marcelo S. Perlin.")
+    return render_template('slides.html', title='Slides', slides=grouped_slides, total_slides=len(slides_data),
+                           description="Presentation slides, workshops, and research materials by Marcelo S. Perlin.")
 
 @app.route('/slides/<slide_folder>/')
 @app.route('/slides/<slide_folder>/<path:path>')
@@ -1061,10 +1185,15 @@ def cv():
                          key=lambda x: int(x.get('year', 0)), reverse=True)
     code_data = (load_data_from_folder('code/r') + load_data_from_folder('code/python'))
     code_data.sort(key=lambda x: int(x.get('number_of_downloads') or 0), reverse=True)
+    slides_data = sorted(load_data_from_folder('slides'),
+                         key=lambda x: str(x.get('date', x.get('year', ''))), reverse=True)
+    news_data = sorted(load_data_from_folder('news'),
+                       key=lambda x: str(x.get('date', '')), reverse=True)
 
     return render_template('cv.html', title='CV', about=load_data('about.json'),
                            publications=publications_data, books=books_data,
                            awards=awards_data, code=code_data[:10],
+                           slides=slides_data, news=news_data,
                            gscholar_stats=load_data('stats/gscholar.json'),
                            description="Curriculum vitae of Marcelo S. Perlin: education, publications, books, awards and software.")
 

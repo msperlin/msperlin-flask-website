@@ -88,6 +88,8 @@
             </div>
             <small><em>Submitted to CRAN on: {{ pkg.date_of_submission }} | Downloads last month: {{ pkg.number_of_downloads }} | Total downloads: {{ pkg.total_downloads }}</em>
             {% if pkg.github_stars %}<span class="gh-stat" title="GitHub stars">★ {{ "{:,}".format(pkg.github_stars) }}</span>{% endif %}
+            {% if pkg.github_forks %}<span class="gh-stat" title="GitHub forks">⑂ {{ "{:,}".format(pkg.github_forks) }}</span>{% endif %}
+            {% if pkg.github_last_push %}<span class="gh-stat" title="Last GitHub push">Last push: {{ pkg.github_last_push }}</span>{% endif %}
             </small>
         </li>
         {% endfor %}
