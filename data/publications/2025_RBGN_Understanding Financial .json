@@ -13,5 +13,14 @@
     "volume": "27",
     "issue": "3",
     "publisher": "FECAP Fundacao Escola de Comercio Alvares",
-    "cited_by_count": 0
+    "cited_by_count": 0,
+    "cited_by_count_openalex": 2,
+    "open_access": true,
+    "open_access_url": "https://rbgn.fecap.br/RBGN/article/download/4302/1996/32782",
+    "openalex_id": "W7084758251",
+    "topics": [
+        "Corporate Finance and Governance",
+        "Organizational Management and Leadership",
+        "Firm Innovation and Growth"
+    ]
 }

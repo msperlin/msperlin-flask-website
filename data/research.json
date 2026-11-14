@@ -1,0 +1,35 @@
+{
+    "intro": "My research sits at the intersection of finance, econometrics and computational methods. I study how financial markets work, how scientific knowledge is produced and rewarded, and how open data and software can make empirical research more reproducible.",
+    "themes": [
+        {
+            "title": "Market microstructure and liquidity",
+            "summary": "How prices form in Brazilian markets, how liquidity varies across assets and venues, and what high-frequency data reveal about trading and market quality.",
+            "keywords": ["liquidity", "microstructure", "market makers", "high-frequency", "trading", "liquidity risk", "price discovery"],
+            "packages": ["BatchGetSymbols", "GetHFData"]
+        },
+        {
+            "title": "Financial econometrics and volatility",
+            "summary": "Time-series models for volatility, risk forecasting and the empirical behaviour of financial returns.",
+            "keywords": ["garch", "volatility", "forecasting", "risk", "time series", "econometric", "returns"],
+            "packages": ["BatchGetSymbols", "GetTDData"]
+        },
+        {
+            "title": "Science of science and publishing",
+            "summary": "Bibliometrics, predatory publishing, academic inbreeding and the incentives that shape scientific production.",
+            "keywords": ["predatory", "bibliometric", "publishing", "academic", "inbreeding", "citation", "journals", "scientific output"],
+            "packages": ["GetLattesData"]
+        },
+        {
+            "title": "Open data, reproducibility and software",
+            "summary": "Building open-source tools that make Brazilian financial and economic data accessible, reproducible and easy to analyse in R and Python.",
+            "keywords": ["open data", "reproducible", "software", "package", "financial reports", "corporate events", "tesouro direto", "accessing"],
+            "packages": ["GetDFPData2", "GetFREData", "GetTDData", "cvm-mcp", "rfbpy"]
+        },
+        {
+            "title": "Artificial intelligence and LLMs in finance",
+            "summary": "How large language models and machine learning are changing financial analysis, research and academic publishing.",
+            "keywords": ["artificial intelligence", "chatgpt", "large language", "machine learning", "sentiment", "generative", "llm"],
+            "packages": ["finbert-ai-detector"]
+        }
+    ]
+}

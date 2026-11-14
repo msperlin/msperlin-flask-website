@@ -14,5 +14,14 @@
     "issue": "3",
     "pages": "85-108",
     "publisher": "Fundacao Getulio Vargas",
-    "cited_by_count": 4
+    "cited_by_count": 4,
+    "cited_by_count_openalex": 19,
+    "open_access": true,
+    "open_access_url": "http://bibliotecadigital.fgv.br/ojs/index.php/rbfin/article/download/78654/77107",
+    "openalex_id": "W3125846085",
+    "topics": [
+        "Financial Reporting and XBRL",
+        "Financial Markets and Investment Strategies",
+        "Financial Analysis and Corporate Governance"
+    ]
 }

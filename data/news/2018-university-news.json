@@ -3,5 +3,8 @@
     "date": "2018-09-21",
     "source": "University World News",
     "link": "https://www.universityworldnews.com/article.php?story=20180918144241202",
-    "pdf": "data/news/pdfs/2018-university-news.pdf"
+    "pdf": "data/news/pdfs/2018-university-news.pdf",
+    "publication_slugs": [
+        "2018-scientometrics-is-predatory-publishing-a"
+    ]
 }

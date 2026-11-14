@@ -7,6 +7,7 @@
     <ul class="item-list" data-stagger>
         {% for book in books %}
         {% set cover = img_dims(book.cover_image) %}
+        {% set cover_path = book.cover_image if (book.cover_image or '').startswith('/') else '/' ~ (book.cover_image or '') %}
         <li class="item-card publication-item reveal" id="{{ book.anchor }}">
             {% if book.cover_image %}
             <div class="publication-image book-image">
@@ -15,12 +16,13 @@
             </div>
             {% endif %}
             <div class="publication-content">
-                <h2><a href="{{ book.link_amazon }}">{{ book.title }}</a></h2>
+                <h2><a href="{{ url_for('book_detail', slug=book.slug) }}">{{ book.title }}</a></h2>
                 <p class="book-badges">
                     {% if book.year %}<span class="tag-pill">{{ book.year }}</span>{% endif %}
                     {% if book.language %}<span class="tag-pill">{{ book.language }}</span>{% endif %}
                 </p>
                 <div class="action-links">
+                    <a href="{{ url_for('book_detail', slug=book.slug) }}">Book page</a>
                     <a href="{{ book.link_amazon }}">Amazon</a>
                     {% if book.link_online %}
                     <a href="{{ book.link_online }}">Read Online</a>
@@ -63,6 +65,7 @@
       "@type": "ItemList",
       "itemListElement": [
         {% for book in books %}
+        {% set cover_path = book.cover_image if (book.cover_image or '').startswith('/') else '/' ~ (book.cover_image or '') %}
         {
           "@type": "ListItem",
           "position": {{ loop.index }},
@@ -75,8 +78,8 @@
             },
             "datePublished": {{ (book.year | string) | tojson }},
             "publisher": {{ (book.publisher or '') | tojson }},
-            "image": {{ (request.url_root.rstrip('/') ~ book.cover_image) | tojson }},
-            "url": {{ ((book.link_online if (book.link_online or '').startswith('http') else request.url_root.rstrip('/') ~ (book.link_online or ''))) | tojson }},
+            "image": {{ (request.url_root.rstrip('/') ~ cover_path) | tojson }},
+            "url": {{ url_for('book_detail', slug=book.slug, _external=True) | tojson }},
              "offers": {
                 "@type": "Offer",
                 "url": {{ (book.link_amazon or '') | tojson }},

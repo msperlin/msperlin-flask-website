@@ -3,5 +3,8 @@
     "date": "2018-09-21",
     "source": "Superintendência de Comunicação Social (UFPR)",
     "link": "https://www.ufpr.br/portalufpr/noticias/revistas-predatorias-ameacam-sistema-academico-brasileiro-alertam-pesquisadores/",
-    "pdf": "data/news/pdfs/2018-UFPR-predatory.pdf"
+    "pdf": "data/news/pdfs/2018-UFPR-predatory.pdf",
+    "publication_slugs": [
+        "2018-scientometrics-is-predatory-publishing-a"
+    ]
 }

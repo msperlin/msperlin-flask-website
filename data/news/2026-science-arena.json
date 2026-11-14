@@ -3,6 +3,8 @@
     "date": "2026-05-07",
     "source": "ScienceArena",
     "link": "https://www.sciencearena.org/noticias/pesquisadores-experientes-sao-parcela-expressiva-dos-autores-em-revistas-predatorias/",
-    "pdf": "data/news/pdfs/SA-predatory.pdf"
+    "pdf": "data/news/pdfs/SA-predatory.pdf",
+    "publication_slugs": [
+        "2018-scientometrics-is-predatory-publishing-a"
+    ]
 }
-

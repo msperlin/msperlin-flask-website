@@ -3,5 +3,8 @@
     "date": "2018-09-21",
     "source": "LSE Impact Blog",
     "link": "https://blogs.lse.ac.uk/impactofsocialsciences/2018/09/06/predatory-publishers-threaten-to-consume-public-research-funds-and-undermine-national-academic-systems-the-case-of-brazil/",
-    "pdf": "data/news/pdfs/2018-LSE-predatory.pdf"
+    "pdf": "data/news/pdfs/2018-LSE-predatory.pdf",
+    "publication_slugs": [
+        "2018-scientometrics-is-predatory-publishing-a"
+    ]
 }

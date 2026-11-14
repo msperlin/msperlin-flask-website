@@ -14,5 +14,14 @@
     "issue": "1",
     "pages": "255-273",
     "publisher": "Springer Science and Business Media LLC",
-    "cited_by_count": 63
+    "cited_by_count": 63,
+    "cited_by_count_openalex": 88,
+    "open_access": true,
+    "open_access_url": "https://doi.org/10.2139/ssrn.3067958",
+    "openalex_id": "W2768619839",
+    "topics": [
+        "scientometrics and bibliometrics research",
+        "Publishing and Scholarly Communication",
+        "Academic Publishing and Open Access"
+    ]
 }

@@ -13,5 +13,14 @@
     "volume": "25",
     "issue": "1",
     "publisher": "FapUNIFESP (SciELO)",
-    "cited_by_count": 7
+    "cited_by_count": 7,
+    "cited_by_count_openalex": 12,
+    "open_access": true,
+    "open_access_url": "https://www.scielo.br/j/rac/a/FyNM3rThZN7wQgMKshwLHjk/?lang=en&format=pdf",
+    "openalex_id": "W3092361347",
+    "topics": [
+        "Financial Risk and Volatility Modeling",
+        "Stock Market Forecasting Methods",
+        "Stochastic processes and financial applications"
+    ]
 }

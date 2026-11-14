@@ -82,6 +82,7 @@
 
     <ul class="item-list" id="pubList" data-stagger>
         {% for pub in publications %}
+        {% set c = citation_strings(pub) %}
         <li class="item-card publication-item reveal" data-year="{{ pub.year }}"
             data-impact-factor="{{ pub.impact_factor or 0 }}"
             data-search="{{ (pub.title ~ ' ' ~ (pub.authors or '') ~ ' ' ~ (pub.journal or '')) | lower }}">
@@ -96,8 +97,10 @@
                     {% if pub.link %}| <a href="{{ pub.link }}" target="_blank"
                         rel="noopener noreferrer">Publisher<span class="visually-hidden"> (opens in a new
                             tab)</span></a>{% endif %}
-                    <button class="cite-btn" data-title="{{ pub.title }}" data-authors="{{ pub.authors }}"
-                        data-year="{{ pub.year }}" data-journal="{{ pub.journal }}">
+                    <button class="cite-btn" data-title="{{ pub.title }}" data-bibtex="{{ c.bibtex }}"
+                        data-apa="{{ c.apa }}" data-abnt="{{ c.abnt }}" data-chicago="{{ c.chicago }}"
+                        data-doi="{{ c.doi }}"
+                        data-share-url="{{ url_for('publication_detail', slug=pub.slug, _external=True) }}">
                         Cite This
                     </button>
                 </p>

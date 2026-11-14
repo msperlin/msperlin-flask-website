@@ -14,5 +14,14 @@
     "issue": "2",
     "pages": "122-136",
     "publisher": "Springer Science and Business Media LLC",
-    "cited_by_count": 80
+    "cited_by_count": 80,
+    "cited_by_count_openalex": 110,
+    "open_access": true,
+    "open_access_url": "https://link.springer.com/content/pdf/10.1057/jdhf.2009.4.pdf",
+    "openalex_id": "W2129040150",
+    "topics": [
+        "Financial Markets and Investment Strategies",
+        "Stock Market Forecasting Methods",
+        "Financial Risk and Volatility Modeling"
+    ]
 }

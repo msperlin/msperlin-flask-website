@@ -14,5 +14,14 @@
     "issue": "4",
     "pages": "454-467",
     "publisher": "Wiley",
-    "cited_by_count": 49
+    "cited_by_count": 49,
+    "cited_by_count_openalex": 63,
+    "open_access": true,
+    "open_access_url": "https://doi.org/10.2139/ssrn.2525909",
+    "openalex_id": "W2533414248",
+    "topics": [
+        "Financial Markets and Investment Strategies",
+        "Stock Market Forecasting Methods",
+        "Financial Risk and Volatility Modeling"
+    ]
 }

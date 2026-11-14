@@ -3,5 +3,8 @@
     "date": "2018-09-21",
     "source": "Revista Pesquisa Fapesp",
     "link": "https://www.revistapesquisa.fapesp.br/2018/08/09/a-sombra-das-revistas-predatorias-no-brasil/",
-    "pdf": "data/news/pdfs/2018-fapesp-predatory.pdf"
+    "pdf": "data/news/pdfs/2018-fapesp-predatory.pdf",
+    "publication_slugs": [
+        "2018-scientometrics-is-predatory-publishing-a"
+    ]
 }

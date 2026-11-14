@@ -25,8 +25,10 @@
     <ul class="item-list" data-stagger>
         {% for i_data in data %}
         <li class="item-card reveal">
-            <b>{{ i_data.name }}</b>: {{ i_data.description }} <a href="{{ i_data.link }}"
-                aria-label="Download {{ i_data.name }} dataset">Download</a>
+            <b><a href="{{ url_for('dataset_detail', slug=i_data.slug) }}">{{ i_data.name }}</a></b>: {{ i_data.description }}
+            <a href="{{ i_data.link }}" aria-label="Download {{ i_data.name }} dataset">Download</a>
+            <a href="{{ url_for('dataset_detail', slug=i_data.slug) }}"
+                aria-label="Details for {{ i_data.name }} dataset">Details</a>
         </li>
         {% endfor %}
     </ul>

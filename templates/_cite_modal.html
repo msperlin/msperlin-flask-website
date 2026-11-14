@@ -3,12 +3,38 @@
     <div class="modal-content">
         <button class="close-btn" data-cite-close aria-label="Close">&times;</button>
         <h3 id="citeModalTitle">Cite this publication</h3>
-        <p>BibTeX format:</p>
+
+        <p>BibTeX</p>
         <textarea id="bibtexOutput" class="modal-textarea" readonly></textarea>
         <button id="copyBtn" class="copy-btn">Copy BibTeX</button>
 
-        <p>APA format:</p>
+        <p>APA</p>
         <textarea id="apaOutput" class="modal-textarea" readonly></textarea>
         <button id="copyApaBtn" class="copy-btn">Copy APA</button>
+
+        <p>ABNT</p>
+        <textarea id="abntOutput" class="modal-textarea" readonly></textarea>
+        <button id="copyAbntBtn" class="copy-btn">Copy ABNT</button>
+
+        <p>Chicago</p>
+        <textarea id="chicagoOutput" class="modal-textarea" readonly></textarea>
+        <button id="copyChicagoBtn" class="copy-btn">Copy Chicago</button>
+
+        <div id="citeDoiRow" hidden>
+            <p>DOI</p>
+            <p class="cite-doi"><code id="citeDoi"></code>
+                <button id="copyDoiBtn" class="install-btn" type="button">Copy DOI</button>
+            </p>
+        </div>
+
+        <div id="citeShare" hidden>
+            <p>Share</p>
+            <p class="cite-share">
+                <a data-share="linkedin" href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a data-share="bluesky" href="#" target="_blank" rel="noopener noreferrer">Bluesky</a>
+                <a data-share="mastodon" href="#" target="_blank" rel="noopener noreferrer">Mastodon</a>
+                <a data-share="email" href="#">Email</a>
+            </p>
+        </div>
     </div>
 </div>

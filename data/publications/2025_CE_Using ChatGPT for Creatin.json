@@ -14,5 +14,12 @@
     "issue": "6",
     "pages": "5105-5132",
     "publisher": "Springer Science and Business Media LLC",
-    "cited_by_count": 1
+    "cited_by_count": 1,
+    "cited_by_count_openalex": 2,
+    "openalex_id": "W7116914588",
+    "topics": [
+        "Sentiment Analysis and Opinion Mining",
+        "Computational and Text Analysis Methods",
+        "Stock Market Forecasting Methods"
+    ]
 }

@@ -2014,3 +2014,90 @@ mark {
 [data-theme="dark"] mark {
     background: rgba(130, 170, 255, 0.28);
 }
+
+/* ==========================================================================
+   Book, dataset, research and citation modal extras
+   ========================================================================== */
+.book-toc {
+    columns: 2;
+    column-gap: 2rem;
+    padding-left: 1.4rem;
+}
+
+.book-toc li {
+    margin: 0.25rem 0;
+    break-inside: avoid;
+}
+
+@media (max-width: 640px) {
+    .book-toc {
+        columns: 1;
+    }
+}
+
+.dataset-meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1rem;
+    margin: 1.2rem 0;
+}
+
+.dataset-meta dt {
+    font-weight: 600;
+}
+
+.dataset-meta dd {
+    margin: 0;
+}
+
+.research-theme {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+}
+
+.research-theme:first-of-type {
+    border-top: 0;
+    margin-top: 0;
+}
+
+.research-theme h2 {
+    margin-bottom: 0.4rem;
+}
+
+.research-theme h3 {
+    margin-top: 1.2rem;
+}
+
+.pub-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.8rem 0;
+}
+
+.cite-doi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+.cite-share {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.cite-share a {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+}
+
+.cite-share a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}

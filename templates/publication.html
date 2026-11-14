@@ -40,6 +40,7 @@
 {% endblock %}
 
 {% block content %}
+{% set c = citation_strings(publication) %}
 <article class="pub-detail">
     <a class="back-link" href="{{ url_for('publications') }}">← All publications</a>
 
@@ -81,12 +82,18 @@
         <a href="{{ cited_by_search_link }}" target="_blank" rel="noopener noreferrer">Find citations<span
                 class="visually-hidden"> on Google Scholar (opens in a new tab)</span></a>
         <button class="cite-btn" type="button" data-title="{{ publication.title }}"
-            data-authors="{{ publication.authors }}" data-year="{{ publication.year }}"
-            data-journal="{{ publication.journal }}">Cite this</button>
+            data-bibtex="{{ c.bibtex }}" data-apa="{{ c.apa }}" data-abnt="{{ c.abnt }}"
+            data-chicago="{{ c.chicago }}" data-doi="{{ c.doi }}"
+            data-share-url="{{ url_for('publication_detail', slug=publication.slug, _external=True) }}">Cite this</button>
     </div>
 
-    {% if cited_by_count %}
-    <p class="meta">Cited by <strong>{{ cited_by_count }}</strong> according to Crossref.</p>
+    {% if cited_by_count or cited_by_count_openalex %}
+    <p class="meta">
+        {% if cited_by_count %}Cited by <strong>{{ cited_by_count }}</strong> according to Crossref.{% endif %}
+        {% if cited_by_count_openalex %}{% if cited_by_count %} · {% endif %}Cited by
+        <strong>{{ cited_by_count_openalex }}</strong>
+        {% if openalex_url %}according to <a href="{{ openalex_url }}" target="_blank" rel="noopener noreferrer">OpenAlex</a>{% else %}according to OpenAlex{% endif %}.{% endif %}
+    </p>
     {% endif %}
 
     {% if badges %}
@@ -96,6 +103,12 @@
                 class="visually-hidden"> (opens in a new tab)</span></a>
         {% endfor %}
     </div>
+    {% endif %}
+
+    {% if publication.topics %}
+    <p class="pub-badges" aria-label="Topics">
+        {% for topic in publication.topics %}<span class="tag-pill">{{ topic }}</span>{% endfor %}
+    </p>
     {% endif %}
 
     {% if publication.abstract %}
@@ -110,6 +123,20 @@
         <li class="item-card">
             <span class="tag-pill">{{ award.year }}</span>
             <strong>{{ award.title }}</strong> ({{ award.organization }}) — {{ award.description }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if related_news %}
+    <h2>Media coverage</h2>
+    <ul class="item-list">
+        {% for item in related_news %}
+        <li class="item-card">
+            <span class="tag-pill">{{ item.date }}</span>
+            <strong><a href="{{ item.link }}" target="_blank" rel="noopener noreferrer">{{ item.title }}</a></strong>
+            {% if item.source %} · {{ item.source }}{% endif %}
+            {% if item.pdf_url %} · <a href="{{ item.pdf_url }}" target="_blank" rel="noopener noreferrer">PDF</a>{% endif %}
         </li>
         {% endfor %}
     </ul>

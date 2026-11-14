@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block head_extra %}
+{% set cover_path = book.cover_image if (book.cover_image or '').startswith('/') else '/' ~ (book.cover_image or '') %}
+<script nonce="{{ csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": {{ book.title | tojson }},
+  "author": {"@type": "Person", "name": "Marcelo S. Perlin"},
+  "datePublished": {{ (book.year | string) | tojson }},
+  "publisher": {{ (book.publisher or '') | tojson }},
+  "inLanguage": {{ (book.language or '') | tojson }},
+  "description": {{ (book.summary or '') | tojson }},
+  "image": {{ (request.url_root.rstrip('/') ~ cover_path) | tojson }},
+  "url": {{ canonical | tojson }}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<article class="pub-detail">
+    <a class="back-link" href="{{ url_for('books') }}">← All books</a>
+
+    {% if book.cover_image %}
+    {% set cover = img_dims(book.cover_image) %}
+    <div class="pub-detail-figure">
+        <img src="{{ book.cover_image | opt_url }}" {% if cover.w %}width="{{ cover.w }}" height="{{ cover.h }}"{% endif %}
+            alt="Cover of {{ book.title }}" fetchpriority="high" decoding="async">
+    </div>
+    {% endif %}
+
+    <h1>{{ book.title }}</h1>
+
+    <p class="pub-meta">
+        {{ book.year }}
+        {% if book.publisher %} · {{ book.publisher }}{% endif %}
+        {% if book.language %} · {{ book.language }}{% endif %}
+    </p>
+
+    {% if book.amazon_rating %}
+    <div class="rating-container" title="{{ book.amazon_rating }} out of 5 stars">
+        <div class="stars-outer">
+            <div class="stars-inner" style="width: {{ (book.amazon_rating / 5) * 100 }}%"></div>
+        </div>
+        <span class="rating-value">{{ "%.1f"|format(book.amazon_rating) }}</span>
+        <span class="rating-count">({{ book.amazon_ratings_count }} ratings on Amazon)</span>
+    </div>
+    {% endif %}
+
+    <div class="pub-links">
+        {% if book.link_amazon %}<a href="{{ book.link_amazon }}">Amazon</a>{% endif %}
+        {% if book.link_online %}<a href="{{ book.link_online }}">Read online</a>{% endif %}
+        {% if book.pdf_url %}<a href="{{ book.pdf_url }}">PDF</a>{% endif %}
+        {% if book.epub_url %}<a href="{{ book.epub_url }}">EPUB</a>{% endif %}
+        {% if book.solutions_url %}<a href="{{ book.solutions_url }}">Solutions</a>{% endif %}
+        {% if book.sample_chapter %}<a href="{{ book.sample_chapter }}">Sample chapter</a>{% endif %}
+        <a href="{{ errata_mailto }}">Report an error</a>
+    </div>
+
+    {% if book.summary %}
+    <h2>About the book</h2>
+    <p class="pub-abstract">{{ book.summary }}</p>
+    {% endif %}
+
+    {% if toc %}
+    <h2>Table of contents</h2>
+    <ol class="book-toc">
+        {% for chapter in toc %}
+        <li><a href="{{ chapter.url }}">{{ chapter.title }}</a></li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+
+    {% if book.errata %}
+    <h2>Errata</h2>
+    <ul class="item-list">
+        {% for entry in book.errata %}
+        <li class="item-card">{{ entry }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if book.translations %}
+    <h2>Translations</h2>
+    <ul>
+        {% for translation in book.translations %}
+        <li>{{ translation.language }}: <a href="{{ translation.link }}">{{ translation.title or 'View edition' }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>Reference</h2>
+    <pre class="pub-bibtex">{{ bibtex }}</pre>
+</article>
+{% endblock %}

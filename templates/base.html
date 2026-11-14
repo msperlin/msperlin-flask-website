@@ -103,10 +103,12 @@
                     </li>
 
                     <li class="dropdown">
-                        <button type="button" class="dropbtn {% if request.endpoint in ['code_r', 'code_python', 'data'] %}active{% endif %}"
+                        <button type="button" class="dropbtn {% if request.endpoint in ['code_r', 'code_python', 'data', 'research'] %}active{% endif %}"
                             aria-haspopup="true" aria-expanded="false" aria-controls="menu-research"
                             data-dropdown-toggle>Research <span aria-hidden="true">▾</span></button>
                         <div class="dropdown-content" id="menu-research">
+                            <a href="{{ url_for('research') }}" {% if request.endpoint == 'research' %}aria-current="page"
+                                {% endif %}>Research themes</a>
                             <div class="dropdown-submenu">
                                 <button type="button" class="submenu-btn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
                                     aria-haspopup="true" aria-expanded="false" aria-controls="menu-code"

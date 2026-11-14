@@ -59,10 +59,17 @@ Besides the browsable sections, the app exposes stable and machine-readable URLs
 | --- | --- |
 | `/publications/<slug>` | One permanent page per paper, with the full abstract, Highwire `citation_*` tags (Google Scholar), `ScholarlyArticle` JSON-LD and a canonical URL. |
 | `/publications/<slug>.bib` | The paper as a downloadable BibTeX file. |
+| `/book/<slug>` | One landing page per book: TOC (extracted from the rendered book), companion files, errata contact, `Book` JSON-LD and a BibTeX reference. |
+| `/data/<slug>` | One page per dataset: coverage, version, DOI, related tools, `Dataset` JSON-LD and a citation. |
+| `/research` | Research agenda: themes with automatically linked papers and packages. |
 | `/feed.xml` | RSS feed for news/media coverage. |
 | `/publications/feed.xml` | RSS feed for new publications. |
-| `/search` | Site-wide search over publications, books, news, slides, awards, datasets and code (server-side, works without JS). |
+| `/search` | Site-wide search over publications, books, news, slides, awards, datasets, research and code (server-side, works without JS). |
 | `/cv` | A print-friendly CV generated from the JSON files. |
+| `/publications.json` | Public JSON API for publications. |
+| `/code.json` | Public JSON API for R and Python packages. |
+| `/data.json` | Public JSON API for datasets. |
+| `/books.json` | Public JSON API for books. |
 | `/press` | Press kit: EN/PT bios, topics, headshot and contact. |
 | `/press/kit.zip` | Downloadable press kit (bios, topics, headshot, `.bib`). |
 | `/feed.json` | JSON Feed 1.1 combining news and publications. |
@@ -200,10 +207,33 @@ uv run python scripts/update_publications.py
 ```
 This runs monthly via GitHub Actions. It matches `data/publications/*.json`
 to your ORCID works, fills missing bibliographic fields (volume, issue, pages,
-publisher, citation counts) from Crossref, adds new journal articles that have
-a DOI, and writes preprints / software / DOI-less works to
+publisher, Crossref citation counts) from Crossref, enriches the same records
+with OpenAlex metadata (citation count, open-access URL) and adds new journal
+articles that have a DOI. Preprints / software / DOI-less works are written to
 `data/publications-review/` for manual approval (never published automatically).
 Move a reviewed file into `data/publications/` to publish it.
+
+#### 11. Editing a Book Page
+*   Book metadata lives in `data/books/<stem>.json`. The `/book/<stem>` landing
+    page is generated automatically, including the table of contents extracted
+    from the rendered book under `books_rendered/`.
+*   Optional fields: `sample_chapter`, `errata` (list of strings) and
+    `translations` (list of `{language, link, title}`).
+*   “Report an error” opens an email with the book title prefilled; set a book
+    specific errata workflow later if you prefer.
+
+#### 12. Editing a Dataset Page
+*   Dataset metadata lives in `data/datasets/<name>.json`. Fields: `name`,
+    `title`, `description`, `coverage`, `frequency`, `format`, `doi`, `link`,
+    `version`, `released` and `packages` (list of `{name, url}`).
+*   Each dataset gets a `/data/<slug>` page with a `Dataset` JSON-LD block and a
+    generated BibTeX citation.
+
+#### 13. Editing the Research Page
+*   Edit `data/research.json`. Each theme has a `title`, `summary`, `keywords`
+    and an optional list of `packages`.
+*   Related papers are matched automatically from the keywords; related
+    packages use the explicit list plus keyword matches.
 
 ---
 

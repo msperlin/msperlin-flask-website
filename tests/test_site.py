@@ -26,7 +26,8 @@ def html(response):
 def test_all_static_routes_render(client):
     skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed',
             'publications_feed', 'site_log', 'json_feed', 'opensearch',
-            'llms_txt', 'security_txt', 'healthz', 'press_kit'}
+            'llms_txt', 'security_txt', 'healthz', 'press_kit',
+            'publications_json', 'code_json', 'data_json', 'books_json'}
     checked = 0
     for rule in site.app.url_map.iter_rules():
         if 'GET' not in rule.methods or rule.arguments or rule.endpoint in skip:
@@ -557,3 +558,118 @@ def test_citation_chart_from_cites_per_year():
         {'cites_per_year': {'2018': 10, '2019': 25}}))
     assert chart['data']['labels'] == ['2018', '2019']
     assert chart['data']['datasets'][0]['data'] == [10, 25]
+
+
+# ---------------------------------------------------------------------------
+# Book/dataset detail pages, research, JSON API and citation formats
+# ---------------------------------------------------------------------------
+
+def test_book_detail_pages(client):
+    with site.app.test_request_context('/'):
+        books = site.get_books()
+    assert books
+    for book in books:
+        response = client.get(f"/book/{book['slug']}")
+        assert response.status_code == 200, book['slug']
+        page = html(response)
+        assert book['title'] in page
+        assert 'Table of contents' in page
+        assert 'Report an error' in page
+        assert '"@type": "Book"' in page
+        assert 'href="/books/' in page
+
+
+def test_dataset_detail_pages(client):
+    with site.app.test_request_context('/'):
+        datasets = site.get_datasets()
+    assert datasets
+    for dataset in datasets:
+        response = client.get(f"/data/{dataset['slug']}")
+        assert response.status_code == 200, dataset['slug']
+        page = html(response)
+        assert dataset['name'] in page
+        assert 'Cite this dataset' in page
+        assert '@misc' in page
+        assert '"@type": "Dataset"' in page
+
+
+def test_research_page(client):
+    response = client.get('/research')
+    assert response.status_code == 200
+    page = html(response)
+    assert 'Market microstructure and liquidity' in page
+    assert 'Selected papers' in page
+    assert 'Software and data' in page
+    assert 'href="/publications/' in page
+
+
+def test_public_json_apis(client):
+    for path, name in (('/publications.json', 'publications'), ('/code.json', 'code'),
+                       ('/data.json', 'data'), ('/books.json', 'books')):
+        response = client.get(path)
+        assert response.status_code == 200, path
+        assert response.headers['Content-Type'].startswith('application/json')
+        payload = json.loads(response.data)
+        assert payload['name'] == name
+        assert payload['count'] == len(payload['items'])
+        assert payload['items']
+        assert all(item.get('url') for item in payload['items'])
+
+
+def test_citation_formats():
+    publication = site.get_publications()[0]
+    strings = site.citation_strings(publication)
+    assert {'bibtex', 'apa', 'abnt', 'chicago', 'doi', 'doi_url'} <= set(strings)
+    assert publication['title'] in strings['apa']
+    assert publication['title'] in strings['abnt']
+    assert publication['title'] in strings['chicago']
+    assert strings['bibtex'].startswith('@article{')
+
+
+def test_publication_page_exposes_citation_formats(client):
+    publication = site.get_publications()[0]
+    page = html(client.get(f"/publications/{publication['slug']}"))
+    assert 'id="abntOutput"' in page
+    assert 'id="chicagoOutput"' in page
+    assert 'data-abnt=' in page
+    assert 'data-chicago=' in page
+
+
+def test_publication_shows_linked_media_coverage(client):
+    slug = '2018-scientometrics-is-predatory-publishing-a'
+    page = html(client.get(f'/publications/{slug}'))
+    assert 'Media coverage' in page
+    assert 'Revista Pesquisa Fapesp' in page
+
+
+def test_publication_shows_openalex_metrics(client):
+    slug = '2018-scientometrics-is-predatory-publishing-a'
+    publication = site.get_publication(slug)
+    assert publication.get('cited_by_count_openalex')
+    page = html(client.get(f'/publications/{slug}'))
+    assert 'OpenAlex' in page
+    assert 'openalex.org' in page
+
+
+def test_sitemap_includes_new_detail_pages(client):
+    body = html(client.get('/sitemap.xml'))
+    with site.app.test_request_context('/'):
+        book = site.get_books()[0]
+        dataset = site.get_datasets()[0]
+    assert f'/book/{book["slug"]}' in body
+    assert f'/data/{dataset["slug"]}' in body
+    assert '/research' in body
+
+
+def test_new_detail_pages_have_valid_json_ld(client):
+    import re
+    with site.app.test_request_context('/'):
+        book = site.get_books()[0]
+        dataset = site.get_datasets()[0]
+    for path in (f"/book/{book['slug']}", f"/data/{dataset['slug']}"):
+        page = html(client.get(path))
+        blocks = re.findall(
+            r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', page, re.S)
+        assert blocks, path
+        for block in blocks:
+            json.loads(block)

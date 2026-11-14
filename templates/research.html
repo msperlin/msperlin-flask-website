@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h1>Research</h1>
+    <p class="lead">{{ research.intro }}</p>
+
+    {% for theme in themes %}
+    <article class="research-theme reveal" id="{{ theme.slug }}">
+        <h2>{{ theme.title }}</h2>
+        <p>{{ theme.summary }}</p>
+        {% if theme.keywords %}
+        <p class="interest-pills">
+            {% for keyword in theme.keywords %}<span class="tag-pill">{{ keyword }}</span>{% endfor %}
+        </p>
+        {% endif %}
+
+        {% if theme.publications %}
+        <h3>Selected papers</h3>
+        <ul class="item-list">
+            {% for pub in theme.publications %}
+            <li class="item-card">
+                <h4><a href="{{ url_for('publication_detail', slug=pub.slug) }}">{{ pub.title }}</a></h4>
+                <p class="meta">{{ pub.year }} · {{ pub.journal or pub.publication }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if theme.packages %}
+        <h3>Software and data</h3>
+        <ul class="item-list">
+            {% for pkg in theme.packages %}
+            <li class="item-card">
+                <span class="tag-pill">{{ pkg.ecosystem }}</span>
+                <a href="{{ pkg.url }}"><strong>{{ pkg.name }}</strong></a>
+                {% if pkg.description %} — {{ pkg.description }}{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -14,5 +14,14 @@
     "issue": "3",
     "pages": "443-478",
     "publisher": "Fundacao Getulio Vargas",
-    "cited_by_count": 2
+    "cited_by_count": 2,
+    "cited_by_count_openalex": 12,
+    "open_access": true,
+    "open_access_url": "http://bibliotecadigital.fgv.br/ojs/index.php/rbfin/article/download/64587/65701",
+    "openalex_id": "W3124155471",
+    "topics": [
+        "Financial Markets and Investment Strategies",
+        "Data Analysis with R",
+        "Stock Market Forecasting Methods"
+    ]
 }

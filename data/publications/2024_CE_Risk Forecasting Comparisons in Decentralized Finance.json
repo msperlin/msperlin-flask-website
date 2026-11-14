@@ -14,5 +14,12 @@
     "issue": "1",
     "pages": "395-428",
     "publisher": "Springer Science and Business Media LLC",
-    "cited_by_count": 6
+    "cited_by_count": 6,
+    "cited_by_count_openalex": 9,
+    "openalex_id": "W4393381763",
+    "topics": [
+        "Financial Risk and Volatility Modeling",
+        "Blockchain Technology Applications and Security",
+        "Stock Market Forecasting Methods"
+    ]
 }

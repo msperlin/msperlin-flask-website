@@ -1,5 +1,23 @@
 {
     "name": "GetTDData",
-    "description": "Prices and yields of brazilian sovereign bonds.",
-    "link": "https://doi.org/10.7910/DVN/SCSQUF"
+    "title": "Prices and Yields of Brazilian Bonds",
+    "description": "Prices and yields of Brazilian sovereign bonds (Tesouro Direto).",
+    "coverage": "Brazilian sovereign bonds (Tesouro Direto)",
+    "frequency": "Updated at least once a year",
+    "format": "CSV / RDS",
+    "doi": "10.7910/DVN/SCSQUF",
+    "link": "https://doi.org/10.7910/DVN/SCSQUF",
+    "deposited": "2020-06-18",
+    "version": "5.0",
+    "released": "2025-04-07",
+    "packages": [
+        {
+            "name": "GetTDData (R)",
+            "url": "https://msperlin.r-universe.dev/GetTDData"
+        },
+        {
+            "name": "tesourodireto-mcp (MCP)",
+            "url": "https://github.com/msperlin/tesourodireto-mcp"
+        }
+    ]
 }

@@ -469,22 +469,6 @@
     /* ------------------------------------------------------------ Cite modal */
     var citeTrigger = null;
 
-    function formatApaAuthors(authorsStr) {
-        var authors = authorsStr.split(',').map(function (a) { return a.trim(); }).filter(Boolean);
-        var formatted = authors.map(function (author) {
-            var parts = author.split(' ');
-            var lastName = parts.pop();
-            var initials = parts.map(function (p) { return p[0] + '.'; }).join(' ');
-            return lastName + (initials ? ', ' + initials : '');
-        });
-        if (formatted.length === 1) { return formatted[0]; }
-        if (formatted.length > 1) {
-            var last = formatted.pop();
-            return formatted.join(', ') + ', & ' + last;
-        }
-        return '';
-    }
-
     function copyToClipboard(element, btn) {
         if (!element) { return; }
         element.select();
@@ -568,17 +552,48 @@
             var apaOutput = document.getElementById('apaOutput');
             if (!bibtexOutput || !apaOutput) { return; }
 
-            var title = citeBtn.getAttribute('data-title') || '';
-            var authors = citeBtn.getAttribute('data-authors') || '';
-            var year = citeBtn.getAttribute('data-year') || '';
-            var journal = citeBtn.getAttribute('data-journal') || '';
+            bibtexOutput.value = citeBtn.getAttribute('data-bibtex') || '';
+            apaOutput.value = citeBtn.getAttribute('data-apa') || '';
 
-            var firstAuthor = (authors.split(',')[0] || '').split(' ').pop().toLowerCase().replace(/[^a-z]/g, '');
-            var bibKey = firstAuthor + year;
+            var abntOutput = document.getElementById('abntOutput');
+            var chicagoOutput = document.getElementById('chicagoOutput');
+            if (abntOutput) { abntOutput.value = citeBtn.getAttribute('data-abnt') || ''; }
+            if (chicagoOutput) { chicagoOutput.value = citeBtn.getAttribute('data-chicago') || ''; }
 
-            bibtexOutput.value = '@article{' + bibKey + ',\n  title = {' + title + '},\n  author = {' + authors +
-                '},\n  journal = {' + journal + '},\n  year = {' + year + '}\n}';
-            apaOutput.value = formatApaAuthors(authors) + ' (' + year + '). ' + title + '. ' + journal + '.';
+            var doi = citeBtn.getAttribute('data-doi') || '';
+            var doiRow = document.getElementById('citeDoiRow');
+            var doiText = document.getElementById('citeDoi');
+            var copyDoiBtn = document.getElementById('copyDoiBtn');
+            if (doiRow && doiText && copyDoiBtn) {
+                doiRow.hidden = !doi;
+                doiText.textContent = doi;
+                if (doi) {
+                    copyDoiBtn.setAttribute('data-copy-text', doi);
+                } else {
+                    copyDoiBtn.removeAttribute('data-copy-text');
+                }
+            }
+
+            var shareUrl = citeBtn.getAttribute('data-share-url') || '';
+            var shareTitle = citeBtn.getAttribute('data-title') || '';
+            var shareBox = document.getElementById('citeShare');
+            if (shareBox) {
+                shareBox.hidden = !shareUrl;
+                if (shareUrl) {
+                    var encodedUrl = encodeURIComponent(shareUrl);
+                    var encodedText = encodeURIComponent(shareTitle + ' ' + shareUrl);
+                    var hrefs = {
+                        linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodedUrl,
+                        bluesky: 'https://bsky.app/intent/compose?text=' + encodedText,
+                        mastodon: 'https://mastodon.social/share?text=' + encodedText,
+                        email: 'mailto:?subject=' + encodeURIComponent(shareTitle) + '&body=' + encodedUrl
+                    };
+                    shareBox.querySelectorAll('[data-share]').forEach(function (link) {
+                        var href = hrefs[link.getAttribute('data-share')];
+                        if (href) { link.setAttribute('href', href); }
+                    });
+                }
+            }
 
             openCiteModal(citeBtn);
             return;
@@ -601,6 +616,14 @@
         }
         if (e.target.closest('#copyApaBtn')) {
             copyToClipboard(document.getElementById('apaOutput'), e.target.closest('#copyApaBtn'));
+            return;
+        }
+        if (e.target.closest('#copyAbntBtn')) {
+            copyToClipboard(document.getElementById('abntOutput'), e.target.closest('#copyAbntBtn'));
+            return;
+        }
+        if (e.target.closest('#copyChicagoBtn')) {
+            copyToClipboard(document.getElementById('chicagoOutput'), e.target.closest('#copyChicagoBtn'));
             return;
         }
     });

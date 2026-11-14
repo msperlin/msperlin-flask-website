@@ -14,5 +14,14 @@
     "issue": "4",
     "pages": "101563",
     "publisher": "Elsevier BV",
-    "cited_by_count": 5
+    "cited_by_count": 5,
+    "cited_by_count_openalex": 6,
+    "open_access": true,
+    "open_access_url": "https://doi.org/10.2139/ssrn.4718387",
+    "openalex_id": "W4400950559",
+    "topics": [
+        "scientometrics and bibliometrics research",
+        "Research, Science, and Academia",
+        "Psychology Research and Bibliometrics"
+    ]
 }

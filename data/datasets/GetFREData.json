@@ -1,5 +1,23 @@
 {
     "name": "GetFREData",
-    "description": "Corporate dataset from FRE system.",
-    "link": "https://doi.org/10.7910/DVN/QIMUNZ"
+    "title": "Corporate Datasets from the FRE System",
+    "description": "Corporate events and reference data from the FRE system (B3/CVM).",
+    "coverage": "Corporate events and registration data of Brazilian public companies",
+    "frequency": "Updated at least once a year",
+    "format": "CSV / RDS",
+    "doi": "10.7910/DVN/QIMUNZ",
+    "link": "https://doi.org/10.7910/DVN/QIMUNZ",
+    "deposited": "2020-06-23",
+    "version": "9.0",
+    "released": "2025-04-10",
+    "packages": [
+        {
+            "name": "GetFREData (R)",
+            "url": "https://msperlin.r-universe.dev/GetFREData"
+        },
+        {
+            "name": "cvm-mcp (MCP)",
+            "url": "https://github.com/msperlin/cvm-mcp"
+        }
+    ]
 }

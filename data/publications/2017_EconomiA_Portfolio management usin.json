@@ -14,5 +14,14 @@
     "issue": "3",
     "pages": "328-343",
     "publisher": "Emerald",
-    "cited_by_count": 9
+    "cited_by_count": 9,
+    "cited_by_count_openalex": 13,
+    "open_access": true,
+    "open_access_url": "https://www.sciencedirect.com/science/article/pii/S1517758017300395/pdf",
+    "openalex_id": "W2612301578",
+    "topics": [
+        "Financial Risk and Volatility Modeling",
+        "Stochastic processes and financial applications",
+        "Financial Markets and Investment Strategies"
+    ]
 }

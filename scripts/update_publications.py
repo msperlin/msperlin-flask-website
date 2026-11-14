@@ -154,6 +154,38 @@ def crossref_to_fields(message):
     return fields
 
 
+def fetch_openalex(doi):
+    """Fetch a work from OpenAlex by DOI (no key required)."""
+    url = 'https://api.openalex.org/works/doi:' + urllib.parse.quote(doi)
+    try:
+        return get_json(url)
+    except Exception as exc:  # noqa: BLE001
+        print(f'    OpenAlex lookup failed for {doi}: {exc}')
+        return None
+
+
+def openalex_to_fields(message):
+    """Map OpenAlex work metadata to optional publication fields."""
+    if not message:
+        return {}
+    fields = {}
+    if message.get('cited_by_count') is not None:
+        fields['cited_by_count_openalex'] = int(message['cited_by_count'])
+    open_access = message.get('open_access') or {}
+    if open_access.get('is_oa'):
+        fields['open_access'] = True
+        if open_access.get('oa_url'):
+            fields['open_access_url'] = open_access['oa_url']
+    work_id = (message.get('id') or '').rsplit('/', 1)[-1]
+    if work_id:
+        fields['openalex_id'] = work_id
+    topics = [topic.get('display_name') for topic in (message.get('topics') or [])[:3]
+              if topic.get('display_name')]
+    if topics:
+        fields['topics'] = topics
+    return fields
+
+
 def load_publications():
     pubs = []
     for path in glob.glob(os.path.join(PUBLICATIONS_DIR, '*.json')):
@@ -170,7 +202,9 @@ def fill_missing(target, fields):
     """Set fields on `target` only where the value is currently empty."""
     changed = False
     for key in ('doi', 'authors', 'journal', 'publication', 'year', 'abstract',
-                'issn', 'volume', 'issue', 'pages', 'publisher', 'cited_by_count', 'link'):
+                'issn', 'volume', 'issue', 'pages', 'publisher', 'cited_by_count', 'link',
+                'cited_by_count_openalex', 'open_access', 'open_access_url', 'openalex_id',
+                'topics'):
         if key in fields and fields[key] in (None, ''):
             continue
         if key in fields and not target.get(key):
@@ -203,6 +237,9 @@ def write_new_publication(fields):
     }
     if fields.get('cited_by_count') is not None:
         entry['cited_by_count'] = fields['cited_by_count']
+    for extra in ('cited_by_count_openalex', 'open_access', 'open_access_url', 'openalex_id', 'topics'):
+        if fields.get(extra) not in (None, ''):
+            entry[extra] = fields[extra]
     with open(path, 'w', encoding='utf-8') as handle:
         json.dump(entry, handle, ensure_ascii=False, indent=4)
         handle.write('\n')
@@ -270,6 +307,7 @@ def main():
             if message is None:
                 continue
             fields = crossref_to_fields(message)
+            fields.update(openalex_to_fields(fetch_openalex(doi)))
             if fill_missing(target, fields):
                 # Preserve the original file's unicode-escaping and newline style
                 # so the diff shows only the fields we actually added.
@@ -297,6 +335,7 @@ def main():
                 reviewed += 1
                 continue
             fields = crossref_to_fields(message)
+            fields.update(openalex_to_fields(fetch_openalex(doi)))
             fields['doi'] = doi
             if not fields.get('year'):
                 fields['year'] = year

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block head_extra %}
+<script nonce="{{ csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": {{ (dataset.title or dataset.name) | tojson }},
+  "description": {{ (dataset.description or '') | tojson }},
+  "url": {{ canonical | tojson }},
+  {% if dataset.doi %}"identifier": {{ ("https://doi.org/" ~ dataset.doi) | tojson }},{% endif %}
+  "creator": {"@type": "Person", "name": "Marcelo S. Perlin"},
+  "distribution": {"@type": "DataDownload", "contentUrl": {{ (dataset.link or '') | tojson }}}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<article class="pub-detail">
+    <a class="back-link" href="{{ url_for('data') }}">← All data</a>
+
+    <h1>{{ dataset.name }}</h1>
+    {% if dataset.title and dataset.title != dataset.name %}
+    <p class="lead">{{ dataset.title }}</p>
+    {% endif %}
+    <p class="pub-abstract">{{ dataset.description }}</p>
+
+    <dl class="dataset-meta">
+        {% if dataset.coverage %}<dt>Coverage</dt><dd>{{ dataset.coverage }}</dd>{% endif %}
+        {% if dataset.frequency %}<dt>Update frequency</dt><dd>{{ dataset.frequency }}</dd>{% endif %}
+        {% if dataset.format %}<dt>Format</dt><dd>{{ dataset.format }}</dd>{% endif %}
+        {% if dataset.version %}<dt>Version</dt><dd>{{ dataset.version }}{% if dataset.released %} (released {{ dataset.released }}){% endif %}</dd>{% endif %}
+        {% if dataset.doi %}<dt>DOI</dt><dd><a href="{{ dataset.link }}">{{ dataset.doi }}</a></dd>{% endif %}
+    </dl>
+
+    <div class="pub-links">
+        {% if dataset.link %}
+        <a href="{{ dataset.link }}" target="_blank" rel="noopener noreferrer">Download from Harvard Dataverse<span
+                class="visually-hidden"> (opens in a new tab)</span></a>
+        {% endif %}
+    </div>
+
+    {% if dataset.packages %}
+    <h2>Use it from code</h2>
+    <ul class="item-list">
+        {% for pkg in dataset.packages %}
+        <li class="item-card"><a href="{{ pkg.url }}"><strong>{{ pkg.name }}</strong></a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>Cite this dataset</h2>
+    <pre class="pub-bibtex">{{ bibtex }}</pre>
+</article>
+{% endblock %}

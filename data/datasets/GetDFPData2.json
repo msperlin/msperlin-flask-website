@@ -1,5 +1,23 @@
 {
     "name": "GetDFPData2",
-    "description": "Annual Financial Reports from the DFP system.",
-    "link": "https://doi.org/10.7910/DVN/7VVX4J"
+    "title": "Annual Financial Reports from the DFP System",
+    "description": "Annual financial statements (DFP) of Brazilian public companies, as published by B3/CVM.",
+    "coverage": "Annual financial reports of Brazilian public companies",
+    "frequency": "Updated at least once a year",
+    "format": "CSV / RDS",
+    "doi": "10.7910/DVN/7VVX4J",
+    "link": "https://doi.org/10.7910/DVN/7VVX4J",
+    "deposited": "2020-06-24",
+    "version": "6.0",
+    "released": "2025-04-07",
+    "packages": [
+        {
+            "name": "GetDFPData2 (R)",
+            "url": "https://msperlin.r-universe.dev/GetDFPData2"
+        },
+        {
+            "name": "cvm-mcp (MCP)",
+            "url": "https://github.com/msperlin/cvm-mcp"
+        }
+    ]
 }

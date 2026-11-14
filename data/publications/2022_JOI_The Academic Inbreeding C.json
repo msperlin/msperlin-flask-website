@@ -14,5 +14,14 @@
     "issue": "2",
     "pages": "101287",
     "publisher": "Elsevier BV",
-    "cited_by_count": 11
+    "cited_by_count": 11,
+    "cited_by_count_openalex": 16,
+    "open_access": true,
+    "open_access_url": "https://doi.org/10.2139/ssrn.3980630",
+    "openalex_id": "W4226146365",
+    "topics": [
+        "scientometrics and bibliometrics research",
+        "Higher Education Governance and Development",
+        "Psychology Research and Bibliometrics"
+    ]
 }

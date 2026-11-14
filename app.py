@@ -1,4 +1,5 @@
 import json
+import html
 import io
 import os
 import re
@@ -277,6 +278,187 @@ def ris_for(publication):
     return '\n'.join(lines) + '\n'
 
 
+# --- Human-readable citation formats (modal, detail pages) -------------------
+
+def _author_names(record):
+    return [name.strip() for name in (record.get('authors') or '').split(',') if name.strip()]
+
+
+def _split_name(name):
+    parts = name.split()
+    if not parts:
+        return '', ''
+    return parts[-1], ' '.join(parts[:-1])
+
+
+def _initials(given):
+    return ' '.join(part[0] + '.' for part in given.split() if part)
+
+
+def _record_year(record):
+    return str(record.get('year') or '').strip()
+
+
+def _record_journal(record):
+    return (record.get('journal') or record.get('publication') or '').strip()
+
+
+def _record_doi(record):
+    return (record.get('doi') or _doi_from_link(record.get('link', '')) or '').strip()
+
+
+def _record_doi_url(record):
+    doi = _record_doi(record)
+    return f'https://doi.org/{doi}' if doi else ''
+
+
+def _with_period(text):
+    """Append a final period unless the text already ends with one."""
+    text = (text or '').strip()
+    if not text:
+        return ''
+    return text if text.endswith('.') else text + '.'
+
+
+def format_apa(record):
+    """APA 7th-edition style reference."""
+    formatted = []
+    for name in _author_names(record):
+        surname, given = _split_name(name)
+        formatted.append(f'{surname}, {_initials(given)}'.strip().rstrip(','))
+    if not formatted:
+        authors = ''
+    elif len(formatted) == 1:
+        authors = formatted[0]
+    elif len(formatted) == 2:
+        authors = f'{formatted[0]}, & {formatted[1]}'
+    else:
+        authors = ', '.join(formatted[:-1]) + f', & {formatted[-1]}'
+
+    year = _record_year(record)
+    title = (record.get('title') or '').strip()
+    source = _record_journal(record)
+    volume = (record.get('volume') or '').strip()
+    issue = (record.get('issue') or '').strip()
+    pages = (record.get('pages') or '').strip()
+    if volume:
+        source += f', {volume}'
+        if issue:
+            source += f'({issue})'
+    if pages:
+        source += f', {pages}'
+
+    parts = []
+    if authors:
+        parts.append(f'{authors} ({year}).' if year else _with_period(authors))
+    elif year:
+        parts.append(f'({year}).')
+    if title:
+        parts.append(_with_period(title))
+    if source:
+        parts.append(_with_period(source))
+    doi = _record_doi_url(record)
+    if doi:
+        parts.append(doi)
+    return ' '.join(parts)
+
+
+def format_abnt(record):
+    """ABNT NBR 6023 style reference."""
+    formatted = []
+    for name in _author_names(record):
+        surname, given = _split_name(name)
+        formatted.append(f'{surname.upper()}, {given}'.strip().rstrip(','))
+    authors = '; '.join(formatted)
+    year = _record_year(record)
+    title = (record.get('title') or '').strip()
+    source = _record_journal(record)
+    volume = (record.get('volume') or '').strip()
+    issue = (record.get('issue') or '').strip()
+    pages = (record.get('pages') or '').strip()
+
+    if volume:
+        source += f', v. {volume}'
+    if issue:
+        source += f', n. {issue}'
+    if pages:
+        source += f', p. {pages}'
+    if year:
+        source += f', {year}'
+
+    parts = []
+    if authors:
+        parts.append(_with_period(authors))
+    if title:
+        parts.append(_with_period(title))
+    if source:
+        parts.append(_with_period(source))
+    doi = _record_doi_url(record)
+    if doi:
+        parts.append(f'Disponível em: {doi}.')
+    return ' '.join(parts)
+
+
+def format_chicago(record):
+    """Chicago author-date style reference."""
+    formatted = []
+    for index, name in enumerate(_author_names(record)):
+        surname, given = _split_name(name)
+        if index == 0:
+            formatted.append(f'{surname}, {given}'.strip().rstrip(','))
+        else:
+            formatted.append(f'{given} {surname}'.strip())
+    if not formatted:
+        authors = ''
+    elif len(formatted) == 1:
+        authors = formatted[0]
+    elif len(formatted) == 2:
+        authors = f'{formatted[0]}, and {formatted[1]}'
+    else:
+        authors = ', '.join(formatted[:-1]) + f', and {formatted[-1]}'
+
+    year = _record_year(record)
+    title = (record.get('title') or '').strip()
+    source = _record_journal(record)
+    volume = (record.get('volume') or '').strip()
+    issue = (record.get('issue') or '').strip()
+    pages = (record.get('pages') or '').strip()
+    if volume:
+        source += f' {volume}'
+    if issue:
+        source += f' ({issue})'
+    if pages:
+        source += f': {pages}'
+
+    parts = []
+    if authors:
+        parts.append(_with_period(authors))
+    if year:
+        parts.append(year + '.')
+    if title:
+        parts.append(f'"{title}."')
+    if source:
+        parts.append(_with_period(source))
+    doi = _record_doi_url(record)
+    if doi:
+        parts.append(doi + '.')
+    return ' '.join(parts)
+
+
+def citation_strings(record):
+    """All citation formats used by the cite modal and detail pages."""
+    return {
+        'bibtex': bibtex_for(record),
+        'apa': format_apa(record),
+        'abnt': format_abnt(record),
+        'chicago': format_chicago(record),
+        'doi': _record_doi(record),
+        'doi_url': _record_doi_url(record),
+    }
+
+
+app.jinja_env.globals['citation_strings'] = citation_strings
+
 
 # --- Site search -------------------------------------------------------------
 
@@ -305,11 +487,11 @@ def get_search_index():
                                 pub.get('abstract'), pub.get('year')),
         })
 
-    for book in load_data_from_folder('books'):
+    for book in get_books():
         items.append({
             'type': 'Book',
             'title': book.get('title', ''),
-            'url': url_for('books') + '#' + slugify(book.get('title', '')),
+            'url': url_for('book_detail', slug=book['slug']),
             'date': str(book.get('year', '')),
             'text': _index_text(book.get('title'), book.get('summary'), book.get('year')),
         })
@@ -343,13 +525,24 @@ def get_search_index():
                                 entry.get('description')),
         })
 
-    for entry in load_data_from_folder('datasets'):
+    for entry in get_datasets():
         items.append({
             'type': 'Dataset',
             'title': entry.get('name', ''),
-            'url': url_for('data'),
+            'url': url_for('dataset_detail', slug=entry['slug']),
             'date': '',
-            'text': _index_text(entry.get('name'), entry.get('description')),
+            'text': _index_text(entry.get('name'), entry.get('title'), entry.get('description'),
+                                entry.get('coverage')),
+        })
+
+    for theme in get_research().get('themes', []):
+        items.append({
+            'type': 'Research',
+            'title': theme.get('title', ''),
+            'url': url_for('research') + '#' + slugify(theme.get('title', '')),
+            'date': '',
+            'text': _index_text(theme.get('title'), theme.get('summary'),
+                                ' '.join(theme.get('keywords') or [])),
         })
 
     for folder, label, field in (('code/r', 'R package', 'title'),
@@ -368,8 +561,8 @@ def get_search_index():
 
 
 TYPE_ORDER = {
-    'Publication': 0, 'Book': 1, 'News': 2, 'Slide': 3,
-    'Award': 4, 'Dataset': 5, 'R package': 6, 'Python package': 7,
+    'Publication': 0, 'Research': 1, 'Book': 2, 'News': 3, 'Slide': 4,
+    'Award': 5, 'Dataset': 6, 'R package': 7, 'Python package': 8,
 }
 
 
@@ -685,6 +878,81 @@ def _related_awards_for_publication(publication):
     return related
 
 
+def _related_news_for_publication(publication):
+    """Media coverage explicitly linked to `publication` (or by DOI/URL)."""
+    related = []
+    slug = publication.get('slug')
+    for item in load_data_from_folder('news'):
+        matched = slug in (item.get('publication_slugs') or [])
+        if not matched:
+            linked = _match_publication_by_link(item.get('paper_link'))
+            matched = bool(linked and linked.get('slug') == slug)
+        if matched:
+            if item.get('pdf'):
+                item['pdf_url'] = url_for('serve_news_pdf', filename=os.path.basename(item['pdf']))
+            related.append(item)
+    related.sort(key=lambda item: str(item.get('date') or ''), reverse=True)
+    return related
+
+
+def _fold(text):
+    """Lowercase and strip accents, for language-tolerant keyword matching."""
+    return unicodedata.normalize('NFKD', text or '').encode('ascii', 'ignore').decode('ascii').lower()
+
+
+def _all_packages():
+    packages = []
+    for folder, ecosystem, field in (('code/r', 'R', 'title'), ('code/python', 'Python', 'name')):
+        for pkg in load_data_from_folder(folder):
+            name = (pkg.get(field) or '').strip()
+            if not name:
+                continue
+            packages.append({
+                'name': name,
+                'ecosystem': ecosystem,
+                'description': pkg.get('description', ''),
+                'url': pkg.get('link') or pkg.get('github_link') or '',
+            })
+    return packages
+
+
+def _packages_for_theme(theme, limit=6):
+    packages = _all_packages()
+    by_name = {pkg['name']: pkg for pkg in packages}
+    result = []
+    seen = set()
+    for name in theme.get('packages') or []:
+        pkg = by_name.get(name)
+        if pkg and pkg['name'] not in seen:
+            result.append(pkg)
+            seen.add(pkg['name'])
+    keywords = [_fold(keyword) for keyword in theme.get('keywords') or []]
+    for pkg in packages:
+        if pkg['name'] in seen:
+            continue
+        haystack = _fold(f"{pkg['name']} {pkg['description']}")
+        if any(keyword and keyword in haystack for keyword in keywords):
+            result.append(pkg)
+            seen.add(pkg['name'])
+    return result[:limit]
+
+
+def _publications_for_keywords(keywords, limit=4):
+    folded = [_fold(keyword) for keyword in keywords if keyword]
+    scored = []
+    for publication in get_publications():
+        haystack = _fold(f"{publication.get('title', '')} {publication.get('abstract', '')} "
+                         f"{publication.get('journal', '')}")
+        score = sum(1 for keyword in folded if keyword in haystack)
+        if score:
+            scored.append((score, int(publication.get('year') or 0), publication))
+    scored.sort(key=lambda row: (row[0], row[1]), reverse=True)
+    return [row[2] for row in scored[:limit]]
+
+
+def get_research():
+    return load_data('research.json')
+
 
 @app.route('/publications')
 def publications():
@@ -751,6 +1019,9 @@ def publication_detail(slug):
         badges.append({'label': 'Software: ' + pkg['name'], 'url': pkg['url']})
 
     cited_by_count = publication.get('cited_by_count') or publication.get('is_referenced_by_count')
+    cited_by_count_openalex = publication.get('cited_by_count_openalex')
+    openalex_url = ('https://openalex.org/' + str(publication['openalex_id'])
+                    if publication.get('openalex_id') else '')
     cited_by_search_link = (
         'https://scholar.google.com/scholar?q=' +
         urllib.parse.quote('"' + (publication.get('title') or '') + '"')
@@ -765,9 +1036,12 @@ def publication_detail(slug):
         related_packages=related_packages,
         related_slides=_related_slides_for_publication(publication),
         related_awards=_related_awards_for_publication(publication),
+        related_news=_related_news_for_publication(publication),
         related_publications=_related_publications(publication),
         badges=badges,
         cited_by_count=cited_by_count,
+        cited_by_count_openalex=cited_by_count_openalex,
+        openalex_url=openalex_url,
         cited_by_search_link=cited_by_search_link,
         gscholar_stats=gscholar_stats,
         canonical=url_for('publication_detail', slug=slug, _external=True),
@@ -838,31 +1112,125 @@ def _discover_book_companions(book):
             book['solutions_url'] = url_for('serve_book', book_name=folder_name, path=fname)
 
 
-@app.route('/books')
-def books():
+def get_books():
     books_data = load_data_from_folder('books')
-    
+
     # Load Amazon stats if available
     try:
         amazon_stats = load_data('stats/amazon_books.json')
         books_stats = amazon_stats.get('books', {})
     except Exception:
         books_stats = {}
-        
+
     for book in books_data:
         stem = book.get('filename_stem')
+        book['slug'] = slugify(stem or book.get('title', ''))
         book['anchor'] = slugify(book.get('title', stem or ''))
         book['language'] = 'PT-BR' if 'com.br' in (book.get('link_amazon') or '') else 'EN'
         _discover_book_companions(book)
         if stem and stem in books_stats:
             book['amazon_rating'] = books_stats[stem].get('rating')
             book['amazon_ratings_count'] = books_stats[stem].get('ratings_count')
-            
+
     books_data.sort(key=lambda x: (int(x.get('amazon_ratings_count') or 0), int(x.get('year') or 0)), reverse=True)
+    return books_data
 
-    n_books = len(books_data)
 
-    return render_template('books.html', title='Books', books=books_data, n_books=n_books, description="Books authored by Marcelo S. Perlin on financial data analysis, R, and Python.")
+def get_book(slug):
+    for book in get_books():
+        if book['slug'] == slug:
+            return book
+    return None
+
+
+_BOOK_TOC_CACHE = {}
+
+
+def _clean_toc_title(raw):
+    text = re.sub(r'<[^>]+>', ' ', raw or '')
+    return ' '.join(html.unescape(text).split())
+
+
+def _book_toc(book):
+    """Extract the chapter list from a rendered book (bookdown or Quarto)."""
+    link_online = book.get('link_online') or ''
+    parts = [part for part in link_online.strip('/').split('/') if part]
+    if len(parts) < 2 or parts[0] != 'books':
+        return []
+    folder = parts[1]
+    if folder in _BOOK_TOC_CACHE:
+        return _BOOK_TOC_CACHE[folder]
+
+    index_path = os.path.join(BOOKS_FOLDER, folder, 'index.html')
+    toc = []
+    if os.path.isfile(index_path):
+        try:
+            with open(index_path, encoding='utf-8') as handle:
+                document = handle.read()
+        except OSError:
+            document = ''
+
+        blocks = []
+        match = re.search(r'<ul class="book-toc[^"]*"[^>]*>(.*?)</ul>', document, re.S)
+        if match:
+            blocks.append(match.group(1))
+        match = re.search(r'<nav id="quarto-sidebar"[^>]*>(.*?)</nav>', document, re.S)
+        if match:
+            blocks.append(match.group(1))
+
+        for block in blocks:
+            for link in re.finditer(r'<a\b[^>]*href="([^"]+)"[^>]*>(.*?)</a>', block, re.S):
+                href = link.group(1)
+                title = _clean_toc_title(link.group(2))
+                path = urllib.parse.unquote(href.split('#')[0])
+                path = re.sub(r'^\./', '', path).lstrip('/')
+                if not title or not path.endswith('.html') or path.startswith(('http:', 'https:')):
+                    continue
+                toc.append({
+                    'title': title,
+                    'url': url_for('serve_book', book_name=folder, path=path),
+                })
+            if toc:
+                break
+
+    _BOOK_TOC_CACHE[folder] = toc
+    return toc
+
+
+def bibtex_for_book(book):
+    year = _bib_escape(str(book.get('year') or ''))
+    fields = [
+        ('author', 'Perlin, Marcelo S.'),
+        ('title', _bib_escape(book.get('title'))),
+        ('year', year),
+        ('publisher', _bib_escape(book.get('publisher'))),
+    ]
+    if book.get('link_amazon'):
+        fields.append(('url', book['link_amazon']))
+    body = ',\n'.join(f'  {name} = {{{value}}}' for name, value in fields if value)
+    return f'@book{{perlin{year},\n{body}\n}}\n'
+
+
+@app.route('/books')
+def books():
+    books_data = get_books()
+    return render_template('books.html', title='Books', books=books_data, n_books=len(books_data),
+                           description="Books authored by Marcelo S. Perlin on financial data analysis, R, and Python.")
+
+
+@app.route('/book/<slug>')
+def book_detail(slug):
+    book = get_book(slug)
+    if book is None:
+        abort(404)
+    errata_subject = urllib.parse.quote(f"Errata: {book.get('title', '')}")
+    return render_template('book.html', title=book.get('title', 'Book'), book=book,
+                           toc=_book_toc(book),
+                           bibtex=bibtex_for_book(book),
+                           errata_mailto=f'mailto:marceloperlin@gmail.com?subject={errata_subject}',
+                           canonical=url_for('book_detail', slug=slug, _external=True),
+                           og_type='book',
+                           description=(book.get('summary') or '')[:300])
 
 
 CHART_COLORS = ['#1d4ed8', '#8b5cf6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444']
@@ -981,10 +1349,68 @@ def code_python():
                                                        if p.get('updated_at')), default=None),
                            description="Open source code and repositories in Python.")
 
+def get_datasets():
+    datasets = load_data_from_folder('datasets')
+    for dataset in datasets:
+        dataset['slug'] = slugify(dataset.get('filename_stem') or dataset.get('name', ''))
+        dataset['doi'] = dataset.get('doi') or _doi_from_link(dataset.get('link', ''))
+    return datasets
+
+
+def get_dataset(slug):
+    for dataset in get_datasets():
+        if dataset['slug'] == slug:
+            return dataset
+    return None
+
+
+def bibtex_for_dataset(dataset):
+    key = slugify(dataset.get('name') or dataset.get('title') or 'dataset')
+    fields = [
+        ('author', 'Perlin, Marcelo S.'),
+        ('title', _bib_escape(dataset.get('title') or dataset.get('name'))),
+    ]
+    if dataset.get('version'):
+        fields.append(('version', _bib_escape(dataset['version'])))
+    if dataset.get('link'):
+        fields.append(('url', dataset['link']))
+    if dataset.get('doi'):
+        fields.append(('doi', dataset['doi']))
+    body = ',\n'.join(f'  {name} = {{{value}}}' for name, value in fields if value)
+    return f'@misc{{{key},\n{body}\n}}\n'
+
+
 @app.route('/data')
 def data():
-    data_data = load_data_from_folder('datasets')
-    return render_template('data.html', title='Data', data=data_data, description="Datasets and financial data resources available for download.")
+    datasets = get_datasets()
+    return render_template('data.html', title='Data', data=datasets,
+                           description="Datasets and financial data resources available for download.")
+
+
+@app.route('/data/<slug>')
+def dataset_detail(slug):
+    dataset = get_dataset(slug)
+    if dataset is None:
+        abort(404)
+    return render_template('dataset.html', title=dataset.get('name', 'Dataset'), dataset=dataset,
+                           bibtex=bibtex_for_dataset(dataset),
+                           canonical=url_for('dataset_detail', slug=slug, _external=True),
+                           description=(dataset.get('description') or '')[:300])
+
+
+@app.route('/research')
+def research():
+    research_data = get_research()
+    themes = []
+    for theme in research_data.get('themes', []):
+        themes.append(dict(
+            theme,
+            slug=slugify(theme.get('title', '')),
+            publications=_publications_for_keywords(theme.get('keywords') or []),
+            packages=_packages_for_theme(theme),
+        ))
+    return render_template('research.html', title='Research', research=research_data, themes=themes,
+                           description="Research themes of Marcelo S. Perlin: market microstructure, financial econometrics, science of science, open data and AI in finance.")
 
 @app.route('/news')
 def news():
@@ -1401,6 +1827,108 @@ def publications_feed():
     return response
 
 
+# --- Public JSON API ---------------------------------------------------------
+
+def _json_response(payload):
+    response = make_response(json.dumps(payload, ensure_ascii=False))
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    response.headers['Cache-Control'] = 'public, max-age=3600'
+    return response
+
+
+def _absolute_url(path):
+    """Make a site-relative path absolute, leaving external URLs untouched."""
+    if not path:
+        return ''
+    if path.startswith(('http://', 'https://')):
+        return path
+    return request.url_root.rstrip('/') + '/' + path.lstrip('/')
+
+
+@app.route('/publications.json')
+def publications_json():
+    items = []
+    for pub in sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True):
+        items.append({
+            'slug': pub['slug'],
+            'title': pub.get('title', ''),
+            'authors': pub.get('authors', ''),
+            'year': pub.get('year', ''),
+            'journal': pub.get('journal') or pub.get('publication') or '',
+            'doi': pub.get('doi', ''),
+            'url': url_for('publication_detail', slug=pub['slug'], _external=True),
+            'abstract': pub.get('abstract', ''),
+            'volume': pub.get('volume', ''),
+            'issue': pub.get('issue', ''),
+            'pages': pub.get('pages', ''),
+            'issn': pub.get('issn', ''),
+            'cited_by_count': pub.get('cited_by_count'),
+            'cited_by_count_openalex': pub.get('cited_by_count_openalex'),
+            'open_access_url': pub.get('open_access_url', ''),
+            'topics': pub.get('topics', []),
+        })
+    return _json_response({'name': 'publications', 'count': len(items), 'items': items})
+
+
+@app.route('/code.json')
+def code_json():
+    items = []
+    for folder, ecosystem, field in (('code/r', 'R', 'title'), ('code/python', 'Python', 'name')):
+        for pkg in load_data_from_folder(folder):
+            items.append({
+                'name': pkg.get(field, ''),
+                'ecosystem': ecosystem,
+                'description': pkg.get('description', ''),
+                'url': pkg.get('link') or pkg.get('github_link') or '',
+                'github': pkg.get('github_link', ''),
+                'downloads_last_month': pkg.get('number_of_downloads'),
+                'total_downloads': pkg.get('total_downloads'),
+                'github_stars': pkg.get('github_stars'),
+            })
+    return _json_response({'name': 'code', 'count': len(items), 'items': items})
+
+
+@app.route('/data.json')
+def data_json():
+    items = []
+    for dataset in get_datasets():
+        items.append({
+            'slug': dataset['slug'],
+            'name': dataset.get('name', ''),
+            'title': dataset.get('title', ''),
+            'description': dataset.get('description', ''),
+            'doi': dataset.get('doi', ''),
+            'url': url_for('dataset_detail', slug=dataset['slug'], _external=True),
+            'coverage': dataset.get('coverage', ''),
+            'frequency': dataset.get('frequency', ''),
+            'format': dataset.get('format', ''),
+            'version': dataset.get('version', ''),
+            'released': dataset.get('released', ''),
+            'packages': dataset.get('packages', []),
+        })
+    return _json_response({'name': 'data', 'count': len(items), 'items': items})
+
+
+@app.route('/books.json')
+def books_json():
+    items = []
+    for book in get_books():
+        items.append({
+            'slug': book['slug'],
+            'title': book.get('title', ''),
+            'year': book.get('year', ''),
+            'publisher': book.get('publisher', ''),
+            'language': book.get('language', ''),
+            'summary': book.get('summary', ''),
+            'url': url_for('book_detail', slug=book['slug'], _external=True),
+            'amazon': book.get('link_amazon', ''),
+            'read_online': _absolute_url(book.get('link_online', '')),
+            'pdf': _absolute_url(book.get('pdf_url', '')),
+            'epub': _absolute_url(book.get('epub_url', '')),
+        })
+    return _json_response({'name': 'books', 'count': len(items), 'items': items})
+
+
 @app.route('/sitemap.xml')
 def sitemap():
     """Generate sitemap.xml with per-section last-modified dates."""
@@ -1424,11 +1952,13 @@ def sitemap():
         'code_r': ('0.7', 'monthly'),
         'code_python': ('0.7', 'monthly'),
         'cv': ('0.8', 'monthly'),
+        'research': ('0.8', 'monthly'),
         'search': ('0.3', 'yearly'),
         'site_log': ('0.2', 'weekly'),
     }
     skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed', 'publications_feed',
-            'json_feed', 'opensearch', 'llms_txt', 'security_txt', 'healthz', 'press_kit'}
+            'json_feed', 'opensearch', 'llms_txt', 'security_txt', 'healthz', 'press_kit',
+            'publications_json', 'code_json', 'data_json', 'books_json'}
 
     for rule in app.url_map.iter_rules():
         if 'GET' not in rule.methods or rule.arguments or rule.endpoint in skip:
@@ -1447,6 +1977,26 @@ def sitemap():
             'loc': url_for('publication_detail', slug=publication['slug'], _external=True),
             'lastmod': mtime(os.path.join('data', 'publications',
                                           publication.get('filename_stem', '') + '.json')),
+            'priority': '0.7',
+            'changefreq': 'yearly',
+        })
+
+    # book landing pages
+    for book in get_books():
+        entries.append({
+            'loc': url_for('book_detail', slug=book['slug'], _external=True),
+            'lastmod': mtime(os.path.join('data', 'books',
+                                          (book.get('filename_stem') or '') + '.json')),
+            'priority': '0.7',
+            'changefreq': 'yearly',
+        })
+
+    # dataset landing pages
+    for dataset in get_datasets():
+        entries.append({
+            'loc': url_for('dataset_detail', slug=dataset['slug'], _external=True),
+            'lastmod': mtime(os.path.join('data', 'datasets',
+                                          (dataset.get('filename_stem') or '') + '.json')),
             'priority': '0.7',
             'changefreq': 'yearly',
         })
@@ -1569,6 +2119,7 @@ def llms_txt():
         f'- Code (R): {url_for("code_r", _external=True)}',
         f'- Code (Python): {url_for("code_python", _external=True)}',
         f'- Data: {url_for("data", _external=True)}',
+        f'- Research: {url_for("research", _external=True)}',
         '',
         '## Publications',
     ]
@@ -1583,7 +2134,12 @@ def llms_txt():
         lines.append(f"- R: {pkg.get('title', '')} — {pkg.get('link') or ''}")
     for pkg in load_data_from_folder('code/python'):
         lines.append(f"- Python: {pkg.get('name', '')} — {pkg.get('link') or pkg.get('github_link') or ''}")
-    lines += ['', '## Datasets and MCP servers',
+    lines += ['', '## Datasets']
+    for dataset in get_datasets():
+        lines.append(f"- {dataset.get('name', '')}: "
+                     f"{url_for('dataset_detail', slug=dataset['slug'], _external=True)} "
+                     f"(DOI: {dataset.get('doi', '')})")
+    lines += ['', '## MCP servers',
               '- cvm-mcp: https://github.com/msperlin/cvm-mcp',
               '- bcb-mcp: https://github.com/msperlin/bcb-mcp',
               '- tesourodireto-mcp: https://github.com/msperlin/tesourodireto-mcp',

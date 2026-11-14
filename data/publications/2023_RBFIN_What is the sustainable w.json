@@ -14,5 +14,14 @@
     "issue": "3",
     "pages": "37-72",
     "publisher": "Fundacao Getulio Vargas",
-    "cited_by_count": 0
+    "cited_by_count": 0,
+    "cited_by_count_openalex": 1,
+    "open_access": true,
+    "open_access_url": "https://periodicos.fgv.br/rbfin/article/download/89040/84531",
+    "openalex_id": "W4391315905",
+    "topics": [
+        "Financial Literacy, Pension, Retirement Analysis",
+        "Risk and Portfolio Optimization",
+        "Stochastic processes and financial applications"
+    ]
 }
