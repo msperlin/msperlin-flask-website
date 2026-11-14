@@ -9,5 +9,10 @@
     "link": "https://doi.org/10.1016/j.joi.2024.101563",
     "image": "static/img/2024_JOI_The determinants and impa.jpg",
     "impact_factor": "3.5",
-    "issn": "1875-5879"
+    "issn": "1875-5879",
+    "volume": "18",
+    "issue": "4",
+    "pages": "101563",
+    "publisher": "Elsevier BV",
+    "cited_by_count": 5
 }

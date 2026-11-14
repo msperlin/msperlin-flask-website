@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <h1>Press Kit</h1>
+    <p class="lead">Information and assets for journalists and organizers: short and full biographies, topics I can
+        comment on, and a high-resolution portrait.</p>
+
+    <p><a class="read-more" href="{{ url_for('press_kit') }}">Download press kit (.zip)&nbsp;→</a></p>
+
+    <h2>Contact</h2>
+    <ul>
+        <li><strong>Email:</strong> <a href="mailto:{{ press.contact.email }}">{{ press.contact.email }}</a></li>
+        <li><strong>Affiliation:</strong> {{ press.contact.affiliation }}</li>
+        <li><strong>Location:</strong> {{ press.contact.location }}</li>
+        <li><strong>Languages:</strong> {{ press.languages | join(', ') }}</li>
+    </ul>
+    <p>
+        <a href="{{ about.orcid_link }}">ORCID</a> ·
+        <a href="{{ about.lattes_link }}">Lattes CV</a> ·
+        <a href="{{ about.gscholar_link }}">Google Scholar</a> ·
+        <a href="{{ about.linkedin_link }}">LinkedIn</a> ·
+        <a href="{{ about.github_link }}">GitHub</a>
+    </p>
+
+    <h2>Biography</h2>
+    <h3>English</h3>
+    <p>{{ press.bios.short_en }}</p>
+    <p>{{ press.bios.long_en }}</p>
+    <button class="install-btn" type="button" data-copy-text="{{ press.bios.short_en }}">Copy short bio (EN)</button>
+    <button class="install-btn" type="button" data-copy-text="{{ press.bios.long_en }}">Copy full bio (EN)</button>
+
+    <h3>Português</h3>
+    <p>{{ press.bios.short_pt }}</p>
+    <p>{{ press.bios.long_pt }}</p>
+    <button class="install-btn" type="button" data-copy-text="{{ press.bios.short_pt }}">Copiar bio curta (PT)</button>
+    <button class="install-btn" type="button" data-copy-text="{{ press.bios.long_pt }}">Copiar bio completa (PT)</button>
+
+    <h2>Topics I can comment on</h2>
+    <ul class="item-list" data-stagger>
+        {% for topic in press.topics %}
+        <li class="item-card reveal"><strong>{{ topic.title }}</strong> — {{ topic.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Portrait</h2>
+    {% for shot in press.headshots %}
+    <p><a href="{{ shot.path }}" download>{{ shot.label }}</a> <span class="meta">({{ shot.note }})</span></p>
+    {% endfor %}
+
+    <h2>Recent coverage</h2>
+    <ul class="item-list" data-stagger>
+        {% for item in recent_coverage %}
+        <li class="item-card reveal">
+            <a href="{{ item.link }}">{{ item.title }}</a>
+            <span class="meta">{{ item.source }}{% if item.date %} · {{ item.date }}{% endif %}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <p><a class="read-more" href="{{ url_for('news') }}">All media coverage&nbsp;→</a></p>
+</section>
+
+<script nonce="{{ csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Marcelo S. Perlin",
+  "url": {{ url_for('index', _external=True) | tojson }},
+  "jobTitle": "Associate Professor of Finance",
+  "affiliation": {"@type": "Organization", "name": {{ press.contact.affiliation | tojson }}},
+  "knowsAbout": {{ press.topics | map(attribute='title') | list | tojson }},
+  "contactPoint": {"@type": "ContactPoint", "email": {{ press.contact.email | tojson }}}
+}
+</script>
+{% endblock %}

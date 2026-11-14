@@ -1,0 +1,43 @@
+{
+    "contact": {
+        "email": "marceloperlin@gmail.com",
+        "affiliation": "Associate Professor of Finance, Federal University of Rio Grande do Sul (UFRGS)",
+        "location": "Porto Alegre, Brazil"
+    },
+    "languages": ["English", "Portuguese"],
+    "bios": {
+        "short_en": "Marcelo S. Perlin is an Associate Professor of Finance at the Federal University of Rio Grande do Sul (UFRGS), Brazil. His work focuses on quantitative finance and data science, applying computational tools to real-world financial problems. He authors books and research papers on financial markets, data analysis and programming, and maintains open-source software in R and Python.",
+        "short_pt": "Marcelo S. Perlin é professor associado de Finanças da Universidade Federal do Rio Grande do Sul (UFRGS). Atua em finanças quantitativas e ciência de dados, aplicando ferramentas computacionais a problemas financeiros reais. É autor de livros e artigos sobre mercados financeiros, análise de dados e programação, além de manter softwares de código aberto em R e Python.",
+        "long_en": "Marcelo S. Perlin is an Associate Professor of Finance at the Federal University of Rio Grande do Sul (UFRGS), in Porto Alegre, Brazil. He researches quantitative finance, financial econometrics, market microstructure and the use of data science in finance. He is the author of several books — including the best-selling 'Análise de Dados Financeiros e Econômicos com o R' — and dozens of peer-reviewed papers, with work on predatory publishing, academic inbreeding and the impact of AI on research. He develops widely used open-source software in R and Python for importing and analysing Brazilian financial and economic data, and recently created MCP servers so AI agents can query those same sources. His commentary has appeared in Brazilian and international outlets.",
+        "long_pt": "Marcelo S. Perlin é professor associado de Finanças da Universidade Federal do Rio Grande do Sul (UFRGS), em Porto Alegre. Pesquisa finanças quantitativas, econometria financeira, microestrutura de mercado e o uso de ciência de dados em finanças. É autor de vários livros — incluindo 'Análise de Dados Financeiros e Econômicos com o R' — e dezenas de artigos revisados por pares, com trabalhos sobre publicações predatórias, endogamia acadêmica e o impacto da IA na pesquisa. Desenvolve softwares de código aberto em R e Python para importação e análise de dados financeiros e econômicos brasileiros e, recentemente, criou servidores MCP para que agentes de IA consultem essas mesmas fontes. Seus comentários já apareceram na imprensa brasileira e internacional."
+    },
+    "topics": [
+        {
+            "title": "Predatory publishing & bibliometrics",
+            "description": "How predatory journals operate and how they distort academic metrics and rewards."
+        },
+        {
+            "title": "AI in finance and academic research",
+            "description": "The impact of generative AI on research, publishing and financial analysis."
+        },
+        {
+            "title": "Brazilian capital markets & market microstructure",
+            "description": "Liquidity, high-frequency data and the functioning of Brazilian equity and fixed-income markets."
+        },
+        {
+            "title": "Financial data & reproducible research",
+            "description": "Open data, reproducible workflows and building R/Python tooling for financial research."
+        },
+        {
+            "title": "R and Python for finance",
+            "description": "Using open-source software to import, organise and analyse financial and economic data."
+        }
+    ],
+    "headshots": [
+        {
+            "label": "High resolution portrait",
+            "path": "/static/img/profile.png",
+            "note": "PNG, 1696 × 1793"
+        }
+    ]
+}

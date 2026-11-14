@@ -1,17 +1,21 @@
 import json
+import io
 import os
 import re
 import secrets
 import unicodedata
-from flask import (Flask, render_template, send_from_directory, make_response, url_for,
-                   request, abort, g)
+import zipfile
+from flask import (Flask, render_template, send_from_directory, make_response, send_file,
+                   url_for, request, abort, g)
 from flask_compress import Compress
+from markupsafe import escape, Markup
 from werkzeug.middleware.proxy_fix import ProxyFix
 import datetime 
 import subprocess
 import time
 import urllib.request
 import urllib.error
+import urllib.parse
 
 app = Flask(__name__)
 
@@ -196,7 +200,7 @@ def get_publications():
         items = load_data_from_folder('publications')
         for item in items:
             item['slug'] = publication_slug(item)
-            item['doi'] = _doi_from_link(item.get('link', ''))
+            item['doi'] = item.get('doi') or _doi_from_link(item.get('link', ''))
         _PUBLICATION_CACHE['items'] = items
         _PUBLICATION_CACHE['by_slug'] = {item['slug']: item for item in items}
     return _PUBLICATION_CACHE['items']
@@ -375,6 +379,16 @@ def _recency(item):
     return int(digits) if digits else 0
 
 
+def _highlight(text, terms):
+    """Escape `text` and wrap matches of `terms` in <mark> (XSS-safe)."""
+    safe = escape(str(text or ''))
+    eligible = [t for t in terms if len(t) >= 2]
+    if not eligible:
+        return safe
+    pattern = re.compile('|'.join(re.escape(t) for t in eligible), re.IGNORECASE)
+    return Markup(pattern.sub(lambda m: '<mark>' + m.group(0) + '</mark>', safe))
+
+
 def search_matches(query, limit=200):
     """Simple AND search over the index, with a short highlighted snippet."""
     terms = [t for t in re.split(r'\s+', (query or '').strip().lower()) if t]
@@ -402,7 +416,12 @@ def search_matches(query, limit=200):
             end = min(start + 240, len(item['text']))
             snippet = ('…' if start else '') + item['text'][start:end].strip() + ('…' if end < len(item['text']) else '')
 
-        results.append(dict(item, snippet=snippet))
+        results.append(dict(
+            item,
+            snippet=snippet,
+            snippet_html=_highlight(snippet, terms),
+            title_html=_highlight(item.get('title') or '', terms),
+        ))
 
     results.sort(key=lambda result: (TYPE_ORDER.get(result['type'], 99), -_recency(result)))
     return results[:limit]
@@ -422,6 +441,11 @@ def index():
         key=lambda x: str(x.get('date', x.get('year', ''))),
         reverse=True,
     )
+    news_data = sorted(
+        load_data_from_folder('news'),
+        key=lambda x: str(x.get('date', '')),
+        reverse=True,
+    )
 
     total_pkg_downloads = sum(
         int(p.get('total_downloads') or 0) for p in (code_r_data + code_py_data)
@@ -439,6 +463,7 @@ def index():
         total_pkg_downloads=total_pkg_downloads,
         recent_pubs=pubs[:3],
         recent_slides=slides_data[:3],
+        recent_news=news_data[:3],
         description="Academic website of Marcelo S. Perlin, featuring publications, books, code, and data related to finance and data science.",
     )
 
@@ -473,6 +498,57 @@ def _publications_by_year_chart(publications_data):
                 "label": "Publications",
                 "data": [counts[y] for y in years_asc],
             }],
+        },
+        "options": {
+            "scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}},
+        },
+    })
+
+
+def _citation_history_chart(stats):
+    """Line chart of Google Scholar citations over time, when enough history exists."""
+    cites_per_year = stats.get('cites_per_year') or {}
+    history = stats.get('history') or []
+
+    if isinstance(cites_per_year, dict) and len(cites_per_year) >= 2:
+        years = sorted(str(year) for year in cites_per_year)
+        return json.dumps({
+            "type": "line",
+            "data": {
+                "labels": years,
+                "datasets": [{
+                    "label": "Citations",
+                    "data": [cites_per_year.get(year, 0) for year in years],
+                }],
+            },
+            "options": {
+                "scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}},
+            },
+        })
+
+    if len(history) < 2:
+        return None
+
+    labels = []
+    data = []
+    for entry in history:
+        date = str(entry.get('date') or '')
+        if not date:
+            continue
+        try:
+            labels.append(datetime.datetime.strptime(date, '%Y-%m').strftime('%b %Y'))
+        except ValueError:
+            labels.append(date)
+        data.append(entry.get('citedby', 0))
+
+    if len(data) < 2:
+        return None
+
+    return json.dumps({
+        "type": "line",
+        "data": {
+            "labels": labels,
+            "datasets": [{"label": "Citations", "data": data}],
         },
         "options": {
             "scales": {"y": {"beginAtZero": True, "ticks": {"precision": 0}}},
@@ -651,6 +727,7 @@ def publications():
         total_publications_with_if=total_publications_with_if,
         avg_if=avg_if,
         chart_pubs_by_year=_publications_by_year_chart(publications_data),
+        chart_citations=_citation_history_chart(gscholar_stats),
         gscholar_stats = gscholar_stats,
         description="Academic publications by Marcelo S. Perlin in finance and data science.")
 
@@ -662,16 +739,36 @@ def publication_detail(slug):
         abort(404)
 
     gscholar_stats = load_data('stats/gscholar.json')
+    related_packages = _related_packages_for_publication(publication)
+
+    badges = []
+    for field, label in (('open_access_url', 'Open Access'), ('preprint_url', 'Preprint'),
+                         ('data_url', 'Data'), ('code_url', 'Code')):
+        url = publication.get(field)
+        if url:
+            badges.append({'label': label, 'url': url})
+    for pkg in related_packages:
+        badges.append({'label': 'Software: ' + pkg['name'], 'url': pkg['url']})
+
+    cited_by_count = publication.get('cited_by_count') or publication.get('is_referenced_by_count')
+    cited_by_search_link = (
+        'https://scholar.google.com/scholar?q=' +
+        urllib.parse.quote('"' + (publication.get('title') or '') + '"')
+    )
+
     return render_template(
         'publication.html',
         title=publication.get('title', 'Publication'),
         publication=publication,
         bibtex=bibtex_for(publication),
         citation_authors=[a.strip() for a in (publication.get('authors') or '').split(',') if a.strip()],
-        related_packages=_related_packages_for_publication(publication),
+        related_packages=related_packages,
         related_slides=_related_slides_for_publication(publication),
         related_awards=_related_awards_for_publication(publication),
         related_publications=_related_publications(publication),
+        badges=badges,
+        cited_by_count=cited_by_count,
+        cited_by_search_link=cited_by_search_link,
         gscholar_stats=gscholar_stats,
         canonical=url_for('publication_detail', slug=slug, _external=True),
         og_type='article',
@@ -941,6 +1038,53 @@ def consulting():
     consulting_data = load_data('consulting.json')
     return render_template('consulting.html', title='Consulting Services', content=consulting_data, description="Expert Financial Data Science Consulting by Marcelo S. Perlin. Services include R/Python programming, financial modeling, machine learning, and data visualization.")
 
+
+@app.route('/press')
+def press():
+    press_data = load_data('press.json')
+    about = load_data('about.json')
+    news_data = sorted(load_data_from_folder('news'), key=lambda x: str(x.get('date', '')), reverse=True)
+    for item in news_data[:6]:
+        if item.get('pdf'):
+            item['pdf_url'] = url_for('serve_news_pdf', filename=os.path.basename(item['pdf']))
+    return render_template('press.html', title='Press Kit', press=press_data, about=about,
+                           recent_coverage=news_data[:6],
+                           description="Press kit for Marcelo S. Perlin: bio, topics, headshot and contact for journalists.")
+
+
+@app.route('/press/kit.zip')
+def press_kit():
+    press_data = load_data('press.json')
+    about = load_data('about.json')
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr('bio-en.txt', press_data['bios']['short_en'] + '\n\n' + press_data['bios']['long_en'])
+        archive.writestr('bio-pt.txt', press_data['bios']['short_pt'] + '\n\n' + press_data['bios']['long_pt'])
+        topics = '\n'.join(f"- {t['title']}: {t['description']}" for t in press_data.get('topics', []))
+        archive.writestr('topics.txt', topics)
+        contact = press_data.get('contact', {})
+        archive.writestr('contact.txt', (
+            'Name: Marcelo S. Perlin\n'
+            f"Email: {contact.get('email', '')}\n"
+            f"Affiliation: {contact.get('affiliation', '')}\n"
+            f"Location: {contact.get('location', '')}\n"
+            f"ORCID: {about.get('orcid_link', '')}\n"
+        ))
+        archive.writestr('publications.bib', '\n'.join(
+            bibtex_for(p).strip()
+            for p in sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True)
+        ) + '\n')
+        for shot in press_data.get('headshots', []):
+            path = shot.get('path', '')
+            if path.startswith('/static/'):
+                local = os.path.join(app.static_folder, path[len('/static/'):])
+                if os.path.isfile(local):
+                    archive.write(local, arcname='headshot-' + os.path.basename(local))
+    buffer.seek(0)
+    return send_file(buffer, mimetype='application/zip', as_attachment=True,
+                     download_name='msperlin-press-kit.zip')
+
+
 @app.route('/slides')
 def slides():
     slides_data = load_data_from_folder('slides')
@@ -1209,6 +1353,17 @@ def _rfc822(date_str):
     return ''
 
 
+def _iso_date(date_str):
+    """Turn an ISO-ish date into an RFC 3339 timestamp, or '' when unparseable."""
+    for fmt in ('%Y-%m-%d', '%Y-%m', '%Y'):
+        try:
+            when = datetime.datetime.strptime(str(date_str or ''), fmt)
+        except ValueError:
+            continue
+        return when.strftime('%Y-%m-%dT00:00:00Z')
+    return ''
+
+
 @app.route('/feed.xml')
 def news_feed():
     """RSS feed for media coverage / news items."""
@@ -1272,7 +1427,8 @@ def sitemap():
         'search': ('0.3', 'yearly'),
         'site_log': ('0.2', 'weekly'),
     }
-    skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed', 'publications_feed'}
+    skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed', 'publications_feed',
+            'json_feed', 'opensearch', 'llms_txt', 'security_txt', 'healthz', 'press_kit'}
 
     for rule in app.url_map.iter_rules():
         if 'GET' not in rule.methods or rule.arguments or rule.endpoint in skip:
@@ -1347,6 +1503,127 @@ def robots():
 @app.route('/f6d89283e4a24c25bcf682e06180dfd3.txt')
 def indexnow_key():
     return send_from_directory(app.static_folder, 'f6d89283e4a24c25bcf682e06180dfd3.txt', max_age=3600)
+
+
+@app.route('/feed.json')
+def json_feed():
+    """JSON Feed 1.1 combining media coverage and publications."""
+    items = []
+    for item in sorted(load_data_from_folder('news'), key=lambda x: x.get('date', ''), reverse=True)[:30]:
+        link = item.get('link') or url_for('news', _external=True)
+        items.append({
+            'id': link,
+            'url': link,
+            'title': item.get('title', ''),
+            'content_text': item.get('source', ''),
+            'date_published': _iso_date(item.get('date')),
+            'tags': ['news'],
+        })
+    for pub in sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True):
+        link = url_for('publication_detail', slug=pub['slug'], _external=True)
+        items.append({
+            'id': link,
+            'url': link,
+            'title': pub.get('title', ''),
+            'content_text': (pub.get('abstract') or '')[:500],
+            'date_published': _iso_date(pub.get('year')),
+            'tags': ['publication'],
+        })
+
+    feed = {
+        'version': 'https://jsonfeed.org/version/1.1',
+        'title': 'Marcelo S. Perlin',
+        'home_page_url': url_for('index', _external=True),
+        'feed_url': url_for('json_feed', _external=True),
+        'description': 'Publications and media coverage from Marcelo S. Perlin.',
+        'items': items,
+    }
+    response = make_response(json.dumps(feed, ensure_ascii=False))
+    response.headers['Content-Type'] = 'application/feed+json; charset=utf-8'
+    response.headers['Cache-Control'] = 'public, max-age=600'
+    return response
+
+
+@app.route('/opensearch.xml')
+def opensearch():
+    xml = render_template('opensearch.xml', search_url=url_for('search', _external=True))
+    response = make_response(xml)
+    response.headers['Content-Type'] = 'application/opensearchdescription+xml; charset=utf-8'
+    response.headers['Cache-Control'] = 'public, max-age=86400'
+    return response
+
+
+@app.route('/llms.txt')
+def llms_txt():
+    """A curated, machine-readable map of the site for AI assistants."""
+    lines = [
+        '# Marcelo S. Perlin',
+        '',
+        '> Associate Professor of Finance at UFRGS. Quantitative finance, data science, R and Python.',
+        '',
+        '## Key links',
+        f'- About: {url_for("index", _external=True)}',
+        f'- CV: {url_for("cv", _external=True)}',
+        f'- Publications: {url_for("publications", _external=True)}',
+        f'- Books: {url_for("books", _external=True)}',
+        f'- Code (R): {url_for("code_r", _external=True)}',
+        f'- Code (Python): {url_for("code_python", _external=True)}',
+        f'- Data: {url_for("data", _external=True)}',
+        '',
+        '## Publications',
+    ]
+    for pub in sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True):
+        lines.append(f"- {pub.get('year', '')} — {pub.get('title', '')}: "
+                     f"{url_for('publication_detail', slug=pub['slug'], _external=True)}")
+    lines += ['', '## Books']
+    for book in load_data_from_folder('books'):
+        lines.append(f"- {book.get('title', '')}: {book.get('link_online') or book.get('link_amazon') or ''}")
+    lines += ['', '## Software']
+    for pkg in load_data_from_folder('code/r'):
+        lines.append(f"- R: {pkg.get('title', '')} — {pkg.get('link') or ''}")
+    for pkg in load_data_from_folder('code/python'):
+        lines.append(f"- Python: {pkg.get('name', '')} — {pkg.get('link') or pkg.get('github_link') or ''}")
+    lines += ['', '## Datasets and MCP servers',
+              '- cvm-mcp: https://github.com/msperlin/cvm-mcp',
+              '- bcb-mcp: https://github.com/msperlin/bcb-mcp',
+              '- tesourodireto-mcp: https://github.com/msperlin/tesourodireto-mcp',
+              '',
+              '## Citation guidance',
+              'When citing Marcelo S. Perlin, use the specific paper or book identified above. '
+              'Do not attribute claims to him without a cited source.']
+    body = '\n'.join(lines) + '\n'
+    response = make_response(body)
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    response.headers['Cache-Control'] = 'public, max-age=3600'
+    return response
+
+
+@app.route('/.well-known/security.txt')
+def security_txt():
+    expires = (datetime.date.today() + datetime.timedelta(days=365)).isoformat()
+    body = (
+        'Contact: mailto:marceloperlin@gmail.com\n'
+        f'Expires: {expires}T00:00:00Z\n'
+        'Preferred-Languages: en, pt\n'
+        f'Canonical: {url_for("security_txt", _external=True)}\n'
+    )
+    response = make_response(body)
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    return response
+
+
+@app.route('/healthz')
+def healthz():
+    payload = {
+        'status': 'ok',
+        'revision': os.environ.get('K_REVISION') or os.environ.get('K_SERVICE', ''),
+        'time': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }
+    response = make_response(json.dumps(payload))
+    response.headers['Content-Type'] = 'application/json'
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

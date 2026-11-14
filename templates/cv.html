@@ -10,6 +10,7 @@
                 {{ about.institution | default('Federal University of Rio Grande do Sul (UFRGS)') }}
                 {% if about.location %}· {{ about.location }}{% endif %}<br>
                 <a href="mailto:{{ about.email }}">{{ about.email }}</a> ·
+                {% if about.orcid_link %}<a href="{{ about.orcid_link }}">ORCID</a> · {% endif %}
                 <a href="{{ about.lattes_link }}">Lattes CV</a> ·
                 <a href="{{ about.gscholar_link }}">Google Scholar</a> ·
                 <a href="{{ about.github_link }}">GitHub</a> ·

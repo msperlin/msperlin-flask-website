@@ -25,7 +25,8 @@ def html(response):
 
 def test_all_static_routes_render(client):
     skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed',
-            'publications_feed', 'site_log'}
+            'publications_feed', 'site_log', 'json_feed', 'opensearch',
+            'llms_txt', 'security_txt', 'healthz', 'press_kit'}
     checked = 0
     for rule in site.app.url_map.iter_rules():
         if 'GET' not in rule.methods or rule.arguments or rule.endpoint in skip:
@@ -447,3 +448,112 @@ def test_research_nested_code_submenu(client):
 
 
 
+
+
+# ---------------------------------------------------------------------------
+# Press kit, feeds, security and polish
+# ---------------------------------------------------------------------------
+
+def test_press_page(client):
+    page = html(client.get('/press'))
+    assert 'Press Kit' in page
+    assert 'ORCID' in page
+    assert 'Biography' in page
+    assert 'marceloperlin@gmail.com' in page
+    assert 'Recent coverage' in page
+
+
+def test_press_kit_zip(client):
+    import zipfile
+    import io as _io
+    response = client.get('/press/kit.zip')
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == 'application/zip'
+    assert 'attachment' in response.headers['Content-Disposition']
+    archive = zipfile.ZipFile(_io.BytesIO(response.data))
+    names = archive.namelist()
+    assert 'bio-en.txt' in names
+    assert 'bio-pt.txt' in names
+    assert 'publications.bib' in names
+    assert any(name.startswith('headshot-') for name in names)
+
+
+def test_json_feed(client):
+    response = client.get('/feed.json')
+    assert response.status_code == 200
+    assert response.headers['Content-Type'].startswith('application/feed+json')
+    feed = json.loads(response.data)
+    assert feed['version'].startswith('https://jsonfeed.org/version/1')
+    assert feed['items']
+    assert any('publication' in item.get('tags', []) for item in feed['items'])
+
+
+def test_opensearch_description(client):
+    response = client.get('/opensearch.xml')
+    assert response.status_code == 200
+    root = ET.fromstring(response.data)
+    assert root.tag.endswith('OpenSearchDescription')
+    assert root.find('.//{http://a9.com/-/spec/opensearch/1.1/}Url') is not None
+
+
+def test_llms_txt(client):
+    body = html(client.get('/llms.txt'))
+    assert 'cvm-mcp' in body
+    assert '/publications/' in body
+    assert '# Marcelo S. Perlin' in body
+
+
+def test_security_txt(client):
+    response = client.get('/.well-known/security.txt')
+    assert response.status_code == 200
+    body = response.data.decode('utf-8')
+    assert 'Contact: mailto:' in body
+    assert 'Expires:' in body
+    assert 'Canonical:' in body
+
+
+def test_healthz(client):
+    response = client.get('/healthz')
+    assert response.status_code == 200
+    payload = json.loads(response.data)
+    assert payload['status'] == 'ok'
+
+
+def test_404_page_has_search(client):
+    response = client.get('/this-page-does-not-exist')
+    assert response.status_code == 404
+    page = html(response)
+    assert 'name="q"' in page
+    assert '>Publications</a>' in page
+
+
+def test_search_highlights_terms(client):
+    page = html(client.get('/search', query_string={'q': 'liquidity'}))
+    assert '<mark>liquidity</mark>' in page
+
+
+def test_highlight_escapes_html():
+    result = str(site._highlight('<script>alert(1)</script>', ['script']))
+    assert '<mark>' in result
+    assert '<script>' not in result
+
+
+def test_citation_history_chart():
+    one_point = {'history': [{'date': '2026-01', 'citedby': 100}]}
+    assert site._citation_history_chart(one_point) is None
+
+    two_points = {'history': [
+        {'date': '2026-01', 'citedby': 100},
+        {'date': '2026-02', 'citedby': 120},
+    ]}
+    chart = json.loads(site._citation_history_chart(two_points))
+    assert chart['type'] == 'line'
+    assert chart['data']['labels'] == ['Jan 2026', 'Feb 2026']
+    assert chart['data']['datasets'][0]['data'] == [100, 120]
+
+
+def test_citation_chart_from_cites_per_year():
+    chart = json.loads(site._citation_history_chart(
+        {'cites_per_year': {'2018': 10, '2019': 25}}))
+    assert chart['data']['labels'] == ['2018', '2019']
+    assert chart['data']['datasets'][0]['data'] == [10, 25]

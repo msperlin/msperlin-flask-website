@@ -2000,3 +2000,17 @@ a.tag-pill:hover {
         transform: none;
     }
 }
+
+/* ==========================================================================
+   Search highlight
+   ========================================================================== */
+mark {
+    background: rgba(29, 78, 216, 0.16);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+
+[data-theme="dark"] mark {
+    background: rgba(130, 170, 255, 0.28);
+}

@@ -43,7 +43,27 @@ if author:
     print(f"got dictionary with keys: {author.keys()}")
     
     author['date_retrieval'] = datetime.datetime.today().strftime('%Y-%m-%d')
-    
+
+    # Preserve the site-owned citation history across runs and append this month.
+    stamp = datetime.date.today().strftime('%Y-%m')
+    history = []
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            previous = json.load(f)
+        history = previous.get('history') or []
+    except (OSError, ValueError):
+        pass
+
+    history = [entry for entry in history if entry.get('date') != stamp]
+    history.append({
+        'date': stamp,
+        'citedby': author.get('citedby', 0),
+        'hindex': author.get('hindex', 0),
+        'i10index': author.get('i10index', 0),
+    })
+    history.sort(key=lambda entry: entry['date'])
+    author['history'] = history[-36:]
+
     # Ensure parent directory exists
     file_path.parent.mkdir(parents=True, exist_ok=True)
     

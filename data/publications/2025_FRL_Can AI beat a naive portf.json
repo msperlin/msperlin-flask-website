@@ -9,5 +9,9 @@
     "link": "https://doi.org/10.1016/j.frl.2025.107126",
     "image": "static/img/2025_FRL_Can AI beat a naive portf.jpg",
     "impact_factor": "6.9",
-    "issn": "1544-6131"
+    "issn": "1544-6131",
+    "volume": "78",
+    "pages": "107126",
+    "publisher": "Elsevier BV",
+    "cited_by_count": 9
 }

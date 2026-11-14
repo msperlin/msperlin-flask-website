@@ -63,6 +63,13 @@ Besides the browsable sections, the app exposes stable and machine-readable URLs
 | `/publications/feed.xml` | RSS feed for new publications. |
 | `/search` | Site-wide search over publications, books, news, slides, awards, datasets and code (server-side, works without JS). |
 | `/cv` | A print-friendly CV generated from the JSON files. |
+| `/press` | Press kit: EN/PT bios, topics, headshot and contact. |
+| `/press/kit.zip` | Downloadable press kit (bios, topics, headshot, `.bib`). |
+| `/feed.json` | JSON Feed 1.1 combining news and publications. |
+| `/opensearch.xml` | OpenSearch description for browser site-search. |
+| `/llms.txt` | Curated, machine-readable site map for AI assistants. |
+| `/.well-known/security.txt` | Security contact information. |
+| `/healthz` | Health-check endpoint for Cloud Run. |
 | `/sitemap.xml` | Sitemap with per-page `lastmod` dates. |
 
 ### Frontend & UI
@@ -120,8 +127,11 @@ To update them, run it from the repository root:
 ```bash
 uv run --group stats python scripts/run_scholarly.py
 ```
-This will update `data/stats/gscholar.json`. The `stats` dependency group is
-only needed for this script, so the production image does not install it.
+This will update `data/stats/gscholar.json`. It also appends a monthly
+`history` snapshot of `citedby` / `hindex` / `i10index`, which powers the
+"Citations over time" chart on the publications page once two months are
+available. The `stats` dependency group is only needed for this script, so the
+production image does not install it.
 
 #### 5. Updating Download and GitHub Stats
 Three scripts keep the code pages current (all run weekly by GitHub Actions):
@@ -178,6 +188,22 @@ dimensions.
 4.  Download stats are filled in by `uv run python scripts/update_pypi_downloads.py`,
     which skips projects with `"pypi_link": null`. Stars and forks are added by
     `scripts/update_github_stats.py`.
+
+#### 9. Updating the Press Kit
+*   Edit `data/press.json` (bios in English and Portuguese, topics, contact,
+    headshots).
+*   The downloadable archive is generated on the fly at `/press/kit.zip`.
+
+#### 10. Syncing Publications from ORCID & Crossref
+```bash
+uv run python scripts/update_publications.py
+```
+This runs monthly via GitHub Actions. It matches `data/publications/*.json`
+to your ORCID works, fills missing bibliographic fields (volume, issue, pages,
+publisher, citation counts) from Crossref, adds new journal articles that have
+a DOI, and writes preprints / software / DOI-less works to
+`data/publications-review/` for manual approval (never published automatically).
+Move a reviewed file into `data/publications/` to publish it.
 
 ---
 

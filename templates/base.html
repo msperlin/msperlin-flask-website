@@ -47,6 +47,9 @@
 
     <link rel="alternate" type="application/rss+xml" title="Marcelo S. Perlin — News" href="{{ url_for('news_feed') }}">
     <link rel="alternate" type="application/rss+xml" title="Marcelo S. Perlin — Publications" href="{{ url_for('publications_feed') }}">
+    <link rel="alternate" type="application/feed+json" title="Marcelo S. Perlin — All updates" href="{{ url_for('json_feed') }}">
+    <link rel="search" type="application/opensearchdescription+xml" title="Marcelo S. Perlin" href="{{ url_for('opensearch') }}">
+    <link rel="me" href="https://orcid.org/0000-0002-9839-4268">
     {% block head_extra %}{% endblock %}
     <title>{{ title }} - Marcelo S. Perlin</title>
 
@@ -163,8 +166,8 @@
             <p>&copy; {{ year }} Marcelo S. Perlin. All rights reserved. <br> Page made with <a
                     href="https://flask.palletsprojects.com/">Flask</a>. Source code available on <a
                     href="https://github.com/msperlin/msperlin-flask-website">GitHub</a>. <a
-                    href="{{ url_for('cv') }}">CV</a> · <a href="{{ url_for('search') }}">Search</a> · <a
-                    href="{{ url_for('news_feed') }}">RSS</a>.</p>
+                    href="{{ url_for('cv') }}">CV</a> · <a href="{{ url_for('press') }}">Press</a> · <a
+                    href="{{ url_for('search') }}">Search</a> · <a href="{{ url_for('news_feed') }}">RSS</a>.</p>
         </div>
     </footer>
 

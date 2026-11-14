@@ -42,6 +42,16 @@
     </div>
     {% endif %}
 
+    {% if chart_citations %}
+    <div class="chart-card reveal">
+        <h3>Citations over time</h3>
+        <p class="chart-help">Google Scholar citations, as recorded by the update scripts.</p>
+        <div class="chart-wrap chart-wrap-compact"><canvas id="citationHistoryChart" data-chart-canvas
+                aria-label="Line chart of citations over time" role="img"></canvas></div>
+        <script nonce="{{ csp_nonce }}" type="application/json" data-chart="citationHistoryChart">{{ chart_citations | safe }}</script>
+    </div>
+    {% endif %}
+
     <div class="pub-controls">
         <label class="field">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

@@ -1,0 +1,39 @@
+name: Update Publications (ORCID + Crossref)
+
+on:
+  schedule:
+    - cron: '0 3 1 * *'   # 1st of every month at 3 AM UTC
+  workflow_dispatch:       # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-publications:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v7
+
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.13'
+
+    - name: Run publication sync
+      run: python scripts/update_publications.py
+
+    - name: Check for changes
+      id: git-check
+      run: |
+        git add data/publications data/publications-review
+        git diff --staged --exit-code || echo "changes=true" >> "$GITHUB_OUTPUT"
+
+    - name: Commit and push changes
+      if: steps.git-check.outputs.changes == 'true'
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git commit -m "Sync publications from ORCID and Crossref"
+        git push

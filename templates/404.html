@@ -4,6 +4,20 @@
 <section>
     <h1>Page not found</h1>
     <p class="lead">The page you are looking for does not exist or has moved.</p>
-    <p><a href="{{ url_for('index') }}">Back to the home page</a></p>
+
+    <form class="search-form" action="{{ url_for('search') }}" method="get" role="search">
+        <label class="visually-hidden" for="not-found-search">Search this site</label>
+        <input id="not-found-search" type="search" name="q" placeholder="Search publications, books, code, data…">
+        <button type="submit">Search</button>
+    </form>
+
+    <p>Or browse:</p>
+    <ul>
+        <li><a href="{{ url_for('publications') }}">Publications</a></li>
+        <li><a href="{{ url_for('books') }}">Books</a></li>
+        <li><a href="{{ url_for('code_r') }}">Code (R)</a> / <a href="{{ url_for('code_python') }}">Code (Python)</a></li>
+        <li><a href="{{ url_for('data') }}">Data</a></li>
+        <li><a href="{{ url_for('cv') }}">CV</a></li>
+    </ul>
 </section>
 {% endblock %}

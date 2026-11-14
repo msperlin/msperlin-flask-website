@@ -78,10 +78,25 @@
         {% endif %}
         <a href="{{ url_for('publication_bibtex', slug=publication.slug) }}">Download .bib</a>
         <a href="{{ url_for('publication_ris', slug=publication.slug) }}">Download .ris</a>
+        <a href="{{ cited_by_search_link }}" target="_blank" rel="noopener noreferrer">Find citations<span
+                class="visually-hidden"> on Google Scholar (opens in a new tab)</span></a>
         <button class="cite-btn" type="button" data-title="{{ publication.title }}"
             data-authors="{{ publication.authors }}" data-year="{{ publication.year }}"
             data-journal="{{ publication.journal }}">Cite this</button>
     </div>
+
+    {% if cited_by_count %}
+    <p class="meta">Cited by <strong>{{ cited_by_count }}</strong> according to Crossref.</p>
+    {% endif %}
+
+    {% if badges %}
+    <div class="pub-badges">
+        {% for badge in badges %}
+        <a class="tag-pill" href="{{ badge.url }}" target="_blank" rel="noopener noreferrer">{{ badge.label }}<span
+                class="visually-hidden"> (opens in a new tab)</span></a>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     {% if publication.abstract %}
     <h2>Abstract</h2>

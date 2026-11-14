@@ -87,6 +87,21 @@
   </div>
 </section>
 
+{% if recent_news %}
+<section class="home-section reveal">
+  <h2>In the media</h2>
+  <ul class="item-list" data-stagger>
+    {% for item in recent_news %}
+    <li class="item-card reveal">
+      <h3><a href="{{ item.link }}" target="_blank" rel="noopener noreferrer">{{ item.title }}</a></h3>
+      <p class="meta">{{ item.source }}{% if item.date %} · {{ item.date }}{% endif %}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  <p><a class="read-more" href="{{ url_for('news') }}">All media coverage&nbsp;→</a> · <a class="read-more" href="{{ url_for('press') }}">Press kit&nbsp;→</a></p>
+</section>
+{% endif %}
+
 <script nonce="{{ csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -99,6 +114,7 @@
       "image": "{{ url_for('static', filename='img/profile.png', _external=True) }}",
       "description": {{ about.bio | tojson }},
       "sameAs": [
+        "{{ about.orcid_link }}",
         "{{ about.lattes_link }}",
         "{{ about.gscholar_link }}",
         "{{ about.linkedin_link }}",

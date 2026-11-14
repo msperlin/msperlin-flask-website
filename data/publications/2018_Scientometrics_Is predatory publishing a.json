@@ -9,5 +9,10 @@
     "link": "https://doi.org/10.1007/s11192-018-2750-6",
     "image": "static/img/2018_Scientometrics_Is predatory publishing a.jpg",
     "impact_factor": "3.5",
-    "issn": "1588-2861"
+    "issn": "1588-2861",
+    "volume": "116",
+    "issue": "1",
+    "pages": "255-273",
+    "publisher": "Springer Science and Business Media LLC",
+    "cited_by_count": 63
 }

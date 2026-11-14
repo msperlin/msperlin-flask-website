@@ -9,5 +9,9 @@
     "link": "https://doi.org/10.1590/1982-7849rac2021200088",
     "image": "static/img/2020_RAC_A GARCH Tutorial with R.jpg",
     "impact_factor": "",
-    "issn": "1982-7849"
+    "issn": "1982-7849",
+    "volume": "25",
+    "issue": "1",
+    "publisher": "FapUNIFESP (SciELO)",
+    "cited_by_count": 7
 }

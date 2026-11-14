@@ -9,5 +9,10 @@
     "link": "https://doi.org/10.1016/j.joi.2022.101287",
     "image": "static/img/2022_JOI_The Academic Inbreeding C.jpg",
     "impact_factor": "3.5",
-    "issn": "1875-5879"
+    "issn": "1875-5879",
+    "volume": "16",
+    "issue": "2",
+    "pages": "101287",
+    "publisher": "Elsevier BV",
+    "cited_by_count": 11
 }
