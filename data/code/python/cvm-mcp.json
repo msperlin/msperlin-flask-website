@@ -4,15 +4,15 @@
     "link": "https://github.com/msperlin/cvm-mcp",
     "github_link": "https://github.com/msperlin/cvm-mcp",
     "pypi_link": "https://pypi.org/project/cvm-mcp/",
-    "number_of_downloads": 228,
-    "downloads_last_month": 228,
-    "total_downloads": 228,
-    "updated_at": "2026-11-10 15:01:09",
+    "number_of_downloads": 370,
+    "downloads_last_month": 370,
+    "total_downloads": 370,
+    "updated_at": "2026-11-15 08:43:02",
     "history": [
         {
             "date": "2026-11",
-            "downloads_last_month": 228,
-            "total_downloads": 228
+            "downloads_last_month": 370,
+            "total_downloads": 370
         }
     ],
     "github_repo": "msperlin/cvm-mcp",

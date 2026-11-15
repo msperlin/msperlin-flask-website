@@ -4,12 +4,19 @@
     "link": "https://github.com/msperlin/bcb-mcp",
     "github_link": "https://github.com/msperlin/bcb-mcp",
     "pypi_link": "https://pypi.org/project/bcb-mcp/",
-    "number_of_downloads": null,
-    "downloads_last_month": null,
-    "total_downloads": null,
-    "updated_at": null,
+    "number_of_downloads": 142,
+    "downloads_last_month": 142,
+    "total_downloads": 142,
+    "updated_at": "2026-11-15 08:43:03",
     "github_repo": "msperlin/bcb-mcp",
     "github_stars": 0,
     "github_forks": 0,
-    "github_last_push": "2026-11-10"
+    "github_last_push": "2026-11-10",
+    "history": [
+        {
+            "date": "2026-11",
+            "downloads_last_month": 142,
+            "total_downloads": 142
+        }
+    ]
 }

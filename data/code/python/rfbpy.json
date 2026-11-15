@@ -4,15 +4,15 @@
     "link": "https://github.com/msperlin/rfbpy",
     "github_link": "https://github.com/msperlin/rfbpy",
     "pypi_link": "https://pypi.org/project/rfbpy/",
-    "number_of_downloads": 435,
-    "downloads_last_month": 435,
-    "total_downloads": 435,
-    "updated_at": "2026-11-10 15:01:11",
+    "number_of_downloads": 144,
+    "downloads_last_month": 144,
+    "total_downloads": 463,
+    "updated_at": "2026-11-15 08:43:03",
     "history": [
         {
             "date": "2026-11",
-            "downloads_last_month": 435,
-            "total_downloads": 435
+            "downloads_last_month": 144,
+            "total_downloads": 463
         }
     ],
     "github_repo": "msperlin/rfbpy",

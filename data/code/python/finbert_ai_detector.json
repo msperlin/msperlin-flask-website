@@ -4,15 +4,15 @@
     "link": "https://github.com/msperlin/finbert-ai-detector",
     "github_link": "https://github.com/msperlin/finbert-ai-detector",
     "pypi_link": "https://pypi.org/project/finbert-ai-detector/",
-    "number_of_downloads": 38,
-    "downloads_last_month": 38,
-    "total_downloads": 3017,
-    "updated_at": "2026-11-10 15:01:11",
+    "number_of_downloads": 42,
+    "downloads_last_month": 42,
+    "total_downloads": 2327,
+    "updated_at": "2026-11-15 08:43:03",
     "history": [
         {
             "date": "2026-11",
-            "downloads_last_month": 38,
-            "total_downloads": 3017
+            "downloads_last_month": 42,
+            "total_downloads": 2327
         }
     ],
     "github_repo": "msperlin/finbert-ai-detector-python",
