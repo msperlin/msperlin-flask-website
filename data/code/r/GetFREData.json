@@ -2,16 +2,16 @@
     "title": "GetFREData",
     "description": "Reading FRE Corporate Data of Public Traded Companies from B3",
     "date_of_submission": "2021-04-06",
-    "number_of_downloads": 390,
+    "number_of_downloads": 415,
     "link": "https://msperlin.r-universe.dev/GetFREData",
-    "downloads_last_month": 390,
-    "total_downloads": 17820,
-    "updated_at": "2026-11-10 15:01:15",
+    "downloads_last_month": 415,
+    "total_downloads": 17907,
+    "updated_at": "2026-11-15 06:07:28",
     "history": [
         {
             "date": "2026-11",
-            "downloads_last_month": 390,
-            "total_downloads": 17820
+            "downloads_last_month": 415,
+            "total_downloads": 17907
         }
     ],
     "github_repo": "msperlin/GetFREData",
