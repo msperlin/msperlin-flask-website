@@ -38,11 +38,8 @@ def _launch_chromium(playwright, *, headless: bool, slow_mo: int):
         '--disable-extensions',
         '--disable-background-networking',
         '--disable-sync',
-        '--metrics-recording-only',
         '--no-first-run',
     ]
-    if headless:
-        args.append('--disable-gpu')
     kwargs = {'headless': headless, 'slow_mo': slow_mo, 'args': args}
     try:
         return playwright.chromium.launch(**kwargs)

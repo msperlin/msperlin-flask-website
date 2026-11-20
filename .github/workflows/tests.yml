@@ -27,7 +27,7 @@ jobs:
       run: uv sync --frozen
 
     - name: Install Playwright Chromium
-      run: uv run playwright install --with-deps chromium
+      run: uv run playwright install --with-deps chromium-headless-shell
 
     - name: Run tests
       run: uv run pytest -n 4 --dist worksteal -q

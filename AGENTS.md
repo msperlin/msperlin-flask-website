@@ -119,10 +119,11 @@ tests/               pytest smoke tests
   validity, security/caching headers) and the Playwright end-to-end browser
   suite (`tests/test_e2e.py`: real user clicks across navigation, dropdowns,
   mobile drawer, dark/light theme, filters, sorting, cite modal, copy buttons,
-  downloads, charts, search, and all internal pages). Use `-n 6 --dist worksteal`
-  for fast parallel runs, `-m e2e` or `-m "not e2e"` to run either suite alone,
-  or `--headed --slowmo 250` to watch the browser interact live. Both suites run
-  in parallel on every push/PR via `.github/workflows/tests.yml`.
+  downloads, charts, search, and all internal pages). Use `-n 4 --dist worksteal`
+  for fast parallel runs (install `uv run playwright install chromium-headless-shell`
+  once locally for best speed), `-m e2e` or `-m "not e2e"` to run either suite
+  alone, or `--headed --slowmo 250` to watch the browser interact live. Both
+  suites run in parallel on every push/PR via `.github/workflows/tests.yml`.
 - When you add a route, add it to the `skip` sets in `test_all_static_routes_render`
   only if it is not a plain GET page; otherwise it will be auto-tested.
 - Weekly GitHub Actions keep `data/stats/` and publications fresh

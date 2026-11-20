@@ -1686,6 +1686,7 @@ footer p a {
     margin: 0.15rem 0 0;
     font-size: 0.92rem;
     color: var(--text-muted);
+    overflow-wrap: anywhere;
 }
 
 .cv-year {
