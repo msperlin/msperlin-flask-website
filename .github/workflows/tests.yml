@@ -30,4 +30,4 @@ jobs:
       run: uv run playwright install --with-deps chromium
 
     - name: Run tests
-      run: uv run pytest -q
+      run: uv run pytest -n 4 --dist worksteal -q

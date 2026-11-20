@@ -92,19 +92,36 @@ def add_security_headers(response):
 
     if response.mimetype == 'text/html':
         response.headers.setdefault('Cache-Control', 'no-cache')
-        nonce = getattr(g, 'csp_nonce', '')
-        response.headers.setdefault('Content-Security-Policy', (
-            "default-src 'self'; "
-            f"script-src 'self' 'nonce-{nonce}'; "
-            "style-src 'self' 'unsafe-inline'; "
-            "img-src 'self' data:; "
-            "font-src 'self'; "
-            "connect-src 'self'; "
-            "object-src 'none'; "
-            "base-uri 'self'; "
-            "form-action 'self'; "
-            "frame-ancestors 'none'"
-        ))
+        if request.endpoint in ('serve_slide', 'serve_book'):
+            # Pre-rendered Quarto/Reveal.js slides and Bookdown HTML books ship
+            # inline initialization scripts and optional CDN assets (MathJax,
+            # FontAwesome, clipboard/fuse) that cannot carry a per-request nonce.
+            response.headers.setdefault('Content-Security-Policy', (
+                "default-src 'self' https: data: blob:; "
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; "
+                "style-src 'self' 'unsafe-inline' https: data:; "
+                "img-src 'self' https: data: blob:; "
+                "font-src 'self' https: data:; "
+                "connect-src 'self' https:; "
+                "frame-src 'self' https:; "
+                "object-src 'none'; "
+                "base-uri 'self'; "
+                "frame-ancestors 'none'"
+            ))
+        else:
+            nonce = getattr(g, 'csp_nonce', '')
+            response.headers.setdefault('Content-Security-Policy', (
+                "default-src 'self'; "
+                f"script-src 'self' 'nonce-{nonce}'; "
+                "style-src 'self' 'unsafe-inline'; "
+                "img-src 'self' data:; "
+                "font-src 'self'; "
+                "connect-src 'self'; "
+                "object-src 'none'; "
+                "base-uri 'self'; "
+                "form-action 'self'; "
+                "frame-ancestors 'none'"
+            ))
     elif response.mimetype in ('application/xml', 'application/rss+xml'):
         response.headers.setdefault('Cache-Control', 'public, max-age=600')
 

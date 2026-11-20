@@ -19,6 +19,7 @@ package = false
 dev = [
     "playwright>=1.65.2",
     "pytest>=9.2.0",
+    "pytest-xdist>=3.8.0",
 ]
 # Only needed by scripts/run_scholarly.py, not by the website; keeping it out
 # of the default group keeps the Cloud Run image small.

@@ -33,7 +33,17 @@ pytestmark = pytest.mark.e2e
 
 def _launch_chromium(playwright, *, headless: bool, slow_mo: int):
     """Launch Playwright's managed Chromium, falling back to system Chromium."""
-    kwargs = {'headless': headless, 'slow_mo': slow_mo}
+    args = [
+        '--disable-dev-shm-usage',
+        '--disable-extensions',
+        '--disable-background-networking',
+        '--disable-sync',
+        '--metrics-recording-only',
+        '--no-first-run',
+    ]
+    if headless:
+        args.append('--disable-gpu')
+    kwargs = {'headless': headless, 'slow_mo': slow_mo, 'args': args}
     try:
         return playwright.chromium.launch(**kwargs)
     except Exception as first_err:
@@ -88,15 +98,8 @@ def browser(request):
         br.close()
 
 
-def _make_monitored_page(browser, base_url: str, *, viewport: dict, color_scheme: str = 'light'):
-    """Create a fresh context + page that asserts zero JS/console/HTTP errors."""
-    context = browser.new_context(
-        viewport=viewport,
-        color_scheme=color_scheme,
-        accept_downloads=True,
-    )
-    context.grant_permissions(['clipboard-read', 'clipboard-write'], origin=base_url)
-    page = context.new_page()
+def _attach_monitors(page, base_url: str):
+    """Attach JS/console/HTTP error monitors to a page and return the collectors."""
     page.set_default_timeout(10000)
 
     page_errors = []
@@ -146,32 +149,80 @@ def _make_monitored_page(browser, base_url: str, *, viewport: dict, color_scheme
     page.on('response', on_response)
     page._allowed_error_paths = allowed_error_paths
 
-    return context, page, page_errors, console_errors, bad_responses
+    return page_errors, console_errors, bad_responses
+
+
+def _new_context(browser, base_url: str, *, viewport: dict, color_scheme: str = 'light',
+                 reduced_motion: str = 'reduce', java_script_enabled: bool = True):
+    context = browser.new_context(
+        viewport=viewport,
+        color_scheme=color_scheme,
+        reduced_motion=reduced_motion,
+        java_script_enabled=java_script_enabled,
+        accept_downloads=True,
+    )
+    if java_script_enabled:
+        context.grant_permissions(['clipboard-read', 'clipboard-write'], origin=base_url)
+    return context
+
+
+@pytest.fixture(scope='module')
+def desktop_context(request, browser, live_server):
+    motion = 'no-preference' if request.config.getoption('--headed') else 'reduce'
+    ctx = _new_context(
+        browser, live_server,
+        viewport={'width': 1280, 'height': 850},
+        reduced_motion=motion,
+    )
+    yield ctx
+    ctx.close()
+
+
+@pytest.fixture(scope='module')
+def mobile_context(request, browser, live_server):
+    motion = 'no-preference' if request.config.getoption('--headed') else 'reduce'
+    ctx = _new_context(
+        browser, live_server,
+        viewport={'width': 390, 'height': 844},
+        reduced_motion=motion,
+    )
+    yield ctx
+    ctx.close()
+
+
+def _reset_page_state(context, pg):
+    """Clear storage and cookies between tests while keeping Chromium's HTTP cache warm."""
+    try:
+        if pg.url.startswith('http'):
+            pg.evaluate('() => { try { localStorage.clear(); sessionStorage.clear(); } catch (e) {} }')
+    except Exception:
+        pass
+    context.clear_cookies()
 
 
 @pytest.fixture
-def page(browser, live_server):
-    context, pg, page_errors, console_errors, bad_responses = _make_monitored_page(
-        browser, live_server, viewport={'width': 1280, 'height': 850}, color_scheme='light',
-    )
+def page(desktop_context, live_server):
+    pg = desktop_context.new_page()
+    page_errors, console_errors, bad_responses = _attach_monitors(pg, live_server)
     try:
         yield pg
     finally:
-        context.close()
+        _reset_page_state(desktop_context, pg)
+        pg.close()
     assert not page_errors, f'Uncaught page errors: {page_errors}'
     assert not console_errors, f'Console errors: {console_errors}'
     assert not bad_responses, f'Failed same-origin HTTP responses: {bad_responses}'
 
 
 @pytest.fixture
-def mobile_page(browser, live_server):
-    context, pg, page_errors, console_errors, bad_responses = _make_monitored_page(
-        browser, live_server, viewport={'width': 390, 'height': 844}, color_scheme='light',
-    )
+def mobile_page(mobile_context, live_server):
+    pg = mobile_context.new_page()
+    page_errors, console_errors, bad_responses = _attach_monitors(pg, live_server)
     try:
         yield pg
     finally:
-        context.close()
+        _reset_page_state(mobile_context, pg)
+        pg.close()
     assert not page_errors, f'Uncaught mobile page errors: {page_errors}'
     assert not console_errors, f'Console mobile errors: {console_errors}'
     assert not bad_responses, f'Failed mobile HTTP responses: {bad_responses}'
@@ -930,7 +981,64 @@ def test_research_news_awards_and_slides_interactions(page, live_server):
         popup = popup_info.value
         popup.wait_for_load_state('domcontentloaded')
         assert '/slides/' in popup.url
+        popup.wait_for_function(
+            '() => Boolean(window.Reveal && window.Reveal.isReady && window.Reveal.isReady())',
+            timeout=10000,
+        )
+        assert popup.evaluate('() => window.Reveal.getTotalSlides()') > 0
         popup.close()
+
+
+def _local_slide_hrefs():
+    """Return all local /slides/<folder>/ links from data/slides/ for parametrization."""
+    hrefs = []
+    for item in site.load_data_from_folder('slides'):
+        link = item.get('link') or ''
+        if link.startswith('/slides/'):
+            hrefs.append(link)
+    return sorted(set(hrefs))
+
+
+@pytest.mark.parametrize('href', _local_slide_hrefs())
+def test_every_local_slide_deck_initializes_cleanly(desktop_context, live_server, href):
+    """Every local talk slide deck must initialize Reveal.js with zero broken assets or CSP errors."""
+    parsed_base = urlparse(live_server)
+    deck = desktop_context.new_page()
+    # Self-contained Quarto decks can be 8-12 MB of embedded base64 assets, so allow
+    # extra time to compress/parse when xdist runs many Chromium workers in parallel.
+    deck.set_default_timeout(30000)
+    page_errors = []
+    csp_errors = []
+    bad_responses = []
+
+    deck.on('pageerror', lambda err: page_errors.append(f'{href}: {err}'))
+
+    def on_console(msg):
+        if msg.type == 'error' and 'Content Security Policy' in msg.text:
+            csp_errors.append(f'{href}: {msg.text}')
+
+    def on_response(resp):
+        parsed = urlparse(resp.url)
+        if parsed.netloc == parsed_base.netloc and resp.status >= 400 and parsed.path != '/favicon.ico':
+            bad_responses.append(f'{href}: {resp.status} {parsed.path}')
+
+    deck.on('console', on_console)
+    deck.on('response', on_response)
+
+    try:
+        resp = deck.goto(live_server + href, wait_until='domcontentloaded', timeout=30000)
+        assert resp.status == 200, f'{href} returned {resp.status}'
+        deck.wait_for_function(
+            '() => Boolean(window.Reveal && window.Reveal.isReady && window.Reveal.isReady())',
+            timeout=30000,
+        )
+        assert deck.evaluate('() => window.Reveal.getTotalSlides()') > 0, f'{href} has 0 slides'
+    finally:
+        deck.close()
+
+    assert not page_errors, f'Uncaught JS errors in {href}: {page_errors}'
+    assert not csp_errors, f'CSP violations in {href}: {csp_errors}'
+    assert not bad_responses, f'Broken local assets in {href}: {bad_responses}'
 
 
 # ---------------------------------------------------------------------------
@@ -1039,42 +1147,61 @@ def test_cv_press_consulting_and_site_log(page, live_server):
 # 12. Full site internal link crawl (zero broken pages, zero JS/asset errors)
 # ---------------------------------------------------------------------------
 
-def test_all_primary_and_detail_internal_pages_load_cleanly(page, live_server):
-    """Crawl every top-level section and verify all internal HTML pages return 200."""
+def _all_detail_paths():
+    """Return every publication, book, package, and dataset detail URL."""
+    paths = [f"/publications/{pub['slug']}" for pub in site.get_publications()]
+    with site.app.test_request_context('/'):
+        paths.extend(f"/book/{book['slug']}" for book in site.get_books())
+        paths.extend(f"/data/{ds['slug']}" for ds in site.get_datasets())
+    for ecosystem in ('r', 'python'):
+        paths.extend(f"/code/{ecosystem}/{pkg['slug']}" for pkg in site.get_packages(ecosystem))
+    return sorted(set(paths))
+
+
+_DETAIL_PATHS = _all_detail_paths()
+
+
+def test_all_primary_pages_and_internal_links_load_cleanly(page, live_server):
+    """Visit every top-level section and verify all internal page links resolve."""
     seed_paths = [
         '/', '/publications', '/books', '/news', '/awards', '/slides',
         '/research', '/code/r', '/code/python', '/mcp', '/data',
         '/consulting', '/site-log', '/cv', '/press', '/search',
     ]
     skip_suffixes = ('.bib', '.ris', '.md', '.zip', '.pdf', '.xml', '.json', '.txt')
-    discovered = []
-    seen = set()
+    known = set(seed_paths) | set(_DETAIL_PATHS)
+    extra = []
 
     for path in seed_paths:
-        resp = page.goto(live_server + path)
+        resp = page.goto(live_server + path, wait_until='domcontentloaded')
         assert resp.status == 200, f'{path} returned {resp.status}'
         expect(page.locator('h1')).to_be_visible()
-        seen.add(path)
 
         hrefs = page.locator('main a[href^="/"]').evaluate_all(
             'els => els.map(el => el.getAttribute("href"))'
         )
         for href in hrefs:
             clean = href.split('#', 1)[0].split('?', 1)[0]
-            if not clean or clean in seen:
+            if not clean or clean in known or clean.endswith(skip_suffixes):
                 continue
-            if clean.endswith(skip_suffixes):
-                continue
-            # Skip static rendered bookdown/slide subtrees here (covered individually above)
             if clean.startswith(('/books/', '/slides/', '/static/', '/news/pdfs/')):
                 continue
-            seen.add(clean)
-            discovered.append(clean)
+            known.add(clean)
+            extra.append(clean)
 
-    # Every discovered detail page (all publications, books, packages, datasets) renders cleanly
-    assert len(discovered) > 30, f'Expected >30 discovered detail pages, got {len(discovered)}'
-    for path in discovered:
-        resp = page.goto(live_server + path)
+    for path in extra:
+        resp = page.goto(live_server + path, wait_until='domcontentloaded')
+        assert resp.status == 200, f'{path} returned {resp.status}'
+        expect(page.locator('h1')).to_be_visible()
+
+
+@pytest.mark.parametrize('shard', range(4), ids=[f'shard-{i}' for i in range(4)])
+def test_all_detail_pages_load_cleanly(page, live_server, shard):
+    """Visit every publication, book, package, and dataset detail page (sharded for parallel runs)."""
+    chunk = _DETAIL_PATHS[shard::4]
+    assert chunk
+    for path in chunk:
+        resp = page.goto(live_server + path, wait_until='domcontentloaded')
         assert resp.status == 200, f'{path} returned {resp.status}'
         expect(page.locator('h1')).to_be_visible()
 
@@ -1084,7 +1211,8 @@ def test_all_primary_and_detail_internal_pages_load_cleanly(page, live_server):
 # ---------------------------------------------------------------------------
 
 def test_no_js_progressive_enhancement(browser, live_server):
-    context = browser.new_context(
+    context = _new_context(
+        browser, live_server,
         viewport={'width': 1280, 'height': 850},
         java_script_enabled=False,
     )
@@ -1106,7 +1234,7 @@ def test_no_js_progressive_enhancement(browser, live_server):
             ('/press', 'Press Kit'),
         ]
         for path, expected_h1 in pages_to_check:
-            resp = pg.goto(live_server + path)
+            resp = pg.goto(live_server + path, wait_until='domcontentloaded')
             assert resp.status == 200, f'No-JS {path} returned {resp.status}'
             expect(pg.locator('h1')).to_contain_text(expected_h1)
             # Confirm scripts did not run
@@ -1118,19 +1246,19 @@ def test_no_js_progressive_enhancement(browser, live_server):
             assert hidden_reveals == 0, f'{hidden_reveals} .reveal elements stuck hidden without JS on {path}'
 
         # Publications list is fully visible without JS
-        pg.goto(live_server + '/publications')
+        pg.goto(live_server + '/publications', wait_until='domcontentloaded')
         assert pg.locator('#pubList .publication-item').count() > 10
         expect(pg.locator('#pubList .publication-item').first).to_be_visible()
 
         # CSS-only dropdown opens on hover without JS (:root:not(.js) .dropdown:hover)
-        pg.goto(live_server + '/')
+        pg.goto(live_server + '/', wait_until='domcontentloaded')
         pg.locator('header nav li.dropdown').first.hover()
         expect(pg.locator('#menu-research a', has_text='Research Articles')).to_be_visible()
         pg.locator('#menu-research a', has_text='Research Articles').click()
         expect(pg).to_have_url(live_server + '/publications')
 
         # Server-side /search form works end-to-end without JS
-        pg.goto(live_server + '/search')
+        pg.goto(live_server + '/search', wait_until='domcontentloaded')
         pg.locator('#site-search').fill('liquidity')
         pg.locator('form.search-form button[type="submit"]').click()
         expect(pg).to_have_url(live_server + '/search?q=liquidity')
@@ -1148,9 +1276,9 @@ def test_no_js_progressive_enhancement(browser, live_server):
     ('tablet', {'width': 768, 'height': 1024}),
 ])
 def test_responsive_no_horizontal_overflow(browser, live_server, viewport_name, viewport):
-    context, pg, page_errors, console_errors, bad_responses = _make_monitored_page(
-        browser, live_server, viewport=viewport, color_scheme='light',
-    )
+    context = _new_context(browser, live_server, viewport=viewport)
+    pg = context.new_page()
+    page_errors, console_errors, bad_responses = _attach_monitors(pg, live_server)
     paths = [
         '/',
         '/publications',
@@ -1177,7 +1305,7 @@ def test_responsive_no_horizontal_overflow(browser, live_server, viewport_name, 
     overflows = []
     try:
         for path in paths:
-            resp = pg.goto(live_server + path)
+            resp = pg.goto(live_server + path, wait_until='domcontentloaded')
             assert resp.status == 200, f'{viewport_name} {path} -> {resp.status}'
             metrics = pg.evaluate(
                 """() => ({

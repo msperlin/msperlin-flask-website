@@ -141,6 +141,22 @@ def test_html_security_headers(client):
     assert response.headers['Cache-Control'] == 'no-cache'
 
 
+def test_static_slide_and_book_csp_allows_inline_scripts(client):
+    slide_resp = client.get('/slides/20260826_cafe-com-pesquisa/')
+    assert slide_resp.status_code == 200
+    slide_csp = slide_resp.headers['Content-Security-Policy']
+    assert "'unsafe-inline'" in slide_csp
+    assert "object-src 'none'" in slide_csp
+    assert "frame-ancestors 'none'" in slide_csp
+
+    book_resp = client.get('/books/adfeR/')
+    assert book_resp.status_code == 200
+    book_csp = book_resp.headers['Content-Security-Policy']
+    assert "'unsafe-inline'" in book_csp
+    assert "object-src 'none'" in book_csp
+    assert "frame-ancestors 'none'" in book_csp
+
+
 def test_static_assets_are_cacheable(client):
     response = client.get('/static/css/style.css')
     assert response.status_code == 200
