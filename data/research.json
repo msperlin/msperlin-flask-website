@@ -5,7 +5,7 @@
             "title": "Market microstructure and liquidity",
             "summary": "How prices form in Brazilian markets, how liquidity varies across assets and venues, and what high-frequency data reveal about trading and market quality.",
             "keywords": ["liquidity", "microstructure", "market makers", "high-frequency", "trading", "liquidity risk", "price discovery"],
-            "packages": ["BatchGetSymbols", "GetHFData"]
+            "packages": ["BatchGetSymbols"]
         },
         {
             "title": "Financial econometrics and volatility",

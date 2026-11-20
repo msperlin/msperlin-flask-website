@@ -1897,7 +1897,10 @@ a.tag-pill:hover {
     border-radius: 7px;
     padding: 4px 10px;
     cursor: pointer;
-    white-space: nowrap;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
     transition: border-color 0.2s var(--ease), color 0.2s var(--ease), background-color 0.2s var(--ease);
 }
 
@@ -2019,6 +2022,7 @@ a.tag-pill:hover {
     cursor: pointer;
     font-weight: 600;
     color: var(--text);
+    overflow-wrap: anywhere;
 }
 
 .mcp-config-body {

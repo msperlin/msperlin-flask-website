@@ -17,6 +17,7 @@ package = false
 
 [dependency-groups]
 dev = [
+    "playwright>=1.65.2",
     "pytest>=9.2.0",
 ]
 # Only needed by scripts/run_scholarly.py, not by the website; keeping it out
@@ -26,4 +27,9 @@ stats = [
     "free-proxy",
     "httpx<0.28",
     "bibtexparser<2.0.0",
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "e2e: end-to-end browser tests simulating real user clicks across the site",
 ]
