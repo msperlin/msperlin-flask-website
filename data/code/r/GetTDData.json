@@ -17,5 +17,13 @@
     "github_repo": "msperlin/GetTDData",
     "github_stars": 30,
     "github_forks": 7,
-    "github_last_push": "2026-10-23"
+    "github_last_push": "2026-10-23",
+    "quickstart": "install.packages(\"GetTDData\")\n\ndf_td <- GetTDData::td_get(\"NTN-B\", first_year = 2020)",
+    "counterparts": [
+        {
+            "ecosystem": "python",
+            "slug": "tesourodireto-mcp",
+            "note": "Python MCP server counterpart for AI agents"
+        }
+    ]
 }

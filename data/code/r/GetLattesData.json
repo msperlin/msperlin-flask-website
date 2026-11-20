@@ -17,5 +17,6 @@
     "github_repo": "msperlin/GetLattesData",
     "github_stars": 27,
     "github_forks": 12,
-    "github_last_push": "2026-09-21"
+    "github_last_push": "2026-09-21",
+    "quickstart": "install.packages(\"GetLattesData\")\n\n# Read exported Lattes XML zip archives into tidy data frames\n# See https://msperlin.r-universe.dev/GetLattesData for vignettes"
 }

@@ -40,18 +40,62 @@
     }
 
     /* ------------------------------------------------------- Navigation */
-    function closeNav() {
-        document.body.classList.remove('nav-open');
-        var toggle = document.querySelector('[data-nav-toggle]');
-        if (toggle) { toggle.setAttribute('aria-expanded', 'false'); }
+    var mobileNavQuery = window.matchMedia('(max-width: 1100px)');
+    var hoverQuery = window.matchMedia('(hover: hover)');
+
+    function setDropdownState(dd, open, hoverPreview) {
+        dd.classList.toggle('is-open', open);
+        if (open && hoverPreview) {
+            dd.setAttribute('data-hover-preview', 'true');
+        } else {
+            dd.removeAttribute('data-hover-preview');
+        }
+        var btn = dd.querySelector(':scope > [data-dropdown-toggle]');
+        if (btn) { btn.setAttribute('aria-expanded', open ? 'true' : 'false'); }
     }
 
     function closeDropdowns(keepInside) {
-        document.querySelectorAll('.dropdown.is-open, .dropdown-submenu.is-open').forEach(function (dd) {
+        document.querySelectorAll('.dropdown.is-open').forEach(function (dd) {
             if (keepInside && (dd === keepInside || dd.contains(keepInside))) { return; }
-            dd.classList.remove('is-open');
-            var btn = dd.querySelector(':scope > [data-dropdown-toggle]');
-            if (btn) { btn.setAttribute('aria-expanded', 'false'); }
+            setDropdownState(dd, false, false);
+        });
+    }
+
+    function closeNav(restoreFocus) {
+        var wasOpen = document.body.classList.contains('nav-open');
+        document.body.classList.remove('nav-open');
+        closeDropdowns();
+        var toggle = document.querySelector('[data-nav-toggle]');
+        if (toggle) {
+            toggle.setAttribute('aria-expanded', 'false');
+            if (restoreFocus && wasOpen) { toggle.focus(); }
+        }
+    }
+
+    // Desktop hover preview: opens on pointerenter (non-touch) and closes on pointerleave
+    // unless pinned open by a click on the trigger.
+    document.querySelectorAll('.dropdown').forEach(function (dd) {
+        dd.addEventListener('pointerenter', function (e) {
+            if (mobileNavQuery.matches || !hoverQuery.matches || e.pointerType === 'touch') { return; }
+            if (!dd.classList.contains('is-open')) {
+                closeDropdowns(dd);
+                setDropdownState(dd, true, true);
+            }
+        });
+
+        dd.addEventListener('pointerleave', function (e) {
+            if (e.pointerType === 'touch') { return; }
+            if (dd.getAttribute('data-hover-preview') === 'true') {
+                setDropdownState(dd, false, false);
+            }
+        });
+    });
+
+    if (mobileNavQuery.addEventListener) {
+        mobileNavQuery.addEventListener('change', function (e) {
+            if (!e.matches) {
+                closeNav(false);
+            }
         });
     }
 
@@ -69,18 +113,16 @@
 
         var dropdownBtn = e.target.closest('[data-dropdown-toggle]');
         if (dropdownBtn) {
-            var dropdown = dropdownBtn.closest('.dropdown-submenu, .dropdown');
+            var dropdown = dropdownBtn.closest('.dropdown');
+            if (!dropdown) { return; }
+            if (dropdown.getAttribute('data-hover-preview') === 'true') {
+                closeDropdowns(dropdown);
+                setDropdownState(dropdown, true, false);
+                return;
+            }
             var willOpen = !dropdown.classList.contains('is-open');
             closeDropdowns(dropdown);
-            dropdown.classList.toggle('is-open', willOpen);
-            dropdownBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-            if (!willOpen) {
-                dropdown.querySelectorAll('.dropdown-submenu.is-open').forEach(function (sub) {
-                    sub.classList.remove('is-open');
-                    var subBtn = sub.querySelector(':scope > [data-dropdown-toggle]');
-                    if (subBtn) { subBtn.setAttribute('aria-expanded', 'false'); }
-                });
-            }
+            setDropdownState(dropdown, willOpen, false);
             return;
         }
 
@@ -90,20 +132,24 @@
 
         var navBtn = e.target.closest('[data-nav-toggle]');
         if (navBtn) {
-            var open = document.body.classList.toggle('nav-open');
-            navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (document.body.classList.contains('nav-open')) {
+                closeNav(false);
+            } else {
+                document.body.classList.add('nav-open');
+                navBtn.setAttribute('aria-expanded', 'true');
+            }
             return;
         }
 
-        if (e.target.closest('nav a') && window.matchMedia('(max-width: 1100px)').matches) {
-            closeNav();
+        if (e.target.closest('nav a') && mobileNavQuery.matches) {
+            closeNav(false);
         }
     });
 
     // Close an open dropdown once keyboard focus leaves it.
     document.addEventListener('focusin', function (e) {
-        var focusedContainer = e.target.closest('.dropdown-submenu, .dropdown');
-        closeDropdowns(focusedContainer);
+        var focusedDropdown = e.target.closest('.dropdown');
+        closeDropdowns(focusedDropdown);
     });
 
     document.addEventListener('keydown', function (e) {
@@ -140,16 +186,6 @@
 
         if (e.key === 'Escape') {
             if (closeCiteModal()) { return; }
-            var openSubmenu = document.querySelector('.dropdown-submenu.is-open');
-            if (openSubmenu) {
-                openSubmenu.classList.remove('is-open');
-                var subTrigger = openSubmenu.querySelector(':scope > [data-dropdown-toggle]');
-                if (subTrigger) {
-                    subTrigger.setAttribute('aria-expanded', 'false');
-                    subTrigger.focus();
-                }
-                return;
-            }
             var openDropdown = document.querySelector('.dropdown.is-open');
             if (openDropdown) {
                 closeDropdowns();
@@ -157,7 +193,9 @@
                 if (trigger) { trigger.focus(); }
                 return;
             }
-            closeNav();
+            if (document.body.classList.contains('nav-open')) {
+                closeNav(true);
+            }
         }
     });
 

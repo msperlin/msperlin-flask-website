@@ -18,5 +18,19 @@
     "github_repo": "msperlin/cvm-mcp",
     "github_stars": 6,
     "github_forks": 3,
-    "github_last_push": "2026-11-14"
+    "github_last_push": "2026-11-14",
+    "mcp_server_key": "cvm",
+    "quickstart": "# Run directly with uvx (recommended for MCP clients)\nuvx cvm-mcp\n\n# Or install from PyPI\npip install cvm-mcp",
+    "counterparts": [
+        {
+            "ecosystem": "r",
+            "slug": "getdfpdata2",
+            "note": "R package for CVM/B3 DFP & ITR financial statements"
+        },
+        {
+            "ecosystem": "r",
+            "slug": "getfredata",
+            "note": "R package for CVM/B3 FRE corporate filings"
+        }
+    ]
 }

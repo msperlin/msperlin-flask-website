@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block head_extra %}
+<script nonce="{{ csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": {{ pkg.display_name | tojson }},
+  "description": {{ (' '.join((pkg.description or '').split())) | tojson }},
+  "programmingLanguage": {{ pkg.language | tojson }},
+  "author": {
+    "@type": "Person",
+    "name": "Marcelo S. Perlin",
+    "url": {{ url_for('index', _external=True) | tojson }}
+  },
+  {% if pkg.github_url %}"codeRepository": {{ pkg.github_url | tojson }},{% endif %}
+  {% if pkg.date_of_submission %}"datePublished": {{ pkg.date_of_submission | tojson }},{% endif %}
+  "url": {{ canonical | tojson }}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<article class="pub-detail">
+    <p class="back-links-row">
+        <a class="back-link" href="{{ url_for(pkg.list_endpoint) }}">← All {{ pkg.ecosystem_label }} code</a>
+        {% if pkg.is_mcp %}
+        <span class="meta">·</span>
+        <a class="back-link" href="{{ url_for('mcp_hub') }}">MCP Servers Hub</a>
+        {% endif %}
+    </p>
+
+    <div class="pub-badges">
+        <span class="tag-pill">{{ pkg.ecosystem_label }} · {{ pkg.registry }}</span>
+        {% if pkg.is_mcp %}<span class="tag-pill">MCP Server</span>{% endif %}
+    </div>
+
+    <h1>{{ pkg.display_name }}</h1>
+    <p class="pub-abstract">{{ pkg.description }}</p>
+
+    <div class="pub-links">
+        {% if pkg.github_url %}
+        <a href="{{ pkg.github_url }}" target="_blank" rel="noopener noreferrer">GitHub<span
+                class="visually-hidden"> (opens in a new tab)</span></a>
+        {% endif %}
+        {% if pkg.pypi_link %}
+        <a href="{{ pkg.pypi_link }}" target="_blank" rel="noopener noreferrer">PyPI<span
+                class="visually-hidden"> (opens in a new tab)</span></a>
+        {% elif pkg.link and pkg.link != pkg.github_url %}
+        <a href="{{ pkg.link }}" target="_blank" rel="noopener noreferrer">CRAN / R-universe<span
+                class="visually-hidden"> (opens in a new tab)</span></a>
+        {% endif %}
+        {% if pkg.is_mcp %}
+        <a href="{{ url_for('mcp_hub') }}">MCP Setup Guide</a>
+        {% endif %}
+        <a href="{{ url_for('package_bibtex', ecosystem=pkg.ecosystem, slug=pkg.slug) }}">Download .bib</a>
+        <a href="{{ url_for('package_markdown', ecosystem=pkg.ecosystem, slug=pkg.slug) }}">Markdown (.md)</a>
+    </div>
+
+    <div class="stats-container reveal" data-stagger>
+        {% if pkg.get('number_of_downloads') is not none %}
+        <div class="stat-card reveal">
+            <p class="stat-label">Monthly downloads</p>
+            <p class="stat-value">{{ "{:,}".format(pkg.number_of_downloads) }}</p>
+            <p class="stat-help">{{ pkg.registry }} downloads in the last 30 days.</p>
+        </div>
+        {% endif %}
+        {% if pkg.get('total_downloads') is not none %}
+        <div class="stat-card reveal">
+            <p class="stat-label">All-time downloads</p>
+            <p class="stat-value">{{ "{:,}".format(pkg.total_downloads) }}</p>
+            <p class="stat-help">Cumulative downloads tracked from {{ pkg.registry }}.</p>
+        </div>
+        {% endif %}
+        {% if pkg.get('github_stars') is not none %}
+        <div class="stat-card reveal">
+            <p class="stat-label">GitHub stars</p>
+            <p class="stat-value">★ {{ "{:,}".format(pkg.github_stars) }}</p>
+            <p class="stat-help">{% if pkg.get('github_forks') is not none %}{{ pkg.github_forks }} forks{% else %}Public repository{% endif %}.</p>
+        </div>
+        {% endif %}
+        {% if pkg.date_of_submission or pkg.github_last_push %}
+        <div class="stat-card reveal">
+            <p class="stat-label">{% if pkg.date_of_submission %}CRAN submission{% else %}Last GitHub push{% endif %}</p>
+            <p class="stat-value stat-value-date">{{ pkg.date_of_submission or pkg.github_last_push }}</p>
+            <p class="stat-help">{% if pkg.date_of_submission and pkg.github_last_push %}Last push: {{ pkg.github_last_push }}{% elif pkg.updated_at %}Stats updated {{ pkg.updated_at[:10] }}{% endif %}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if pkg.install_cmd or pkg.uvx_cmd %}
+    <h2>Install</h2>
+    <div class="install-row">
+        {% if pkg.uvx_cmd %}
+        <button class="install-btn" type="button" data-copy-text="{{ pkg.uvx_cmd }}"
+            aria-label="Copy uvx command for {{ pkg.display_name }}">
+            <code>{{ pkg.uvx_cmd }}</code>
+        </button>
+        {% endif %}
+        {% if pkg.install_cmd %}
+        <button class="install-btn" type="button" data-copy-text="{{ pkg.install_cmd }}"
+            aria-label="Copy install command for {{ pkg.display_name }}">
+            <code>{{ pkg.install_cmd }}</code>
+        </button>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if pkg.quickstart %}
+    <h2>Quickstart</h2>
+    <div class="code-snippet-block">
+        <pre class="pub-bibtex"><code>{{ pkg.quickstart }}</code></pre>
+        <button class="install-btn" type="button" data-copy-text="{{ pkg.quickstart }}"
+            aria-label="Copy quickstart snippet for {{ pkg.display_name }}">Copy snippet</button>
+    </div>
+    {% endif %}
+
+    {% if mcp_config %}
+    <h2>MCP Client Configuration</h2>
+    <p>Add this entry to your <code>claude_desktop_config.json</code> or <code>.cursor/mcp.json</code> (or see the <a href="{{ url_for('mcp_hub') }}">MCP Servers Hub</a> for all three servers together):</p>
+    <div class="code-snippet-block">
+        <pre class="pub-bibtex"><code>{{ mcp_config }}</code></pre>
+        <button class="install-btn" type="button" data-copy-text="{{ mcp_config }}"
+            aria-label="Copy MCP JSON configuration for {{ pkg.display_name }}">Copy MCP JSON</button>
+    </div>
+    {% endif %}
+
+    {% if mcp_server_meta and mcp_server_meta.capabilities %}
+    <h2>What AI Agents Can Query</h2>
+    <ul class="mcp-cap-list">
+        {% for cap in mcp_server_meta.capabilities %}
+        <li>{{ cap }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if mcp_server_meta and mcp_server_meta.example_prompts %}
+    <h2>Example Prompts</h2>
+    <ul class="item-list">
+        {% for prompt in mcp_server_meta.example_prompts %}
+        <li class="item-card prompt-card">
+            <p class="prompt-text">“{{ prompt }}”</p>
+            <button class="install-btn" type="button" data-copy-text="{{ prompt }}"
+                aria-label="Copy example prompt">Copy prompt</button>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if chart_trend %}
+    <div class="chart-card reveal">
+        <h3>Monthly downloads over time</h3>
+        <div class="chart-wrap chart-wrap-compact"><canvas id="pkgTrendChart" data-chart-canvas
+                aria-label="Line chart of monthly downloads for {{ pkg.display_name }}" role="img"></canvas></div>
+        <script nonce="{{ csp_nonce }}" type="application/json" data-chart="pkgTrendChart">{{ chart_trend | safe }}</script>
+    </div>
+    {% endif %}
+
+    {% if counterparts %}
+    <h2>Companion &amp; Counterpart Software</h2>
+    <ul class="item-list">
+        {% for other in counterparts %}
+        <li class="item-card">
+            <span class="tag-pill">{{ other.ecosystem_label }}</span>
+            <strong><a href="{{ other.url }}">{{ other.display_name }}</a></strong>
+            {% if other.note %} — {{ other.note }}{% elif other.description %} — {{ other.description }}{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if related_datasets %}
+    <h2>Related Datasets</h2>
+    <ul class="item-list">
+        {% for ds in related_datasets %}
+        <li class="item-card">
+            <strong><a href="{{ url_for('dataset_detail', slug=ds.slug) }}">{{ ds.name }}</a></strong>
+            {% if ds.title %} — {{ ds.title }}{% endif %}
+            {% if ds.doi %}<span class="meta"> · DOI: {{ ds.doi }}</span>{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if related_publications %}
+    <h2>Related Publications</h2>
+    <ul class="item-list">
+        {% for pub in related_publications %}
+        <li class="item-card">
+            <h3><a href="{{ url_for('publication_detail', slug=pub.slug) }}">{{ pub.title }}</a></h3>
+            <p class="meta">{{ pub.year }} · {{ pub.journal or pub.publication }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if related_themes %}
+    <h2>Research Themes</h2>
+    <div class="interest-pills">
+        {% for theme in related_themes %}
+        <a class="tag-pill" href="{{ url_for('research') }}#{{ theme.slug }}">{{ theme.title }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Cite this package</h2>
+    {% if r_citation %}
+    <p>In R, run <code>{{ r_citation }}</code> for the official package citation, or use the BibTeX entry below:</p>
+    <p>
+        <button class="install-btn" type="button" data-copy-text="{{ r_citation }}"
+            aria-label="Copy R citation command for {{ pkg.display_name }}">
+            <code>{{ r_citation }}</code>
+        </button>
+    </p>
+    {% endif %}
+    <div class="code-snippet-block">
+        <pre class="pub-bibtex">{{ bibtex }}</pre>
+        <button class="install-btn" type="button" data-copy-text="{{ bibtex }}"
+            aria-label="Copy BibTeX citation for {{ pkg.display_name }}">Copy BibTeX</button>
+    </div>
+</article>
+{% endblock %}
+
+{% block vendor_scripts %}
+{% if chart_trend %}
+<script defer src="{{ static_url('js/vendor/chart.umd.min.js') }}"></script>
+{% endif %}
+{% endblock %}

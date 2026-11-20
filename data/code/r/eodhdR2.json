@@ -13,5 +13,6 @@
             "downloads_last_month": 436,
             "total_downloads": 7818
         }
-    ]
+    ],
+    "quickstart": "install.packages(\"eodhdR2\")\n\n# Official R API client for EODHD market & fundamentals data\n# See https://eodhistoricaldata.r-universe.dev/eodhdR2 for documentation"
 }

@@ -17,5 +17,13 @@
     "github_repo": "msperlin/BatchGetSymbols",
     "github_stars": 18,
     "github_forks": 5,
-    "github_last_push": "2026-11-06"
+    "github_last_push": "2026-11-06",
+    "quickstart": "# BatchGetSymbols has been superseded by yfR\ninstall.packages(\"yfR\")\n\ndf_yf <- yfR::yf_get(tickers = c(\"PETR4.SA\", \"^BVSP\"), first_date = \"2020-01-01\")",
+    "counterparts": [
+        {
+            "ecosystem": "r",
+            "slug": "yfr",
+            "note": "Recommended successor package on rOpenSci"
+        }
+    ]
 }

@@ -26,7 +26,7 @@ def html(response):
 def test_all_static_routes_render(client):
     skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed',
             'publications_feed', 'site_log', 'json_feed', 'opensearch',
-            'llms_txt', 'security_txt', 'healthz', 'press_kit',
+            'llms_txt', 'llms_full_txt', 'security_txt', 'healthz', 'press_kit',
             'publications_json', 'code_json', 'data_json', 'books_json'}
     checked = 0
     for rule in site.app.url_map.iter_rules():
@@ -302,8 +302,9 @@ def test_home_page_shows_impact_and_recent_work(client):
     assert 'Recent Talks &amp; Slides' in page
     assert 'market microstructure' in page
     assert 'href="/cv">CV (html)</a>' in page
-    nav_section = page.split('<ul id="primary-nav">', 1)[1].split('</ul>', 1)[0]
-    assert 'href="/cv"' not in nav_section
+    nav_section = page.split('<nav aria-label="Primary">', 1)[1].split('</nav>', 1)[0]
+    assert 'href="/site-log"' not in nav_section
+    assert 'href="/site-log">Site Log</a>' in page.split('<footer>', 1)[1]
 
 
 def test_all_publications_bibtex_export(client):
@@ -427,25 +428,34 @@ def test_mcp_quickstart_and_expanded_cv(client):
     assert 'Selected Media Coverage' in cv_page
 
 
-def test_publications_dropdown_navigation(client):
+def test_navigation_structure_and_active_states(client):
     pubs_page = html(client.get('/publications'))
-    assert 'id="menu-publications"' in pubs_page
-    assert 'aria-controls="menu-publications"' in pubs_page
-    assert '>Research Articles<' in pubs_page
-    assert '>Books<' in pubs_page
-    assert 'href="/publications" aria-current="page" >Research Articles</a>' in pubs_page
+    assert 'id="menu-research"' in pubs_page
+    assert 'aria-controls="menu-research"' in pubs_page
+    assert 'id="menu-code-data"' in pubs_page
+    assert 'id="menu-profile"' in pubs_page
+    assert 'dropdown-submenu' not in pubs_page
+    assert 'aria-haspopup' not in pubs_page
+    assert 'href="/publications" aria-current="page">Research Articles</a>' in pubs_page
 
-    books_page = html(client.get('/books'))
-    assert 'href="/books" aria-current="page"' in books_page
+    with site.app.test_request_context('/'):
+        book_slug = site.get_books()[0]['slug']
+    book_page = html(client.get(f'/book/{book_slug}'))
+    assert 'class="dropbtn active"' in book_page
+    assert 'href="/books" aria-current="page">Books</a>' in book_page
 
-
-def test_research_nested_code_submenu(client):
     r_page = html(client.get('/code/r'))
-    research_menu_idx = r_page.index('id="menu-research"')
-    code_menu_idx = r_page.index('id="menu-code"')
-    assert code_menu_idx > research_menu_idx
-    assert 'class="submenu-btn active"' in r_page
-    assert 'href="/code/r" aria-current="page"' in r_page
+    assert 'href="/code/r" aria-current="page">R Packages</a>' in r_page
+    pkg_page = html(client.get('/code/python/cvm-mcp'))
+    assert 'href="/code/python" aria-current="page">Python Packages</a>' in pkg_page
+
+    cv_page = html(client.get('/cv'))
+    assert 'href="/cv" aria-current="page">CV</a>' in cv_page
+    press_page = html(client.get('/press'))
+    assert 'href="/press" aria-current="page">Press Kit</a>' in press_page
+
+    search_page = html(client.get('/search'))
+    assert 'class="search-link active" href="/search" aria-current="page"' in search_page
 
 
 
@@ -666,10 +676,147 @@ def test_new_detail_pages_have_valid_json_ld(client):
     with site.app.test_request_context('/'):
         book = site.get_books()[0]
         dataset = site.get_datasets()[0]
-    for path in (f"/book/{book['slug']}", f"/data/{dataset['slug']}"):
+    for path in (f"/book/{book['slug']}", f"/data/{dataset['slug']}",
+                 '/mcp', '/code/r/yfr', '/code/python/cvm-mcp'):
         page = html(client.get(path))
         blocks = re.findall(
             r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', page, re.S)
         assert blocks, path
         for block in blocks:
             json.loads(block)
+
+
+# ---------------------------------------------------------------------------
+# Software detail pages, MCP Hub, /llms-full.txt and Markdown mirrors
+# ---------------------------------------------------------------------------
+
+def test_every_software_package_has_a_detail_page(client):
+    for ecosystem in ('r', 'python'):
+        packages = site.get_packages(ecosystem)
+        assert packages
+        slugs = [pkg['slug'] for pkg in packages]
+        assert len(slugs) == len(set(slugs)), f'duplicate {ecosystem} package slugs'
+        for pkg in packages:
+            response = client.get(f"/code/{ecosystem}/{pkg['slug']}")
+            assert response.status_code == 200, f"{ecosystem}/{pkg['slug']}"
+            page = html(response)
+            assert pkg['display_name'] in page
+            assert '"@type": "SoftwareSourceCode"' in page
+            assert 'rel="canonical"' in page
+            assert 'Cite this package' in page
+            assert '@manual{' in page
+
+    assert client.get('/code/r/does-not-exist').status_code == 404
+    assert client.get('/code/rust/anything').status_code == 404
+
+
+def test_package_bibtex_and_markdown_exports(client):
+    bib = client.get('/code/r/getdfpdata2.bib')
+    assert bib.status_code == 200
+    assert bib.headers['Content-Type'].startswith('text/plain')
+    assert 'attachment' in bib.headers['Content-Disposition']
+    bib_text = bib.data.decode('utf-8')
+    assert bib_text.startswith('@manual{')
+    assert 'GetDFPData2' in bib_text
+
+    md = client.get('/code/python/cvm-mcp.md')
+    assert md.status_code == 200
+    assert md.headers['Content-Type'].startswith('text/markdown')
+    md_text = md.data.decode('utf-8')
+    assert '# cvm-mcp' in md_text
+    assert 'uvx cvm-mcp' in md_text
+    assert 'mcpServers' in md_text
+    assert '```bibtex' in md_text
+
+    assert client.get('/code/r/does-not-exist.bib').status_code == 404
+    assert client.get('/code/r/does-not-exist.md').status_code == 404
+
+
+def test_package_detail_cross_links_and_trend_chart(client, monkeypatch):
+    dfp_page = html(client.get('/code/r/getdfpdata2'))
+    assert "citation(&#39;GetDFPData2&#39;)" in dfp_page or "citation('GetDFPData2')" in dfp_page
+    assert 'Companion &amp; Counterpart Software' in dfp_page
+    assert '/code/python/cvm-mcp' in dfp_page
+    assert 'Related Datasets' in dfp_page
+    assert '/data/getdfpdata2' in dfp_page
+    assert 'Related Publications' in dfp_page
+
+    cvm_page = html(client.get('/code/python/cvm-mcp'))
+    assert 'MCP Client Configuration' in cvm_page
+    assert 'What AI Agents Can Query' in cvm_page
+    assert 'Example Prompts' in cvm_page
+    assert '/code/r/getdfpdata2' in cvm_page
+
+    original = site.load_data_from_folder
+
+    def fake_loader(folder):
+        if folder == 'code/r':
+            return [{
+                'filename_stem': 'fakepkg',
+                'title': 'fakepkg',
+                'description': 'test',
+                'number_of_downloads': 15,
+                'total_downloads': 120,
+                'history': [
+                    {'date': '2026-01', 'downloads_last_month': 10},
+                    {'date': '2026-02', 'downloads_last_month': 15},
+                ],
+            }]
+        return original(folder)
+
+    monkeypatch.setattr(site, 'load_data_from_folder', fake_loader)
+    trend_page = html(client.get('/code/r/fakepkg'))
+    assert 'pkgTrendChart' in trend_page
+    assert 'Jan 2026' in trend_page
+
+
+def test_mcp_hub_page(client):
+    response = client.get('/mcp')
+    assert response.status_code == 200
+    page = html(response)
+    assert 'Brazilian Financial Data MCP Servers' in page
+    assert 'cvm-mcp' in page
+    assert 'bcb-mcp' in page
+    assert 'tesourodireto-mcp' in page
+    assert 'Claude Desktop' in page
+    assert 'Cursor' in page
+    assert 'Claude Code' in page
+    assert 'Example Prompts to Try' in page
+    assert '/code/python/cvm-mcp' in page
+    assert '/code/r/getbcbdata' in page
+    assert '/llms-full.txt' in page
+    assert 'href="/mcp" aria-current="page"' in page
+
+
+def test_publication_markdown_mirror(client):
+    pub = site.get_publications()[0]
+    response = client.get(f"/publications/{pub['slug']}.md")
+    assert response.status_code == 200
+    assert response.headers['Content-Type'].startswith('text/markdown')
+    body = response.data.decode('utf-8')
+    assert f"# {pub['title']}" in body
+    assert '```bibtex' in body
+    assert client.get('/publications/does-not-exist.md').status_code == 404
+
+
+def test_llms_full_txt_and_sitemap_software(client):
+    llms = html(client.get('/llms.txt'))
+    assert '/mcp' in llms
+    assert '/llms-full.txt' in llms
+    assert '/code/r/yfr' in llms
+    assert '/code/python/cvm-mcp' in llms
+
+    full = client.get('/llms-full.txt')
+    assert full.status_code == 200
+    assert full.headers['Content-Type'].startswith('text/plain')
+    full_text = full.data.decode('utf-8')
+    assert 'Full Site Reference' in full_text
+    assert '## Brazilian Financial Data MCP Servers' in full_text
+    assert '## Peer-Reviewed Publications' in full_text
+    assert 'cvm-mcp' in full_text
+    assert 'GetDFPData2' in full_text
+
+    sitemap_body = html(client.get('/sitemap.xml'))
+    assert '/mcp' in sitemap_body
+    assert '/code/r/yfr' in sitemap_body
+    assert '/code/python/cvm-mcp' in sitemap_body

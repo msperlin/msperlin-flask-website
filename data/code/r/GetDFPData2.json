@@ -17,5 +17,18 @@
     "github_repo": "msperlin/GetDFPData2",
     "github_stars": 46,
     "github_forks": 8,
-    "github_last_push": "2026-06-04"
+    "github_last_push": "2026-06-04",
+    "quickstart": "install.packages(\"GetDFPData2\")\n\nl_dfp <- GetDFPData2::get_dfp_data(\n  companies_cvm_codes = 9512,\n  first_year = 2020\n)",
+    "counterparts": [
+        {
+            "ecosystem": "python",
+            "slug": "cvm-mcp",
+            "note": "Python MCP server for CVM open data"
+        },
+        {
+            "ecosystem": "r",
+            "slug": "getfredata",
+            "note": "Companion R package for FRE corporate filings"
+        }
+    ]
 }

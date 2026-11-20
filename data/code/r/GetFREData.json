@@ -17,5 +17,18 @@
     "github_repo": "msperlin/GetFREData",
     "github_stars": 5,
     "github_forks": 1,
-    "github_last_push": "2026-09-04"
+    "github_last_push": "2026-09-04",
+    "quickstart": "install.packages(\"GetFREData\")\n\nl_fre <- GetFREData::get_fre_data2(\n  companies_cvm_codes = 9512,\n  fre_to_read = \"last\"\n)",
+    "counterparts": [
+        {
+            "ecosystem": "python",
+            "slug": "cvm-mcp",
+            "note": "Python MCP server for CVM open data"
+        },
+        {
+            "ecosystem": "r",
+            "slug": "getdfpdata2",
+            "note": "Companion R package for DFP/ITR financial statements"
+        }
+    ]
 }

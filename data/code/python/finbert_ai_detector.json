@@ -18,5 +18,6 @@
     "github_repo": "msperlin/finbert-ai-detector-python",
     "github_stars": 0,
     "github_forks": 0,
-    "github_last_push": "2026-06-01"
+    "github_last_push": "2026-06-01",
+    "quickstart": "pip install finbert-ai-detector\n\n# Companion Python interface for msperlin/finbert-ai-detector\n# https://github.com/msperlin/finbert-ai-detector"
 }

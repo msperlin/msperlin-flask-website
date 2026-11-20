@@ -79,6 +79,7 @@
         {% endif %}
         <a href="{{ url_for('publication_bibtex', slug=publication.slug) }}">Download .bib</a>
         <a href="{{ url_for('publication_ris', slug=publication.slug) }}">Download .ris</a>
+        <a href="{{ url_for('publication_markdown', slug=publication.slug) }}">Markdown (.md)</a>
         <a href="{{ cited_by_search_link }}" target="_blank" rel="noopener noreferrer">Find citations<span
                 class="visually-hidden"> on Google Scholar (opens in a new tab)</span></a>
         <button class="cite-btn" type="button" data-title="{{ publication.title }}"

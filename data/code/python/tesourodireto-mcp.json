@@ -12,6 +12,15 @@
     "github_stars": 4,
     "github_forks": 1,
     "github_last_push": "2026-11-10",
+    "mcp_server_key": "tesourodireto",
+    "quickstart": "# Run directly with uvx (recommended for MCP clients)\nuvx tesourodireto-mcp\n\n# Or install from PyPI\npip install tesourodireto-mcp",
+    "counterparts": [
+        {
+            "ecosystem": "r",
+            "slug": "gettddata",
+            "note": "R package counterpart for Tesouro Direto sovereign bonds"
+        }
+    ],
     "history": [
         {
             "date": "2026-11",

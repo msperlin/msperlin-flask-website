@@ -17,5 +17,13 @@
     "github_repo": "msperlin/GetBCBData",
     "github_stars": 17,
     "github_forks": 1,
-    "github_last_push": "2026-10-05"
+    "github_last_push": "2026-10-05",
+    "quickstart": "install.packages(\"GetBCBData\")\n\ndf_ipca <- GetBCBData::gbcbd_get_series(\n  id = c(IPCA = 433),\n  first.date = \"2020-01-01\"\n)",
+    "counterparts": [
+        {
+            "ecosystem": "python",
+            "slug": "bcb-mcp",
+            "note": "Python MCP server counterpart for AI agents"
+        }
+    ]
 }

@@ -18,5 +18,6 @@
     "github_repo": "msperlin/rfbpy",
     "github_stars": 20,
     "github_forks": 0,
-    "github_last_push": "2026-10-12"
+    "github_last_push": "2026-10-12",
+    "quickstart": "pip install rfbpy\n\n# See repository README for CNPJ download & SQLite/Parquet import commands\n# https://github.com/msperlin/rfbpy"
 }

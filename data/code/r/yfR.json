@@ -17,5 +17,13 @@
     "github_repo": "ropensci/yfR",
     "github_stars": 51,
     "github_forks": 7,
-    "github_last_push": "2026-03-06"
+    "github_last_push": "2026-03-06",
+    "quickstart": "install.packages(\"yfR\")\n\ndf_yf <- yfR::yf_get(\n  tickers = c(\"PETR4.SA\", \"^BVSP\"),\n  first_date = \"2020-01-01\"\n)",
+    "counterparts": [
+        {
+            "ecosystem": "r",
+            "slug": "batchgetsymbols",
+            "note": "Earlier R package superseded by yfR"
+        }
+    ]
 }

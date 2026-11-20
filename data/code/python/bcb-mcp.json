@@ -12,6 +12,15 @@
     "github_stars": 1,
     "github_forks": 0,
     "github_last_push": "2026-11-10",
+    "mcp_server_key": "bcb",
+    "quickstart": "# Run directly with uvx (recommended for MCP clients)\nuvx bcb-mcp\n\n# Or install from PyPI\npip install bcb-mcp",
+    "counterparts": [
+        {
+            "ecosystem": "r",
+            "slug": "getbcbdata",
+            "note": "R package counterpart for BCB-SGS time series"
+        }
+    ],
     "history": [
         {
             "date": "2026-11",

@@ -4,7 +4,7 @@
 <section data-pkg-filter>
     <h1>Code (Python)</h1>
     <p>
-        Here are Python projects I've developed, mostly related to financial data science, Brazilian public datasets, and Model Context Protocol (MCP) servers for AI agents.
+        Here are Python projects I've developed, mostly related to financial data science, Brazilian public datasets, and <a href="{{ url_for('mcp_hub') }}">Model Context Protocol (MCP) servers for AI agents</a>.
     </p>
 
     <div class="stats-container reveal" data-stagger>
@@ -80,7 +80,7 @@
             <div class="pkg-card-head">
                 <div>
                     {% if is_mcp %}<span class="tag-pill">MCP Server</span> {% endif %}
-                    <strong><a href="{{ pkg.link or (links[0].url if links else '#') }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
+                    <strong><a href="{{ url_for('package_detail', ecosystem='python', slug=pkg.slug) }}">{{ pkg.name }}</a></strong>: {{ pkg.description }}
                 </div>
                 {% if pkg.pypi_link %}
                 <button class="install-btn" type="button"
@@ -91,6 +91,8 @@
                 {% endif %}
             </div>
             <small>
+                <a href="{{ url_for('package_detail', ecosystem='python', slug=pkg.slug) }}">Details &amp; citation</a>
+                {%- if links %} | {% endif -%}
                 {%- for link in links %}<a href="{{ link.url }}">{{ link.label }}</a>{% if not loop.last %} | {% endif %}{% endfor -%}
                 {%- if pkg.github_stars %} <span class="gh-stat" title="GitHub stars">★ {{ "{:,}".format(pkg.github_stars) }}</span>{% endif -%}
                 {%- if pkg.github_forks %} <span class="gh-stat" title="GitHub forks">⑂ {{ "{:,}".format(pkg.github_forks) }}</span>{% endif -%}
@@ -129,6 +131,7 @@
                 aria-label="Copy MCP JSON configuration">
                 Copy MCP JSON Config
             </button>
+            <p class="meta"><a class="read-more" href="{{ url_for('mcp_hub') }}">Explore all MCP servers, client guides &amp; example prompts&nbsp;→</a></p>
         </div>
     </details>
 </section>

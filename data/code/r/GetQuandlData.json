@@ -13,5 +13,6 @@
             "downloads_last_month": 383,
             "total_downloads": 26991
         }
-    ]
+    ],
+    "quickstart": "install.packages(\"GetQuandlData\")\n\n# Fetch cached time series from the Quandl JSON API\n# See https://msperlin.r-universe.dev/GetQuandlData for examples"
 }

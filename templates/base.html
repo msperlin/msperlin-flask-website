@@ -68,81 +68,62 @@
 
     <header>
         <div class="container header-inner">
-            <a class="logo" href="{{ url_for('index') }}">Marcelo S. Perlin<span class="logo-dot">.</span></a>
-
-            <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="primary-nav"
-                aria-label="Toggle navigation">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    aria-hidden="true">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
+            <a class="logo" href="{{ url_for('index') }}"{% if request.endpoint == 'index' %} aria-current="page"{% endif %}>Marcelo S. Perlin<span class="logo-dot">.</span></a>
 
             <nav aria-label="Primary">
                 <ul id="primary-nav">
-                    <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"
-                            aria-current="page" {% endif %}>Home</a></li>
                     <li class="dropdown">
-                        <button type="button" class="dropbtn {% if request.endpoint in ['publications', 'publication_detail', 'books', 'news', 'awards', 'slides'] %}active{% endif %}"
-                            aria-haspopup="true" aria-expanded="false" aria-controls="menu-publications"
-                            data-dropdown-toggle>Publications <span aria-hidden="true">▾</span></button>
-                        <div class="dropdown-content" id="menu-publications">
-                            <a href="{{ url_for('publications') }}" {% if request.endpoint in ['publications',
-                                'publication_detail'] %}aria-current="page" {% endif %}>Research Articles</a>
-                            <a href="{{ url_for('books') }}" {% if request.endpoint == 'books' %}aria-current="page"
-                                {% endif %}>Books</a>
-                            <a href="{{ url_for('news') }}" {% if request.endpoint == 'news' %}aria-current="page"
-                                {% endif %}>Media Coverage</a>
-                            <a href="{{ url_for('awards') }}" {% if request.endpoint == 'awards' %}aria-current="page"
-                                {% endif %}>Awards</a>
-                            <a href="{{ url_for('slides') }}" {% if request.endpoint == 'slides' %}aria-current="page"
-                                {% endif %}>Slides</a>
-                        </div>
+                        <button type="button" class="dropbtn{% if request.endpoint in ['research', 'publications', 'publication_detail', 'books', 'book_detail', 'slides'] %} active{% endif %}"
+                            aria-expanded="false" aria-controls="menu-research"
+                            data-dropdown-toggle>Research <span class="dropdown-caret" aria-hidden="true">▾</span></button>
+                        <ul class="dropdown-content" id="menu-research">
+                            <li><a href="{{ url_for('research') }}"{% if request.endpoint == 'research' %} aria-current="page"{% endif %}>Research Themes</a></li>
+                            <li><a href="{{ url_for('publications') }}"{% if request.endpoint in ['publications', 'publication_detail'] %} aria-current="page"{% endif %}>Research Articles</a></li>
+                            <li><a href="{{ url_for('books') }}"{% if request.endpoint in ['books', 'book_detail'] %} aria-current="page"{% endif %}>Books</a></li>
+                            <li><a href="{{ url_for('slides') }}"{% if request.endpoint == 'slides' %} aria-current="page"{% endif %}>Talk Slides</a></li>
+                        </ul>
                     </li>
 
                     <li class="dropdown">
-                        <button type="button" class="dropbtn {% if request.endpoint in ['code_r', 'code_python', 'data', 'research'] %}active{% endif %}"
-                            aria-haspopup="true" aria-expanded="false" aria-controls="menu-research"
-                            data-dropdown-toggle>Research <span aria-hidden="true">▾</span></button>
-                        <div class="dropdown-content" id="menu-research">
-                            <a href="{{ url_for('research') }}" {% if request.endpoint == 'research' %}aria-current="page"
-                                {% endif %}>Research themes</a>
-                            <div class="dropdown-submenu">
-                                <button type="button" class="submenu-btn {% if request.endpoint in ['code_r', 'code_python'] %}active{% endif %}"
-                                    aria-haspopup="true" aria-expanded="false" aria-controls="menu-code"
-                                    data-dropdown-toggle>Code <span class="submenu-caret" aria-hidden="true">▸</span></button>
-                                <div class="dropdown-content dropdown-subcontent" id="menu-code">
-                                    <a href="{{ url_for('code_r') }}" {% if request.endpoint == 'code_r' %}aria-current="page"
-                                        {% endif %}>R</a>
-                                    <a href="{{ url_for('code_python') }}" {% if request.endpoint == 'code_python'
-                                        %}aria-current="page" {% endif %}>Python</a>
-                                </div>
-                            </div>
-                            <a href="{{ url_for('data') }}" {% if request.endpoint == 'data' %}aria-current="page"
-                                {% endif %}>Data</a>
-                        </div>
+                        <button type="button" class="dropbtn{% if request.endpoint in ['code_r', 'code_python', 'package_detail', 'mcp_hub', 'data', 'dataset_detail'] %} active{% endif %}"
+                            aria-expanded="false" aria-controls="menu-code-data"
+                            data-dropdown-toggle>Code &amp; Data <span class="dropdown-caret" aria-hidden="true">▾</span></button>
+                        <ul class="dropdown-content" id="menu-code-data">
+                            <li><a href="{{ url_for('code_r') }}"{% if request.endpoint == 'code_r' or (request.endpoint == 'package_detail' and (request.view_args or {}).get('ecosystem') == 'r') %} aria-current="page"{% endif %}>R Packages</a></li>
+                            <li><a href="{{ url_for('code_python') }}"{% if request.endpoint == 'code_python' or (request.endpoint == 'package_detail' and (request.view_args or {}).get('ecosystem') == 'python') %} aria-current="page"{% endif %}>Python Packages</a></li>
+                            <li><a href="{{ url_for('mcp_hub') }}"{% if request.endpoint == 'mcp_hub' %} aria-current="page"{% endif %}>MCP Servers</a></li>
+                            <li><a href="{{ url_for('data') }}"{% if request.endpoint in ['data', 'dataset_detail'] %} aria-current="page"{% endif %}>Datasets</a></li>
+                        </ul>
                     </li>
-                    <li><a href="{{ url_for('consulting') }}" {% if request.endpoint == 'consulting' %}class="active"
-                            aria-current="page" {% endif %}>Consulting</a></li>
+
+                    <li class="dropdown">
+                        <button type="button" class="dropbtn{% if request.endpoint in ['cv', 'awards', 'news', 'press'] %} active{% endif %}"
+                            aria-expanded="false" aria-controls="menu-profile"
+                            data-dropdown-toggle>Profile <span class="dropdown-caret" aria-hidden="true">▾</span></button>
+                        <ul class="dropdown-content" id="menu-profile">
+                            <li><a href="{{ url_for('cv') }}"{% if request.endpoint == 'cv' %} aria-current="page"{% endif %}>CV</a></li>
+                            <li><a href="{{ url_for('awards') }}"{% if request.endpoint == 'awards' %} aria-current="page"{% endif %}>Awards</a></li>
+                            <li><a href="{{ url_for('news') }}"{% if request.endpoint == 'news' %} aria-current="page"{% endif %}>Media Coverage</a></li>
+                            <li><a href="{{ url_for('press') }}"{% if request.endpoint == 'press' %} aria-current="page"{% endif %}>Press Kit</a></li>
+                        </ul>
+                    </li>
+
                     <li><a href="https://msperlin.github.io/site-slides/" target="_blank"
-                            rel="noopener noreferrer">Class Slides<span class="visually-hidden"> (opens in a new
+                            rel="noopener noreferrer">Class Slides<span class="ext-arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new
                                 tab)</span></a></li>
-                    <li><a href="{{ url_for('site_log') }}" {% if request.endpoint == 'site_log' %}class="active"
-                            aria-current="page" {% endif %}>Site Log</a></li>
+                    <li><a href="{{ url_for('consulting') }}"{% if request.endpoint == 'consulting' %} class="active" aria-current="page"{% endif %}>Consulting</a></li>
                 </ul>
             </nav>
 
             <div class="nav-actions">
-                <a class="search-link" href="{{ url_for('search') }}" aria-label="Search this site">
+                <a class="search-link{% if request.endpoint == 'search' %} active{% endif %}" href="{{ url_for('search') }}"{% if request.endpoint == 'search' %} aria-current="page"{% endif %} aria-label="Search this site" title="Search (Ctrl+K)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         aria-hidden="true">
                         <circle cx="11" cy="11" r="7"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </a>
-                <button class="theme-toggle" data-theme-toggle aria-label="Toggle color theme">
+                <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle color theme">
                     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" aria-hidden="true">
                         <circle cx="12" cy="12" r="4"></circle>
@@ -153,6 +134,15 @@
                     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+                    </svg>
+                </button>
+                <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="primary-nav"
+                    aria-label="Toggle navigation">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        aria-hidden="true">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
             </div>
@@ -169,7 +159,8 @@
                     href="https://flask.palletsprojects.com/">Flask</a>. Source code available on <a
                     href="https://github.com/msperlin/msperlin-flask-website">GitHub</a>. <a
                     href="{{ url_for('cv') }}">CV</a> · <a href="{{ url_for('press') }}">Press</a> · <a
-                    href="{{ url_for('search') }}">Search</a> · <a href="{{ url_for('news_feed') }}">RSS</a>.</p>
+                    href="{{ url_for('site_log') }}">Site Log</a> · <a href="{{ url_for('search') }}">Search</a> · <a
+                    href="{{ url_for('news_feed') }}">RSS</a>.</p>
         </div>
     </footer>
 

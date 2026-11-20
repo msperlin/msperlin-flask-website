@@ -545,16 +545,32 @@ def get_search_index():
                                 ' '.join(theme.get('keywords') or [])),
         })
 
-    for folder, label, field in (('code/r', 'R package', 'title'),
-                                 ('code/python', 'Python package', 'name')):
-        for entry in load_data_from_folder(folder):
-            items.append({
-                'type': label,
-                'title': entry.get(field, ''),
-                'url': entry.get('link') or entry.get('github_link') or '',
-                'date': '',
-                'text': _index_text(entry.get(field), entry.get('description')),
-            })
+    for pkg in get_packages():
+        label = 'R package' if pkg['ecosystem'] == 'r' else 'Python package'
+        items.append({
+            'type': label,
+            'title': pkg['display_name'],
+            'url': url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug']),
+            'date': '',
+            'text': _index_text(pkg['display_name'], pkg.get('description'),
+                                'mcp server' if pkg['is_mcp'] else ''),
+        })
+
+    mcp_data = get_mcp_data()
+    if mcp_data:
+        items.append({
+            'type': 'Python package',
+            'title': mcp_data.get('title', 'MCP Servers'),
+            'url': url_for('mcp_hub'),
+            'date': '',
+            'text': _index_text(
+                mcp_data.get('title'),
+                mcp_data.get('lead'),
+                mcp_data.get('what_is_mcp'),
+                ' '.join(s.get('slug', '') + ' ' + s.get('source', '')
+                         for s in mcp_data.get('servers') or []),
+            ),
+        })
 
     _SEARCH_CACHE['items'] = items
     return items
@@ -754,37 +770,44 @@ _PACKAGE_TOPIC_HINTS = {
     'GetFREData': ('getdfpdata', 'getfredata', 'financial reports', 'corporate events', 'board'),
     'GetTDData': ('gettddata', 'tesouro direto', 'sovereign bonds'),
     'GetLattesData': ('getlattesdata', 'lattes', 'cnpq'),
+    'GetBCBData': ('getbcbdata', 'central bank of brazil', 'bcb-sgs'),
     'cvm-mcp': ('getdfpdata', 'financial reports', 'corporate events'),
+    'bcb-mcp': ('getbcbdata', 'central bank of brazil', 'bcb-sgs'),
     'tesourodireto-mcp': ('tesouro direto', 'gettddata'),
+    'finbert-ai-detector': ('finbert', '10-k', 'ai-generated'),
 }
+
+
+def _package_matches_publication(pkg, publication):
+    """True when a package's name or topic hints match `publication`."""
+    haystack = f"{publication.get('title', '')} {publication.get('abstract', '')}".lower()
+    name = pkg['display_name']
+    if len(name) < 3:
+        return False
+    base_name = name.rstrip('0123456789').lower()
+    hints = _PACKAGE_TOPIC_HINTS.get(name, ())
+    return (
+        bool(re.search(rf'\b{re.escape(name.lower())}\b', haystack))
+        or (len(base_name) >= 5 and bool(re.search(rf'\b{re.escape(base_name)}\b', haystack)))
+        or any(hint in haystack for hint in hints)
+    )
 
 
 def _related_packages_for_publication(publication):
     """Find R and Python packages related to a publication's title or abstract."""
-    haystack = f"{publication.get('title', '')} {publication.get('abstract', '')}".lower()
     related = []
-    for folder, ecosystem, field in (('code/r', 'R (CRAN)', 'title'),
-                                     ('code/python', 'Python (PyPI)', 'name')):
-        for pkg in load_data_from_folder(folder):
-            name = (pkg.get(field) or '').strip()
-            if len(name) < 3:
-                continue
-            base_name = name.rstrip('0123456789').lower()
-            hints = _PACKAGE_TOPIC_HINTS.get(name, ())
-            matched = (
-                bool(re.search(rf'\b{re.escape(name.lower())}\b', haystack))
-                or (len(base_name) >= 5 and bool(re.search(rf'\b{re.escape(base_name)}\b', haystack)))
-                or any(hint in haystack for hint in hints)
+    for pkg in get_packages():
+        if _package_matches_publication(pkg, publication):
+            ecosystem_badge = 'R (CRAN)' if pkg['ecosystem'] == 'r' else (
+                'Python (MCP)' if pkg['is_mcp'] else 'Python (PyPI)'
             )
-            if matched:
-                related.append({
-                    'name': name,
-                    'ecosystem': ecosystem,
-                    'description': pkg.get('description', ''),
-                    'url': pkg.get('link') or pkg.get('github_link') or (
-                        url_for('code_r') if folder == 'code/r' else url_for('code_python')
-                    ),
-                })
+            related.append({
+                'name': pkg['display_name'],
+                'slug': pkg['slug'],
+                'ecosystem': ecosystem_badge,
+                'description': pkg.get('description', ''),
+                'url': url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug']),
+            })
     return related
 
 
@@ -902,17 +925,14 @@ def _fold(text):
 
 def _all_packages():
     packages = []
-    for folder, ecosystem, field in (('code/r', 'R', 'title'), ('code/python', 'Python', 'name')):
-        for pkg in load_data_from_folder(folder):
-            name = (pkg.get(field) or '').strip()
-            if not name:
-                continue
-            packages.append({
-                'name': name,
-                'ecosystem': ecosystem,
-                'description': pkg.get('description', ''),
-                'url': pkg.get('link') or pkg.get('github_link') or '',
-            })
+    for pkg in get_packages():
+        packages.append({
+            'name': pkg['display_name'],
+            'slug': pkg['slug'],
+            'ecosystem': pkg['ecosystem_label'],
+            'description': pkg.get('description', ''),
+            'url': url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug']),
+        })
     return packages
 
 
@@ -1087,6 +1107,61 @@ def publication_ris(slug):
     response = make_response(ris_for(publication))
     response.headers['Content-Type'] = 'application/x-research-info-systems; charset=utf-8'
     response.headers['Content-Disposition'] = f'attachment; filename="{slug}.ris"'
+    return response
+
+
+@app.route('/publications/<slug>.md')
+def publication_markdown(slug):
+    publication = get_publication(slug)
+    if publication is None:
+        abort(404)
+
+    canonical = url_for('publication_detail', slug=slug, _external=True)
+    journal = publication.get('journal') or publication.get('publication') or ''
+    lines = [
+        f"# {publication.get('title', '')}",
+        '',
+        f"- **Authors:** {publication.get('authors', '')}",
+        f"- **Year:** {publication.get('year', '')}",
+    ]
+    if journal:
+        lines.append(f"- **Journal:** {journal}")
+    if publication.get('issn'):
+        lines.append(f"- **ISSN:** {publication['issn']}")
+    if publication.get('doi'):
+        lines.append(f"- **DOI:** https://doi.org/{publication['doi']}")
+    if publication.get('link'):
+        lines.append(f"- **Publisher URL:** {publication['link']}")
+    lines.append(f"- **Page URL:** {canonical}")
+    if publication.get('cited_by_count_openalex'):
+        lines.append(f"- **Citations (OpenAlex):** {publication['cited_by_count_openalex']}")
+    elif publication.get('cited_by_count'):
+        lines.append(f"- **Citations (Crossref):** {publication['cited_by_count']}")
+
+    if publication.get('abstract'):
+        lines += ['', '## Abstract', '', publication['abstract'].strip()]
+
+    related_pkgs = _related_packages_for_publication(publication)
+    if related_pkgs:
+        lines += ['', '## Related Open-Source Software', '']
+        for pkg in related_pkgs:
+            lines.append(f"- [{pkg['name']}]({_absolute_url(pkg['url'])}) ({pkg['ecosystem']}): {pkg['description']}")
+
+    lines += [
+        '',
+        '## Citation',
+        '',
+        f"**APA:** {format_apa(publication)}",
+        '',
+        f"**ABNT:** {format_abnt(publication)}",
+        '',
+        '```bibtex',
+        bibtex_for(publication).strip(),
+        '```',
+    ]
+    response = make_response('\n'.join(lines) + '\n')
+    response.headers['Content-Type'] = 'text/markdown; charset=utf-8'
+    response.headers['Cache-Control'] = 'public, max-age=3600'
     return response
 
 
@@ -1278,9 +1353,177 @@ def download_trend_chart(items, name_field):
     })
 
 
+_PACKAGE_ECOSYSTEMS = {
+    'r': {
+        'folder': 'code/r',
+        'label': 'R',
+        'registry': 'CRAN / R-universe',
+        'name_field': 'title',
+        'language': 'R',
+        'list_endpoint': 'code_r',
+    },
+    'python': {
+        'folder': 'code/python',
+        'label': 'Python',
+        'registry': 'PyPI',
+        'name_field': 'name',
+        'language': 'Python',
+        'list_endpoint': 'code_python',
+    },
+}
+
+
+def get_packages(ecosystem=None):
+    """Load and normalize R and/or Python package records."""
+    ecosystems = [ecosystem] if ecosystem else list(_PACKAGE_ECOSYSTEMS)
+    results = []
+    for eco in ecosystems:
+        cfg = _PACKAGE_ECOSYSTEMS.get(eco)
+        if not cfg:
+            continue
+        for raw in load_data_from_folder(cfg['folder']):
+            pkg = dict(raw)
+            display_name = (pkg.get(cfg['name_field']) or '').strip()
+            if not display_name:
+                continue
+            slug = slugify(pkg.get('filename_stem') or display_name)
+            github_url = pkg.get('github_link') or (
+                f"https://github.com/{pkg['github_repo']}" if pkg.get('github_repo') else ''
+            )
+            is_mcp = 'mcp' in display_name.lower()
+            if eco == 'r':
+                install_cmd = f"install.packages('{display_name}')"
+            else:
+                install_cmd = f"pip install {display_name}" if pkg.get('pypi_link') else ''
+            pkg.update({
+                'ecosystem': eco,
+                'ecosystem_label': cfg['label'],
+                'registry': cfg['registry'],
+                'language': cfg['language'],
+                'list_endpoint': cfg['list_endpoint'],
+                'display_name': display_name,
+                'slug': slug,
+                'github_url': github_url,
+                'is_mcp': is_mcp,
+                'install_cmd': install_cmd,
+                'uvx_cmd': f"uvx {display_name}" if is_mcp else '',
+            })
+            results.append(pkg)
+    return results
+
+
+def get_package(ecosystem, slug):
+    if ecosystem not in _PACKAGE_ECOSYSTEMS:
+        return None
+    for pkg in get_packages(ecosystem):
+        if pkg['slug'] == slug:
+            return pkg
+    return None
+
+
+def get_mcp_data():
+    try:
+        return load_data('mcp.json')
+    except (OSError, ValueError):
+        return {}
+
+
+def _package_year(pkg):
+    for field in ('date_of_submission', 'github_last_push', 'updated_at'):
+        val = str(pkg.get(field) or '').strip()
+        if len(val) >= 4 and val[:4].isdigit():
+            return val[:4]
+    return str(datetime.date.today().year)
+
+
+def bibtex_for_package(pkg, canonical_url=''):
+    key = 'perlin_' + slugify(pkg['display_name']).replace('-', '_')
+    year = _package_year(pkg)
+    desc = ' '.join((pkg.get('description') or '').split())
+    title = f"{pkg['display_name']}: {desc}" if desc else pkg['display_name']
+    if pkg['ecosystem'] == 'r':
+        note = 'R package'
+    elif pkg['is_mcp']:
+        note = 'Python Model Context Protocol (MCP) server'
+    else:
+        note = 'Python package'
+    target_url = pkg.get('link') or pkg.get('github_url') or canonical_url
+    fields = [
+        ('author', 'Perlin, Marcelo S.'),
+        ('title', _bib_escape(title)),
+        ('year', year),
+        ('note', note),
+        ('url', target_url),
+    ]
+    body = ',\n'.join(f'  {name} = {{{value}}}' for name, value in fields if value)
+    return f'@manual{{{key},\n{body}\n}}\n'
+
+
+def _mcp_single_config(pkg):
+    if not pkg.get('is_mcp'):
+        return ''
+    server_key = pkg.get('mcp_server_key') or pkg['slug'].removesuffix('-mcp')
+    payload = {
+        'mcpServers': {
+            server_key: {
+                'command': 'uvx',
+                'args': [pkg['display_name']],
+            }
+        }
+    }
+    return json.dumps(payload, indent=2)
+
+
+def _related_publications_for_package(pkg):
+    related = [pub for pub in get_publications() if _package_matches_publication(pkg, pub)]
+    related.sort(key=lambda x: int(x.get('year') or 0), reverse=True)
+    return related
+
+
+def _related_datasets_for_package(pkg):
+    target = pkg['display_name'].lower()
+    related = []
+    for dataset in get_datasets():
+        pkg_names = ' '.join(p.get('name', '') for p in dataset.get('packages') or []).lower()
+        if target in pkg_names or target == (dataset.get('name') or '').lower():
+            related.append(dataset)
+    return related
+
+
+def _related_themes_for_package(pkg):
+    target = pkg['display_name'].lower()
+    related = []
+    for theme in get_research().get('themes', []):
+        declared = [name.lower() for name in theme.get('packages') or []]
+        if target in declared:
+            related.append({
+                'title': theme.get('title', ''),
+                'summary': theme.get('summary', ''),
+                'slug': slugify(theme.get('title', '')),
+            })
+    return related
+
+
+def _resolve_counterparts(pkg):
+    resolved = []
+    for entry in pkg.get('counterparts') or []:
+        other = get_package(entry.get('ecosystem'), entry.get('slug'))
+        if other:
+            resolved.append({
+                'display_name': other['display_name'],
+                'ecosystem': other['ecosystem'],
+                'ecosystem_label': 'MCP Server' if other['is_mcp'] else other['ecosystem_label'],
+                'slug': other['slug'],
+                'description': other.get('description', ''),
+                'note': entry.get('note', ''),
+                'url': url_for('package_detail', ecosystem=other['ecosystem'], slug=other['slug']),
+            })
+    return resolved
+
+
 @app.route('/code/r')
 def code_r():
-    code_data_r = load_data_from_folder('code/r')
+    code_data_r = get_packages('r')
     
     # Sort R packages by number of downloads (descending)
     code_data_r.sort(key=lambda x: int(x.get('number_of_downloads') or 0), reverse=True)
@@ -1315,7 +1558,7 @@ def code_r():
 
 @app.route('/code/python')
 def code_python():
-    code_data_python = load_data_from_folder('code/python')
+    code_data_python = get_packages('python')
 
     # Sort Python packages by number of downloads (descending); entries without
     # download stats (e.g. MCP servers not yet tracked by pypistats) go last.
@@ -1348,6 +1591,169 @@ def code_python():
                            code_python_updated_at=max((p.get('updated_at') for p in code_data_python
                                                        if p.get('updated_at')), default=None),
                            description="Open source code and repositories in Python.")
+
+
+@app.route('/code/<ecosystem>/<slug>')
+def package_detail(ecosystem, slug):
+    pkg = get_package(ecosystem, slug)
+    if pkg is None:
+        abort(404)
+
+    canonical = url_for('package_detail', ecosystem=ecosystem, slug=slug, _external=True)
+    mcp_server_meta = None
+    if pkg['is_mcp']:
+        for server in get_mcp_data().get('servers') or []:
+            if server.get('slug') == slug:
+                mcp_server_meta = server
+                break
+
+    return render_template(
+        'package.html',
+        title=f"{pkg['display_name']} ({pkg['ecosystem_label']})",
+        pkg=pkg,
+        bibtex=bibtex_for_package(pkg, canonical),
+        r_citation=f"citation('{pkg['display_name']}')" if ecosystem == 'r' else '',
+        mcp_config=_mcp_single_config(pkg),
+        mcp_server_meta=mcp_server_meta,
+        chart_trend=download_trend_chart([pkg], 'display_name'),
+        counterparts=_resolve_counterparts(pkg),
+        related_datasets=_related_datasets_for_package(pkg),
+        related_publications=_related_publications_for_package(pkg),
+        related_themes=_related_themes_for_package(pkg),
+        canonical=canonical,
+        description=' '.join((pkg.get('description') or '').split())[:300],
+    )
+
+
+@app.route('/code/<ecosystem>/<slug>.bib')
+def package_bibtex(ecosystem, slug):
+    pkg = get_package(ecosystem, slug)
+    if pkg is None:
+        abort(404)
+    canonical = url_for('package_detail', ecosystem=ecosystem, slug=slug, _external=True)
+    response = make_response(bibtex_for_package(pkg, canonical))
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    response.headers['Content-Disposition'] = f'attachment; filename="{slug}.bib"'
+    return response
+
+
+@app.route('/code/<ecosystem>/<slug>.md')
+def package_markdown(ecosystem, slug):
+    pkg = get_package(ecosystem, slug)
+    if pkg is None:
+        abort(404)
+
+    canonical = url_for('package_detail', ecosystem=ecosystem, slug=slug, _external=True)
+    lines = [
+        f"# {pkg['display_name']}",
+        '',
+        ' '.join((pkg.get('description') or '').split()),
+        '',
+        f"- **Ecosystem:** {pkg['ecosystem_label']} ({pkg['registry']})",
+        f"- **Page URL:** {canonical}",
+    ]
+    if pkg.get('github_url'):
+        lines.append(f"- **GitHub:** {pkg['github_url']}")
+    if pkg.get('pypi_link'):
+        lines.append(f"- **PyPI:** {pkg['pypi_link']}")
+    elif pkg.get('link') and pkg.get('link') != pkg.get('github_url'):
+        lines.append(f"- **Package page:** {pkg['link']}")
+    if pkg.get('date_of_submission'):
+        lines.append(f"- **CRAN submission:** {pkg['date_of_submission']}")
+    if pkg.get('number_of_downloads') is not None:
+        lines.append(f"- **Monthly downloads:** {pkg['number_of_downloads']:,}")
+    if pkg.get('total_downloads') is not None:
+        lines.append(f"- **All-time downloads:** {pkg['total_downloads']:,}")
+    if pkg.get('github_stars') is not None:
+        lines.append(f"- **GitHub stars:** {pkg['github_stars']:,}")
+    if pkg.get('github_last_push'):
+        lines.append(f"- **Last push:** {pkg['github_last_push']}")
+
+    if pkg.get('install_cmd') or pkg.get('uvx_cmd'):
+        lines += ['', '## Installation', '']
+        if pkg.get('uvx_cmd'):
+            lines += ['```bash', pkg['uvx_cmd'], '```', '']
+        if pkg.get('install_cmd'):
+            lang = 'r' if ecosystem == 'r' else 'bash'
+            lines += [f'```{lang}', pkg['install_cmd'], '```']
+
+    if pkg.get('quickstart'):
+        lang = 'r' if ecosystem == 'r' else 'bash'
+        lines += ['', '## Quickstart', '', f'```{lang}', pkg['quickstart'].strip(), '```']
+
+    if pkg.get('is_mcp'):
+        lines += ['', '## MCP Client Configuration', '', '```json', _mcp_single_config(pkg), '```']
+
+    datasets = _related_datasets_for_package(pkg)
+    if datasets:
+        lines += ['', '## Related Datasets', '']
+        for ds in datasets:
+            lines.append(f"- [{ds['name']}]({url_for('dataset_detail', slug=ds['slug'], _external=True)}) (DOI: {ds.get('doi', '')})")
+
+    pubs = _related_publications_for_package(pkg)
+    if pubs:
+        lines += ['', '## Related Publications', '']
+        for pub in pubs:
+            lines.append(f"- {pub.get('year', '')} — [{pub.get('title', '')}]({url_for('publication_detail', slug=pub['slug'], _external=True)})")
+
+    lines += ['', '## Citation', '', '```bibtex', bibtex_for_package(pkg, canonical).strip(), '```']
+    response = make_response('\n'.join(lines) + '\n')
+    response.headers['Content-Type'] = 'text/markdown; charset=utf-8'
+    response.headers['Cache-Control'] = 'public, max-age=3600'
+    return response
+
+
+@app.route('/mcp')
+def mcp_hub():
+    mcp_data = get_mcp_data()
+    servers = []
+    for entry in mcp_data.get('servers') or []:
+        pkg = get_package('python', entry.get('slug'))
+        if not pkg:
+            continue
+        r_counterparts = [
+            p for p in (get_package('r', s) for s in entry.get('r_counterparts') or [])
+            if p
+        ]
+        datasets = [
+            ds for ds in (get_dataset(s) for s in entry.get('datasets') or [])
+            if ds
+        ]
+        servers.append(dict(
+            entry,
+            pkg=pkg,
+            r_counterparts=r_counterparts,
+            datasets=datasets,
+            detail_url=url_for('package_detail', ecosystem='python', slug=pkg['slug']),
+            single_config=_mcp_single_config(pkg),
+        ))
+
+    ai_tools = []
+    for entry in mcp_data.get('ai_tools') or []:
+        pkg = get_package(entry.get('ecosystem'), entry.get('slug'))
+        if pkg:
+            ai_tools.append(dict(
+                entry,
+                pkg=pkg,
+                detail_url=url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug']),
+            ))
+
+    total_monthly_downloads = sum(int(s['pkg'].get('number_of_downloads') or 0) for s in servers)
+    total_all_time_downloads = sum(int(s['pkg'].get('total_downloads') or 0) for s in servers)
+    total_stars = sum(int(s['pkg'].get('github_stars') or 0) for s in servers)
+
+    return render_template(
+        'mcp.html',
+        title='MCP Servers & AI Tools',
+        mcp=mcp_data,
+        servers=servers,
+        ai_tools=ai_tools,
+        total_monthly_downloads=total_monthly_downloads,
+        total_all_time_downloads=total_all_time_downloads,
+        total_stars=total_stars,
+        canonical=url_for('mcp_hub', _external=True),
+        description=mcp_data.get('lead') or "Open-source MCP servers for Brazilian financial data (CVM, BCB-SGS, Tesouro Direto).",
+    )
 
 def get_datasets():
     datasets = load_data_from_folder('datasets')
@@ -1873,18 +2279,20 @@ def publications_json():
 @app.route('/code.json')
 def code_json():
     items = []
-    for folder, ecosystem, field in (('code/r', 'R', 'title'), ('code/python', 'Python', 'name')):
-        for pkg in load_data_from_folder(folder):
-            items.append({
-                'name': pkg.get(field, ''),
-                'ecosystem': ecosystem,
-                'description': pkg.get('description', ''),
-                'url': pkg.get('link') or pkg.get('github_link') or '',
-                'github': pkg.get('github_link', ''),
-                'downloads_last_month': pkg.get('number_of_downloads'),
-                'total_downloads': pkg.get('total_downloads'),
-                'github_stars': pkg.get('github_stars'),
-            })
+    for pkg in get_packages():
+        items.append({
+            'slug': pkg['slug'],
+            'name': pkg['display_name'],
+            'ecosystem': pkg['ecosystem_label'],
+            'is_mcp': pkg['is_mcp'],
+            'description': pkg.get('description', ''),
+            'url': url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug'], _external=True),
+            'external_url': pkg.get('link') or pkg.get('github_url') or '',
+            'github': pkg.get('github_url', ''),
+            'downloads_last_month': pkg.get('number_of_downloads'),
+            'total_downloads': pkg.get('total_downloads'),
+            'github_stars': pkg.get('github_stars'),
+        })
     return _json_response({'name': 'code', 'count': len(items), 'items': items})
 
 
@@ -1951,14 +2359,15 @@ def sitemap():
         'books': ('0.8', 'monthly'),
         'code_r': ('0.7', 'monthly'),
         'code_python': ('0.7', 'monthly'),
+        'mcp_hub': ('0.8', 'monthly'),
         'cv': ('0.8', 'monthly'),
         'research': ('0.8', 'monthly'),
         'search': ('0.3', 'yearly'),
         'site_log': ('0.2', 'weekly'),
     }
     skip = {'static', 'sitemap', 'robots', 'indexnow_key', 'news_feed', 'publications_feed',
-            'json_feed', 'opensearch', 'llms_txt', 'security_txt', 'healthz', 'press_kit',
-            'publications_json', 'code_json', 'data_json', 'books_json'}
+            'json_feed', 'opensearch', 'llms_txt', 'llms_full_txt', 'security_txt', 'healthz',
+            'press_kit', 'publications_json', 'code_json', 'data_json', 'books_json'}
 
     for rule in app.url_map.iter_rules():
         if 'GET' not in rule.methods or rule.arguments or rule.endpoint in skip:
@@ -1999,6 +2408,17 @@ def sitemap():
                                           (dataset.get('filename_stem') or '') + '.json')),
             'priority': '0.7',
             'changefreq': 'yearly',
+        })
+
+    # software package detail pages
+    for pkg in get_packages():
+        folder = _PACKAGE_ECOSYSTEMS[pkg['ecosystem']]['folder']
+        entries.append({
+            'loc': url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug'], _external=True),
+            'lastmod': mtime(os.path.join('data', folder,
+                                          (pkg.get('filename_stem') or '') + '.json')),
+            'priority': '0.7',
+            'changefreq': 'monthly',
         })
 
     # books
@@ -2109,7 +2529,7 @@ def llms_txt():
     lines = [
         '# Marcelo S. Perlin',
         '',
-        '> Associate Professor of Finance at UFRGS. Quantitative finance, data science, R and Python.',
+        '> Associate Professor of Finance at UFRGS. Quantitative finance, data science, R, Python, and Brazilian financial data MCP servers.',
         '',
         '## Key links',
         f'- About: {url_for("index", _external=True)}',
@@ -2118,8 +2538,17 @@ def llms_txt():
         f'- Books: {url_for("books", _external=True)}',
         f'- Code (R): {url_for("code_r", _external=True)}',
         f'- Code (Python): {url_for("code_python", _external=True)}',
+        f'- MCP Servers & AI Tools: {url_for("mcp_hub", _external=True)}',
         f'- Data: {url_for("data", _external=True)}',
         f'- Research: {url_for("research", _external=True)}',
+        f'- Full AI compendium: {url_for("llms_full_txt", _external=True)}',
+        '',
+        '## Markdown mirrors & JSON APIs',
+        'Append `.md` to any publication or software page URL for clean Markdown (e.g. `/publications/<slug>.md`, `/code/r/<slug>.md`, `/code/python/<slug>.md`).',
+        f'- Publications JSON: {url_for("publications_json", _external=True)}',
+        f'- Software JSON: {url_for("code_json", _external=True)}',
+        f'- Datasets JSON: {url_for("data_json", _external=True)}',
+        f'- Books JSON: {url_for("books_json", _external=True)}',
         '',
         '## Publications',
     ]
@@ -2127,28 +2556,141 @@ def llms_txt():
         lines.append(f"- {pub.get('year', '')} — {pub.get('title', '')}: "
                      f"{url_for('publication_detail', slug=pub['slug'], _external=True)}")
     lines += ['', '## Books']
-    for book in load_data_from_folder('books'):
-        lines.append(f"- {book.get('title', '')}: {book.get('link_online') or book.get('link_amazon') or ''}")
+    for book in get_books():
+        lines.append(f"- {book.get('title', '')}: {url_for('book_detail', slug=book['slug'], _external=True)}")
     lines += ['', '## Software']
-    for pkg in load_data_from_folder('code/r'):
-        lines.append(f"- R: {pkg.get('title', '')} — {pkg.get('link') or ''}")
-    for pkg in load_data_from_folder('code/python'):
-        lines.append(f"- Python: {pkg.get('name', '')} — {pkg.get('link') or pkg.get('github_link') or ''}")
+    for pkg in get_packages():
+        detail_url = url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug'], _external=True)
+        lines.append(f"- {pkg['ecosystem_label']}: {pkg['display_name']} — {detail_url}")
     lines += ['', '## Datasets']
     for dataset in get_datasets():
         lines.append(f"- {dataset.get('name', '')}: "
                      f"{url_for('dataset_detail', slug=dataset['slug'], _external=True)} "
                      f"(DOI: {dataset.get('doi', '')})")
-    lines += ['', '## MCP servers',
-              '- cvm-mcp: https://github.com/msperlin/cvm-mcp',
-              '- bcb-mcp: https://github.com/msperlin/bcb-mcp',
-              '- tesourodireto-mcp: https://github.com/msperlin/tesourodireto-mcp',
-              '',
+    lines += ['', '## MCP servers', f"- Overview & setup hub: {url_for('mcp_hub', _external=True)}"]
+    for pkg in get_packages('python'):
+        if pkg['is_mcp']:
+            lines.append(
+                f"- {pkg['display_name']}: "
+                f"{url_for('package_detail', ecosystem='python', slug=pkg['slug'], _external=True)} "
+                f"({pkg.get('github_url') or pkg.get('link') or ''})"
+            )
+    lines += ['',
               '## Citation guidance',
-              'When citing Marcelo S. Perlin, use the specific paper or book identified above. '
+              'When citing Marcelo S. Perlin, use the specific paper, book, dataset, or software package identified above. '
               'Do not attribute claims to him without a cited source.']
     body = '\n'.join(lines) + '\n'
     response = make_response(body)
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    response.headers['Cache-Control'] = 'public, max-age=3600'
+    return response
+
+
+@app.route('/llms-full.txt')
+def llms_full_txt():
+    """Expanded single-file Markdown knowledge base of the entire site for LLMs."""
+    about = load_data('about.json')
+    gscholar = load_data('stats/gscholar.json')
+    research_data = get_research()
+    mcp_data = get_mcp_data()
+
+    lines = [
+        f"# {about.get('name', 'Marcelo S. Perlin')} — Full Site Reference",
+        '',
+        f"> {about.get('title', 'Associate Professor of Finance')}, {about.get('institution', 'UFRGS')} ({about.get('location', 'Porto Alegre, Brazil')}).",
+        '',
+        about.get('bio', ''),
+        '',
+        f"- **Website:** {url_for('index', _external=True)}",
+        f"- **Email:** {about.get('email', '')}",
+        f"- **ORCID:** {about.get('orcid_link', '')}",
+        f"- **Google Scholar:** {gscholar.get('citedby', '')} citations, h-index {gscholar.get('hindex', '')}, i10-index {gscholar.get('i10index', '')} (updated {gscholar.get('date_retrieval', '')})",
+        f"- **GitHub:** {about.get('github_link', '')}",
+        '',
+        '## Research Themes',
+        '',
+    ]
+    for theme in research_data.get('themes') or []:
+        lines.append(f"### {theme.get('title', '')}")
+        lines.append(theme.get('summary', ''))
+        if theme.get('packages'):
+            lines.append('Packages: ' + ', '.join(theme['packages']))
+        lines.append('')
+
+    lines += ['## Brazilian Financial Data MCP Servers', '']
+    if mcp_data.get('lead'):
+        lines.append(mcp_data['lead'])
+        lines.append('')
+    lines.append(f"Hub URL: {url_for('mcp_hub', _external=True)}")
+    lines.append('')
+    for srv in mcp_data.get('servers') or []:
+        pkg = get_package('python', srv.get('slug'))
+        if not pkg:
+            continue
+        lines.append(f"### {pkg['display_name']} ({srv.get('source', '')})")
+        lines.append(pkg.get('description', ''))
+        lines.append(f"- Detail page: {url_for('package_detail', ecosystem='python', slug=pkg['slug'], _external=True)}")
+        lines.append(f"- Markdown: {url_for('package_markdown', ecosystem='python', slug=pkg['slug'], _external=True)}")
+        lines.append(f"- Run via uvx: `{pkg['uvx_cmd']}`")
+        for cap in srv.get('capabilities') or []:
+            lines.append(f"  - {cap}")
+        lines.append('')
+
+    lines += ['## Open-Source Software (R & Python)', '']
+    for pkg in get_packages():
+        desc = ' '.join((pkg.get('description') or '').split())
+        lines.append(f"### {pkg['display_name']} ({pkg['ecosystem_label']})")
+        lines.append(desc)
+        lines.append(f"- Detail page: {url_for('package_detail', ecosystem=pkg['ecosystem'], slug=pkg['slug'], _external=True)}")
+        lines.append(f"- Markdown: {url_for('package_markdown', ecosystem=pkg['ecosystem'], slug=pkg['slug'], _external=True)}")
+        if pkg.get('install_cmd'):
+            lines.append(f"- Install: `{pkg['install_cmd']}`")
+        if pkg.get('total_downloads') is not None:
+            lines.append(f"- Downloads: {pkg.get('number_of_downloads', 0):,} last month / {pkg['total_downloads']:,} total")
+        if pkg.get('github_url'):
+            lines.append(f"- Repository: {pkg['github_url']}")
+        lines.append('')
+
+    lines += ['## Books', '']
+    for book in get_books():
+        lines.append(f"### {book.get('title', '')} ({book.get('year', '')})")
+        if book.get('summary'):
+            lines.append(book['summary'].strip())
+        lines.append(f"- Detail page: {url_for('book_detail', slug=book['slug'], _external=True)}")
+        if book.get('link_online'):
+            lines.append(f"- Read online: {_absolute_url(book['link_online'])}")
+        if book.get('link_amazon'):
+            lines.append(f"- Amazon: {book['link_amazon']}")
+        lines.append('')
+
+    lines += ['## Datasets', '']
+    for ds in get_datasets():
+        lines.append(f"### {ds.get('name', '')}: {ds.get('title', '')}")
+        lines.append(ds.get('description', ''))
+        lines.append(f"- Detail page: {url_for('dataset_detail', slug=ds['slug'], _external=True)}")
+        if ds.get('doi'):
+            lines.append(f"- DOI: https://doi.org/{ds['doi']}")
+        if ds.get('coverage'):
+            lines.append(f"- Coverage: {ds['coverage']}")
+        lines.append('')
+
+    lines += ['## Peer-Reviewed Publications', '']
+    for pub in sorted(get_publications(), key=lambda x: int(x.get('year', 0)), reverse=True):
+        journal = pub.get('journal') or pub.get('publication') or ''
+        lines.append(f"### {pub.get('year', '')} — {pub.get('title', '')}")
+        lines.append(f"- Authors: {pub.get('authors', '')}")
+        if journal:
+            lines.append(f"- Journal: {journal}")
+        if pub.get('doi'):
+            lines.append(f"- DOI: https://doi.org/{pub['doi']}")
+        lines.append(f"- Detail page: {url_for('publication_detail', slug=pub['slug'], _external=True)}")
+        lines.append(f"- Markdown: {url_for('publication_markdown', slug=pub['slug'], _external=True)}")
+        if pub.get('abstract'):
+            lines.append('')
+            lines.append(pub['abstract'].strip())
+        lines.append('')
+
+    response = make_response('\n'.join(lines) + '\n')
     response.headers['Content-Type'] = 'text/plain; charset=utf-8'
     response.headers['Cache-Control'] = 'public, max-age=3600'
     return response

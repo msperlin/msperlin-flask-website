@@ -35,7 +35,7 @@
 
     <h2>Brazilian Financial &amp; Public Data Ecosystem</h2>
     <p>
-        Each dataset below is also accessible programmatically via open-source R packages, Python libraries, and Model Context Protocol (MCP) servers for AI agents:
+        Each dataset below is also accessible programmatically via open-source R packages, Python libraries, and <a href="{{ url_for('mcp_hub') }}">Model Context Protocol (MCP) servers for AI agents</a>:
     </p>
     <div class="table-wrap reveal">
         <table class="ecosystem-table">
@@ -50,26 +50,26 @@
             <tbody>
                 <tr>
                     <td><strong>B3 / CVM Corporate Filings (DFP &amp; FRE)</strong></td>
-                    <td><a href="https://msperlin.r-universe.dev/GetDFPData2">GetDFPData2</a>, <a href="https://msperlin.r-universe.dev/GetFREData">GetFREData</a></td>
-                    <td><a href="https://github.com/msperlin/cvm-mcp">cvm-mcp</a> <span class="tag-pill">MCP</span></td>
-                    <td><a href="https://doi.org/10.7910/DVN/7VVX4J">DFP Dataverse</a> · <a href="https://doi.org/10.7910/DVN/QIMUNZ">FRE Dataverse</a></td>
+                    <td><a href="{{ url_for('package_detail', ecosystem='r', slug='getdfpdata2') }}">GetDFPData2</a>, <a href="{{ url_for('package_detail', ecosystem='r', slug='getfredata') }}">GetFREData</a></td>
+                    <td><a href="{{ url_for('package_detail', ecosystem='python', slug='cvm-mcp') }}">cvm-mcp</a> <span class="tag-pill">MCP</span></td>
+                    <td><a href="{{ url_for('dataset_detail', slug='getdfpdata2') }}">DFP Dataverse</a> · <a href="{{ url_for('dataset_detail', slug='getfredata') }}">FRE Dataverse</a></td>
                 </tr>
                 <tr>
                     <td><strong>Central Bank of Brazil (BCB-SGS)</strong></td>
-                    <td><a href="https://msperlin.r-universe.dev/GetBCBData">GetBCBData</a></td>
-                    <td><a href="https://github.com/msperlin/bcb-mcp">bcb-mcp</a> <span class="tag-pill">MCP</span></td>
+                    <td><a href="{{ url_for('package_detail', ecosystem='r', slug='getbcbdata') }}">GetBCBData</a></td>
+                    <td><a href="{{ url_for('package_detail', ecosystem='python', slug='bcb-mcp') }}">bcb-mcp</a> <span class="tag-pill">MCP</span></td>
                     <td>Official BCB API</td>
                 </tr>
                 <tr>
                     <td><strong>Brazilian Sovereign Bonds (Tesouro Direto)</strong></td>
-                    <td><a href="https://msperlin.r-universe.dev/GetTDData">GetTDData</a></td>
-                    <td><a href="https://github.com/msperlin/tesourodireto-mcp">tesourodireto-mcp</a> <span class="tag-pill">MCP</span></td>
-                    <td><a href="https://doi.org/10.7910/DVN/SCSQUF">TD Dataverse</a></td>
+                    <td><a href="{{ url_for('package_detail', ecosystem='r', slug='gettddata') }}">GetTDData</a></td>
+                    <td><a href="{{ url_for('package_detail', ecosystem='python', slug='tesourodireto-mcp') }}">tesourodireto-mcp</a> <span class="tag-pill">MCP</span></td>
+                    <td><a href="{{ url_for('dataset_detail', slug='gettddata') }}">TD Dataverse</a></td>
                 </tr>
                 <tr>
                     <td><strong>Receita Federal Company Registry (CNPJ)</strong></td>
                     <td>—</td>
-                    <td><a href="https://github.com/msperlin/rfbpy">rfbpy</a></td>
+                    <td><a href="{{ url_for('package_detail', ecosystem='python', slug='rfbpy') }}">rfbpy</a></td>
                     <td>Receita Federal Open Data</td>
                 </tr>
             </tbody>

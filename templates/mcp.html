@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block head_extra %}
+<script nonce="{{ csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": {{ (mcp.title or 'Brazilian Financial Data MCP Servers') | tojson }},
+  "description": {{ (mcp.lead or '') | tojson }},
+  "url": {{ canonical | tojson }},
+  "author": {
+    "@type": "Person",
+    "name": "Marcelo S. Perlin",
+    "url": {{ url_for('index', _external=True) | tojson }}
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {% for srv in servers %}
+      {
+        "@type": "ListItem",
+        "position": {{ loop.index }},
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": {{ srv.pkg.display_name | tojson }},
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Cross-platform",
+          "description": {{ (srv.pkg.description or '') | tojson }},
+          "url": {{ url_for('package_detail', ecosystem='python', slug=srv.pkg.slug, _external=True) | tojson }}
+        }
+      }{{ "," if not loop.last }}
+      {% endfor %}
+    ]
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="mcp-hub">
+    <h1>{{ mcp.title or 'Brazilian Financial Data MCP Servers' }}</h1>
+    <p class="lead">{{ mcp.lead }}</p>
+
+    <div class="stats-container reveal" data-stagger>
+        <div class="stat-card reveal">
+            <p class="stat-label">MCP servers</p>
+            <p class="stat-value">{{ servers | length }}</p>
+            <p class="stat-help">Official Brazilian public financial &amp; economic data sources.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">Monthly downloads</p>
+            <p class="stat-value">{{ "{:,}".format(total_monthly_downloads) }}</p>
+            <p class="stat-help">Combined PyPI downloads over the last 30 days.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">All-time downloads</p>
+            <p class="stat-value">{{ "{:,}".format(total_all_time_downloads) }}</p>
+            <p class="stat-help">Cumulative PyPI downloads across all MCP servers.</p>
+        </div>
+        <div class="stat-card reveal">
+            <p class="stat-label">GitHub stars</p>
+            <p class="stat-value">★ {{ "{:,}".format(total_stars) }}</p>
+            <p class="stat-help">Open-source repositories on <a href="https://github.com/msperlin">GitHub</a>.</p>
+        </div>
+    </div>
+
+    {% if mcp.what_is_mcp %}
+    <p>{{ mcp.what_is_mcp }}</p>
+    {% endif %}
+
+    <h2>Available MCP Servers</h2>
+    <div class="mcp-server-grid" data-stagger>
+        {% for srv in servers %}
+        <article class="item-card mcp-server-card reveal" id="{{ srv.pkg.slug }}">
+            <div class="pkg-card-head">
+                <div>
+                    <span class="tag-pill">{{ srv.source }}</span>
+                    <h3 class="mcp-server-title"><a href="{{ srv.detail_url }}">{{ srv.pkg.display_name }}</a></h3>
+                </div>
+                <button class="install-btn" type="button" data-copy-text="{{ srv.pkg.uvx_cmd }}"
+                    aria-label="Copy uvx command for {{ srv.pkg.display_name }}">
+                    <code>{{ srv.pkg.uvx_cmd }}</code>
+                </button>
+            </div>
+            <p>{{ srv.pkg.description }}</p>
+
+            {% if srv.capabilities %}
+            <ul class="mcp-cap-list">
+                {% for cap in srv.capabilities %}
+                <li>{{ cap }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div class="action-links">
+                <a href="{{ srv.detail_url }}">Package Details →</a>
+                {% if srv.pkg.github_url %}<a href="{{ srv.pkg.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>{% endif %}
+                {% if srv.pkg.pypi_link %}<a href="{{ srv.pkg.pypi_link }}" target="_blank" rel="noopener noreferrer">PyPI</a>{% endif %}
+                <a href="{{ url_for('package_markdown', ecosystem='python', slug=srv.pkg.slug) }}">Markdown</a>
+            </div>
+
+            <p class="meta">
+                {% if srv.pkg.get('number_of_downloads') is not none %}Downloads (30d): {{ "{:,}".format(srv.pkg.number_of_downloads) }}{% endif %}
+                {% if srv.pkg.get('github_stars') is not none %} · ★ {{ srv.pkg.github_stars }}{% endif %}
+                {% if srv.pkg.github_last_push %} · Last push: {{ srv.pkg.github_last_push }}{% endif %}
+                {% if srv.r_counterparts %}
+                <br>R counterpart:
+                {% for rpkg in srv.r_counterparts %}
+                <a href="{{ url_for('package_detail', ecosystem='r', slug=rpkg.slug) }}">{{ rpkg.display_name }}</a>{% if not loop.last %}, {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% if srv.datasets %}
+                · Dataset archive:
+                {% for ds in srv.datasets %}
+                <a href="{{ url_for('dataset_detail', slug=ds.slug) }}">{{ ds.name }}</a>{% if not loop.last %}, {% endif %}
+                {% endfor %}
+                {% endif %}
+            </p>
+        </article>
+        {% endfor %}
+    </div>
+
+    <section class="accordion mcp-accordion" aria-labelledby="mcp-setup-heading">
+        <h2 id="mcp-setup-heading">Client Setup Guides</h2>
+        <p>All three servers run locally over standard stdio via <a href="https://docs.astral.sh/uv/"><code>uvx</code></a> (no API keys required). Open any client below to copy the ready-to-paste configuration:</p>
+        {% for client in mcp.clients %}
+        <details class="mcp-config-card" {% if loop.first %}open{% endif %}>
+            <summary>{{ client.name }} — <code>{{ client.config_path }}</code></summary>
+            <div class="mcp-config-body">
+                <p>{{ client.notes }}</p>
+                <pre class="pub-bibtex"><code>{{ client.snippet }}</code></pre>
+                <button class="install-btn" type="button" data-copy-text="{{ client.snippet }}"
+                    aria-label="Copy MCP configuration for {{ client.name }}">
+                    Copy {{ client.name }} Config
+                </button>
+            </div>
+        </details>
+        {% endfor %}
+    </section>
+
+    <h2>Example Prompts to Try</h2>
+    <p>Once connected, you can ask your AI assistant questions that combine live official Brazilian data with analysis and charts:</p>
+
+    {% for srv in servers %}
+    {% if srv.example_prompts %}
+    <h3>{{ srv.pkg.display_name }} <span class="meta">({{ srv.source }})</span></h3>
+    <ul class="item-list">
+        {% for prompt in srv.example_prompts %}
+        <li class="item-card prompt-card">
+            <p class="prompt-text">“{{ prompt }}”</p>
+            <button class="install-btn" type="button" data-copy-text="{{ prompt }}"
+                aria-label="Copy prompt for {{ srv.pkg.display_name }}">Copy prompt</button>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endfor %}
+
+    {% if mcp.cross_server_prompts %}
+    <h3>Combining Multiple Servers</h3>
+    <ul class="item-list">
+        {% for prompt in mcp.cross_server_prompts %}
+        <li class="item-card prompt-card">
+            <p class="prompt-text">“{{ prompt }}”</p>
+            <button class="install-btn" type="button" data-copy-text="{{ prompt }}"
+                aria-label="Copy cross-server prompt">Copy prompt</button>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if ai_tools %}
+    <h2>Other AI &amp; NLP Research Tools</h2>
+    <ul class="item-list">
+        {% for tool in ai_tools %}
+        <li class="item-card">
+            <span class="tag-pill">{{ tool.label }}</span>
+            <strong><a href="{{ tool.detail_url }}">{{ tool.pkg.display_name }}</a></strong> — {{ tool.note }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>Machine-Readable Site Endpoints for AI Agents</h2>
+    <p>Looking to connect an LLM or research agent to this website's publications, books, datasets, and software catalog?</p>
+    <div class="action-links">
+        <a href="{{ url_for('llms_txt') }}">/llms.txt (Site map)</a>
+        <a href="{{ url_for('llms_full_txt') }}">/llms-full.txt (Full compendium)</a>
+        <a href="{{ url_for('code_json') }}">/code.json</a>
+        <a href="{{ url_for('publications_json') }}">/publications.json</a>
+        <a href="{{ url_for('data_json') }}">/data.json</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,105 @@
+{
+    "title": "Brazilian Financial Data MCP Servers",
+    "lead": "Open-source Model Context Protocol (MCP) servers that give AI assistants direct, structured access to official Brazilian financial, corporate, and macroeconomic open data — with local caching and zero API keys required.",
+    "what_is_mcp": "The Model Context Protocol (MCP) is an open standard that lets AI assistants (Claude Desktop, Cursor, Windsurf, Claude Code, Antigravity, and other MCP-compatible clients) call external tools safely. Instead of manually downloading CSV archives or guessing outdated numbers, your assistant can query official CVM, Central Bank (BCB), and Tesouro Direto data directly.",
+    "servers": [
+        {
+            "slug": "cvm-mcp",
+            "source": "CVM / B3 Open Data",
+            "server_key": "cvm",
+            "r_counterparts": ["getdfpdata2", "getfredata"],
+            "datasets": ["getdfpdata2", "getfredata"],
+            "capabilities": [
+                "Annual (DFP) and quarterly (ITR) financial statements of Brazilian public companies",
+                "Corporate reference filings (FRE), governance, and corporate events",
+                "Brazilian investment funds (fundos de investimento) data and registration",
+                "Insider trading reports and CVM public open-data archives (dados.cvm.gov.br)"
+            ],
+            "example_prompts": [
+                "Pull Petrobras's (PETR4) annual income statement and balance sheet from CVM DFP for the last 5 years and compute ROE and net margin.",
+                "List recent insider trading transactions reported to CVM for Vale over the past 6 months.",
+                "Compare revenue growth and leverage across the three largest Brazilian banks using the latest DFP filings."
+            ]
+        },
+        {
+            "slug": "bcb-mcp",
+            "source": "Central Bank of Brazil (BCB-SGS)",
+            "server_key": "bcb",
+            "r_counterparts": ["getbcbdata"],
+            "datasets": [],
+            "capabilities": [
+                "Curated dictionary and search across BCB-SGS macroeconomic and financial series (Selic, IPCA, CDI, PTAX, GDP, credit)",
+                "Time-series retrieval and summary statistics directly from the official Central Bank API",
+                "Local Parquet caching with DuckDB SQL querying for fast multi-series analysis"
+            ],
+            "example_prompts": [
+                "Fetch monthly IPCA inflation and the Selic target rate from BCB-SGS since 2015 and calculate the real interest rate.",
+                "Search the BCB-SGS catalog for Brazilian USD/BRL exchange rate (PTAX) series and summarize annual averages since 2020.",
+                "Query the local cache with SQL to compare annual cumulative IPCA against CDI over the last 10 years."
+            ]
+        },
+        {
+            "slug": "tesourodireto-mcp",
+            "source": "Tesouro Nacional / ANBIMA",
+            "server_key": "tesourodireto",
+            "r_counterparts": ["gettddata"],
+            "datasets": ["gettddata"],
+            "capabilities": [
+                "Historical daily prices and yields for Brazilian sovereign bonds (Tesouro Direto)",
+                "Current Tesouro Direto purchase and redemption rates across available maturities",
+                "Per-maturity yield statistics and the ANBIMA sovereign yield curve"
+            ],
+            "example_prompts": [
+                "Show current Tesouro IPCA+ (NTN-B) real yields across all available maturities and highlight the longest duration bond.",
+                "Fetch historical yields for Tesouro Prefixado 2029 and plot how spreads evolved over the last 12 months.",
+                "Retrieve the latest ANBIMA yield curve and summarize the term structure slope between 2-year and 10-year rates."
+            ]
+        }
+    ],
+    "cross_server_prompts": [
+        "Combine BCB-SGS (IPCA & Selic), Tesouro Direto (NTN-B real yields), and CVM DFP filings for WEG to build a Brazilian macro-to-fundamentals brief.",
+        "Compare the current real yield on 10-year Tesouro IPCA+ bonds against the trailing 12-month IPCA from BCB and the dividend/earnings yield of top B3 utilities."
+    ],
+    "clients": [
+        {
+            "id": "claude-desktop",
+            "name": "Claude Desktop",
+            "config_path": "~/Library/Application Support/Claude/claude_desktop_config.json (macOS) or %APPDATA%\\Claude\\claude_desktop_config.json (Windows)",
+            "notes": "Requires uv (for uvx). Add the block below to your config file and restart Claude Desktop.",
+            "language": "json",
+            "snippet": "{\n  \"mcpServers\": {\n    \"bcb\": {\n      \"command\": \"uvx\",\n      \"args\": [\"bcb-mcp\"]\n    },\n    \"cvm\": {\n      \"command\": \"uvx\",\n      \"args\": [\"cvm-mcp\"]\n    },\n    \"tesourodireto\": {\n      \"command\": \"uvx\",\n      \"args\": [\"tesourodireto-mcp\"]\n    }\n  }\n}"
+        },
+        {
+            "id": "cursor",
+            "name": "Cursor",
+            "config_path": ".cursor/mcp.json (project) or ~/.cursor/mcp.json (global)",
+            "notes": "Create or edit mcp.json in your workspace or home directory, then reload MCP servers in Cursor Settings.",
+            "language": "json",
+            "snippet": "{\n  \"mcpServers\": {\n    \"bcb\": {\n      \"command\": \"uvx\",\n      \"args\": [\"bcb-mcp\"]\n    },\n    \"cvm\": {\n      \"command\": \"uvx\",\n      \"args\": [\"cvm-mcp\"]\n    },\n    \"tesourodireto\": {\n      \"command\": \"uvx\",\n      \"args\": [\"tesourodireto-mcp\"]\n    }\n  }\n}"
+        },
+        {
+            "id": "claude-code",
+            "name": "Claude Code (CLI)",
+            "config_path": "Run in your terminal",
+            "notes": "Register all three servers directly from the command line using uvx (no global Python environment pollution).",
+            "language": "bash",
+            "snippet": "claude mcp add bcb -- uvx bcb-mcp\nclaude mcp add cvm -- uvx cvm-mcp\nclaude mcp add tesourodireto -- uvx tesourodireto-mcp"
+        },
+        {
+            "id": "windsurf-antigravity",
+            "name": "Windsurf / Antigravity / Generic MCP Client",
+            "config_path": "Client MCP configuration file (mcp_config.json)",
+            "notes": "Any client supporting the standard stdio MCP transport can launch the servers via uvx or pipx.",
+            "language": "json",
+            "snippet": "{\n  \"mcpServers\": {\n    \"bcb\": {\n      \"command\": \"uvx\",\n      \"args\": [\"bcb-mcp\"]\n    },\n    \"cvm\": {\n      \"command\": \"uvx\",\n      \"args\": [\"cvm-mcp\"]\n    },\n    \"tesourodireto\": {\n      \"command\": \"uvx\",\n      \"args\": [\"tesourodireto-mcp\"]\n    }\n  }\n}"
+        }
+    ],
+    "ai_tools": [
+        {
+            "ecosystem": "python",
+            "slug": "finbert-ai-detector",
+            "label": "ML / NLP Package",
+            "note": "Detect AI-generated text in financial documents (companion library to the 2026 Finance Research Letters study on AI in 10-K filings)."
+        }
+    ]
+}
